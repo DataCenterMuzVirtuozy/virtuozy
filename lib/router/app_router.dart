@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:virtuozy/presentations/auth_screen/login_page.dart';
 import 'package:virtuozy/presentations/auth_screen/singin_page.dart';
 import 'package:virtuozy/presentations/auth_screen/success_send_sms_page.dart';
+import 'package:virtuozy/presentations/main_screen/main_page.dart';
 import 'package:virtuozy/presentations/onboarding_screen/onboarding_page.dart';
 import 'package:virtuozy/router/paths.dart';
 
@@ -21,7 +22,7 @@ class AppRouter{
           return CupertinoPage(
               key: state.pageKey,
               //todo for test
-              child: const LogInPage());
+              child: const MainPage());
         },
       ),
       GoRoute(
