@@ -53,6 +53,9 @@ dependencies:
   lottie: ^3.0.0
   persistent_bottom_nav_bar: ^5.0.2
   webview_flutter: ^4.4.4
+  table_calendar: ^3.0.9
+
+
 
 
 dev_dependencies:

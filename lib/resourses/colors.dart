@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
    Color get colorOrange => const Color.fromRGBO(228, 96, 54, 1.0);
    Color get colorGrey => const Color.fromRGBO(134, 152, 149, 1.0);
    Color  get colorBeruza => const Color.fromRGBO(31, 162, 184, 1.0);
+   Color  get colorBeruzaLight => const Color.fromRGBO(31, 162, 184, 0.1);
    Color get colorYellow => const Color.fromRGBO(247, 196, 94, 1.0);
 
 
