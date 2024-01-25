@@ -6,6 +6,7 @@ import 'dart:ui';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/resourses/images.dart';
@@ -13,9 +14,10 @@ import 'package:virtuozy/resourses/images.dart';
 import '../utils/text_style.dart';
 
 class HomeDrawerMenu extends StatelessWidget{
-  const HomeDrawerMenu({super.key,required this.onCallLogOut});
+  const HomeDrawerMenu({super.key,required this.onCallLogOut,required this.onSelectedPage});
 
   final VoidCallback onCallLogOut;
+  final Function onSelectedPage;
 
 
   @override
@@ -66,7 +68,28 @@ class HomeDrawerMenu extends StatelessWidget{
                           )),
                     ],
                   ),
-                  DrawerItem(title: 'Выйти'.tr(),textColor: Colors.red, onPressed: () {
+                  const Gap(20.0),
+                  DrawerItem(title: 'Мои абонементы'.tr(),textColor: colorBlack, onPressed: () {
+                    onSelectedPage.call(0);
+                  },),
+
+                  DrawerItem(title: 'Расписание'.tr(),textColor: colorBlack, onPressed: () {
+                     onSelectedPage.call(1);
+                  },),
+
+                  DrawerItem(title: 'Финансы'.tr(),textColor: colorBlack, onPressed: () {
+                    onSelectedPage.call(2);
+                  },),
+
+                  DrawerItem(title: 'Предложения'.tr(),textColor: colorBlack, onPressed: () {
+                    onSelectedPage.call(3);
+                  },),
+
+                  DrawerItem(title: 'Сайт'.tr(),textColor: colorBlack, onPressed: () {
+                    onSelectedPage.call(4);
+                  },),
+
+                  DrawerItem(title: 'Выйти'.tr(),textColor: colorRed, onPressed: () {
 
                   },),
                 ],
