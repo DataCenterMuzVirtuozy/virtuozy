@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:virtuozy/components/calendar.dart';
+import 'package:virtuozy/components/dialoger.dart';
 import 'package:virtuozy/resourses/colors.dart';
 
 import '../../../components/buttons.dart';
@@ -40,22 +41,30 @@ class PageHome extends StatelessWidget{
              }),
            ),
            const Gap(10.0),
-           SizedBox(
-             height: 40.0,
-             child: SubmitButton(
-               colorFill: colorGreen,
-            borderRadius: 10.0,
-            //todo local
-            textButton: 'Подтвердите прохождение урока'.tr(),
-             ),
-           ),
-           const Gap(10.0),
-           SizedBox(
-             height: 40.0,
-             child: OutLineButton(
-               borderRadius: 10.0,
-               //todo local
-               textButton: 'Получить бонусный урок'.tr(),
+           Padding(
+             padding: const EdgeInsets.symmetric(horizontal: 20.0),
+             child: Column(
+               children: [
+                 SizedBox(
+                   height: 40.0,
+                   child: SubmitButton(
+                     onTap: (){
+                       Dialoger.showBottomMenu(context: context);
+                     },
+                     colorFill: colorGreen,
+                  borderRadius: 10.0,
+                  textButton: 'Подтвердите прохождение урока'.tr(),
+                   ),
+                 ),
+                 const Gap(10.0),
+                 SizedBox(
+                   height: 40.0,
+                   child: OutLineButton(
+                     borderRadius: 10.0,
+                     textButton: 'Получить бонусный урок'.tr(),
+                   ),
+                 ),
+               ],
              ),
            )
          ],

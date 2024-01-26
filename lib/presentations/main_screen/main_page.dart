@@ -5,13 +5,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:virtuozy/components/calendar.dart';
 import 'package:virtuozy/components/home_drawer_menu.dart';
 import 'package:virtuozy/presentations/main_screen/pages_menu/page_home.dart';
 import 'package:virtuozy/presentations/main_screen/pages_menu/page_web.dart';
+import 'package:virtuozy/presentations/promotion_screen/promotion_page.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/resourses/images.dart';
+ import 'package:badges/badges.dart' as badges;
+import 'package:virtuozy/router/paths.dart';
+
+import '../../utils/text_style.dart';
 
 class MainPage extends StatefulWidget{
   const MainPage({super.key});
@@ -49,7 +55,16 @@ class _MainPageState extends State<MainPage> {
                   _openMenu();
                 }, icon: const Icon(Icons.menu_open_rounded)),
                 SvgPicture.asset(logo,width: 100.0),
-                IconButton(onPressed: (){}, icon: const Icon(Icons.notifications_none_rounded)),
+                badges.Badge(
+                    position: badges.BadgePosition.topStart(start: 5.0,top: 3.0),
+                  showBadge: true,
+                badgeContent: Text('3',style: TStyle.textStyleVelaSansBold(colorWhite)),
+                    child: IconButton(
+                        onPressed: () {
+                          GoRouter.of(context).push(pathNotification);
+                        },
+                        icon: const Icon(Icons.notifications_none_rounded))),
+
               ],
             ),
           )
@@ -100,7 +115,7 @@ class _MainPageState extends State<MainPage> {
       const PageHome(),
       Container(color: Colors.greenAccent),
       Container(color: Colors.yellow),
-      Container(color: Colors.blue),
+      const PromotionPage(),
       const PageWeb()
     ];
   }

@@ -5,7 +5,9 @@ import 'package:virtuozy/presentations/auth_screen/login_page.dart';
 import 'package:virtuozy/presentations/auth_screen/singin_page.dart';
 import 'package:virtuozy/presentations/auth_screen/success_send_sms_page.dart';
 import 'package:virtuozy/presentations/main_screen/main_page.dart';
+import 'package:virtuozy/presentations/notification_screen/notification_page.dart';
 import 'package:virtuozy/presentations/onboarding_screen/onboarding_page.dart';
+import 'package:virtuozy/presentations/promotion_screen/details_promo_page.dart';
 import 'package:virtuozy/router/paths.dart';
 
 import '../main.dart';
@@ -23,6 +25,22 @@ class AppRouter{
               key: state.pageKey,
               //todo for test
               child: const MainPage());
+        },
+      ),
+      GoRoute(
+        path: pathDetailPromo,
+        pageBuilder: (context, state) {
+          return CupertinoPage(
+              key: state.pageKey,
+              child: const DetailsPromoPage());
+        },
+      ),
+      GoRoute(
+        path: pathNotification,
+        pageBuilder: (context, state) {
+          return CupertinoPage(
+              key: state.pageKey,
+              child: const NotificationPage());
         },
       ),
       GoRoute(
