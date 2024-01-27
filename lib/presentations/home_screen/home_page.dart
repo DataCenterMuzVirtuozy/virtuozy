@@ -9,12 +9,12 @@ import 'package:virtuozy/components/calendar.dart';
 import 'package:virtuozy/components/dialoger.dart';
 import 'package:virtuozy/resourses/colors.dart';
 
-import '../../../components/buttons.dart';
-import '../../../components/drawing_menu_selected.dart';
-import '../../../utils/text_style.dart';
+import '../../components/buttons.dart';
+import '../../components/drawing_menu_selected.dart';
+import '../../utils/text_style.dart';
 
-class PageHome extends StatelessWidget{
-  const PageHome({super.key});
+class HomePage extends StatelessWidget{
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +24,17 @@ class PageHome extends StatelessWidget{
        child: Column(
          children: [
            //todo local
-           DrawingMenuSelected(items: [
-             'Вокал'.tr(),
-             'Академический вокал'.tr(),
-             'Фортепиано'.tr(),
-             'Все направления'.tr()
-           ], onSelected: (index){
+           Padding(
+             padding: const EdgeInsets.symmetric(horizontal: 10.0),
+             child: DrawingMenuSelected(items: [
+               'Вокал'.tr(),
+               'Академический вокал'.tr(),
+               'Фортепиано'.tr(),
+               'Все направления'.tr()
+             ], onSelected: (index){
 
-           },),
+             },),
+           ),
            const Gap(10.0),
            const Calendar(),
            const Gap(10.0),

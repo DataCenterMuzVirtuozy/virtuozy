@@ -9,8 +9,9 @@ import 'package:go_router/go_router.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:virtuozy/components/calendar.dart';
 import 'package:virtuozy/components/home_drawer_menu.dart';
-import 'package:virtuozy/presentations/main_screen/pages_menu/page_home.dart';
-import 'package:virtuozy/presentations/main_screen/pages_menu/page_web.dart';
+import 'package:virtuozy/presentations/home_screen/home_page.dart';
+import 'package:virtuozy/presentations/schedule_screen/schedule_page.dart';
+import 'package:virtuozy/presentations/web_screen/web_page.dart';
 import 'package:virtuozy/presentations/promotion_screen/promotion_page.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/resourses/images.dart';
@@ -112,11 +113,11 @@ class _MainPageState extends State<MainPage> {
 
   List<Widget> _buildScreens() {
     return [
-      const PageHome(),
-      Container(color: Colors.greenAccent),
+      const HomePage(),
+      const SchedulePage(),
       Container(color: Colors.yellow),
       const PromotionPage(),
-      const PageWeb()
+      const WebPage()
     ];
   }
 

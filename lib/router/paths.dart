@@ -7,3 +7,4 @@ const String pathSingIn = '/singin';
 const String pathSuccessSendSMS = '/sms_success';
 const String pathNotification = '/notifi';
 const String pathDetailPromo = '/details_promo';
+const String pathDetailsSchedule = '/details_schedule';

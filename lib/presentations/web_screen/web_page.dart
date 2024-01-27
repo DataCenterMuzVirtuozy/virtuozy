@@ -12,14 +12,14 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 
  //todo pag not loading in ios
-class PageWeb extends StatefulWidget{
-  const PageWeb({super.key});
+class WebPage extends StatefulWidget{
+  const WebPage({super.key});
 
   @override
-  State<PageWeb> createState() => _PageWebState();
+  State<WebPage> createState() => _WebPageState();
 }
 
-class _PageWebState extends State<PageWeb> {
+class _WebPageState extends State<WebPage> {
 
   late final WebViewController _controller;
   @override
