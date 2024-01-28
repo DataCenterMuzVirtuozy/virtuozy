@@ -11,3 +11,4 @@
    String get illustration_5 =>'lib/assets/img/illustration_5.png';
    String get logoColumn =>'lib/assets/img/logo_column.png';
 
+

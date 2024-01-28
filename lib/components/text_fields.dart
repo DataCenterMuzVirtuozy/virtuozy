@@ -51,11 +51,11 @@ class PhoneField extends StatelessWidget {
 
 
 class CustomField extends StatelessWidget {
-  const CustomField(
+   CustomField(
       {Key? key,
         required this.controller,
         required this.textHint,
-        required this.iconData,
+         this.iconData,
         this.sizeTextHint = 16,
         this.maxLines = 1,
         this.heightBody = 50.0,
@@ -66,7 +66,7 @@ class CustomField extends StatelessWidget {
       : super(key: key);
   final TextEditingController controller;
   final String textHint;
-  final IconData iconData;
+   IconData? iconData;
   final double sizeTextHint;
   final int maxLines;
   final double heightBody;
@@ -77,6 +77,9 @@ class CustomField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
+
     return SizedBox(
       height: heightBody,
       child: TextField(
@@ -86,14 +89,14 @@ class CustomField extends StatelessWidget {
         keyboardType: textInputType,
         textAlign: TextAlign.start,
         controller: controller,
-        style: TextStyle(color: colorWhite),
+        style: TextStyle(color: colorBlack),
         decoration: InputDecoration(
             filled: true,
             fillColor: fillColor,
-            suffixIcon: Padding(
+            suffixIcon: iconData != null?Padding(
               padding: const EdgeInsets.all(14.0),
               child: Icon(iconData,color: colorGrey),
-            ),
+            ):null,
             hintText: textHint.tr(),
             hintStyle: TStyle.textStyleVelaSansBold(colorGrey),
             contentPadding:const EdgeInsets.only(left: 20,right: 20,top: 12,bottom: 12),
