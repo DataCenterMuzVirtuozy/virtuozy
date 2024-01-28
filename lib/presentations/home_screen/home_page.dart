@@ -52,7 +52,8 @@ class HomePage extends StatelessWidget{
                    height: 40.0,
                    child: SubmitButton(
                      onTap: (){
-                       Dialoger.showBottomMenu(context: context);
+                       Dialoger.showBottomMenu(context: context,
+                       content: ConfirmLesson());
                      },
                      colorFill: colorGreen,
                   borderRadius: 10.0,
@@ -129,7 +130,6 @@ class HomePage extends StatelessWidget{
           SizedBox(
             height: 40.0,
             child: SubmitButton(
-              //todo local
               textButton: 'Пополнить'.tr(),
             ),
           )
