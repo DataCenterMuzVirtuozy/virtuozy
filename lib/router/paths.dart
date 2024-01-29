@@ -8,3 +8,5 @@ const String pathSuccessSendSMS = '/sms_success';
 const String pathNotification = '/notifi';
 const String pathDetailPromo = '/details_promo';
 const String pathDetailsSchedule = '/details_schedule';
+const String pathListTransaction = '/list_transaction';
+const String pathListSubscriptionsHistory = '/list_sub_history';
