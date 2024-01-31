@@ -7,10 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
-import 'package:virtuozy/components/calendar.dart';
 import 'package:virtuozy/components/home_drawer_menu.dart';
+import 'package:virtuozy/presentations/finance_screen/pay_page.dart';
 import 'package:virtuozy/presentations/home_screen/home_page.dart';
-import 'package:virtuozy/presentations/pay_screen/pay_page.dart';
 import 'package:virtuozy/presentations/schedule_screen/schedule_page.dart';
 import 'package:virtuozy/presentations/web_screen/web_page.dart';
 import 'package:virtuozy/presentations/promotion_screen/promotion_page.dart';
@@ -20,6 +19,7 @@ import 'package:virtuozy/resourses/images.dart';
 import 'package:virtuozy/router/paths.dart';
 
 import '../../utils/text_style.dart';
+import '../finance_screen/finance_page.dart';
 
 class MainPage extends StatefulWidget{
   const MainPage({super.key});
@@ -116,7 +116,7 @@ class _MainPageState extends State<MainPage> {
     return [
       const HomePage(),
       const SchedulePage(),
-      const PayPage(),
+      const FinancePage(),
       const PromotionPage(),
       const WebPage()
     ];

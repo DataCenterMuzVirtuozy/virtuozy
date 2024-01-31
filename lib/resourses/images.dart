@@ -10,5 +10,6 @@
    String get logo => 'lib/assets/img/logo.svg';
    String get illustration_5 =>'lib/assets/img/illustration_5.png';
    String get logoColumn =>'lib/assets/img/logo_column.png';
+   String get spbPay =>'lib/assets/img/spb.png';
 
 

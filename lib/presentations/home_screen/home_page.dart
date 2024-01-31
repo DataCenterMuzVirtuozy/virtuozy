@@ -5,16 +5,31 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:virtuozy/components/calendar.dart';
 import 'package:virtuozy/components/dialoger.dart';
 import 'package:virtuozy/resourses/colors.dart';
+import 'package:virtuozy/router/paths.dart';
 
 import '../../components/buttons.dart';
 import '../../components/drawing_menu_selected.dart';
 import '../../utils/text_style.dart';
 
-class HomePage extends StatelessWidget{
+class HomePage extends StatefulWidget{
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _selIndexDirection = 0;
+  List<String> _listDirection =  [
+    'Вокал'.tr(),
+    'Академический вокал'.tr(),
+    'Фортепиано'.tr(),
+    'Все направления'.tr()
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -26,13 +41,10 @@ class HomePage extends StatelessWidget{
            //todo local
            Padding(
              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-             child: DrawingMenuSelected(items: [
-               'Вокал'.tr(),
-               'Академический вокал'.tr(),
-               'Фортепиано'.tr(),
-               'Все направления'.tr()
-             ], onSelected: (index){
-
+             child: DrawingMenuSelected(items:_listDirection, onSelected: (index){
+                 setState(() {
+                   _selIndexDirection = index;
+                 });
              },),
            ),
            const Gap(10.0),
@@ -40,7 +52,8 @@ class HomePage extends StatelessWidget{
            const Gap(10.0),
            Column(
              children: List.generate(1, (index) {
-              return const ItemSubscription();
+              return  ItemSubscription(direction: _selIndexDirection==3?'':
+              _listDirection[_selIndexDirection]);
              }),
            ),
            const Gap(10.0),
@@ -76,12 +89,14 @@ class HomePage extends StatelessWidget{
      ),
    );
   }
-
 }
 
 
  class ItemSubscription extends StatelessWidget{
-  const ItemSubscription({super.key});
+  const ItemSubscription({super.key,
+  required this.direction});
+
+  final String direction;
 
   @override
   Widget build(BuildContext context) {
@@ -131,6 +146,9 @@ class HomePage extends StatelessWidget{
             height: 40.0,
             child: SubmitButton(
               textButton: 'Пополнить'.tr(),
+              onTap: () {
+                GoRouter.of(context).push(pathPay,extra: direction);
+              }
             ),
           )
         ],

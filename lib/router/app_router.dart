@@ -4,16 +4,17 @@ import 'package:go_router/go_router.dart';
 import 'package:virtuozy/presentations/auth_screen/login_page.dart';
 import 'package:virtuozy/presentations/auth_screen/singin_page.dart';
 import 'package:virtuozy/presentations/auth_screen/success_send_sms_page.dart';
+import 'package:virtuozy/presentations/finance_screen/pay_page.dart';
 import 'package:virtuozy/presentations/main_screen/main_page.dart';
 import 'package:virtuozy/presentations/notification_screen/notification_page.dart';
 import 'package:virtuozy/presentations/onboarding_screen/onboarding_page.dart';
-import 'package:virtuozy/presentations/pay_screen/list_subscriptions_hystory.dart';
-import 'package:virtuozy/presentations/pay_screen/list_transactios_page.dart';
 import 'package:virtuozy/presentations/promotion_screen/details_promo_page.dart';
 import 'package:virtuozy/presentations/schedule_screen/details_schedule_page.dart';
 import 'package:virtuozy/router/paths.dart';
 
 import '../main.dart';
+import '../presentations/finance_screen/list_subscriptions_hystory.dart';
+import '../presentations/finance_screen/list_transactios_page.dart';
 import '../presentations/schedule_screen/schedule_page.dart';
 
 class AppRouter{
@@ -40,11 +41,19 @@ class AppRouter{
         },
       ),
       GoRoute(
+        path: pathPay,
+        pageBuilder: (context, state) {
+          return CupertinoPage(
+              key: state.pageKey,
+              child:   PayPage(direction: (state.extra as String) ?? '',));
+        },
+      ),
+      GoRoute(
         path: pathListTransaction,
         pageBuilder: (context, state) {
           return CupertinoPage(
               key: state.pageKey,
-              child: const ListTransactionsPage());
+              child:  ListTransactionsPage());
         },
       ),
       GoRoute(
@@ -60,7 +69,7 @@ class AppRouter{
         pageBuilder: (context, state) {
           return CupertinoPage(
               key: state.pageKey,
-              child: const DetailsPromoPage());
+              child:  DetailsPromoPage(title: (state.extra as String)??'',));
         },
       ),
       GoRoute(

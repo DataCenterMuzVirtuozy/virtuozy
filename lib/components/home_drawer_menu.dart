@@ -34,8 +34,12 @@ class HomeDrawerMenu extends StatelessWidget{
       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 5),
       child: Container(
         margin:const EdgeInsets.only(right: 100),
-        color: colorWhite,
         width: width/1.2,
+        decoration:  BoxDecoration(
+            color: colorWhite,
+          borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(20.0),
+                bottomRight: Radius.circular(20.0))),
         //height: height/2,
         child: Drawer(
           backgroundColor: Colors.transparent,
@@ -49,11 +53,11 @@ class HomeDrawerMenu extends StatelessWidget{
                     children: [
                       Container(
                         width: width,
-                        height: 180.0,
+                        height: 120.0,
                         decoration: BoxDecoration(
                             color: colorYellow
                         ),
-                        child: Image.asset(illustration_2,fit: BoxFit.cover),
+                        //child: Image.asset(illustration_2,fit: BoxFit.cover),
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 10.0),
@@ -62,7 +66,7 @@ class HomeDrawerMenu extends StatelessWidget{
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Иван Иванивич Иванов',style: TStyle.textStyleGaretHeavy(colorWhite,size: 20.0)),
+                              Text('Иван Иванович Иванов',style: TStyle.textStyleGaretHeavy(colorWhite,size: 20.0)),
                               Text('+7 (999) 999-99-99',style: TStyle.textStyleVelaSansBold(colorWhite,size: 16.0)),
                             ],
                           )),

@@ -52,7 +52,7 @@ class _PromotionPageState extends State<PromotionPage> {
    Widget build(BuildContext context) {
      return GestureDetector(
        onTap: (){
-          GoRouter.of(context).push(pathDetailPromo);
+          GoRouter.of(context).push(pathDetailPromo,extra: title);
        },
        child: Container(
          margin: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 5.0),

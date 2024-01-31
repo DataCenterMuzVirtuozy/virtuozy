@@ -10,3 +10,4 @@ const String pathDetailPromo = '/details_promo';
 const String pathDetailsSchedule = '/details_schedule';
 const String pathListTransaction = '/list_transaction';
 const String pathListSubscriptionsHistory = '/list_sub_history';
+const String pathPay = '/pay';
