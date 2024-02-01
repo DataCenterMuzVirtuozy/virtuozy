@@ -47,6 +47,7 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
+        backgroundColor: colorWhite,
         automaticallyImplyLeading: false,
         actions: [
           Expanded(
@@ -55,7 +56,7 @@ class _MainPageState extends State<MainPage> {
               children: [
                 IconButton(onPressed: (){
                   _openMenu();
-                }, icon: const Icon(Icons.menu_open_rounded)),
+                }, icon:  Icon(Icons.menu_open_rounded,color: Theme.of(context).iconTheme.color)),
                 SvgPicture.asset(logo,width: 100.0),
                 badges.Badge(
                     position: badges.BadgePosition.topStart(start: 5.0,top: 3.0),
@@ -65,7 +66,7 @@ class _MainPageState extends State<MainPage> {
                         onPressed: () {
                           GoRouter.of(context).push(pathNotification);
                         },
-                        icon: const Icon(Icons.notifications_none_rounded))),
+                        icon: Icon(Icons.notifications_none_rounded,color:Theme.of(context).iconTheme.color))),
 
               ],
             ),
@@ -75,6 +76,7 @@ class _MainPageState extends State<MainPage> {
       drawer: HomeDrawerMenu(
         onCallLogOut: () {  },
       onSelectedPage: (index){
+
           setState(() {
             _indexPage = index;
           });

@@ -16,6 +16,7 @@ import '../../components/drawing_menu_selected.dart';
 import '../../utils/text_style.dart';
 
 class HomePage extends StatefulWidget{
+
   const HomePage({super.key});
 
   @override
@@ -30,6 +31,13 @@ class _HomePageState extends State<HomePage> {
     'Фортепиано'.tr(),
     'Все направления'.tr()
   ];
+
+
+  @override
+  void initState() {
+    super.initState();
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +76,7 @@ class _HomePageState extends State<HomePage> {
                        Dialoger.showBottomMenu(context: context,
                        content: ConfirmLesson());
                      },
-                     colorFill: colorGreen,
+                     colorFill: Theme.of(context).colorScheme.tertiary,
                   borderRadius: 10.0,
                   textButton: 'Подтвердите прохождение урока'.tr(),
                    ),
@@ -105,7 +113,7 @@ class _HomePageState extends State<HomePage> {
       padding: const EdgeInsets.all(20.0),
       width: MediaQuery.sizeOf(context).width,
       decoration: BoxDecoration(
-          color: colorBeruzaLight,
+          color: Theme.of(context).colorScheme.surfaceVariant,
           borderRadius: BorderRadius.circular(20.0)
       ),
       child: Column(
@@ -128,10 +136,10 @@ class _HomePageState extends State<HomePage> {
             children: [
               Container(
                 decoration: BoxDecoration(
-                    color: colorOrange,
+                    color: Theme.of(context).colorScheme.secondary,
                     shape: BoxShape.circle
                 ),
-                child: Icon(CupertinoIcons.money_rubl_circle,color: colorPink,size: 25.0,),),
+                child: Icon(CupertinoIcons.money_rubl_circle,color: colorWhite,size: 25.0,),),
               const Gap(5.0),
               Row(
                 children: [

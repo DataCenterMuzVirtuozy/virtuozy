@@ -137,7 +137,7 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
                     decoration: BoxDecoration(
                         border: Border.all(color: colorBeruzaLight.withOpacity(animationOpacity.value),width: 1.5),
                         borderRadius: BorderRadius.circular(10.0),
-                        color: colorBeruzaLight
+                        color: Theme.of(context).colorScheme.surfaceVariant
                     ),
                     child:  Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

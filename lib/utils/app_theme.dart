@@ -5,14 +5,33 @@ import 'package:virtuozy/resourses/colors.dart';
 class AppTheme{
 
 
-  static  ThemeData get light=> ThemeData(
+  static  ThemeData get first=> ThemeData(
     useMaterial3: true,
-    //textSelectionTheme: TextSelectionThemeData(cursorColor: colorItem),
-    colorScheme: ColorScheme.fromSeed(seedColor: colorPink),
+    iconTheme: IconThemeData(color:colorBlack),
+    colorScheme: ColorScheme(
+      tertiary: colorGreen,
+      surfaceVariant: colorBeruzaLight,
+      secondary: colorOrange,
+      primary: colorOrange,
+      brightness: Brightness.light,
+      onPrimary: colorOrange,
+      onSecondary: colorBeruza,
+      error: colorRed,
+      onError: colorRed,
+      background: colorWhite,
+      onBackground: colorWhite,
+      surface: colorGreen,
+      onSurface: colorBeruzaLight,
+
+    ),
   );
 
 
+  static ThemeData custom(color) => ThemeData(
+    useMaterial3: true,
+    colorSchemeSeed: color
 
+  );
 
 
 }

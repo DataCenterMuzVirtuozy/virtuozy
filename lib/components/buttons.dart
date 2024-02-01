@@ -7,7 +7,7 @@ import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/utils/text_style.dart';
 
 // ignore: must_be_immutable
-class SubmitButton extends StatelessWidget {
+class SubmitButton extends StatefulWidget {
 
   final VoidCallback? onTap;
   final String? textButton;
@@ -26,25 +26,41 @@ class SubmitButton extends StatelessWidget {
   }):super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  State<SubmitButton> createState() => _SubmitButtonState();
+}
 
-    colorFill ??= colorOrange;
+class _SubmitButtonState extends State<SubmitButton> {
+
+
+  @override
+  Widget build(BuildContext context) {
 
     return SizedBox(
       height: 50,
-      width: width,
+      width: widget.width,
       child: ElevatedButton(
+        autofocus: true,
         style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(colorFill!),
+          splashFactory: InkRipple.splashFactory,
+            overlayColor: MaterialStateProperty.resolveWith(
+                  (states) {
+                return states.contains(MaterialState.pressed)
+                    ? Theme.of(context).colorScheme.secondary.withOpacity(0.2)
+                    : Theme.of(context).colorScheme.secondary;
+              },
+            ),
+            backgroundColor: widget.colorFill==null?
+            MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.secondary):
+            MaterialStateProperty.all<Color>(widget.colorFill!),
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(borderRadius!),
+                  borderRadius: BorderRadius.circular(widget.borderRadius!),
                 )
             )
         ),
-        onPressed: onTap,
+        onPressed: widget.onTap,
         child: Text(
-          textButton!,
+          widget.textButton!,
           textAlign: TextAlign.center,
           style: TStyle.textStyleVelaSansBold(colorWhite,size: 15.0)
         ),
@@ -65,11 +81,14 @@ class OutLineButton extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
+
+
+
     return SizedBox(
       width: width,
       child: OutlinedButton(
           style: OutlinedButton.styleFrom(
-            side:  BorderSide(color: colorOrange),
+            side:  BorderSide(color: Theme.of(context).colorScheme.secondary),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0),
             ),
@@ -80,7 +99,8 @@ class OutLineButton extends StatelessWidget{
           child:  Text(
           textButton!,
           textAlign: TextAlign.center,
-      style: TStyle.textStyleVelaSansBold(colorOrange,size: 15.0))),
+      style: TStyle.textStyleVelaSansBold(Theme.of(context).colorScheme.secondary,
+          size: 15.0))),
     );
 
   }

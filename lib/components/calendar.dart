@@ -3,6 +3,7 @@
 
   import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:virtuozy/resourses/colors.dart';
 
@@ -15,7 +16,7 @@ class Calendar extends StatelessWidget{
   Widget build(BuildContext context) {
    return Container(
      decoration: BoxDecoration(
-       color: colorBeruzaLight,
+       color: Theme.of(context).colorScheme.surfaceVariant,
        borderRadius: BorderRadius.circular(20.0)
      ),
      child: TableCalendar(

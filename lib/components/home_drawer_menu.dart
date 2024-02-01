@@ -8,17 +8,35 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:virtuozy/di/locator.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/resourses/images.dart';
+import 'package:virtuozy/utils/theme_provider.dart';
 
+import '../utils/preferences_util.dart';
 import '../utils/text_style.dart';
 
-class HomeDrawerMenu extends StatelessWidget{
+class HomeDrawerMenu extends StatefulWidget{
   const HomeDrawerMenu({super.key,required this.onCallLogOut,required this.onSelectedPage});
 
   final VoidCallback onCallLogOut;
   final Function onSelectedPage;
 
+  @override
+  State<HomeDrawerMenu> createState() => _HomeDrawerMenuState();
+}
+
+class _HomeDrawerMenuState extends State<HomeDrawerMenu> {
+
+  final themeProvider = locator.get<ThemeProvider>();
+  bool themeFirst = true;
+
+
+  @override
+  void initState() {
+    themeFirst=PreferencesUtil.getTheme;
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,23 +92,88 @@ class HomeDrawerMenu extends StatelessWidget{
                   ),
                   const Gap(20.0),
                   DrawerItem(title: 'Мои абонементы'.tr(),textColor: colorBlack, onPressed: () {
-                    onSelectedPage.call(0);
+                    widget.onSelectedPage.call(0);
                   },),
 
                   DrawerItem(title: 'Расписание'.tr(),textColor: colorBlack, onPressed: () {
-                     onSelectedPage.call(1);
+                     widget.onSelectedPage.call(1);
                   },),
 
                   DrawerItem(title: 'Финансы'.tr(),textColor: colorBlack, onPressed: () {
-                    onSelectedPage.call(2);
+                    widget.onSelectedPage.call(2);
                   },),
 
                   DrawerItem(title: 'Предложения'.tr(),textColor: colorBlack, onPressed: () {
-                    onSelectedPage.call(3);
+                    widget.onSelectedPage.call(3);
+                  },),
+                  DrawerItem(title: 'Тема'.tr(),textColor: colorBlack, onPressed: () {
+                    //todo testing
+
                   },),
 
+                  Row(
+                    children: [
+                      InkWell(
+                        onTap: (){
+                          themeProvider.setTheme(themeFirst: false,color: colorGreen);
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.all(10.0),
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: colorGreen
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: (){
+                          themeProvider.setTheme(themeFirst: false,color: colorRed);
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.all(10.0),
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: colorRed
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: (){
+                          themeProvider.setTheme(themeFirst: false,color: colorYellow);
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.all(10.0),
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: colorYellow
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: (){
+                          themeProvider.setTheme(themeFirst: false,color: colorOrange);
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.all(10.0),
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: colorOrange
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+
                   DrawerItem(title: 'Сайт'.tr(),textColor: colorBlack, onPressed: () {
-                    onSelectedPage.call(4);
+                    widget.onSelectedPage.call(4);
                   },),
 
                   DrawerItem(title: 'Выйти'.tr(),textColor: colorRed, onPressed: () {
@@ -116,12 +199,6 @@ class HomeDrawerMenu extends StatelessWidget{
         ),
       ),);
   }
-
-
-
-
-
-
 }
 
 
