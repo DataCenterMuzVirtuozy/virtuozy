@@ -17,5 +17,6 @@ import 'package:flutter/material.dart';
    Color get colorYellow => const Color.fromRGBO(247, 196, 94, 1.0);
    Color get colorGreen => const Color.fromRGBO(0, 148, 77, 1.0);
    Color get colorGreenLight => const Color.fromRGBO(94, 174, 82, 1.0);
+   Color get secondaryContainer =>  const Color(0xFF161516);
 
 

@@ -101,7 +101,8 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
                               child: Row(
                                 children: [
                                   Text(widget.items[index],style:
-                                  TStyle.textStyleVelaSansMedium(colorBlack.withOpacity(0.5),size: 18.0)),
+                                  TStyle.textStyleVelaSansMedium(colorGrey,
+                                      size: 18.0)),
                                 ],
                               ),
                             ),
@@ -145,7 +146,8 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
                         ValueListenableBuilder<String>(
                           builder: (context,value,child) {
                             return Text(value,
-                                style:  TStyle.textStyleGaretHeavy(colorBlack,size: 18.0));
+                                style:  TStyle.textStyleGaretHeavy(Theme.of(context).textTheme.displayMedium!.color!,
+                                    size: 18.0));
                           },
                           valueListenable: changeTextNotifier,
                         ),

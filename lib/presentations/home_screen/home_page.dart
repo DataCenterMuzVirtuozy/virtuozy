@@ -120,7 +120,9 @@ class _HomePageState extends State<HomePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           //todo local
-          Text('Баланс абонемента'.tr(),style:TStyle.textStyleVelaSansExtraBolt(colorBlack,size: 18.0)),
+          Text('Баланс абонемента'.tr(),
+              style:TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,
+              size: 18.0)),
           const Gap(5.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -143,8 +145,8 @@ class _HomePageState extends State<HomePage> {
               const Gap(5.0),
               Row(
                 children: [
-                  Text('8999',style:TStyle.textStyleVelaSansBold(colorBlack,size: 25.0)),
-                  Icon(CupertinoIcons.money_rubl,color: colorBlack,size: 30.0,)
+                  Text('8999',style:TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 25.0)),
+                  Icon(CupertinoIcons.money_rubl,color: Theme.of(context).iconTheme.color,size: 30.0,)
                 ],
               ),
             ],

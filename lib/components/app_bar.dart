@@ -16,8 +16,11 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget{
   @override
   Widget build(BuildContext context) {
     return AppBar(
-    backgroundColor: colorWhite,
-    title: Text(title,style: TStyle.textStyleVelaSansBold(colorBlack,size: 18.0)),
+      iconTheme: IconThemeData(
+        color: Theme.of(context).iconTheme.color
+      ),
+    backgroundColor: Theme.of(context).colorScheme.background,
+    title: Text(title,style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18.0)),
 );
   }
 

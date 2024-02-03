@@ -24,7 +24,7 @@ class Calendar extends StatelessWidget{
        rowHeight: 40.0,
        weekNumbersVisible: false,
        daysOfWeekStyle: DaysOfWeekStyle(
-         weekdayStyle: TStyle.textStyleVelaSansBold(colorBlack),
+         weekdayStyle: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!),
          weekendStyle: TStyle.textStyleVelaSansBold(colorRed)
        ),
        firstDay: DateTime.utc(2010, 10, 16),
@@ -32,14 +32,14 @@ class Calendar extends StatelessWidget{
        focusedDay: DateTime.now(),
        calendarStyle: CalendarStyle(
          tablePadding: const EdgeInsets.only(bottom: 10.0),
-         selectedTextStyle: TStyle.textStyleVelaSansBold(colorBlack),
-         rangeStartTextStyle: TStyle.textStyleVelaSansBold(colorBlack),
-         disabledTextStyle: TStyle.textStyleVelaSansBold(colorBlack),
+         selectedTextStyle: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!),
+         rangeStartTextStyle: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!),
+         disabledTextStyle: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!),
          todayTextStyle: TStyle.textStyleVelaSansBold(colorWhite),
-         rangeEndTextStyle: TStyle.textStyleVelaSansBold(colorBlack),
+         rangeEndTextStyle: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!),
          weekendTextStyle: TStyle.textStyleVelaSansBold(colorGrey),
-         outsideTextStyle: TStyle.textStyleVelaSansBold(colorBlack),
-         defaultTextStyle: TStyle.textStyleVelaSansBold(colorBlack),
+         outsideTextStyle: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!),
+         defaultTextStyle: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!),
          // todayDecoration: BoxDecoration(
          //   color: colorOrange,
          //   shape: BoxShape.circle,
@@ -47,7 +47,7 @@ class Calendar extends StatelessWidget{
        ),
        headerStyle:  HeaderStyle(
          titleCentered: true,
-         titleTextStyle: TStyle.textStyleVelaSansBold(colorBlack,size: 18.0),
+         titleTextStyle: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18.0),
          formatButtonVisible: false,
        ),
        calendarBuilders: CalendarBuilders(
@@ -62,7 +62,7 @@ class Calendar extends StatelessWidget{
                child: Center(
                  child: Text(
                      day.day.toString(),
-                   style:  TStyle.textStyleVelaSansBold(colorBlack),
+                   style:  TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!),
                  ),
                ),
              );
@@ -77,7 +77,7 @@ class Calendar extends StatelessWidget{
                child: Center(
                  child: Text(
                      day.day.toString(),
-                   style:  TStyle.textStyleVelaSansBold(colorBlack),
+                   style:  TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!),
                  ),
                ),
              );

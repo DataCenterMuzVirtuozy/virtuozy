@@ -35,8 +35,8 @@ class _MyAppState extends State<MyApp> {
 
   _getCurrentTheme(){
     final theme=PreferencesUtil.getTheme;
-    //todo save color
-    themeProvider.setTheme(themeFirst: true,color: colorGreen);
+    final color = PreferencesUtil.getColorScheme;
+    themeProvider.setTheme(themeStatus: theme,color: color);
   }
 
 
@@ -52,10 +52,12 @@ class _MyAppState extends State<MyApp> {
         return themeProvider;
       },
       child: Consumer<ThemeProvider>(
-        builder: (context,theme,child) {
+        builder: (context,theme,widget) {
           return MaterialApp.router(
             title: 'Flutter Demo',
-            theme:theme.themeFirst?AppTheme.first:AppTheme.custom(theme.color),
+            theme:theme.themeStatus == ThemeStatus.first ?AppTheme.first:
+                theme.themeStatus == ThemeStatus.dark?AppTheme.dark:
+            AppTheme.custom(theme.color),
             themeAnimationCurve: Curves.easeIn,
             themeAnimationDuration: const Duration(milliseconds: 1000),
             localizationsDelegates: context.localizationDelegates,

@@ -11,6 +11,7 @@ import 'package:virtuozy/components/home_drawer_menu.dart';
 import 'package:virtuozy/presentations/finance_screen/pay_page.dart';
 import 'package:virtuozy/presentations/home_screen/home_page.dart';
 import 'package:virtuozy/presentations/schedule_screen/schedule_page.dart';
+import 'package:virtuozy/presentations/theme_screen/theme_page.dart';
 import 'package:virtuozy/presentations/web_screen/web_page.dart';
 import 'package:virtuozy/presentations/promotion_screen/promotion_page.dart';
 import 'package:virtuozy/resourses/colors.dart';
@@ -47,7 +48,7 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        backgroundColor: colorWhite,
+        backgroundColor: Theme.of(context).colorScheme.background,
         automaticallyImplyLeading: false,
         actions: [
           Expanded(
@@ -57,7 +58,13 @@ class _MainPageState extends State<MainPage> {
                 IconButton(onPressed: (){
                   _openMenu();
                 }, icon:  Icon(Icons.menu_open_rounded,color: Theme.of(context).iconTheme.color)),
-                SvgPicture.asset(logo,width: 100.0),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30.0),
+                    color: colorWhite
+                  ),
+                    child: SvgPicture.asset(logo,width: 100.0)),
                 badges.Badge(
                     position: badges.BadgePosition.topStart(start: 5.0,top: 3.0),
                   showBadge: true,

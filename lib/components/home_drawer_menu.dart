@@ -11,6 +11,7 @@ import 'package:go_router/go_router.dart';
 import 'package:virtuozy/di/locator.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/resourses/images.dart';
+import 'package:virtuozy/router/paths.dart';
 import 'package:virtuozy/utils/theme_provider.dart';
 
 import '../utils/preferences_util.dart';
@@ -28,15 +29,10 @@ class HomeDrawerMenu extends StatefulWidget{
 
 class _HomeDrawerMenuState extends State<HomeDrawerMenu> {
 
-  final themeProvider = locator.get<ThemeProvider>();
-  bool themeFirst = true;
 
 
-  @override
-  void initState() {
-    themeFirst=PreferencesUtil.getTheme;
 
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -107,70 +103,9 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> {
                     widget.onSelectedPage.call(3);
                   },),
                   DrawerItem(title: 'Тема'.tr(),textColor: colorBlack, onPressed: () {
-                    //todo testing
-
+                   GoRouter.of(context).push(pathTheme);
                   },),
 
-                  Row(
-                    children: [
-                      InkWell(
-                        onTap: (){
-                          themeProvider.setTheme(themeFirst: false,color: colorGreen);
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.all(10.0),
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: colorGreen
-                          ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: (){
-                          themeProvider.setTheme(themeFirst: false,color: colorRed);
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.all(10.0),
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: colorRed
-                          ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: (){
-                          themeProvider.setTheme(themeFirst: false,color: colorYellow);
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.all(10.0),
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: colorYellow
-                          ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: (){
-                          themeProvider.setTheme(themeFirst: false,color: colorOrange);
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.all(10.0),
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: colorOrange
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
 
                   DrawerItem(title: 'Сайт'.tr(),textColor: colorBlack, onPressed: () {
                     widget.onSelectedPage.call(4);

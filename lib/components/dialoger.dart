@@ -17,6 +17,17 @@ import '../utils/text_style.dart';
 import 'buttons.dart';
 
 
+ sealed class DialogsContent{}
+
+
+ class ConfirmLesson extends DialogsContent{
+   static build({required BuildContext context}){
+     return const StepsConfirmLesson();
+   }
+ }
+
+
+
 
 class Dialoger{
 
@@ -86,14 +97,7 @@ class Dialoger{
 }
 
 
- sealed class DialogsContent{}
 
-
- class ConfirmLesson extends DialogsContent{
-  static build({required BuildContext context}){
-     return const StepsConfirmLesson();
-   }
-  }
 
 
   class StepsConfirmLesson extends StatefulWidget{
@@ -427,3 +431,5 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson> {
 
 
 }
+
+

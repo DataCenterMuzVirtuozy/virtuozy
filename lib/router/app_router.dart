@@ -10,6 +10,7 @@ import 'package:virtuozy/presentations/notification_screen/notification_page.dar
 import 'package:virtuozy/presentations/onboarding_screen/onboarding_page.dart';
 import 'package:virtuozy/presentations/promotion_screen/details_promo_page.dart';
 import 'package:virtuozy/presentations/schedule_screen/details_schedule_page.dart';
+import 'package:virtuozy/presentations/theme_screen/theme_page.dart';
 import 'package:virtuozy/router/paths.dart';
 
 import '../main.dart';
@@ -30,6 +31,14 @@ class AppRouter{
               key: state.pageKey,
               //todo for test
               child: const MainPage());
+        },
+      ),
+      GoRoute(
+        path: pathTheme,
+        pageBuilder: (context, state) {
+          return CupertinoPage(
+              key: state.pageKey,
+              child: const ThemePage());
         },
       ),
       GoRoute(

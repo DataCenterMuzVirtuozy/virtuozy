@@ -7,19 +7,27 @@ import 'package:flutter/foundation.dart';
 import 'package:virtuozy/utils/preferences_util.dart';
 
 
+
+enum ThemeStatus{
+   dark,
+   color,
+   first
+
+}
+
 class ThemeProvider with ChangeNotifier{
 
-  bool _themeFirst=true;
+  ThemeStatus _themeStatus= ThemeStatus.first;  // 0 - default, 1 - dark, 2 - color
   Color? _color;
 
-  bool get themeFirst => _themeFirst;
+  ThemeStatus get themeStatus => _themeStatus;
   Color get color =>_color!;
 
 
-  setTheme({required bool themeFirst,Color? color}) async {
-    _themeFirst=themeFirst;
+  setTheme({required ThemeStatus themeStatus,Color? color}) async {
+    _themeStatus=themeStatus;
     _color = color;
-    await PreferencesUtil.setTheme(themeFirst: themeFirst);
+    await PreferencesUtil.setTheme(themeStatus: themeStatus);
     notifyListeners();
 
   }
