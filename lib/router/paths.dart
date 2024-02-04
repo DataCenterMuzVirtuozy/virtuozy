@@ -12,3 +12,4 @@ const String pathListTransaction = '/list_transaction';
 const String pathListSubscriptionsHistory = '/list_sub_history';
 const String pathPay = '/pay';
 const String pathTheme = '/theme';
+const String pathMain = '/main';

@@ -25,12 +25,19 @@ class AppRouter{
     initialLocation: pathApp,
     routes: [
       GoRoute(
+        path: pathMain,
+        pageBuilder: (context, state) {
+          return CupertinoPage(
+              key: state.pageKey,
+              child: const MainPage());
+        },
+      ),
+      GoRoute(
         path: pathApp,
         pageBuilder: (context, state) {
           return CupertinoPage(
               key: state.pageKey,
-              //todo for test
-              child: const MainPage());
+              child: const InitPage());
         },
       ),
       GoRoute(

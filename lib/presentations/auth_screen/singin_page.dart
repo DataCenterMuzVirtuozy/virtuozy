@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:virtuozy/router/paths.dart';
 
@@ -27,6 +28,7 @@ class _SingInPageState extends State<SingInPage> {
   late TextEditingController _phoneController;
   late TextEditingController _firsNameController;
   late TextEditingController _lastNameController;
+  late MaskTextInputFormatter _maskFormatter;
 
 
   @override
@@ -35,6 +37,11 @@ class _SingInPageState extends State<SingInPage> {
     _phoneController = TextEditingController();
     _lastNameController = TextEditingController();
     _firsNameController = TextEditingController();
+    _maskFormatter = MaskTextInputFormatter(
+        mask: '+# (###) ###-##-##',
+        filter: { "#": RegExp(r'[0-9]') },
+        type: MaskAutoCompletionType.lazy
+    );
   }
 
   @override
@@ -62,7 +69,12 @@ class _SingInPageState extends State<SingInPage> {
                   const Gap(15.0),
                   CustomField(controller: _firsNameController, textHint: 'Имя'.tr(),iconData: Icons.drive_file_rename_outline, fillColor: colorWhite),
                   const Gap(15.0),
-                  PhoneField(controller: _phoneController),
+                  PhoneField(
+                    onChange: (text){
+
+                    },
+                    textInputFormatter: _maskFormatter,
+                      controller: _phoneController),
                   const Gap(30.0),
                   SubmitButton(
                     onTap: (){

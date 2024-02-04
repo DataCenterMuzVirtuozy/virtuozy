@@ -42,7 +42,7 @@ class Dialoger{
            behavior: SnackBarBehavior.floating,
            content: Text(
              title,
-             style: TStyle.textStyleVelaSansRegular(colorBlack)
+             style: TStyle.textStyleVelaSansRegular(colorOrange)
            ),
            action: SnackBarAction(
              textColor: colorOrange,
