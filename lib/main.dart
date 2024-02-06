@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:virtuozy/bloc/app_bloc.dart';
 import 'package:virtuozy/presentations/auth_screen/bloc/auth_bloc.dart';
 import 'package:virtuozy/presentations/auth_screen/login_page.dart';
+import 'package:virtuozy/presentations/auth_screen/singin_page.dart';
+import 'package:virtuozy/presentations/branch_search_screen/branch_search_page.dart';
 import 'package:virtuozy/presentations/main_screen/main_page.dart';
 import 'package:virtuozy/presentations/splash_screen/splash_page.dart';
 import 'package:virtuozy/resourses/colors.dart';
@@ -110,14 +112,15 @@ class _InitPageState extends State<InitPage> {
         }
       },
         builder: (context,state){
-        print('State ${state.authStatusCheck}');
-        if(state.authStatusCheck == AuthStatusCheck.unknown){
-          return const SplashPage();
-        }else if(state.authStatusCheck == AuthStatusCheck.unauthenticated){
-           return const LogInPage();
-        }
+        // if(state.authStatusCheck == AuthStatusCheck.unknown){
+        //   return const SplashPage();
+        // }else if(state.authStatusCheck == AuthStatusCheck.unauthenticated){
+        //    return const MainPage();
+        // }
 
         //return const LogInPage();
+          //return BranchSearchPage();
+          //return SingInPage();
         return const MainPage();
     });
   }

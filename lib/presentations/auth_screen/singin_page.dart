@@ -78,9 +78,9 @@ class _SingInPageState extends State<SingInPage> {
                   const Gap(30.0),
                   SubmitButton(
                     onTap: (){
-                      GoRouter.of(context).push(pathSuccessSendSMS);
+                      GoRouter.of(context).pushReplacement(pathBranchSearch);
                     },
-                    textButton: 'Запросить пароль по СМС'.tr(),
+                    textButton: 'Далее'.tr(),
                   ),
                   const Gap(15.0),
                   TextButton(onPressed: (){

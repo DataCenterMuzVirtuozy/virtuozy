@@ -6,10 +6,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:virtuozy/components/box_info.dart';
 import 'package:virtuozy/components/calendar.dart';
 import 'package:virtuozy/components/dialoger.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/router/paths.dart';
+import 'package:virtuozy/utils/auth_mixin.dart';
 
 import '../../components/buttons.dart';
 import '../../components/drawing_menu_selected.dart';
@@ -23,8 +25,9 @@ class HomePage extends StatefulWidget{
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with AuthMixin{
   int _selIndexDirection = 0;
+
   List<String> _listDirection =  [
     'Вокал'.tr(),
     'Академический вокал'.tr(),
@@ -39,8 +42,25 @@ class _HomePageState extends State<HomePage> {
 
   }
 
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+  }
+
   @override
   Widget build(BuildContext context) {
+
+    if(notAuthorized){
+      return Center(
+        child: BoxInfo(title: 'Абонементы недоступны'.tr(),
+            description: 'Для работы с абонементами необходимо авторизироваться'.tr(),
+            iconData: CupertinoIcons.music_note_list),
+      );
+    }
+
+
    return Padding(
      padding: const EdgeInsets.symmetric(horizontal: 20.0),
      child: SingleChildScrollView(
@@ -73,7 +93,7 @@ class _HomePageState extends State<HomePage> {
                    height: 40.0,
                    child: SubmitButton(
                      onTap: (){
-                       Dialoger.showBottomMenu(context: context,
+                       Dialoger.showBottomMenu(title:'Урок',context: context,
                        content: ConfirmLesson());
                      },
                      colorFill: Theme.of(context).colorScheme.tertiary,

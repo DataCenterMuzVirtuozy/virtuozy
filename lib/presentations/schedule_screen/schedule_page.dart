@@ -7,19 +7,34 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtuozy/router/paths.dart';
+import 'package:virtuozy/utils/auth_mixin.dart';
 
+import '../../components/box_info.dart';
 import '../../components/calendar.dart';
 import '../../components/drawing_menu_selected.dart';
 import '../../resourses/colors.dart';
 import '../../utils/text_style.dart';
 
-class SchedulePage extends StatelessWidget{
+class SchedulePage extends StatefulWidget{
    const SchedulePage({super.key});
 
+  @override
+  State<SchedulePage> createState() => _SchedulePageState();
+}
 
-
+class _SchedulePageState extends State<SchedulePage> with AuthMixin{
   @override
   Widget build(BuildContext context) {
+
+    if(notAuthorized){
+      return Center(
+        child: BoxInfo(title: 'Расписание недоступно'.tr(),
+            description: 'Для работы с расписанием необходимо авторизироваться'.tr(),
+            iconData: Icons.calendar_month),
+      );
+    }
+
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: SingleChildScrollView(
@@ -52,7 +67,6 @@ class SchedulePage extends StatelessWidget{
     );
 
   }
-
 }
 
  class ItemSchedule extends StatelessWidget{

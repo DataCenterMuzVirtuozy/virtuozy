@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:virtuozy/presentations/auth_screen/login_page.dart';
 import 'package:virtuozy/presentations/auth_screen/singin_page.dart';
 import 'package:virtuozy/presentations/auth_screen/success_send_sms_page.dart';
+import 'package:virtuozy/presentations/branch_search_screen/branch_search_page.dart';
 import 'package:virtuozy/presentations/finance_screen/pay_page.dart';
 import 'package:virtuozy/presentations/main_screen/main_page.dart';
 import 'package:virtuozy/presentations/notification_screen/notification_page.dart';
@@ -24,6 +25,14 @@ class AppRouter{
   static GoRouter get router=>GoRouter(
     initialLocation: pathApp,
     routes: [
+      GoRoute(
+        path: pathBranchSearch,
+        pageBuilder: (context, state) {
+          return CupertinoPage(
+              key: state.pageKey,
+              child: const BranchSearchPage());
+        },
+      ),
       GoRoute(
         path: pathMain,
         pageBuilder: (context, state) {

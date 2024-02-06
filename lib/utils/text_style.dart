@@ -3,6 +3,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:virtuozy/resourses/colors.dart';
 
 class TStyle{
 
@@ -94,6 +95,7 @@ class TStyle{
   static textStyleVelaSansRegularUnderline(Color color,
       {double size = 12.0, FontWeight fontWeight = FontWeight.w500}){
     return TextStyle(
+        decorationColor: color,
         decoration: TextDecoration.underline,
         fontWeight: fontWeight,
         fontSize: size,

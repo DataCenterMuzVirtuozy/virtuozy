@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtuozy/router/paths.dart';
+import 'package:virtuozy/utils/auth_mixin.dart';
 
+import '../../components/box_info.dart';
 import '../../resourses/colors.dart';
 import '../../utils/text_style.dart';
 
@@ -17,7 +19,7 @@ class PromotionPage extends StatefulWidget{
   State<PromotionPage> createState() => _PromotionPageState();
 }
 
-class _PromotionPageState extends State<PromotionPage> {
+class _PromotionPageState extends State<PromotionPage> with AuthMixin{
   final List<Map<String,String>> testPromo = [
     {'body':'Ответьте на 5 вопросов и мы зачислим 1 урок на ваш счет 3','title':'Бонусный урок за опрос'},
     {'body':'Подарим 1 урок, если ваш друг приобретет абонемент на любой курс','title':'Урок за друга'},
@@ -27,6 +29,16 @@ class _PromotionPageState extends State<PromotionPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    if(notAuthorized){
+      return Center(
+        child: BoxInfo(title: 'Предложения недоступны'.tr(),
+            description: 'Доступ к предложениям только для авторизированных пользователей'.tr(),
+            iconData: CupertinoIcons.square_favorites_alt),
+      );
+    }
+
+
     return ListView.builder(
       itemCount: testPromo.length,
         itemBuilder: (context,index){

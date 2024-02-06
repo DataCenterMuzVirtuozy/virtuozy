@@ -10,7 +10,9 @@ import 'package:go_router/go_router.dart';
 import 'package:virtuozy/components/buttons.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/router/paths.dart';
+import 'package:virtuozy/utils/auth_mixin.dart';
 
+import '../../components/box_info.dart';
 import '../../components/drawing_menu_selected.dart';
 import '../../utils/text_style.dart';
 
@@ -21,7 +23,7 @@ class FinancePage extends StatefulWidget{
   State<FinancePage> createState() => _FinancePageState();
 }
 
-class _FinancePageState extends State<FinancePage> {
+class _FinancePageState extends State<FinancePage> with AuthMixin {
 
   int _selIndexDirection = 0;
   List<String> _listDirection =  [
@@ -32,6 +34,17 @@ class _FinancePageState extends State<FinancePage> {
   ];
   @override
   Widget build(BuildContext context) {
+
+
+    if(notAuthorized){
+      return Center(
+        child: BoxInfo(title: 'Финансы недоступны'.tr(),
+            description: 'Для работы с балансом счета необходимо авторизироваться'.tr(),
+            iconData: CupertinoIcons.creditcard),
+      );
+    }
+
+
    return Padding(
      padding: const EdgeInsets.symmetric(horizontal: 20.0),
      child: SingleChildScrollView(

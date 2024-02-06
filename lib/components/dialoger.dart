@@ -17,13 +17,23 @@ import '../utils/text_style.dart';
 import 'buttons.dart';
 
 
- sealed class DialogsContent{}
+ sealed class DialogsContent{
+   build({required BuildContext context});
+ }
 
 
  class ConfirmLesson extends DialogsContent{
-   static build({required BuildContext context}){
-     return const StepsConfirmLesson();
-   }
+  @override
+  build({required BuildContext context}) {
+    return const StepsConfirmLesson();
+  }
+ }
+
+ class SelectBranch extends DialogsContent{
+  @override
+  build({required BuildContext context}) {
+    return const SelectBranchContent();
+  }
  }
 
 
@@ -64,10 +74,71 @@ class Dialoger{
      );
    }
 
-   static void showBottomMenu({required BuildContext context,required DialogsContent content}){
+   static void showModalBottomMenu({
+     double height = 500.0,
+     required String title,
+     required BuildContext context,required DialogsContent content}){
 
      final body = switch(content){
-       ConfirmLesson()=>ConfirmLesson.build(context: context)
+       ConfirmLesson()=>ConfirmLesson().build(context: context),
+       SelectBranch() => SelectBranch().build(context: context),
+     };
+
+     showModalBottomSheet(
+         enableDrag: false,
+         backgroundColor: Colors.transparent,
+         context: context, builder: (_){
+       return  BackdropFilter(
+         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 5),
+         child: Container(
+           height: height,
+           width: MediaQuery.of(context).size.width,
+           padding: const EdgeInsets.only(
+               right: 10.0,
+               left: 10.0,
+               top: 10.0),
+           decoration: BoxDecoration(
+               color: colorWhite,
+               borderRadius: const BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30))
+           ),
+           child: Column(
+             children: [
+               Container(
+                 height: 45.0,
+                 padding: const EdgeInsets.only(top: 5.0,right: 15.0,left: 20.0),
+                 decoration: BoxDecoration(
+                     color: colorGrey,
+                     borderRadius: const BorderRadius.only(topRight: Radius.circular(20.0),topLeft: Radius.circular(20.0),
+                         bottomLeft: Radius.circular(10.0),bottomRight: Radius.circular(10.0))
+                 ),
+                 child: Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   children: [
+                     Text(title,style: TStyle.textStyleGaretHeavy(colorWhite,size: 18.0),),
+                     InkWell(
+                         onTap: (){
+                           Navigator.pop(context);
+                         },
+                         child: Icon(Icons.close_rounded,color: colorWhite)),
+
+                   ],
+                 ),
+               ),
+               const Gap(20.0),
+               body
+             ],
+           ),
+         ),
+       );
+     });
+   }
+
+
+   static void showBottomMenu({required String title,required BuildContext context,required DialogsContent content}){
+
+     final body = switch(content){
+       ConfirmLesson()=>ConfirmLesson().build(context: context),
+       SelectBranch() => SelectBranch().build(context: context),
      };
 
      showBottomSheet(
@@ -77,6 +148,7 @@ class Dialoger{
        return  BackdropFilter(
          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 5),
          child: Container(
+           width: MediaQuery.of(context).size.width,
            padding: const EdgeInsets.only(
                   right: 10.0,
                   left: 10.0,
@@ -85,7 +157,34 @@ class Dialoger{
          color: colorWhite,
          borderRadius: const BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30))
          ),
-           child: body,
+           child: Column(
+             children: [
+               Container(
+                 height: 45.0,
+                 padding: const EdgeInsets.only(top: 5.0,right: 15.0,left: 20.0),
+                 decoration: BoxDecoration(
+                     color: colorGreenLight,
+                     borderRadius: const BorderRadius.only(topRight: Radius.circular(20.0),topLeft: Radius.circular(20.0),
+                         bottomLeft: Radius.circular(10.0),bottomRight: Radius.circular(10.0))
+                 ),
+                 child: Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   children: [
+                     Text(title,style: TStyle.textStyleGaretHeavy(colorWhite,size: 18.0),),
+                     InkWell(
+                         onTap: (){
+                           Navigator.pop(context);
+                         },
+                         child: Icon(Icons.close_rounded,color: colorWhite)),
+
+                   ],
+                 ),
+               ),
+               const Gap(20.0),
+               body
+             ],
+           ),
+
          ),
        );
      });
@@ -140,28 +239,6 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson> {
       duration: const Duration(milliseconds: 700),
       child: Column(
         children: [
-          Container(
-            height: 45.0,
-            padding: const EdgeInsets.only(top: 5.0,right: 15.0,left: 20.0),
-            decoration: BoxDecoration(
-                color: colorGreenLight,
-                borderRadius: const BorderRadius.only(topRight: Radius.circular(20.0),topLeft: Radius.circular(20.0),
-                    bottomLeft: Radius.circular(10.0),bottomRight: Radius.circular(10.0))
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Урок',style: TStyle.textStyleGaretHeavy(colorWhite,size: 18.0),),
-                InkWell(
-                    onTap: (){
-                      Navigator.pop(context);
-                    },
-                    child: Icon(Icons.close_rounded,color: colorWhite)),
-
-              ],
-            ),
-          ),
-          const Gap(10.0),
           Expanded(
             child: PageView(
               physics: const NeverScrollableScrollPhysics(),
@@ -430,6 +507,49 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson> {
 
 
 
+}
+
+
+ class SelectBranchContent extends StatefulWidget{
+  const SelectBranchContent({super.key});
+
+  @override
+  State<SelectBranchContent> createState() => _SelectBranchContentState();
+}
+
+class _SelectBranchContentState extends State<SelectBranchContent> {
+   final List<String> _branchs = ['Москова','Новосибирск'];
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Column(
+        children: [
+          ...List.generate(2, (index){
+            return Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(5.0),
+                  decoration: BoxDecoration(
+                      color: colorOrange.withOpacity(0.2),
+                      shape: BoxShape.circle
+                  ),
+                  child: Icon(Icons.location_on_outlined,color: colorOrange),
+                ),
+                const Gap(15.0),
+                Expanded(child: Text(_branchs[index],style: TStyle.textStyleVelaSansBold(colorBlack,size: 14.0))),
+                Checkbox(
+                  fillColor: MaterialStatePropertyAll(colorWhite),
+                    value: false,
+                    onChanged: (sel){})
+              ],
+            );
+          })
+        ],
+      ),
+    );
+  }
 }
 
 

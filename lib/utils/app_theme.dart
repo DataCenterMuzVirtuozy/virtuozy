@@ -8,7 +8,10 @@ class AppTheme{
   static  ThemeData get first=> ThemeData(
     useMaterial3: true,
     iconTheme: IconThemeData(color:colorBlack),
-    textTheme: TextTheme(displayMedium: TextStyle(color: colorBlack)),
+    textTheme: TextTheme(
+
+        displayMedium: TextStyle(color: colorBlack,
+        )),
     colorScheme: ColorScheme(
       tertiary: colorGreen,  // фон кнопки в параметрах
       surfaceVariant: colorBeruzaLight, // фон карточек

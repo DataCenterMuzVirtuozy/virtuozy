@@ -105,7 +105,7 @@ class CustomField extends StatelessWidget {
         style: TextStyle(color: colorBlack),
         decoration: InputDecoration(
             filled: true,
-            fillColor: fillColor,
+            fillColor:  colorPink.withOpacity(0.5),
             suffixIcon: iconData != null?Padding(
               padding: const EdgeInsets.all(14.0),
               child: Icon(iconData,color: colorGrey),

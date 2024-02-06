@@ -12,6 +12,7 @@ import 'package:virtuozy/di/locator.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/resourses/images.dart';
 import 'package:virtuozy/router/paths.dart';
+import 'package:virtuozy/utils/auth_mixin.dart';
 import 'package:virtuozy/utils/theme_provider.dart';
 
 import '../utils/preferences_util.dart';
@@ -27,7 +28,7 @@ class HomeDrawerMenu extends StatefulWidget{
   State<HomeDrawerMenu> createState() => _HomeDrawerMenuState();
 }
 
-class _HomeDrawerMenuState extends State<HomeDrawerMenu> {
+class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
 
 
 
@@ -111,7 +112,9 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> {
                     widget.onSelectedPage.call(4);
                   },),
 
-                  DrawerItem(title: 'Выйти'.tr(),textColor: colorRed, onPressed: () {
+                  DrawerItem(title:
+                  notAuthorized?'Войти'.tr():'Выйти'.tr(),
+                    textColor: colorRed, onPressed: () {
 
                   },),
                 ],
