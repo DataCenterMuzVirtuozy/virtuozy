@@ -8,7 +8,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtuozy/components/box_info.dart';
 import 'package:virtuozy/components/calendar.dart';
-import 'package:virtuozy/components/dialoger.dart';
+import 'package:virtuozy/components/dialogs/dialoger.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/router/paths.dart';
 import 'package:virtuozy/utils/auth_mixin.dart';
@@ -52,10 +52,13 @@ class _HomePageState extends State<HomePage> with AuthMixin{
   @override
   Widget build(BuildContext context) {
 
-    if(notAuthorized){
+    if(notAuthorized || moderation){
       return Center(
-        child: BoxInfo(title: 'Абонементы недоступны'.tr(),
-            description: 'Для работы с абонементами необходимо авторизироваться'.tr(),
+        child: BoxInfo(
+            buttonVisible: !notAuthorized,
+            title: moderation?'Ваш аккаунт на модерации'.tr():'Абонементы недоступны'.tr(),
+            description: moderation?'На период модерации работа с абонементами недоступна'.tr():
+            'Для работы с абонементами необходимо авторизироваться'.tr(),
             iconData: CupertinoIcons.music_note_list),
       );
     }

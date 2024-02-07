@@ -36,10 +36,13 @@ class _FinancePageState extends State<FinancePage> with AuthMixin {
   Widget build(BuildContext context) {
 
 
-    if(notAuthorized){
+    if(notAuthorized || moderation){
       return Center(
-        child: BoxInfo(title: 'Финансы недоступны'.tr(),
-            description: 'Для работы с балансом счета необходимо авторизироваться'.tr(),
+        child: BoxInfo(
+            buttonVisible: !notAuthorized,
+            title: moderation?'Ваш аккаунт на модерации'.tr():'Финансы недоступны'.tr(),
+            description: moderation?'На период модерации работа с финансами недоступна'.tr():
+            'Для работы с балансом счета необходимо авторизироваться'.tr(),
             iconData: CupertinoIcons.creditcard),
       );
     }

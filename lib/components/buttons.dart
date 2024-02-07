@@ -94,7 +94,7 @@ class OutLineButton extends StatelessWidget{
             ),
           ),
           onPressed: (){
-
+          onTap!.call();
       },
           child:  Text(
           textButton!,

@@ -21,7 +21,7 @@ part 'app_state.dart';
   void _initApp(InitAppEvent event,emit) async {
    emit(state.copyWith(authStatusCheck: AuthStatusCheck.unknown));
    await Future.delayed(const Duration(seconds: 3));
-   emit(state.copyWith(authStatusCheck: AuthStatusCheck.unauthenticated));
+   emit(state.copyWith(authStatusCheck: AuthStatusCheck.moderation));
   }
 
 

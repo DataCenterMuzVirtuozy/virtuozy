@@ -30,10 +30,13 @@ class _PromotionPageState extends State<PromotionPage> with AuthMixin{
   @override
   Widget build(BuildContext context) {
 
-    if(notAuthorized){
+    if(notAuthorized || moderation){
       return Center(
-        child: BoxInfo(title: 'Предложения недоступны'.tr(),
-            description: 'Доступ к предложениям только для авторизированных пользователей'.tr(),
+        child: BoxInfo(
+            buttonVisible: !notAuthorized,
+            title: moderation?'Ваш аккаунт на модерации'.tr():'Предложения недоступны'.tr(),
+            description: moderation?'На период модерации, предложения недоступны'.tr():
+            'Доступ к предложениям только для авторизированных пользователей'.tr(),
             iconData: CupertinoIcons.square_favorites_alt),
       );
     }

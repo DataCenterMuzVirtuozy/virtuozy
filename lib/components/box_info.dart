@@ -12,13 +12,13 @@ class BoxInfo extends StatelessWidget{
     required this.title,
     this.description = '',
     required this.iconData,
-    this.isNotAuthorized = true,
+    this.buttonVisible = false
   });
 
   final String title;
   final String description;
   final IconData iconData;
-  final bool isNotAuthorized;
+  final bool buttonVisible;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class BoxInfo extends StatelessWidget{
                     style: TStyle.textStyleVelaSansRegular(colorGrey.withOpacity(0.6),size: 14.0))),
             const Gap(20.0),
             Visibility(
-              visible: isNotAuthorized,
+              visible: buttonVisible,
                 child:  OutLineButton(
                   width: 100.0,
                   textButton: 'Войти'.tr(),

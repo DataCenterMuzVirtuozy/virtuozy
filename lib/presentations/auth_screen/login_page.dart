@@ -12,7 +12,7 @@ import 'package:lottie/lottie.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:virtuozy/components/buttons.dart';
-import 'package:virtuozy/components/dialoger.dart';
+import 'package:virtuozy/components/dialogs/dialoger.dart';
 import 'package:virtuozy/presentations/auth_screen/bloc/auth_bloc.dart';
 import 'package:virtuozy/presentations/auth_screen/bloc/auth_event.dart';
 import 'package:virtuozy/presentations/auth_screen/bloc/auth_state.dart';

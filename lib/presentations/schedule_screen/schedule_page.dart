@@ -26,10 +26,13 @@ class _SchedulePageState extends State<SchedulePage> with AuthMixin{
   @override
   Widget build(BuildContext context) {
 
-    if(notAuthorized){
+    if(notAuthorized || moderation){
       return Center(
-        child: BoxInfo(title: 'Расписание недоступно'.tr(),
-            description: 'Для работы с расписанием необходимо авторизироваться'.tr(),
+        child: BoxInfo(
+            buttonVisible: !notAuthorized,
+            title: moderation?'Ваш аккаунт на модерации'.tr():'Расписание недоступно'.tr(),
+            description: moderation?'На период модерации работа с расписанием недоступна'.tr():
+            'Для работы с расписанием необходимо авторизироваться'.tr(),
             iconData: Icons.calendar_month),
       );
     }

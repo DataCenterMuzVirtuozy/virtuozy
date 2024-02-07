@@ -5,6 +5,7 @@ part of 'app_bloc.dart';
 enum AuthStatusCheck{
  unknown,
  authenticated,
+  moderation,
  unauthenticated,
  error,
 }

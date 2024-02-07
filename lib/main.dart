@@ -17,7 +17,7 @@ import 'package:virtuozy/utils/preferences_util.dart';
 import 'package:virtuozy/di/locator.dart' as di;
 import 'package:virtuozy/utils/theme_provider.dart';
 
-import 'components/dialoger.dart';
+import 'components/dialogs/dialoger.dart';
 import 'di/locator.dart';
 
 void main() async {
@@ -112,11 +112,12 @@ class _InitPageState extends State<InitPage> {
         }
       },
         builder: (context,state){
-        // if(state.authStatusCheck == AuthStatusCheck.unknown){
-        //   return const SplashPage();
-        // }else if(state.authStatusCheck == AuthStatusCheck.unauthenticated){
-        //    return const MainPage();
-        // }
+        if(state.authStatusCheck == AuthStatusCheck.unknown){
+          return const SplashPage();
+        }else if(state.authStatusCheck == AuthStatusCheck.unauthenticated||
+        state.authStatusCheck == AuthStatusCheck.moderation){
+           return const MainPage();
+        }
 
         //return const LogInPage();
           //return BranchSearchPage();

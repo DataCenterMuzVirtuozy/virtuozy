@@ -20,6 +20,20 @@ class AuthEvent extends Equatable{
   });
 }
 
+class SearchLocationEvent extends AuthEvent{}
+
+
+ class SingInEvent extends AuthEvent{
+   final String name;
+   final String phone;
+   final String idBranch;
+   const SingInEvent({
+     required this.phone,
+     required this.idBranch,
+     required this.name,
+   });
+ }
+
  class GetCodeEvent extends AuthEvent{
    final String phoneNumber;
    const GetCodeEvent({
