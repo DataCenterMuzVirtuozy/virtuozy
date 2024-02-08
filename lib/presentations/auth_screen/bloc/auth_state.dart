@@ -12,11 +12,14 @@
    searchLocation,
    searchLocationComplete,
    searchLocationError,
+   onSearchLocation,
    processSingIn,
    processLogIn,
    processLogOut,
    awaitCode,
-   sendRequestCode
+   sendRequestCode,
+   moderation,
+   logOut
 
  }
 

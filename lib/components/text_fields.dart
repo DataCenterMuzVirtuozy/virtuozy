@@ -8,11 +8,11 @@ import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/utils/text_style.dart';
 
 class PhoneField extends StatelessWidget {
-  const PhoneField({Key? key, required this.controller,this.activate = true,
+  const PhoneField({Key? key, required this.controller,this.readOnly = false,
     required this.textInputFormatter, required this.onChange}) : super(key: key);
   final TextEditingController controller;
   final TextInputFormatter textInputFormatter;
-  final bool activate;
+  final bool readOnly;
   final Function onChange;
 
   @override
@@ -24,7 +24,7 @@ class PhoneField extends StatelessWidget {
           onChange.call(text);
         },
         inputFormatters: [textInputFormatter],
-        readOnly: activate,
+        readOnly: readOnly,
         maxLines: 1,
         keyboardType: TextInputType.phone,
         textAlign: TextAlign.start,
@@ -70,7 +70,7 @@ class CustomField extends StatelessWidget {
         this.maxLines = 1,
         this.heightBody = 50.0,
         this.borderRadius=50.0,
-        this.activate = true,
+        this.readOnly = false,
         this.textInputType = TextInputType.emailAddress,
         required this.fillColor,
         this.textCapitalization})
@@ -83,7 +83,7 @@ class CustomField extends StatelessWidget {
   final double heightBody;
   final double borderRadius;
   final Color fillColor;
-  final bool activate;
+  final bool readOnly;
   final TextInputType textInputType;
   final TextCapitalization? textCapitalization;
 
@@ -95,7 +95,7 @@ class CustomField extends StatelessWidget {
     return SizedBox(
       height: heightBody,
       child: TextField(
-        readOnly: activate,
+        readOnly: readOnly,
         textCapitalization: textCapitalization==null?
         TextCapitalization.none:textCapitalization!,
         maxLines: maxLines,

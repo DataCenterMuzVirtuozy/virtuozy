@@ -2,6 +2,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:virtuozy/utils/preferences_util.dart';
 
 import '../utils/network_check.dart';
 part 'app_event.dart';
@@ -20,8 +21,20 @@ part 'app_state.dart';
 
   void _initApp(InitAppEvent event,emit) async {
    emit(state.copyWith(authStatusCheck: AuthStatusCheck.unknown));
+   final user = PreferencesUtil.phoneUser;
+   final status = PreferencesUtil.statusUser;
    await Future.delayed(const Duration(seconds: 3));
-   emit(state.copyWith(authStatusCheck: AuthStatusCheck.moderation));
+   if(user.isEmpty){
+    emit(state.copyWith(authStatusCheck: AuthStatusCheck.unauthenticated));
+   }else{
+    if(status == 1){
+     emit(state.copyWith(authStatusCheck: AuthStatusCheck.authenticated));
+    }else{
+     emit(state.copyWith(authStatusCheck: AuthStatusCheck.moderation));
+    }
+
+   }
+
   }
 
 

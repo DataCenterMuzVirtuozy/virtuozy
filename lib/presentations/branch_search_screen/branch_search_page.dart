@@ -16,9 +16,10 @@ import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/resourses/images.dart';
 
 import '../../components/dialogs/dialoger.dart';
+import '../../components/dialogs/sealeds.dart';
 import '../../utils/text_style.dart';
 
- final scaffoldState = GlobalKey<ScaffoldState>();
+
 
 class BranchSearchPage extends StatefulWidget{
   const BranchSearchPage({super.key});
@@ -49,7 +50,9 @@ class _BranchSearchPageState extends State<BranchSearchPage> with TickerProvider
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldState,
+      appBar: AppBarCustom(title: 'Поиск филиала'.tr(),
+
+      ),
       body: BlocConsumer<AuthBloc,AuthState>(
         listener: (c,s){
            if(s.authStatus == AuthStatus.searchLocationComplete){
@@ -95,7 +98,7 @@ class _BranchSearchPageState extends State<BranchSearchPage> with TickerProvider
                     textButton: 'Поиск'.tr(),
                      onTap: (){
                       _controller.forward();
-                      context.read<AuthBloc>().add(SearchLocationEvent());
+                      context.read<AuthBloc>().add(const SearchLocationEvent());
                      },
 
                                    ),
@@ -108,7 +111,8 @@ class _BranchSearchPageState extends State<BranchSearchPage> with TickerProvider
                     Dialoger.showModalBottomMenu(
                       height: 240.0,
                         title:'Выбери свой филиал'.tr(),
-                        context: context, content: SelectBranch());
+                        context: context,
+                        content: SelectBranch());
                   }, child: Column(
                     children: [
                       Text('Выбрать вручную'.tr(),style: TStyle.textStyleVelaSansRegularUnderline(colorOrange,size: 14.0)),

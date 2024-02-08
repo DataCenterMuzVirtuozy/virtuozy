@@ -6,7 +6,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
+import 'package:timer_count_down/timer_count_down.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:virtuozy/router/paths.dart';
 
 import '../../components/buttons.dart';
 import '../../components/text_fields.dart';
@@ -43,16 +46,30 @@ class SuccessSendSMS extends StatelessWidget{
             const Gap(20.0),
             Column(
               children: [
-
-               Container(
+                Container(
                  padding: const EdgeInsets.all(20.0),
                  decoration: BoxDecoration(
                    borderRadius: BorderRadius.circular(20.0),
                    color: colorOrange
                  ),
-                 child: Text('Сообщение исчезает через 30 секунд. Пользователя переводит на страницу Вход'.tr(),
-                 textAlign: TextAlign.center,
-                 style: TStyle.textStyleVelaSansRegular(colorWhite)),
+                 child: Countdown(
+                   onFinished: (){
+                     GoRouter.of(context).pushReplacement(pathLogIn);
+                   },
+                   seconds: 30,
+                   build: (c,i){
+                     return Column(
+                       children: [
+                         Text('Сообщение исчезает через ${i.toInt()} секунд.'.tr(),
+                             textAlign: TextAlign.center,
+                             style: TStyle.textStyleVelaSansRegular(colorWhite)),
+                         Text('Вас направит на страницу Вход',
+                             textAlign: TextAlign.center,
+                             style: TStyle.textStyleVelaSansRegular(colorWhite))
+                       ],
+                     );
+                   },
+                 ),
                ),
                 const Gap(40.0),
                 InkWell(

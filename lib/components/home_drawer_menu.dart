@@ -6,9 +6,13 @@ import 'dart:ui';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtuozy/di/locator.dart';
+import 'package:virtuozy/domain/user_cubit.dart';
+import 'package:virtuozy/presentations/auth_screen/bloc/auth_bloc.dart';
+import 'package:virtuozy/presentations/auth_screen/bloc/auth_event.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/resourses/images.dart';
 import 'package:virtuozy/router/paths.dart';
@@ -32,7 +36,11 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
 
 
 
+  @override
+  void didChangeDependencies() {
+   super.didChangeDependencies();
 
+  }
 
 
   @override
@@ -68,7 +76,7 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                     children: [
                       Container(
                         width: width,
-                        height: 120.0,
+                        height: 150.0,
                         decoration: BoxDecoration(
                             color: colorYellow
                         ),
@@ -81,8 +89,32 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Иван Иванович Иванов',style: TStyle.textStyleGaretHeavy(colorWhite,size: 20.0)),
-                              Text('+7 (999) 999-99-99',style: TStyle.textStyleVelaSansBold(colorWhite,size: 16.0)),
+                              Text('${user.firstName} ${user.lastName}',
+                                  maxLines: 2,
+                                  style: TStyle.textStyleGaretHeavy(colorWhite,size: 20.0)),
+                              const Gap(8.0),
+                              Visibility(
+                                visible: user.phoneNumber.isNotEmpty,
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.phone_enabled_rounded,color: colorWhite,
+                                    size: 12.0),
+                                    const Gap(5.0),
+                                    Text(user.phoneNumber,style: TStyle.textStyleVelaSansBold(colorWhite,size: 12.0)),
+                                  ],
+                                ),
+                              ),
+                              Visibility(
+                                visible: user.branchName.isNotEmpty,
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.location_on_outlined,color: colorWhite,size: 12.0),
+                                    const Gap(5.0),
+                                    Text(user.branchName,style: TStyle.textStyleVelaSansMedium(colorWhite,size: 12.0)),
+                                  ],
+                                ),
+                              ),
+
                             ],
                           )),
                     ],
@@ -113,23 +145,26 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                   },),
 
                   DrawerItem(title:
-                  notAuthorized?'Войти'.tr():'Выйти'.tr(),
-                    textColor: colorRed, onPressed: () {
-
+                  notAuthorized?'Войти'.tr():moderation?'Выйти'.tr():
+                  'Войти'.tr(),
+                    textColor: colorRed, onPressed: ()  {
+                      if(!notAuthorized || !moderation){
+                        context.read<AuthBloc>().add(LogOutEvent());
+                      }
                   },),
                 ],
               ),
 
-              Column(
-                children: [
-                  TextButton(onPressed: (){},
-                      child:  Text('Политика конфиденциальности'.tr(),style: TStyle.textStyleVelaSansRegularUnderline(colorGrey))),
-                  TextButton(onPressed: (){},
-                      child:  Text('Пользовательское соглашение'.tr(),style: TStyle.textStyleVelaSansRegularUnderline(colorGrey)))
-
-
-                ],
-              )
+              // Column(
+              //   children: [
+              //     TextButton(onPressed: (){},
+              //         child:  Text('Политика конфиденциальности'.tr(),style: TStyle.textStyleVelaSansRegularUnderline(colorGrey))),
+              //     TextButton(onPressed: (){},
+              //         child:  Text('Пользовательское соглашение'.tr(),style: TStyle.textStyleVelaSansRegularUnderline(colorGrey)))
+              //
+              //
+              //   ],
+              // )
 
 
             ],
@@ -137,6 +172,8 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
         ),
       ),);
   }
+
+
 }
 
 

@@ -14,6 +14,25 @@ class PreferencesUtil{
     return _prefsInstance;
   }
 
+  // 0 - not auth 1 - auth 2 - moderation
+  static Future<void> setStatusUser({required int status}) async{
+    await _prefsInstance!.setInt(_keyStatus, status);
+  }
+
+  static Future<void> setLastNameUser({required String lastName}) async{
+    await _prefsInstance!.setString(_keyLastName, lastName);
+  }
+
+  static Future<void> setFirstNameUser({required String firstName}) async{
+    await _prefsInstance!.setString(_keyFirstName, firstName);
+  }
+  static Future<void> setPhoneUser({required String phone}) async{
+    await _prefsInstance!.setString(_keyPhoneNumber, phone);
+  }
+
+  static Future<void> setBranchUser({required String branch}) async{
+    await _prefsInstance!.setString(_keyBranch, branch);
+  }
 
   static Future<void> setColorScheme({required Color color}) async{
     String red = color.red.toString();
@@ -45,6 +64,13 @@ class PreferencesUtil{
     await _prefsInstance!.setInt(_keyTheme, theme);
   }
 
+
+  static int get statusUser => _prefsInstance!.getInt(_keyStatus)??0;
+  static String get lastNameUser => _prefsInstance!.getString(_keyLastName)??'';
+  static String get firstNameUser => _prefsInstance!.getString(_keyFirstName)??'';
+  static String get phoneUser => _prefsInstance!.getString(_keyPhoneNumber)??'';
+  static String get branchUser => _prefsInstance!.getString(_keyBranch)??'';
+
   static ThemeStatus get getTheme{
     final result = _prefsInstance!.getInt(_keyTheme)??0;
 
@@ -58,6 +84,11 @@ class PreferencesUtil{
   }
 
 
+  static clear() async {
+    _prefsInstance!.clear();
+  }
+
+
 
 
 
@@ -67,3 +98,8 @@ class PreferencesUtil{
 
 String get _keyTheme =>'key_theme';
 String get _keyColor =>'key_color';
+String get _keyLastName => '_key_last_name';
+String get _keyFirstName =>'key_first_name';
+String get _keyPhoneNumber => 'ky_phone';
+String get _keyBranch => 'key_branch';
+String get _keyStatus => 'key_status';

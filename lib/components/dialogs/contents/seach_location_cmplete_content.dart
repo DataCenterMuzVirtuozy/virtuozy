@@ -5,10 +5,15 @@
  import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:virtuozy/components/buttons.dart';
+import 'package:virtuozy/presentations/auth_screen/bloc/auth_bloc.dart';
+import 'package:virtuozy/presentations/auth_screen/bloc/auth_event.dart';
 import 'package:virtuozy/resourses/colors.dart';
 
+import '../../../router/paths.dart';
 import '../../../utils/text_style.dart';
 
 class SearchLocationCompleteContent extends StatelessWidget{
@@ -46,6 +51,10 @@ class SearchLocationCompleteContent extends StatelessWidget{
        ),
        const Gap(20.0),
        OutLineButton(
+         onTap: (){
+           context.read<AuthBloc>().add(CompleteSinIgEvent(branch: branch));
+           GoRouter.of(context).push(pathSuccessSendSMS);
+         },
         textButton: 'Завершить регистрацию'.tr(),
        ),
        const Gap(10.0),

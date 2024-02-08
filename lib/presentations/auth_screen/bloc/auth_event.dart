@@ -15,28 +15,41 @@ class AuthEvent extends Equatable{
 
  class LogInEvent extends AuthEvent{
     final String code;
-    const LogInEvent({
+    final String phone;
+    const LogInEvent( {required this.phone,
     required this.code,
   });
 }
 
-class SearchLocationEvent extends AuthEvent{}
+class SearchLocationEvent extends AuthEvent{
+  const SearchLocationEvent();
+}
+
+
+class CompleteSinIgEvent extends AuthEvent{
+  final String branch;
+
+  const CompleteSinIgEvent({required this.branch});
+}
 
 
  class SingInEvent extends AuthEvent{
-   final String name;
+   final String lastName;
+   final String firstName;
    final String phone;
-   final String idBranch;
+
    const SingInEvent({
+     required this.lastName,
+     required this.firstName,
      required this.phone,
-     required this.idBranch,
-     required this.name,
    });
  }
 
  class GetCodeEvent extends AuthEvent{
-   final String phoneNumber;
+   final String idBranch;
    const GetCodeEvent({
-     required this.phoneNumber,
+     required this.idBranch,
    });
  }
+
+ class LogOutEvent extends AuthEvent{}

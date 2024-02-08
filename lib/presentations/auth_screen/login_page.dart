@@ -35,12 +35,7 @@ class _LogInPageState extends State<LogInPage> {
 
   late TextEditingController _codeController;
   late TextEditingController _phoneController;
-  bool _activePhoneField = true;
-  bool _activeCodeField = false;
-  bool _activeButton = false;
-  bool _visibleButton = true;
-  final List<String> _textButton = ['Получить код','Войти'];
-  int _indexTextButton = 0;
+
   late MaskTextInputFormatter _maskFormatter;
 
 
@@ -49,18 +44,6 @@ class _LogInPageState extends State<LogInPage> {
     super.initState();
     _codeController = TextEditingController();
     _phoneController = TextEditingController();
-    _codeController.addListener(() {
-      if(_codeController.text.isNotEmpty){
-         setState(() {
-           _visibleButton = true;
-           _indexTextButton = 1;
-         });
-      }else{
-        setState(() {
-          _indexTextButton = 0;
-        });
-      }
-    });
     _maskFormatter = MaskTextInputFormatter(
         mask: '+# (###) ###-##-##',
         filter: { "#": RegExp(r'[0-9]') },
@@ -69,6 +52,12 @@ class _LogInPageState extends State<LogInPage> {
   }
 
 
+  @override
+  void dispose() {
+    super.dispose();
+    _codeController.dispose();
+    _phoneController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,19 +67,17 @@ class _LogInPageState extends State<LogInPage> {
         child: SingleChildScrollView(
           child: BlocConsumer<AuthBloc,AuthState>(
             listener: ( c,s) {
-                if(s.authStatus == AuthStatus.sendRequestCode){
-                  _visibleButton = false;
 
+                if(s.error.isNotEmpty){
+                  Dialoger.showActionMaterialSnackBar(context: context,
+                      title: s.error);
                 }
 
                 if(s.authStatus == AuthStatus.authenticated){
                   GoRouter.of(context).pushReplacement(pathMain);
                 }
-                print('Code ${s.authStatus}');
-                if(s.authStatus == AuthStatus.awaitCode){
-                  _activeCodeField = true;
-                  Dialoger.showActionMaterialSnackBar(onAction: (){}, context: context, title: 'Код успешно отправлен. Ожидайте'.tr());
-                }
+
+
             },
             builder: (context,state) {
               if(state.authStatus == AuthStatus.processLogIn||
@@ -111,78 +98,41 @@ class _LogInPageState extends State<LogInPage> {
                 children: [
                   Column(
                     children: [
-                      SvgPicture.asset(logo),
+                      SvgPicture.asset(logo,width: 100.0,),
                       const Gap(30.0),
                       Image.asset(illustration_5),
-                      const Gap(40.0),
+                      const Gap(30.0),
                       Text('Добро пожаловать!'.tr(),style: TStyle.textStyleVelaSansBold(colorBlack,size: 25.0)),
                     ],
                   ),
-                  const Gap(40.0),
+                  const Gap(30.0),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Opacity(opacity: _activePhoneField?1.0:0.3,
-                      child: PhoneField(
+                      PhoneField(
                         onChange: (String text){
-                          _indexTextButton = 0;
-                          if(text.isNotEmpty){
-                            setState(() {
-                               _activeButton = true;
-                            });
-                          }else{
-                            setState(() {
-                              _activeButton = false;
-                            });
-                          }
+
                         },
                         textInputFormatter: _maskFormatter,
-                        activate: !_activePhoneField,
-                          controller: _phoneController)),
+                          controller: _phoneController),
                       const Gap(20.0),
-                      Opacity(
-                          opacity: _activeCodeField?1.0:0.3,
-                          child: CustomField(
-                            activate: !_activeCodeField,
-                              controller: _codeController,
-                              textHint: 'Пароль'.tr(),
-                              iconData: Icons.code,
-                              fillColor: colorPink.withOpacity(0.5))),
-                      const Gap(40.0),
-                      Visibility(
-                        visible: state.authStatus == AuthStatus.awaitCode && !_visibleButton,
-                          child: Text('Не пришел пароль по СМС? Позвоните по телефону 8 (499) 322-71-04'.tr(),
-                          textAlign: TextAlign.center,
-                          style: TStyle.textStyleVelaSansMedium(colorRed,size: 14.0),)),
-
-                      Visibility(
-                        visible: state.authStatus == AuthStatus.sendRequestCode,
-                          child: CircularProgressIndicator(color: colorOrange)),
-                      Visibility(
-                        visible: _visibleButton,
-                        child: Opacity(
-                          opacity: _activeButton?1.0:0.5,
-                          child: SubmitButton(
-                            onTap: (){
-                              if(_activeButton){
-                                if(_codeController.text.isEmpty){
-                                  setState(() {
-                                    _visibleButton = false;
-                                  });
-                                }
-
-                                if(_phoneController.text.isNotEmpty&&_codeController.text.isEmpty){
-                                  context.read<AuthBloc>().add(GetCodeEvent(phoneNumber: _phoneController.text));
-                                }
-                                if(_codeController.text.isNotEmpty){
-                                  context.read<AuthBloc>().add(LogInEvent(code: _codeController.text));
-                                }
-
-                              }
-                            },
-                            textButton: _textButton[_indexTextButton].tr(),
-                          ),
-                        ),
+                      CustomField(
+                          controller: _codeController,
+                          textHint: 'Пароль'.tr(),
+                          iconData: Icons.code,
+                          fillColor: colorPink.withOpacity(0.5)),
+                      const Gap(20.0),
+                      Text('Не пришел пароль по СМС? Позвоните по телефону 8 (499) 322-71-04'.tr(),
+                      textAlign: TextAlign.center,
+                      style: TStyle.textStyleVelaSansMedium(colorRed,size: 14.0),),
+                      const Gap(20.0),
+                      SubmitButton(
+                        onTap: (){
+                          context.read<AuthBloc>().add(LogInEvent(
+                            phone: _phoneController.text,
+                              code: _codeController.text));
+                        },
+                        textButton:'Войти'.tr(),
                       ),
                       const Gap(15.0),
                       TextButton(onPressed: (){
@@ -193,7 +143,7 @@ class _LogInPageState extends State<LogInPage> {
                       },
                           child: Text('Регистрация'.tr(),
                           style: TStyle.textStyleVelaSansRegularUnderline(colorBlack,size: 18.0),)),
-                      const Gap(30.0),
+                      const Gap(20.0),
                       InkWell(
                         onTap: () async {
                           await _launchUrl();

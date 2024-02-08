@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:virtuozy/bloc/app_bloc.dart';
+import 'package:virtuozy/domain/user_cubit.dart';
 import 'package:virtuozy/presentations/auth_screen/bloc/auth_bloc.dart';
 import 'package:virtuozy/presentations/auth_screen/login_page.dart';
 import 'package:virtuozy/presentations/auth_screen/singin_page.dart';
@@ -66,6 +67,7 @@ class _MyAppState extends State<MyApp> {
             providers: [
               BlocProvider<AppBloc>(create: (_) => AppBloc()..add(ObserveNetworkEvent())),
               BlocProvider<AuthBloc>(create: (_) => AuthBloc()),
+              BlocProvider<UserCubit>(create: (_)=>UserCubit())
             ],
             child: MaterialApp.router(
               title: 'Flutter Demo',

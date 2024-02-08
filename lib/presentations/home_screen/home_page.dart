@@ -14,6 +14,7 @@ import 'package:virtuozy/router/paths.dart';
 import 'package:virtuozy/utils/auth_mixin.dart';
 
 import '../../components/buttons.dart';
+import '../../components/dialogs/sealeds.dart';
 import '../../components/drawing_menu_selected.dart';
 import '../../utils/text_style.dart';
 
