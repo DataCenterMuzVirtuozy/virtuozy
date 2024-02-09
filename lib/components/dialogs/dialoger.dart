@@ -80,7 +80,7 @@ class Dialoger{
                left: 10.0,
                top: 10.0),
            decoration: BoxDecoration(
-               color: colorWhite,
+               color: Theme.of(context).colorScheme.background,
                borderRadius: const BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30))
            ),
            child: Column(
@@ -137,7 +137,7 @@ class Dialoger{
                   left: 10.0,
                   top: 10.0),
               decoration: BoxDecoration(
-         color: colorWhite,
+         color: Theme.of(context).colorScheme.background,
          borderRadius: const BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30))
          ),
            child: Column(

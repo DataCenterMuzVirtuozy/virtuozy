@@ -5,6 +5,13 @@
    moderation
  }
 
+
+ extension UserStatusExt on UserStatus{
+  bool get isModeration => this==UserStatus.moderation;
+  bool get isAuth => this == UserStatus.auth;
+  bool get isNotAuth => this == UserStatus.notAuth;
+ }
+
  class UserEntity{
 
    final String lastName;

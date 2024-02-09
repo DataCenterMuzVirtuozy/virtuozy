@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/router/paths.dart';
 import 'package:virtuozy/utils/auth_mixin.dart';
 
@@ -26,12 +27,12 @@ class _SchedulePageState extends State<SchedulePage> with AuthMixin{
   @override
   Widget build(BuildContext context) {
 
-    if(notAuthorized || moderation){
+    if(user.userStatus.isModeration || user.userStatus.isNotAuth){
       return Center(
         child: BoxInfo(
-            buttonVisible: !notAuthorized,
-            title: moderation?'Ваш аккаунт на модерации'.tr():'Расписание недоступно'.tr(),
-            description: moderation?'На период модерации работа с расписанием недоступна'.tr():
+            buttonVisible: user.userStatus.isNotAuth,
+            title: user.userStatus.isModeration?'Ваш аккаунт на модерации'.tr():'Расписание недоступно'.tr(),
+            description: user.userStatus.isModeration?'На период модерации работа с расписанием недоступна'.tr():
             'Для работы с расписанием необходимо авторизироваться'.tr(),
             iconData: Icons.calendar_month),
       );

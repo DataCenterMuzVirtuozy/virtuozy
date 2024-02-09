@@ -86,7 +86,8 @@ class _BranchSearchPageState extends State<BranchSearchPage> with TickerProvider
                       Text(state.authStatus == AuthStatus.searchLocation?'Поиск филиалов поблизости....'.tr():
                       'Для определения филиала в автоматическом режиме, включите определение геолокации на своем устройстве'.tr(),
                           textAlign: TextAlign.center,
-                          style: TStyle.textStyleVelaSansBold(colorBlack,size: 18.0)),
+                          style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,
+                              size: 18.0)),
                     ],
                   ),
 

@@ -2,6 +2,7 @@
 
 
  import 'package:equatable/equatable.dart';
+import 'package:virtuozy/domain/entities/user_entity.dart';
 
 class AuthEvent extends Equatable{
 
@@ -52,4 +53,9 @@ class CompleteSinIgEvent extends AuthEvent{
    });
  }
 
- class LogOutEvent extends AuthEvent{}
+ class LogOutEvent extends AuthEvent{
+  final UserEntity user;
+
+  const LogOutEvent({required this.user});
+
+ }

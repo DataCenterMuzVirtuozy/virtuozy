@@ -41,18 +41,20 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
        final phone = PreferencesUtil.phoneUser;
 
       if(event.phone == '+1 (111) 111-11-11'){
-        userCubit.setUser(user: const UserEntity(
-          userStatus: UserStatus.auth,
+        const user = UserEntity(
+            userStatus: UserStatus.auth,
             lastName: 'Петров',
             firstName: 'Иван',
             branchName: 'Москва',
-            phoneNumber: '+1 (111) 111-11-11'));
+            phoneNumber: '+1 (111) 111-11-11');
+        userCubit.setUser(user: user);
+        await _createLocalUser(user);
         await Future.delayed(const Duration(seconds: 2));
         emit(state.copyWith(authStatus: AuthStatus.authenticated));
         return;
       }
 
-      if(phone == event.phone){
+      if(phone == event.phone&& phone!='+1 (111) 111-11-11'){
         await Future.delayed(const Duration(seconds: 2));
         userCubit.setUser(user:  UserEntity(
             userStatus: UserStatus.moderation,
@@ -83,7 +85,13 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
       }else if(event.phone.isEmpty){
         throw Failure('Введите номер телефона'.tr());
       }
-      await _createLocalUser(event);
+      user =  UserEntity(
+          userStatus: UserStatus.moderation,
+          lastName: event.lastName,
+          firstName: event.firstName,
+          branchName: '',
+          phoneNumber: event.phone);
+      await _createLocalUser(user);
       emit(state.copyWith(authStatus: AuthStatus.onSearchLocation));
     }on Failure catch(e){
        emit(state.copyWith(authStatus: AuthStatus.error,error: e.message));
@@ -91,17 +99,15 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
 
   }
 
-  Future<void> _createLocalUser(SingInEvent event) async {
-     await PreferencesUtil.setFirstNameUser(firstName: event.firstName);
-     await PreferencesUtil.setLastNameUser(lastName: event.lastName);
-     await PreferencesUtil.setPhoneUser(phone: event.phone);
-     await PreferencesUtil.setStatusUser(status: 2);
-     user = UserEntity(
-        userStatus: UserStatus.moderation,
-        lastName: event.lastName,
-        firstName: event.firstName,
-        branchName: '',
-        phoneNumber: event.phone);
+  Future<void> _createLocalUser(UserEntity user) async {
+     await PreferencesUtil.setFirstNameUser(firstName: user.firstName);
+     await PreferencesUtil.setLastNameUser(lastName: user.lastName);
+     await PreferencesUtil.setPhoneUser(phone: user.phoneNumber);
+     await PreferencesUtil.setStatusUser(status:
+     user.userStatus == UserStatus.moderation?2:
+         user.userStatus == UserStatus.auth?1:0
+     );
+
     userCubit.setUser(user:user);
   }
 
@@ -131,7 +137,10 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
   }
 
   void _logOut(LogOutEvent event,emit) async {
-    await PreferencesUtil.clear();
+    if(event.user.userStatus.isModeration || event.user.userStatus.isAuth){
+      await PreferencesUtil.clear();
+    }
+
    emit(state.copyWith(authStatus: AuthStatus.logOut));
   }
 

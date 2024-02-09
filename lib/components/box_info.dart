@@ -2,8 +2,10 @@
   import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:virtuozy/components/buttons.dart';
 import 'package:virtuozy/resourses/colors.dart';
+import 'package:virtuozy/router/paths.dart';
 
 import '../utils/text_style.dart';
 
@@ -43,6 +45,9 @@ class BoxInfo extends StatelessWidget{
             Visibility(
               visible: buttonVisible,
                 child:  OutLineButton(
+                  onTap: (){
+                    GoRouter.of(context).pushReplacement(pathLogIn);
+                  },
                   width: 100.0,
                   textButton: 'Войти'.tr(),
                 ))

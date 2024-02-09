@@ -37,10 +37,12 @@ class SuccessSendSMS extends StatelessWidget{
                 const Gap(40.0),
                 Text('Поздравляем с регистрацией в личном кабинете!'.tr(),
                     textAlign: TextAlign.center,
-                    style: TStyle.textStyleVelaSansBold(colorBlack,size: 20.0)),
+                    style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,
+                        size: 20.0)),
                 Text('Ожидайте СМС с паролем от сотрудника школы.'.tr(),
                     textAlign: TextAlign.center,
-                    style: TStyle.textStyleVelaSansBold(colorBlack,size: 20.0)),
+                    style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,
+                        size: 20.0)),
               ],
             ),
             const Gap(20.0),
@@ -56,7 +58,7 @@ class SuccessSendSMS extends StatelessWidget{
                    onFinished: (){
                      GoRouter.of(context).pushReplacement(pathLogIn);
                    },
-                   seconds: 30,
+                   seconds: 10,
                    build: (c,i){
                      return Column(
                        children: [

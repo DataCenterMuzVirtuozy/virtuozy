@@ -9,8 +9,8 @@ import '../di/locator.dart';
 
 mixin AuthMixin<T extends StatefulWidget> on State<T> {
   final userCubit = locator.get<UserCubit>();
-  bool get notAuthorized => context.read<AppBloc>().state.authStatusCheck != AuthStatusCheck.authenticated;
-  bool get moderation => context.read<AppBloc>().state.authStatusCheck == AuthStatusCheck.moderation;
   UserEntity get user =>userCubit.userEntity;
+
+
 
 }

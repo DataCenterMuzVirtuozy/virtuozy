@@ -9,6 +9,7 @@ import 'package:go_router/go_router.dart';
 import 'package:virtuozy/components/box_info.dart';
 import 'package:virtuozy/components/calendar.dart';
 import 'package:virtuozy/components/dialogs/dialoger.dart';
+import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/router/paths.dart';
 import 'package:virtuozy/utils/auth_mixin.dart';
@@ -53,12 +54,12 @@ class _HomePageState extends State<HomePage> with AuthMixin{
   @override
   Widget build(BuildContext context) {
 
-    if(notAuthorized || moderation){
+    if(user.userStatus.isModeration || user.userStatus.isNotAuth){
       return Center(
         child: BoxInfo(
-            buttonVisible: !notAuthorized,
-            title: moderation?'Ваш аккаунт на модерации'.tr():'Абонементы недоступны'.tr(),
-            description: moderation?'На период модерации работа с абонементами недоступна'.tr():
+            buttonVisible: user.userStatus.isNotAuth,
+            title: user.userStatus.isModeration?'Ваш аккаунт на модерации'.tr():'Абонементы недоступны'.tr(),
+            description: user.userStatus.isModeration?'На период модерации работа с абонементами недоступна'.tr():
             'Для работы с абонементами необходимо авторизироваться'.tr(),
             iconData: CupertinoIcons.music_note_list),
       );
@@ -109,6 +110,9 @@ class _HomePageState extends State<HomePage> with AuthMixin{
                  SizedBox(
                    height: 40.0,
                    child: OutLineButton(
+                     onTap: (){
+
+                     },
                      borderRadius: 10.0,
                      textButton: 'Получить бонусный урок'.tr(),
                    ),

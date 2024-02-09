@@ -73,7 +73,8 @@ class _LogInPageState extends State<LogInPage> {
                       title: s.error);
                 }
 
-                if(s.authStatus == AuthStatus.authenticated){
+                if(s.authStatus == AuthStatus.authenticated||
+                    s.authStatus == AuthStatus.moderation){
                   GoRouter.of(context).pushReplacement(pathMain);
                 }
 
@@ -102,7 +103,8 @@ class _LogInPageState extends State<LogInPage> {
                       const Gap(30.0),
                       Image.asset(illustration_5),
                       const Gap(30.0),
-                      Text('Добро пожаловать!'.tr(),style: TStyle.textStyleVelaSansBold(colorBlack,size: 25.0)),
+                      Text('Добро пожаловать!'.tr(),style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,
+                          size: 25.0)),
                     ],
                   ),
                   const Gap(30.0),
@@ -122,9 +124,19 @@ class _LogInPageState extends State<LogInPage> {
                           iconData: Icons.code,
                           fillColor: colorPink.withOpacity(0.5)),
                       const Gap(20.0),
-                      Text('Не пришел пароль по СМС? Позвоните по телефону 8 (499) 322-71-04'.tr(),
-                      textAlign: TextAlign.center,
-                      style: TStyle.textStyleVelaSansMedium(colorRed,size: 14.0),),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text('Не пришел пароль по СМС? Позвоните по телефону'.tr(),
+                          textAlign: TextAlign.center,
+                          style: TStyle.textStyleVelaSansMedium(colorRed,size: 14.0),),
+                         TextButton(onPressed: () async {
+                            await _launchUrlTel(tel: '8 (499) 322-71-04');
+                         },
+                             child:  Text('8 (499) 322-71-04',
+                               style: TStyle.textStyleVelaSansRegularUnderline(colorRed,size: 16.0),))
+                        ],
+                      ),
                       const Gap(20.0),
                       SubmitButton(
                         onTap: (){
@@ -142,7 +154,8 @@ class _LogInPageState extends State<LogInPage> {
 
                       },
                           child: Text('Регистрация'.tr(),
-                          style: TStyle.textStyleVelaSansRegularUnderline(colorBlack,size: 18.0),)),
+                          style: TStyle.textStyleVelaSansRegularUnderline(Theme.of(context).textTheme.displayMedium!.color!,
+                              size: 18.0),)),
                       const Gap(20.0),
                       InkWell(
                         onTap: () async {
@@ -167,6 +180,15 @@ class _LogInPageState extends State<LogInPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _launchUrlTel({required String tel}) async {
+    final Uri url = Uri(
+        scheme:'tel',
+      path: tel);
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    }
   }
 
   Future<void> _launchUrl() async {

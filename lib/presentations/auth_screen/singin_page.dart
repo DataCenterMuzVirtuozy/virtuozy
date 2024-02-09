@@ -84,7 +84,9 @@ class _SingInPageState extends State<SingInPage> {
                       const Gap(30.0),
                       Image.asset(illustration_5),
                       const Gap(20.0),
-                      Text('Добро пожаловать!'.tr(),style: TStyle.textStyleVelaSansBold(colorBlack,size: 25.0)),
+                      Text('Добро пожаловать!'.tr(),style: TStyle.textStyleVelaSansBold(
+                          Theme.of(context).textTheme.displayMedium!.color!,
+                          size: 25.0)),
                     ],
                   ),
                   const Gap(20.0),
@@ -115,7 +117,9 @@ class _SingInPageState extends State<SingInPage> {
                         Navigator.pop(context);
                       },
                           child: Text('Вход'.tr(),
-                            style: TStyle.textStyleVelaSansRegularUnderline(colorBlack,size: 18.0),)),
+                            style: TStyle.textStyleVelaSansRegularUnderline(
+                                Theme.of(context).textTheme.displayMedium!.color!,
+                                size: 18.0),)),
                       const Gap(20.0),
                       InkWell(
                         onTap: () async {

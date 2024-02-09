@@ -86,7 +86,8 @@ class _SelectBranchContentState extends State<SelectBranchContent> {
            child: Icon(Icons.location_on_outlined,color: colorOrange),
          ),
          const Gap(15.0),
-         Expanded(child: Text(branch,style: TStyle.textStyleVelaSansBold(colorBlack,size: 14.0))),
+         Expanded(child: Text(branch,style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,
+             size: 14.0))),
          Checkbox(
              activeColor: colorPink,
              value: selected,

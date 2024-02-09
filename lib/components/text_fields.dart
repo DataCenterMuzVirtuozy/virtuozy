@@ -29,10 +29,10 @@ class PhoneField extends StatelessWidget {
         keyboardType: TextInputType.phone,
         textAlign: TextAlign.start,
         controller: controller,
-        style: TextStyle(color: colorBlack),
+        style: TextStyle(color: Theme.of(context).textTheme.displayMedium!.color!),
         decoration: InputDecoration(
             filled: true,
-            fillColor: colorPink.withOpacity(0.5),
+            fillColor: Theme.of(context).colorScheme.background,
             suffixIcon: Padding(
               padding: const EdgeInsets.all(14.0),
               child: Icon(Icons.phone,color: colorGrey),
@@ -102,10 +102,10 @@ class CustomField extends StatelessWidget {
         keyboardType: textInputType,
         textAlign: TextAlign.start,
         controller: controller,
-        style: TextStyle(color: colorBlack),
+        style: TextStyle(color: Theme.of(context).textTheme.displayMedium!.color!),
         decoration: InputDecoration(
             filled: true,
-            fillColor:  colorPink.withOpacity(0.5),
+            fillColor:  Theme.of(context).colorScheme.background,
             suffixIcon: iconData != null?Padding(
               padding: const EdgeInsets.all(14.0),
               child: Icon(iconData,color: colorGrey),
@@ -154,7 +154,7 @@ class _PassFieldLoginState extends State<PassFieldLogin> {
         keyboardType: TextInputType.visiblePassword,
         textAlign: TextAlign.start,
         controller: widget.controller,
-        style: TextStyle(color: colorBlack),
+        style: TextStyle(color: Theme.of(context).textTheme.displayMedium!.color!),
         decoration: InputDecoration(
             filled: true,
             fillColor: colorWhite,

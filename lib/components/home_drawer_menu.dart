@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtuozy/di/locator.dart';
+import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/domain/user_cubit.dart';
 import 'package:virtuozy/presentations/auth_screen/bloc/auth_bloc.dart';
 import 'package:virtuozy/presentations/auth_screen/bloc/auth_event.dart';
@@ -59,7 +60,7 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
         margin:const EdgeInsets.only(right: 100),
         width: width/1.2,
         decoration:  BoxDecoration(
-            color: colorWhite,
+            color: Theme.of(context).colorScheme.background,
           borderRadius: const BorderRadius.only(
                 topRight: Radius.circular(20.0),
                 bottomRight: Radius.circular(20.0))),
@@ -120,37 +121,36 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                     ],
                   ),
                   const Gap(20.0),
-                  DrawerItem(title: 'Мои абонементы'.tr(),textColor: colorBlack, onPressed: () {
+                  DrawerItem(title: 'Мои абонементы'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
                     widget.onSelectedPage.call(0);
                   },),
 
-                  DrawerItem(title: 'Расписание'.tr(),textColor: colorBlack, onPressed: () {
+                  DrawerItem(title: 'Расписание'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
                      widget.onSelectedPage.call(1);
                   },),
 
-                  DrawerItem(title: 'Финансы'.tr(),textColor: colorBlack, onPressed: () {
+                  DrawerItem(title: 'Финансы'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
                     widget.onSelectedPage.call(2);
                   },),
 
-                  DrawerItem(title: 'Предложения'.tr(),textColor: colorBlack, onPressed: () {
+                  DrawerItem(title: 'Предложения'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
                     widget.onSelectedPage.call(3);
                   },),
-                  DrawerItem(title: 'Тема'.tr(),textColor: colorBlack, onPressed: () {
+                  DrawerItem(title: 'Тема'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
                    GoRouter.of(context).push(pathTheme);
                   },),
 
 
-                  DrawerItem(title: 'Сайт'.tr(),textColor: colorBlack, onPressed: () {
+                  DrawerItem(title: 'Сайт'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
                     widget.onSelectedPage.call(4);
                   },),
 
                   DrawerItem(title:
-                  notAuthorized?'Войти'.tr():moderation?'Выйти'.tr():
+                  user.userStatus.isModeration || user.userStatus.isAuth?'Выйти'.tr():
                   'Войти'.tr(),
                     textColor: colorRed, onPressed: ()  {
-                      if(!notAuthorized || !moderation){
-                        context.read<AuthBloc>().add(LogOutEvent());
-                      }
+                    context.read<AuthBloc>().add(LogOutEvent(user: user));
+
                   },),
                 ],
               ),

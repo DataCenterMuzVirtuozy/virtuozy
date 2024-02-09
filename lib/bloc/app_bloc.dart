@@ -2,8 +2,11 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:virtuozy/domain/entities/user_entity.dart';
+import 'package:virtuozy/domain/user_cubit.dart';
 import 'package:virtuozy/utils/preferences_util.dart';
 
+import '../di/locator.dart';
 import '../utils/network_check.dart';
 part 'app_event.dart';
 part 'app_state.dart';
@@ -16,25 +19,44 @@ part 'app_state.dart';
   }
 
   final NetworkConnectivity _networkConnectivity = NetworkConnectivity.instance;
+  final userCubit = locator.get<UserCubit>();
   Map _source = {ConnectivityResult.none: false};
 
 
   void _initApp(InitAppEvent event,emit) async {
    emit(state.copyWith(authStatusCheck: AuthStatusCheck.unknown));
-   final user = PreferencesUtil.phoneUser;
-   final status = PreferencesUtil.statusUser;
+    final user = _getUser();
+    userCubit.setUser(user: user);
    await Future.delayed(const Duration(seconds: 3));
-   if(user.isEmpty){
+
+   if(user.userStatus == UserStatus.notAuth){
+    print('A1');
     emit(state.copyWith(authStatusCheck: AuthStatusCheck.unauthenticated));
    }else{
-    if(status == 1){
+    if(user.userStatus == UserStatus.auth){
+     print('A2');
      emit(state.copyWith(authStatusCheck: AuthStatusCheck.authenticated));
-    }else{
+    }else if(user.userStatus == UserStatus.moderation){
+     print('A3');
      emit(state.copyWith(authStatusCheck: AuthStatusCheck.moderation));
     }
 
    }
 
+  }
+
+
+  UserEntity _getUser(){
+   final phone = PreferencesUtil.phoneUser;
+   final status = PreferencesUtil.statusUser;
+   final lastName = PreferencesUtil.lastNameUser;
+   final firstName = PreferencesUtil.firstNameUser;
+   final branch = PreferencesUtil.branchUser;
+
+   return UserEntity(userStatus: status == 1?UserStatus.auth:
+       status == 2?UserStatus.moderation:UserStatus.notAuth,
+       lastName: lastName, firstName: firstName, branchName: branch,
+       phoneNumber: phone);
   }
 
 
