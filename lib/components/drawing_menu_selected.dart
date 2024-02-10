@@ -118,13 +118,16 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
             }),
         GestureDetector(
           onTap: (){
-            if(isDraw){
-              isDraw=false;
-              animationController.reverse();
-            }else{
-              isDraw=true;
-              animationController.forward();
+            if(widget.items.length>1){
+              if(isDraw){
+                isDraw=false;
+                animationController.reverse();
+              }else{
+                isDraw=true;
+                animationController.forward();
+              }
             }
+
 
           },
           child: AnimatedBuilder(
@@ -151,13 +154,16 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
                           },
                           valueListenable: changeTextNotifier,
                         ),
-                        RotatedBox(
-                            quarterTurns: 1,
-                            child: Icon(
-                              Icons.arrow_forward_ios_rounded,
-                              color: colorGrey,
-                              size: 16.0,
-                            )),
+                        Visibility(
+                          visible: widget.items.length>1,
+                          child: RotatedBox(
+                              quarterTurns: 1,
+                              child: Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                color: colorGrey,
+                                size: 16.0,
+                              )),
+                        ),
                       ],
                     ));
               }

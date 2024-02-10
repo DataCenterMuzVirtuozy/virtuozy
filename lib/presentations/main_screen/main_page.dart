@@ -10,10 +10,7 @@ import 'package:go_router/go_router.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:virtuozy/components/home_drawer_menu.dart';
 import 'package:virtuozy/presentations/auth_screen/bloc/auth_state.dart';
-import 'package:virtuozy/presentations/finance_screen/pay_page.dart';
-import 'package:virtuozy/presentations/home_screen/home_page.dart';
 import 'package:virtuozy/presentations/schedule_screen/schedule_page.dart';
-import 'package:virtuozy/presentations/theme_screen/theme_page.dart';
 import 'package:virtuozy/presentations/web_screen/web_page.dart';
 import 'package:virtuozy/presentations/promotion_screen/promotion_page.dart';
 import 'package:virtuozy/resourses/colors.dart';
@@ -22,8 +19,10 @@ import 'package:virtuozy/resourses/images.dart';
 import 'package:virtuozy/router/paths.dart';
 
 import '../../utils/text_style.dart';
+import '../../utils/theme_provider.dart';
 import '../auth_screen/bloc/auth_bloc.dart';
 import '../finance_screen/finance_page.dart';
+import '../subscription_screen/subscription_page.dart';
 
 class MainPage extends StatefulWidget{
   const MainPage({super.key});
@@ -38,6 +37,7 @@ class _MainPageState extends State<MainPage> {
   late PersistentTabController _controller;
   final scaffoldKey = GlobalKey<ScaffoldState>();
   int _indexPage = 0;
+  bool _darkTheme = false;
 
   @override
   void initState() {
@@ -45,6 +45,16 @@ class _MainPageState extends State<MainPage> {
     _controller = PersistentTabController(initialIndex: 0);
 
   }
+
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _darkTheme = context.watch<ThemeProvider>().themeStatus == ThemeStatus.dark;
+
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -68,13 +78,8 @@ class _MainPageState extends State<MainPage> {
                     IconButton(onPressed: (){
                       _openMenu();
                     }, icon:  Icon(Icons.menu_open_rounded,color: Theme.of(context).iconTheme.color)),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30.0),
-                        color: colorWhite
-                      ),
-                        child: SvgPicture.asset(logo,width: 100.0)),
+                    _darkTheme?Image.asset(logoDark,width: 100.0):
+                    SvgPicture.asset(logo, width: 100.0),
                     badges.Badge(
                         position: badges.BadgePosition.topStart(start: 5.0,top: 3.0),
                       showBadge: true,
@@ -135,7 +140,7 @@ class _MainPageState extends State<MainPage> {
 
   List<Widget> _buildScreens() {
     return [
-      const HomePage(),
+      const SubscriptionPage(),
       const SchedulePage(),
       const FinancePage(),
       const PromotionPage(),

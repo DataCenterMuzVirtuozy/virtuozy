@@ -12,5 +12,6 @@
    String get logoColumn =>'lib/assets/img/logo_column.png';
    String get spbPay =>'lib/assets/img/spb.png';
    String get animationLocation => 'lib/assets/animations/search_location.json';
+   String get logoDark =>'lib/assets/img/logo_dark.png';
 
 

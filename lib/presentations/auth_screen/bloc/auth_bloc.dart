@@ -6,6 +6,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:virtuozy/di/locator.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
+import 'package:virtuozy/domain/repository/user_repository.dart';
 import 'package:virtuozy/domain/user_cubit.dart';
 import 'package:virtuozy/presentations/auth_screen/bloc/auth_event.dart';
 import 'package:virtuozy/presentations/auth_screen/bloc/auth_state.dart';
@@ -23,7 +24,8 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
   }
 
 
-    final userCubit = locator.get<UserCubit>();
+    final _userCubit = locator.get<UserCubit>();
+    final _userRepository = locator.get<UserRepository>();
     late UserEntity user;
 
 
@@ -41,13 +43,8 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
        final phone = PreferencesUtil.phoneUser;
 
       if(event.phone == '+1 (111) 111-11-11'){
-        const user = UserEntity(
-            userStatus: UserStatus.auth,
-            lastName: 'Петров',
-            firstName: 'Иван',
-            branchName: 'Москва',
-            phoneNumber: '+1 (111) 111-11-11');
-        userCubit.setUser(user: user);
+        final user = await _userRepository.getUser();
+        _userCubit.setUser(user: user);
         await _createLocalUser(user);
         await Future.delayed(const Duration(seconds: 2));
         emit(state.copyWith(authStatus: AuthStatus.authenticated));
@@ -56,12 +53,14 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
 
       if(phone == event.phone&& phone!='+1 (111) 111-11-11'){
         await Future.delayed(const Duration(seconds: 2));
-        userCubit.setUser(user:  UserEntity(
+        _userCubit.setUser(user:  UserEntity(
             userStatus: UserStatus.moderation,
             lastName: PreferencesUtil.lastNameUser,
             firstName: PreferencesUtil.firstNameUser,
             branchName: PreferencesUtil.branchUser,
-            phoneNumber: PreferencesUtil.phoneUser));
+            phoneNumber: PreferencesUtil.phoneUser,
+            userType: UserType.student,
+            directions: []));
         emit(state.copyWith(authStatus: AuthStatus.moderation));
         return;
       }
@@ -85,12 +84,16 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
       }else if(event.phone.isEmpty){
         throw Failure('Введите номер телефона'.tr());
       }
+
+
       user =  UserEntity(
           userStatus: UserStatus.moderation,
           lastName: event.lastName,
           firstName: event.firstName,
           branchName: '',
-          phoneNumber: event.phone);
+          phoneNumber: event.phone,
+          userType: UserType.student,
+          directions: []);
       await _createLocalUser(user);
       emit(state.copyWith(authStatus: AuthStatus.onSearchLocation));
     }on Failure catch(e){
@@ -108,16 +111,16 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
          user.userStatus == UserStatus.auth?1:0
      );
 
-    userCubit.setUser(user:user);
+    _userCubit.setUser(user:user);
   }
 
   Future<void> _completeSingIn(CompleteSinIgEvent event,emit) async{
     try{
       await PreferencesUtil.setBranchUser(branch: event.branch);
       user = user.copyWith(branchName: event.branch);
-      userCubit.updateUser(newUser: user);
+      _userCubit.updateUser(newUser: user);
     } on Failure catch(e){
-
+       Failure(e.message);
     }
   }
 

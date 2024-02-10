@@ -3,6 +3,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
+import 'package:virtuozy/domain/repository/user_repository.dart';
 import 'package:virtuozy/domain/user_cubit.dart';
 import 'package:virtuozy/utils/preferences_util.dart';
 
@@ -19,25 +20,21 @@ part 'app_state.dart';
   }
 
   final NetworkConnectivity _networkConnectivity = NetworkConnectivity.instance;
-  final userCubit = locator.get<UserCubit>();
+  final _userCubit = locator.get<UserCubit>();
+  final _userRepository = locator.get<UserRepository>();
   Map _source = {ConnectivityResult.none: false};
 
 
   void _initApp(InitAppEvent event,emit) async {
    emit(state.copyWith(authStatusCheck: AuthStatusCheck.unknown));
-    final user = _getUser();
-    userCubit.setUser(user: user);
-   await Future.delayed(const Duration(seconds: 3));
-
-   if(user.userStatus == UserStatus.notAuth){
-    print('A1');
+    final user = await _getUser();
+    _userCubit.setUser(user: user);
+    if(user.userStatus == UserStatus.notAuth){
     emit(state.copyWith(authStatusCheck: AuthStatusCheck.unauthenticated));
    }else{
     if(user.userStatus == UserStatus.auth){
-     print('A2');
      emit(state.copyWith(authStatusCheck: AuthStatusCheck.authenticated));
     }else if(user.userStatus == UserStatus.moderation){
-     print('A3');
      emit(state.copyWith(authStatusCheck: AuthStatusCheck.moderation));
     }
 
@@ -46,17 +43,13 @@ part 'app_state.dart';
   }
 
 
-  UserEntity _getUser(){
-   final phone = PreferencesUtil.phoneUser;
-   final status = PreferencesUtil.statusUser;
-   final lastName = PreferencesUtil.lastNameUser;
-   final firstName = PreferencesUtil.firstNameUser;
-   final branch = PreferencesUtil.branchUser;
-
-   return UserEntity(userStatus: status == 1?UserStatus.auth:
-       status == 2?UserStatus.moderation:UserStatus.notAuth,
-       lastName: lastName, firstName: firstName, branchName: branch,
-       phoneNumber: phone);
+  Future<UserEntity> _getUser() async {
+   // final phone = PreferencesUtil.phoneUser;
+   // final status = PreferencesUtil.statusUser;
+   // final lastName = PreferencesUtil.lastNameUser;
+   // final firstName = PreferencesUtil.firstNameUser;
+   // final branch = PreferencesUtil.branchUser;
+   return await _userRepository.getUser();
   }
 
 
