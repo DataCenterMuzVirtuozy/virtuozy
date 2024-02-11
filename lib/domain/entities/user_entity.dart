@@ -107,13 +107,14 @@ class Direction{
 }
 
  enum LessonStatus{
-   booked,
+   planned,
    complete,
    out,
    cancel,
    trial,
    reservation,
    singly,
+   awaitAccept,
    unknown
  }
 

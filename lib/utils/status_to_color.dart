@@ -15,20 +15,37 @@ class StatusToColor{
    const Color.fromRGBO(243, 243, 243, 1.0),
    const Color.fromRGBO(120, 63, 4, 1.0),
    const Color.fromRGBO(153, 0, 255, 1.0),
-   const Color.fromRGBO(255, 255, 255, 0.0)
+   const Color.fromRGBO(255, 255, 255, 1.0),
+    const Color.fromRGBO(0, 148, 77, 1.0)
   ];
+
+  static final List<String> _namesStatus = [
+    'Запланирован',
+    'Пробный урок',
+        'Отмена урока',
+    'Бронь',
+    'Пропуск',
+    'Самостоятельные',
+    'Проведен',
+     'Ожидает подтверждения ученика'
+  ];
+
+  static List<Color> get statusColors => _colors;
+
+ static List<String> get namesStatus => _namesStatus;
 
 
    static Color getColor({required LessonStatus lessonStatus}){
     switch(lessonStatus){
-     case LessonStatus.booked: return _colors[0];
+     case LessonStatus.planned: return _colors[6];
      case LessonStatus.complete: return _colors[0];
      case LessonStatus.cancel: return _colors[2];
      case LessonStatus.out: return _colors[4];
      case LessonStatus.reservation: return _colors[3];
-     case LessonStatus.singly: return _colors[5];
+     case LessonStatus.singly: return _colors[4];
      case LessonStatus.trial: return _colors[1];
-      case LessonStatus.unknown: return _colors[6];
+      case LessonStatus.awaitAccept:return _colors[7];
+      case LessonStatus.unknown: return const Color.fromRGBO(255, 255, 255, 0.0);
 
     }
 

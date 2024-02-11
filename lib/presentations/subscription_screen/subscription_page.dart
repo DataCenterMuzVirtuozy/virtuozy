@@ -16,7 +16,7 @@ import 'package:virtuozy/presentations/subscription_screen/bloc/sub_event.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/router/paths.dart';
 import 'package:virtuozy/utils/auth_mixin.dart';
-
+ import 'package:badges/badges.dart' as badges;
 import '../../components/buttons.dart';
 import '../../components/dialogs/sealeds.dart';
 import '../../components/drawing_menu_selected.dart';
@@ -34,13 +34,13 @@ class SubscriptionPage extends StatefulWidget{
 class _SubscriptionPageState extends State<SubscriptionPage>{
   int _selIndexDirection = 0;
 
-  List<String> _listDirection =  [];
+  List<Direction> _listDirection =  [];
 
 
   @override
   void initState() {
     super.initState();
-    context.read<SubBloc>().add(GetUserEvent());
+    context.read<SubBloc>().add(GetUserEvent(currentDirIndex: _selIndexDirection));
   }
 
 
@@ -50,18 +50,22 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
 
   }
 
+
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
 
-
-
-   return BlocConsumer<SubBloc,SubState>(
+    return BlocConsumer<SubBloc,SubState>(
      listener: (c,s){
 
      },
      builder: (context,state) {
 
-       _listDirection = state.userEntity.directions.map((e) => e.name).toList();
+       _listDirection = state.userEntity.directions;
 
        if(state.userEntity.userStatus.isModeration || state.userEntity.userStatus.isModeration){
          return Center(
@@ -94,7 +98,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                //todo local
                Padding(
                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                 child: DrawingMenuSelected(items: _listDirection,
+                 child: DrawingMenuSelected(items: _listDirection.map((e) => e.name).toList(),
                    onSelected: (index){
                      setState(() {
                        _selIndexDirection = index;
@@ -106,8 +110,8 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                const Gap(10.0),
                Column(
                  children: List.generate(_listDirection.length, (index) {
-                  return  ItemSubscription(direction: _selIndexDirection==3?'':
-                  _listDirection[_selIndexDirection]);
+                  return  ItemSubscription(
+                      direction: _listDirection[_selIndexDirection]);
                  }),
                ),
                const Gap(10.0),
@@ -115,27 +119,42 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
                  child: Column(
                    children: [
-                     SizedBox(
-                       height: 40.0,
-                       child: SubmitButton(
-                         onTap: (){
-                           Dialoger.showBottomMenu(title:'Урок',context: context,
-                           content: ConfirmLesson());
-                         },
-                         colorFill: Theme.of(context).colorScheme.tertiary,
-                      borderRadius: 10.0,
-                      textButton: 'Подтвердите прохождение урока'.tr(),
+                     Visibility(
+                       visible: state.lengthNotAcceptLesson>0,
+                       child: badges.Badge(
+                         position: badges.BadgePosition.topEnd(end: -5.0,top: -8.0),
+                         showBadge: state.lengthNotAcceptLesson>1,
+                         badgeContent: Text('${state.lengthNotAcceptLesson}',
+                             style: TStyle.textStyleVelaSansBold(colorWhite)),
+                         child: SizedBox(
+                           height: 40.0,
+                           child: SubmitButton(
+                             onTap: (){
+                               Dialoger.showBottomMenu(
+                                   title:'Урок',context: context,
+                               content: ConfirmLesson());
+                             },
+                             //colorFill: Theme.of(context).colorScheme.tertiary,
+                                colorFill: colorGreen,
+                                borderRadius: 10.0,
+                                textButton:
+                                    'Подтвердите прохождение урока'.tr(),
+                              ),
+                         ),
                        ),
                      ),
                      const Gap(10.0),
-                     SizedBox(
-                       height: 40.0,
-                       child: OutLineButton(
-                         onTap: (){
+                     Visibility(
+                       visible: _listDirection[_selIndexDirection].bonus.isNotEmpty,
+                       child: SizedBox(
+                         height: 40.0,
+                         child: OutLineButton(
+                           onTap: (){
 
-                         },
-                         borderRadius: 10.0,
-                         textButton: 'Получить бонусный урок'.tr(),
+                           },
+                           borderRadius: 10.0,
+                           textButton: 'Получить бонусный урок'.tr(),
+                         ),
                        ),
                      ),
                    ],
@@ -155,7 +174,12 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
   const ItemSubscription({super.key,
   required this.direction});
 
-  final String direction;
+  final Direction direction;
+
+
+  int _freeLessons({required List<Lesson> lessons}){
+    return lessons.where((element) => element.status == LessonStatus.planned).length;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -179,8 +203,22 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               //todo local
-              Text('Вокал',style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
-              Text('2 урока осталось',style:TStyle.textStyleVelaSansMedium(colorGrey,size: 14.0)),
+              Text(direction.name,
+                  style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
+              Row(
+                children: [
+                  Text('Осталось уроков '.tr(),style:TStyle.textStyleVelaSansMedium(colorGrey,size: 14.0)),
+                  const Gap(5.0),
+                  Container(
+                    padding: const EdgeInsets.all(5.0),
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.secondary,
+                        shape: BoxShape.circle),
+                    child: Text('${_freeLessons(lessons: direction.lessons)}',
+                        style:TStyle.textStyleVelaSansMedium(colorWhite,size: 14.0)),
+                  ),
+                ],
+              ),
             ],
           ),
           const Gap(5.0),
@@ -192,11 +230,13 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                     color: Theme.of(context).colorScheme.secondary,
                     shape: BoxShape.circle
                 ),
-                child: Icon(CupertinoIcons.money_rubl_circle,color: colorWhite,size: 25.0,),),
+                child: Icon(CupertinoIcons.money_rubl_circle,color: colorWhite,size: 20.0,),),
               const Gap(5.0),
               Row(
                 children: [
-                  Text('8999',style:TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 25.0)),
+                  Text(direction.balance>0.0?'${direction.balance}':
+                      '0.00',
+                      style:TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 25.0)),
                   Icon(CupertinoIcons.money_rubl,color: Theme.of(context).iconTheme.color,size: 30.0,)
                 ],
               ),

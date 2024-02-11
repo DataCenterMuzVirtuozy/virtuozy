@@ -29,13 +29,14 @@ class UserMapper{
 
   static LessonStatus _lessonStatus(int status){
     switch(status){
-      case 1: return LessonStatus.booked;
+      case 1: return LessonStatus.planned;
       case 2: return LessonStatus.complete;
       case 3: return LessonStatus.cancel;
       case 4: return LessonStatus.out;
       case 5: return LessonStatus.reservation;
       case 6: return LessonStatus.singly;
       case 7: return LessonStatus.trial;
+      case 8:return LessonStatus.awaitAccept;
     }
     return LessonStatus.unknown;
   }

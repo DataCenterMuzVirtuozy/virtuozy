@@ -90,11 +90,25 @@ class UserService{
        'status': 1,
       },
       {
-       'date': '2024-02-20',
+       'date': '2024-02-22',
+       'timePeriod': '12:00-13:00',
+       'idAuditory': 120,
+       'nameTeacher': 'Данилина Д.Д.',
+       'status': 8,
+      },
+      {
+       'date': '2024-02-25',
        'timePeriod': '12:00-13:00',
        'idAuditory': 120,
        'nameTeacher': 'Данилина Д.Д.',
        'status': 1,
+      },
+      {
+       'date': '2024-02-28',
+       'timePeriod': '12:00-13:00',
+       'idAuditory': 120,
+       'nameTeacher': 'Данилина Д.Д.',
+       'status': 8,
       },
 
      ],

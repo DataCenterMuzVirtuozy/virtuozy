@@ -15,6 +15,7 @@ enum SubStatus{
 
   final SubStatus subStatus;
   final String error;
+  final int lengthNotAcceptLesson;
   final UserEntity userEntity;
 
 
@@ -22,10 +23,12 @@ enum SubStatus{
   return SubState(
       subStatus: SubStatus.unknown,
       error: '',
-      userEntity: UserEntity.unknown());
+      userEntity: UserEntity.unknown(),
+      lengthNotAcceptLesson: 0);
  }
 
   const SubState({
+    required this.lengthNotAcceptLesson,
     required this.subStatus,
     required this.error,
     required this.userEntity,
@@ -38,8 +41,10 @@ enum SubStatus{
     SubStatus? subStatus,
     String? error,
     UserEntity? userEntity,
+    int? lengthNotAcceptLesson
   }) {
     return SubState(
+      lengthNotAcceptLesson: lengthNotAcceptLesson??this.lengthNotAcceptLesson,
       subStatus: subStatus ?? this.subStatus,
       error: error ?? this.error,
       userEntity: userEntity ?? this.userEntity,

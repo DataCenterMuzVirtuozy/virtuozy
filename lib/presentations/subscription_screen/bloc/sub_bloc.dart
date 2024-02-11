@@ -7,6 +7,8 @@ import 'package:virtuozy/presentations/subscription_screen/bloc/sub_event.dart';
 import 'package:virtuozy/presentations/subscription_screen/bloc/sub_state.dart';
 import 'package:virtuozy/utils/failure.dart';
 
+import '../../../domain/entities/user_entity.dart';
+
 class SubBloc extends Bloc<SubEvent,SubState>{
   SubBloc():super(SubState.unknown()){
     on<GetUserEvent>(_getUser);
@@ -20,10 +22,16 @@ class SubBloc extends Bloc<SubEvent,SubState>{
      try{
       emit(state.copyWith(subStatus: SubStatus.loading));
        final user = _userCubit.userEntity;
-       emit(state.copyWith(userEntity: user,subStatus: SubStatus.loaded));
+       final lengthNotAcceptLesson = _lengthNotAcceptLesson(lessons: user.directions[event.currentDirIndex].lessons);
+       emit(state.copyWith(userEntity: user,subStatus: SubStatus.loaded,lengthNotAcceptLesson: lengthNotAcceptLesson));
      }on Failure catch(e){
       throw Failure(e.message);
      }
+  }
+
+
+  int _lengthNotAcceptLesson({required List<Lesson> lessons}){
+    return lessons.where((element) => element.status == LessonStatus.awaitAccept).length;
   }
 
  }

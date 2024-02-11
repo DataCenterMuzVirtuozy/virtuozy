@@ -138,7 +138,7 @@ class Dialoger{
                   top: 10.0),
               decoration: BoxDecoration(
          color: Theme.of(context).colorScheme.background,
-         borderRadius: const BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30))
+                  borderRadius: const BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30))
          ),
            child: Column(
              children: [
