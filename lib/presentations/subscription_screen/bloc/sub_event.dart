@@ -2,6 +2,7 @@
 
 
  import 'package:equatable/equatable.dart';
+import 'package:virtuozy/domain/entities/user_entity.dart';
 
 
 
@@ -18,4 +19,14 @@ class GetUserEvent extends SubEvent{
   final int currentDirIndex;
 
   const GetUserEvent({required this.currentDirIndex});
+}
+
+class AcceptLessonEvent extends SubEvent{
+  final Lesson lesson;
+  final Direction direction;
+
+  const AcceptLessonEvent({
+    required this.direction,
+    required this.lesson});
+
 }

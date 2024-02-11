@@ -4,15 +4,24 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:gap/gap.dart';
+import 'package:virtuozy/domain/entities/user_entity.dart';
+import 'package:virtuozy/presentations/subscription_screen/bloc/sub_bloc.dart';
+import 'package:virtuozy/presentations/subscription_screen/bloc/sub_event.dart';
 
 import '../../../resourses/colors.dart';
 import '../../../utils/text_style.dart';
 import '../../buttons.dart';
 
 class StepsConfirmLesson extends StatefulWidget{
-  const StepsConfirmLesson({super.key});
+  const StepsConfirmLesson({super.key, required this.lesson,
+    required this.direction});
+
+  final Lesson lesson;
+  final Direction direction;
+
 
   @override
   State<StepsConfirmLesson> createState() => _StepsConfirmLessonState();
@@ -56,12 +65,18 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson> {
               physics: const NeverScrollableScrollPhysics(),
               controller: _pageController,
               children: [
-                step_1(next: (){
+                step_1(
+                    next: (){
+                      //todo test
+                      context.read<SubBloc>().add(AcceptLessonEvent(direction: widget.direction,
+                          lesson: widget.lesson));
                   _pageController.animateToPage(1, duration: const Duration(milliseconds: 700), curve: Curves.ease);
                   setState(() {
                     _stepIndex = 1;
                   });
-                }),
+                }, lesson: widget.lesson,
+                    direction: widget.direction,
+                    context: context),
                 step_2(negative: (value){
                   setState(() {
                     if(value){
@@ -102,29 +117,65 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson> {
     );
   }
 
-  Widget step_1({required VoidCallback next}) => SingleChildScrollView(
+  Widget step_1({required VoidCallback next,
+    required BuildContext context,
+    required Lesson lesson,
+    required Direction direction}) => SingleChildScrollView(
     child: Column(
       children: [
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 10.0),
-          width: double.infinity,
-          decoration: BoxDecoration(
-              color: colorBeruzaLight,
-              borderRadius:  BorderRadius.circular(10.0)
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text('Среда, 1 ноября, 10:00 - 10:55',style: TStyle.textStyleVelaSansMedium(colorBlack,size: 18.0)),
-              const Gap(10.0),
-              Text('Кабинет №2338',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
-              const Gap(10.0),
-              Text('Иванов Иван Иванович',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
-              const Gap(10.0),
-              Text('Вокал',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
-            ],
-          ),
+    Container(
+    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+    width: double.infinity,
+    decoration: BoxDecoration(
+        color: colorBeruzaLight,
+        borderRadius: BorderRadius.circular(10.0)
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.calendar_month, color: colorBlack, size: 15.0),
+                const Gap(5.0),
+                Text(lesson.date,
+                    style: TStyle.textStyleVelaSansMedium(
+                        colorBlack, size: 16.0)),
+              ],
+            ),
+            Row(
+              children: [
+                Icon(Icons.timelapse_rounded, color: colorBlack, size: 15.0),
+                const Gap(5.0),
+                Text(lesson.timePeriod,
+                    style: TStyle.textStyleVelaSansMedium(
+                        colorBlack, size: 16.0)),
+              ],
+            ),
+          ],
         ),
+        const Gap(10.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Кабинет №',
+                style: TStyle.textStyleVelaSansMedium(colorGrey, size: 16.0)),
+            Text('${lesson.idAuditory}',
+                style: TStyle.textStyleVelaSansMedium(colorGrey, size: 16.0)),
+          ],
+        ),
+        const Gap(10.0),
+        Text(lesson.nameTeacher,
+            style: TStyle.textStyleVelaSansBold(colorBlack, size: 18.0)),
+        const Gap(10.0),
+        Text(direction.name,
+            style: TStyle.textStyleVelaSansMedium(colorGrey, size: 16.0)),
+        const Gap(20.0),
+     ],
+    ),
+  ),
 
         const Gap(10.0),
         SizedBox(

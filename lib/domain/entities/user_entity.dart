@@ -119,13 +119,17 @@ class Direction{
  }
 
 class Lesson{
+  final int id;
   final String date; //2024-12-22
    final String timePeriod;
+   final String timeAccept;
    final int idAuditory;
    final String nameTeacher;
    final LessonStatus status;
 
   const Lesson({
+    required this.id,
+    required this.timeAccept,
     required this.date,
     required this.timePeriod,
     required this.idAuditory,
@@ -133,19 +137,34 @@ class Lesson{
     required this.status,
   });
 
+
+  factory Lesson.unknown(){
+    return const Lesson(
+        timeAccept: '',
+        date: '',
+        timePeriod: '',
+        idAuditory: 0,
+        nameTeacher: '',
+        status: LessonStatus.unknown,
+        id: 0);
+  }
+
   Lesson copyWith({
     String? date,
     String? timePeriod,
     int? idAuditory,
     String? nameTeacher,
     LessonStatus? status,
+    String? timeAccept
   }) {
     return Lesson(
+      timeAccept: timeAccept??this.timeAccept,
       date: date ?? this.date,
       timePeriod: timePeriod ?? this.timePeriod,
       idAuditory: idAuditory ?? this.idAuditory,
       nameTeacher: nameTeacher ?? this.nameTeacher,
       status: status ?? this.status,
+      id: id,
     );
   }
 }

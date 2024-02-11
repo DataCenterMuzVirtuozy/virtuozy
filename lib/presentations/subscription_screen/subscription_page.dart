@@ -34,7 +34,7 @@ class SubscriptionPage extends StatefulWidget{
 class _SubscriptionPageState extends State<SubscriptionPage>{
   int _selIndexDirection = 0;
 
-  List<Direction> _listDirection =  [];
+
 
 
   @override
@@ -65,7 +65,6 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
      },
      builder: (context,state) {
 
-       _listDirection = state.userEntity.directions;
 
        if(state.userEntity.userStatus.isModeration || state.userEntity.userStatus.isModeration){
          return Center(
@@ -79,7 +78,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
        }
 
 
-       if(_listDirection.isEmpty){
+       if(state.userEntity.directions.isEmpty){
          return Center(
            child: BoxInfo(
                buttonVisible:false,
@@ -98,7 +97,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                //todo local
                Padding(
                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                 child: DrawingMenuSelected(items: _listDirection.map((e) => e.name).toList(),
+                 child: DrawingMenuSelected(items: state.userEntity.directions.map((e) => e.name).toList(),
                    onSelected: (index){
                      setState(() {
                        _selIndexDirection = index;
@@ -106,12 +105,20 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                  },),
                ),
                const Gap(10.0),
-                Calendar(lessons: state.userEntity.directions[_selIndexDirection].lessons),
+                Calendar(lessons: state.userEntity.directions[_selIndexDirection].lessons,
+                  onLesson: (lesson){
+                    Dialoger.showModalBottomMenu(
+                      height: 260.0,
+                        title: 'Урок'.tr(),
+                        context: context,
+                        args: [lesson,state.userEntity.directions[_selIndexDirection].name],
+                        content: DetailsLesson());
+                  },),
                const Gap(10.0),
                Column(
-                 children: List.generate(_listDirection.length, (index) {
+                 children: List.generate(state.userEntity.directions.length, (index) {
                   return  ItemSubscription(
-                      direction: _listDirection[_selIndexDirection]);
+                      direction: state.userEntity.directions[_selIndexDirection]);
                  }),
                ),
                const Gap(10.0),
@@ -120,18 +127,19 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                  child: Column(
                    children: [
                      Visibility(
-                       visible: state.lengthNotAcceptLesson>0,
+                       visible: state.listNotAcceptLesson.isNotEmpty,
                        child: badges.Badge(
                          position: badges.BadgePosition.topEnd(end: -5.0,top: -8.0),
-                         showBadge: state.lengthNotAcceptLesson>1,
-                         badgeContent: Text('${state.lengthNotAcceptLesson}',
+                         showBadge: state.listNotAcceptLesson.length>1,
+                         badgeContent: Text('${state.listNotAcceptLesson.length}',
                              style: TStyle.textStyleVelaSansBold(colorWhite)),
                          child: SizedBox(
                            height: 40.0,
                            child: SubmitButton(
                              onTap: (){
                                Dialoger.showBottomMenu(
-                                   title:'Урок',context: context,
+                                 args:[state.firstNotAcceptLesson,state.userEntity.directions[_selIndexDirection]],
+                                   title:'Подтверждение урока'.tr(),context: context,
                                content: ConfirmLesson());
                              },
                              //colorFill: Theme.of(context).colorScheme.tertiary,
@@ -145,7 +153,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                      ),
                      const Gap(10.0),
                      Visibility(
-                       visible: _listDirection[_selIndexDirection].bonus.isNotEmpty,
+                       visible: state.userEntity.directions[_selIndexDirection].bonus.isNotEmpty,
                        child: SizedBox(
                          height: 40.0,
                          child: OutLineButton(

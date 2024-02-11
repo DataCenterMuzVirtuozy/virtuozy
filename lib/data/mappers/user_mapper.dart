@@ -50,10 +50,13 @@ class UserMapper{
 
 
   static Lesson _fromLessonModel(LessonModel lessonModel){
-    return Lesson(date: lessonModel.date,
+    return Lesson(
+        id: lessonModel.id,
+        date: lessonModel.date,
         timePeriod: lessonModel.timePeriod,
         idAuditory: lessonModel.idAuditory,
         nameTeacher: lessonModel.nameTeacher,
+        timeAccept: lessonModel.timeAccept,
         status: _lessonStatus(lessonModel.status));
   }
 

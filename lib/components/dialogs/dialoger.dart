@@ -64,6 +64,7 @@ class Dialoger{
        ConfirmLesson()=>ConfirmLesson().build(context: context),
        SelectBranch() => SelectBranch().build(context: context),
        SearchLocationComplete() => SearchLocationComplete().build(context: context,args: args),
+       DetailsLesson() => DetailsLesson().build(context: context,args: args)
      };
 
      showModalBottomSheet(
@@ -116,12 +117,13 @@ class Dialoger{
    }
 
 
-   static void showBottomMenu({required String title,required BuildContext context,required DialogsContent content}){
+   static void showBottomMenu({required String title,required BuildContext context,required DialogsContent content,Object? args}){
 
      final body = switch(content){
-       ConfirmLesson()=>ConfirmLesson().build(context: context),
+       ConfirmLesson()=>ConfirmLesson().build(context: context,args: args),
        SelectBranch() => SelectBranch().build(context: context),
        SearchLocationComplete() => SearchLocationComplete().build(context: context),
+       DetailsLesson() => DetailsLesson().build(context: context),
      };
 
      showBottomSheet(
@@ -146,7 +148,7 @@ class Dialoger{
                  height: 45.0,
                  padding: const EdgeInsets.only(top: 5.0,right: 15.0,left: 20.0),
                  decoration: BoxDecoration(
-                     color: colorGreenLight,
+                     color: colorGrey,
                      borderRadius: const BorderRadius.only(topRight: Radius.circular(20.0),topLeft: Radius.circular(20.0),
                          bottomLeft: Radius.circular(10.0),bottomRight: Radius.circular(10.0))
                  ),

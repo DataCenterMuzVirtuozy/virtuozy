@@ -15,9 +15,10 @@ import '../domain/entities/user_entity.dart';
 import '../utils/text_style.dart';
 
 class Calendar extends StatefulWidget{
-  const Calendar({super.key, required this.lessons});
+  const Calendar({super.key, required this.lessons, required this.onLesson});
 
   final List<Lesson> lessons;
+  final Function onLesson;
 
   @override
   State<Calendar> createState() => _CalendarState();
@@ -71,7 +72,10 @@ class _CalendarState extends State<Calendar> {
            ),
            calendarBuilders: CalendarBuilders(
              markerBuilder: (context, day,values) {
-               return _handlerDay(lessons: widget.lessons, day: day.day,context: context);
+               return _handlerDay(lessons: widget.lessons, day: day.day,context: context,
+               onLesson: (lesson){
+                 widget.onLesson.call(lesson);
+               });
              },
            ),
            // selectedDayPredicate: (day){
@@ -84,23 +88,29 @@ class _CalendarState extends State<Calendar> {
    );
   }
 
-   _handlerDay({required List<Lesson> lessons,required int day,required BuildContext context}){
+   _handlerDay({required List<Lesson> lessons,required int day,required BuildContext context,
+   required Function onLesson}){
     final intDays = lessons.map((e) => DateFormat('yyyy-MM-dd').parse(e.date).day).toList();
     if(intDays.contains(day)){
       final lesson = lessons.firstWhere((element) => DateFormat('yyyy-MM-dd').parse(element.date).day == day);
       return Padding(
         padding: const EdgeInsets.all(3.0),
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: StatusToColor.getColor(lessonStatus: lesson.status),
-            shape: BoxShape.circle,
-            border: Border.all(color: Theme.of(context).textTheme.displayMedium!.color!,
-            width: 0.5)
-          ),
-          child: Center(
-            child: Text(
-              day.toString(),
-              style:  TStyle.textStyleVelaSansBold(colorBlack),
+        child: InkWell(
+          onTap: (){
+            onLesson.call(lesson);
+          },
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: StatusToColor.getColor(lessonStatus: lesson.status),
+              shape: BoxShape.circle,
+              border: Border.all(color: Theme.of(context).textTheme.displayMedium!.color!,
+              width: 0.5)
+            ),
+            child: Center(
+              child: Text(
+                day.toString(),
+                style:  TStyle.textStyleVelaSansBold(colorBlack),
+              ),
             ),
           ),
         ),

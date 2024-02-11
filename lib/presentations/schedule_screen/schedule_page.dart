@@ -57,7 +57,9 @@ class _SchedulePageState extends State<SchedulePage> with AuthMixin{
               },),
             ),
             const Gap(10.0),
-            const Calendar(lessons: []),
+             Calendar(lessons: [],onLesson: (lesson){
+
+            }),
             const Gap(10.0),
             Column(
               children: List.generate(1, (index) {

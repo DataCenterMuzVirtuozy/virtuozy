@@ -116,12 +116,12 @@ class _InitPageState extends State<InitPage> {
         }
       },
         builder: (context,state){
-        // if(state.authStatusCheck == AuthStatusCheck.unknown){
-        //   return const SplashPage();
-        // }else if(state.authStatusCheck == AuthStatusCheck.unauthenticated||
-        // state.authStatusCheck == AuthStatusCheck.moderation){
-        //    return const MainPage();
-        //}
+        if(state.authStatusCheck == AuthStatusCheck.unknown){
+          return const SplashPage();
+        }else if(state.authStatusCheck == AuthStatusCheck.unauthenticated||
+        state.authStatusCheck == AuthStatusCheck.moderation){
+           return const MainPage();
+        }
 
         //return const LogInPage();
           //return BranchSearchPage();

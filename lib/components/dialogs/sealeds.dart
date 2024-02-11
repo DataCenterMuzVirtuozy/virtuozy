@@ -1,6 +1,8 @@
 
 
 import 'package:flutter/widgets.dart';
+import 'package:virtuozy/components/dialogs/contents/details_lesson_content.dart';
+import 'package:virtuozy/domain/entities/user_entity.dart';
 
 import 'contents/seach_location_cmplete_content.dart';
 import 'contents/select_branch_content.dart';
@@ -10,11 +12,21 @@ sealed class DialogsContent{
   build({required BuildContext context,Object? args});
 }
 
+class DetailsLesson extends DialogsContent{
+  @override
+  build({required BuildContext context, Object? args}) {
+    return DetailsLessonContent(lesson: (args as List<dynamic>)[0] as Lesson,
+        nameDirection: (args)[1] as String);
+  }
+
+}
+
 
 class ConfirmLesson extends DialogsContent{
   @override
   build({required BuildContext context,Object? args}) {
-    return const StepsConfirmLesson();
+    return  StepsConfirmLesson(lesson: (args as List<dynamic>)[0] as Lesson,
+        direction: (args)[1] as Direction);
   }
 }
 

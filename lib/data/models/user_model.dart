@@ -70,13 +70,17 @@
 
 
  class LessonModel{
+  final int id;
    final String date; //2024-12-22
    final String timePeriod;
    final int idAuditory;
    final String nameTeacher;
    final int status;
+   final String timeAccept;
 
    const LessonModel({
+     required this.id,
+     required this.timeAccept,
     required this.date,
     required this.timePeriod,
     required this.idAuditory,
@@ -88,6 +92,8 @@
 
   factory LessonModel.fromMap(Map<String, dynamic> map) {
     return LessonModel(
+      id: map['id'] as int,
+      timeAccept: map['timeAccept'] as String,
       date: map['date'] as String,
       timePeriod: map['timePeriod'] as String,
       idAuditory: map['idAuditory'] as int,
