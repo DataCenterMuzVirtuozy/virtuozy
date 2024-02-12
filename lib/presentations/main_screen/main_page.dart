@@ -22,6 +22,8 @@ import '../../utils/text_style.dart';
 import '../../utils/theme_provider.dart';
 import '../auth_screen/bloc/auth_bloc.dart';
 import '../finance_screen/finance_page.dart';
+import '../subscription_screen/bloc/sub_bloc.dart';
+import '../subscription_screen/bloc/sub_event.dart';
 import '../subscription_screen/subscription_page.dart';
 
 class MainPage extends StatefulWidget{
@@ -34,7 +36,7 @@ class MainPage extends StatefulWidget{
 class _MainPageState extends State<MainPage> {
 
 
-  late PersistentTabController _controller;
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
   int _indexPage = 0;
   bool _darkTheme = false;
@@ -42,7 +44,6 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-    _controller = PersistentTabController(initialIndex: 0);
 
   }
 

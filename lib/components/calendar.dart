@@ -167,6 +167,7 @@ class _InfoColorState extends State<InfoColor> {
       height: _heightBoxInfo,
       duration: const Duration(milliseconds: 300),
       child: SingleChildScrollView(
+        physics: const NeverScrollableScrollPhysics(),
         child: GestureDetector(
           onTap: (){
             setState(() {

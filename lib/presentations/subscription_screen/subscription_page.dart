@@ -40,7 +40,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
   @override
   void initState() {
     super.initState();
-    context.read<SubBloc>().add(GetUserEvent(currentDirIndex: _selIndexDirection));
+   context.read<SubBloc>().add(GetUserEvent(currentDirIndex: _selIndexDirection));
   }
 
 
@@ -64,7 +64,13 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
 
      },
      builder: (context,state) {
+       if(state.subStatus == SubStatus.unknown){
+         return Container();
+       }
 
+       if(state.subStatus == SubStatus.loading){
+         return Center(child: CircularProgressIndicator(color: colorOrange));
+       }
 
        if(state.userEntity.userStatus.isModeration || state.userEntity.userStatus.isModeration){
          return Center(
@@ -78,7 +84,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
        }
 
 
-       if(state.userEntity.directions.isEmpty){
+       if(state.userEntity.directions.isEmpty && state.subStatus == SubStatus.loaded){
          return Center(
            child: BoxInfo(
                buttonVisible:false,
@@ -87,6 +93,8 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                iconData: CupertinoIcons.music_note_list),
          );
        }
+
+
 
 
        return Padding(

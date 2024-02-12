@@ -17,6 +17,7 @@ class SubBloc extends Bloc<SubEvent,SubState>{
   SubBloc():super(SubState.unknown()){
     on<GetUserEvent>(_getUser);
     on<AcceptLessonEvent>(_acceptLesson);
+    on<UpdateUserEvent>(_updateUser);
   }
 
 
@@ -25,18 +26,40 @@ class SubBloc extends Bloc<SubEvent,SubState>{
 
   void _getUser(GetUserEvent event,emit) async {
      try{
-      emit(state.copyWith(subStatus: SubStatus.loading));
+      // emit(state.copyWith(subStatus: SubStatus.loading));
+      // await Future.delayed(const Duration(milliseconds: 1500));
        final user = _userCubit.userEntity;
        final firstNotAcceptLesson = _firstNotAcceptLesson(lessons: user.directions[event.currentDirIndex].lessons);
        final listNotAcceptLesson = _getListNotAcceptLesson(lessons: user.directions[event.currentDirIndex].lessons);
-      emit(state.copyWith(
-          userEntity: user,
-          subStatus: SubStatus.loaded,
-          firstNotAcceptLesson: firstNotAcceptLesson,
-          listNotAcceptLesson: listNotAcceptLesson));
+       emit(state.copyWith(
+           userEntity: user,
+           subStatus: SubStatus.loaded,
+           firstNotAcceptLesson: firstNotAcceptLesson,
+           listNotAcceptLesson: listNotAcceptLesson));
+       _listenUser(event);
+
+
+
     }on Failure catch(e){
       throw Failure(e.message);
      }
+  }
+
+  void _listenUser(GetUserEvent event) {
+     _userCubit.stream.listen((user) async {
+       add(UpdateUserEvent(currentDirIndex: event.currentDirIndex, user: user));
+     });
+  }
+
+
+  void _updateUser(UpdateUserEvent event,emit) async {
+    final firstNotAcceptLesson = _firstNotAcceptLesson(lessons: event.user.directions[event.currentDirIndex].lessons);
+    final listNotAcceptLesson = _getListNotAcceptLesson(lessons: event.user.directions[event.currentDirIndex].lessons);
+    emit(state.copyWith(
+        userEntity: event.user,
+        subStatus: SubStatus.loaded,
+        firstNotAcceptLesson: firstNotAcceptLesson,
+        listNotAcceptLesson: listNotAcceptLesson));
   }
 
 
@@ -73,7 +96,6 @@ class SubBloc extends Bloc<SubEvent,SubState>{
 
       //todo отнять с баланса сумму за урок
 
-      add(GetUserEvent(currentDirIndex: indexDirection<0?0:indexDirection));
     }on Failure catch(e){
 
     }

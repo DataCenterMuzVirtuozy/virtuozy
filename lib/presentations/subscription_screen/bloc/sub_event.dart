@@ -30,3 +30,13 @@ class AcceptLessonEvent extends SubEvent{
     required this.lesson});
 
 }
+
+class UpdateUserEvent extends SubEvent{
+  final int currentDirIndex;
+  final UserEntity user;
+
+  const UpdateUserEvent({
+    required this.currentDirIndex,
+    required this.user,
+  });
+}
