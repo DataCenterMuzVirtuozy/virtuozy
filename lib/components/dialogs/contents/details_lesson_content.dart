@@ -11,13 +11,16 @@ import '../../../resourses/colors.dart';
 import '../../../utils/status_to_color.dart';
 import '../../../utils/text_style.dart';
 import '../../buttons.dart';
+import '../dialoger.dart';
+import '../sealeds.dart';
 
 class DetailsLessonContent extends StatelessWidget {
   const DetailsLessonContent(
-      {super.key, required this.lesson, required this.nameDirection});
+      {super.key, required this.lesson, required this.direction});
 
   final Lesson lesson;
-  final String nameDirection;
+  final Direction direction;
+
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +71,7 @@ class DetailsLessonContent extends StatelessWidget {
           Text(lesson.nameTeacher,
               style: TStyle.textStyleVelaSansBold(colorBlack, size: 18.0)),
           const Gap(10.0),
-          Text(nameDirection,
+          Text(direction.name,
               style: TStyle.textStyleVelaSansMedium(colorGrey, size: 16.0)),
           const Gap(20.0),
           Row(
@@ -77,6 +80,7 @@ class DetailsLessonContent extends StatelessWidget {
               Row(
                 children: [
                   Container(
+                    margin: const EdgeInsets.only(left: 10.0),
                     width: 10.0,
                     height: 10.0,
                     decoration: BoxDecoration(
@@ -86,7 +90,7 @@ class DetailsLessonContent extends StatelessWidget {
                   ),
                   const Gap(10.0),
                   Text(_getNameStatus(lesson.status),
-                      style: TStyle.textStyleVelaSansExtraBolt(
+                      style: TStyle.textStyleVelaSansRegular(
                           colorGrey, size: 14.0)),
                 ],
               ),
@@ -105,6 +109,31 @@ class DetailsLessonContent extends StatelessWidget {
               )
             ],
           ),
+          Visibility(
+            visible: lesson.status == LessonStatus.awaitAccept,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20.0,bottom: 20.0),
+              child: SizedBox(
+                height: 40.0,
+                child: SubmitButton(
+                  onTap: () async {
+                    Navigator.pop(context);
+                    Dialoger.showModalBottomMenu(
+                        blurred: false,
+                        args:[lesson,direction],
+                        title:'Подтверждение урока'.tr(),context: context,
+                        content: ConfirmLesson());
+                  },
+                  //colorFill: Theme.of(context).colorScheme.tertiary,
+                  colorFill: colorGreen,
+                  borderRadius: 10.0,
+                  textButton:
+                  'Подтвердите прохождение урока'.tr(),
+                ),
+              ),
+            )
+            ),
+
         ],
       ),
     );

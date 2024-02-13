@@ -57,7 +57,7 @@ class _BranchSearchPageState extends State<BranchSearchPage> with TickerProvider
         listener: (c,s){
            if(s.authStatus == AuthStatus.searchLocationComplete){
           Dialoger.showModalBottomMenu(
-            height: 320.0,
+            //height: 320.0,
               title: 'Ваш филиал'.tr(),
               context: context,
               args: 'Москва',
@@ -110,7 +110,7 @@ class _BranchSearchPageState extends State<BranchSearchPage> with TickerProvider
                   visible: state.authStatus != AuthStatus.searchLocation,
                   child: TextButton(onPressed: () {
                     Dialoger.showModalBottomMenu(
-                      height: 240.0,
+                      //height: 240.0,
                         title:'Выбери свой филиал'.tr(),
                         context: context,
                         content: SelectBranch());

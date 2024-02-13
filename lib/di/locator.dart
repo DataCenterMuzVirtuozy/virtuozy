@@ -2,6 +2,7 @@
 
 
 
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:virtuozy/data/repository/user_repository_impl.dart';
 import 'package:virtuozy/data/services/user_service.dart';
@@ -21,6 +22,8 @@ void setup() {
   locator.registerLazySingleton<UserService>(() => UserService());
   locator.registerLazySingleton<UserUtil>(() => UserUtil());
   locator.registerFactory<UserRepository>(() => UserRepositoryImpl());
+
+  locator.registerLazySingleton(() => ValueNotifier<int>(0));
 
 
 }

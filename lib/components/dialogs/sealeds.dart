@@ -16,7 +16,7 @@ class DetailsLesson extends DialogsContent{
   @override
   build({required BuildContext context, Object? args}) {
     return DetailsLessonContent(lesson: (args as List<dynamic>)[0] as Lesson,
-        nameDirection: (args)[1] as String);
+        direction: (args)[1] as Direction);
   }
 
 }

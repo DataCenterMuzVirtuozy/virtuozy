@@ -7,9 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
+import 'package:virtuozy/components/calendar.dart';
 import 'package:virtuozy/components/dialogs/sealeds.dart';
 import 'package:virtuozy/resourses/colors.dart';
 
+import '../../di/locator.dart';
 import '../../utils/text_style.dart';
 
 
@@ -54,76 +56,89 @@ class Dialoger{
    }
 
    static void showModalBottomMenu({
-     double height = 500.0,
      required String title,
      required BuildContext context,
      required DialogsContent content,
+     bool blurred = false,
      Object? args}){
+     final currentDayNotifi = locator.get<ValueNotifier<int>>();
 
-     final body = switch(content){
-       ConfirmLesson()=>ConfirmLesson().build(context: context),
-       SelectBranch() => SelectBranch().build(context: context),
-       SearchLocationComplete() => SearchLocationComplete().build(context: context,args: args),
-       DetailsLesson() => DetailsLesson().build(context: context,args: args)
-     };
 
      showModalBottomSheet(
+         isDismissible:false,
          enableDrag: false,
          backgroundColor: Colors.transparent,
          context: context, builder: (_){
+       final body = switch(content){
+         ConfirmLesson()=>ConfirmLesson().build(context: _,args: args),
+         SelectBranch() => SelectBranch().build(context: _),
+         SearchLocationComplete() => SearchLocationComplete().build(context: _,args: args),
+         DetailsLesson() => DetailsLesson().build(context: _,args: args)
+       };
        return  BackdropFilter(
-         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 5),
-         child: Container(
-           height: height,
-           width: MediaQuery.of(context).size.width,
-           padding: const EdgeInsets.only(
-               right: 10.0,
-               left: 10.0,
-               top: 10.0),
-           decoration: BoxDecoration(
-               color: Theme.of(context).colorScheme.background,
-               borderRadius: const BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30))
-           ),
-           child: Column(
-             children: [
-               Container(
-                 height: 45.0,
-                 padding: const EdgeInsets.only(top: 5.0,right: 15.0,left: 20.0),
-                 decoration: BoxDecoration(
-                     color: colorGrey,
-                     borderRadius: const BorderRadius.only(topRight: Radius.circular(20.0),topLeft: Radius.circular(20.0),
-                         bottomLeft: Radius.circular(10.0),bottomRight: Radius.circular(10.0))
-                 ),
-                 child: Row(
-                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                   children: [
-                     Text(title,style: TStyle.textStyleGaretHeavy(colorWhite,size: 18.0),),
-                     InkWell(
-                         onTap: (){
-                           Navigator.pop(context);
-                         },
-                         child: Icon(Icons.close_rounded,color: colorWhite)),
-
-                   ],
-                 ),
+         filter:  blurred?ImageFilter.blur(sigmaX: 10, sigmaY: 5):
+         ImageFilter.blur(sigmaX: 0.0, sigmaY: 0.0),
+         child: Wrap(
+           children: [
+             Container(
+               width: MediaQuery.of(context).size.width,
+               padding: const EdgeInsets.only(
+                   right: 10.0,
+                   left: 10.0,
+                   top: 10.0),
+               decoration: BoxDecoration(
+                   color: Theme.of(context).colorScheme.background,
+                   borderRadius: const BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30))
                ),
-               const Gap(20.0),
-               body
-             ],
-           ),
+               child: Column(
+                 children: [
+                   Container(
+                     height: 45.0,
+                     padding: const EdgeInsets.only(top: 5.0,right: 15.0,left: 20.0),
+                     decoration: BoxDecoration(
+                         color: colorGrey,
+                         borderRadius: const BorderRadius.only(topRight: Radius.circular(20.0),topLeft: Radius.circular(20.0),
+                             bottomLeft: Radius.circular(10.0),bottomRight: Radius.circular(10.0))
+                     ),
+                     child: Row(
+                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                       children: [
+                         Text(title,style: TStyle.textStyleGaretHeavy(colorWhite,size: 18.0),),
+                         InkWell(
+                             onTap: (){
+                               currentDayNotifi.value = 0;
+                               Navigator.pop(_);
+                             },
+                             child: Icon(Icons.close_rounded,color: colorWhite)),
+
+                       ],
+                     ),
+                   ),
+                   const Gap(20.0),
+                   body
+                 ],
+               ),
+             ),
+           ],
          ),
        );
      });
    }
 
 
-   static void showBottomMenu({required String title,required BuildContext context,required DialogsContent content,Object? args}){
+   static void showBottomMenu({
+     required String title,
+     required BuildContext context,
+     required DialogsContent content,
+     bool blurred = true,
+     Object? args}){
 
-     final body = switch(content){
+
+     final Widget body = switch(content){
        ConfirmLesson()=>ConfirmLesson().build(context: context,args: args),
        SelectBranch() => SelectBranch().build(context: context),
        SearchLocationComplete() => SearchLocationComplete().build(context: context),
-       DetailsLesson() => DetailsLesson().build(context: context),
+       DetailsLesson() => DetailsLesson().build(context: context,args: args),
      };
 
      showBottomSheet(
@@ -131,45 +146,51 @@ class Dialoger{
          backgroundColor: Colors.transparent,
          context: context, builder: (_){
        return  BackdropFilter(
-         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 5),
-         child: Container(
-           width: MediaQuery.of(context).size.width,
-           padding: const EdgeInsets.only(
-                  right: 10.0,
-                  left: 10.0,
-                  top: 10.0),
-              decoration: BoxDecoration(
-         color: Theme.of(context).colorScheme.background,
-                  borderRadius: const BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30))
-         ),
-           child: Column(
-             children: [
-               Container(
-                 height: 45.0,
-                 padding: const EdgeInsets.only(top: 5.0,right: 15.0,left: 20.0),
-                 decoration: BoxDecoration(
-                     color: colorGrey,
-                     borderRadius: const BorderRadius.only(topRight: Radius.circular(20.0),topLeft: Radius.circular(20.0),
-                         bottomLeft: Radius.circular(10.0),bottomRight: Radius.circular(10.0))
-                 ),
-                 child: Row(
-                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                   children: [
-                     Text(title,style: TStyle.textStyleGaretHeavy(colorWhite,size: 18.0),),
-                     InkWell(
-                         onTap: (){
-                           Navigator.pop(context);
-                         },
-                         child: Icon(Icons.close_rounded,color: colorWhite)),
+         filter: blurred?ImageFilter.blur(sigmaX: 10, sigmaY: 5):
+         ImageFilter.blur(sigmaX: 0.0, sigmaY: 0.0),
+         child: Wrap(
+           children: [
+             Container(
+               width: MediaQuery.of(context).size.width,
+               padding: const EdgeInsets.only(
+                      right: 10.0,
+                      left: 10.0,
+                      top: 10.0),
+                  decoration: BoxDecoration(
+             color: Theme.of(context).colorScheme.background,
+                      borderRadius: const BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30))
+             ),
+               child: Column(
+                 children: [
+                   Container(
+                     height: 45.0,
+                     padding: const EdgeInsets.only(top: 5.0,right: 15.0,left: 20.0),
+                     decoration: BoxDecoration(
+                         color: colorGrey,
+                         borderRadius: const BorderRadius.only(topRight: Radius.circular(20.0),topLeft: Radius.circular(20.0),
+                             bottomLeft: Radius.circular(10.0),bottomRight: Radius.circular(10.0))
+                     ),
+                     child: Row(
+                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                       children: [
+                         Text(title,style: TStyle.textStyleGaretHeavy(colorWhite,size: 18.0),),
+                         InkWell(
+                             onTap: (){
+                               Navigator.pop(context);
 
-                   ],
-                 ),
+                             },
+                             child: Icon(Icons.close_rounded,color: colorWhite)),
+
+                       ],
+                     ),
+                   ),
+                   const Gap(20.0),
+                   body
+                 ],
                ),
-               const Gap(20.0),
-               body
-             ],
-           ),
 
+             ),
+           ],
          ),
        );
      });

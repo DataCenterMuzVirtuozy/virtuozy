@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:virtuozy/components/calendar.dart';
 import 'package:virtuozy/components/home_drawer_menu.dart';
 import 'package:virtuozy/presentations/auth_screen/bloc/auth_state.dart';
 import 'package:virtuozy/presentations/schedule_screen/schedule_page.dart';
@@ -26,6 +27,11 @@ import '../subscription_screen/bloc/sub_bloc.dart';
 import '../subscription_screen/bloc/sub_event.dart';
 import '../subscription_screen/subscription_page.dart';
 
+
+
+ final scaffoldKey = GlobalKey<ScaffoldState>();
+
+
 class MainPage extends StatefulWidget{
   const MainPage({super.key});
 
@@ -37,7 +43,7 @@ class _MainPageState extends State<MainPage> {
 
 
 
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+
   int _indexPage = 0;
   bool _darkTheme = false;
 

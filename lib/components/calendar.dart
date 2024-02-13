@@ -8,17 +8,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:virtuozy/di/locator.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/utils/status_to_color.dart';
 
 import '../domain/entities/user_entity.dart';
 import '../utils/text_style.dart';
 
+
+//ValueNotifier<int> currentDayNotifi = ValueNotifier<int>(0);
+
 class Calendar extends StatefulWidget{
   const Calendar({super.key, required this.lessons, required this.onLesson});
 
   final List<Lesson> lessons;
   final Function onLesson;
+
 
   @override
   State<Calendar> createState() => _CalendarState();
@@ -27,11 +32,14 @@ class Calendar extends StatefulWidget{
 class _CalendarState extends State<Calendar> {
 
 
+  final currentDayNotifi = locator.get<ValueNotifier<int>>();
+
 
 
 
   @override
   Widget build(BuildContext context) {
+
    return Container(
      decoration: BoxDecoration(
        color: Theme.of(context).colorScheme.surfaceVariant,
@@ -72,7 +80,8 @@ class _CalendarState extends State<Calendar> {
            ),
            calendarBuilders: CalendarBuilders(
              markerBuilder: (context, day,values) {
-               return _handlerDay(lessons: widget.lessons, day: day.day,context: context,
+               return _handlerDay(lessons: widget.lessons,
+                   day: day.day,context: context,
                onLesson: (lesson){
                  widget.onLesson.call(lesson);
                });
@@ -93,27 +102,35 @@ class _CalendarState extends State<Calendar> {
     final intDays = lessons.map((e) => DateFormat('yyyy-MM-dd').parse(e.date).day).toList();
     if(intDays.contains(day)){
       final lesson = lessons.firstWhere((element) => DateFormat('yyyy-MM-dd').parse(element.date).day == day);
-      return Padding(
-        padding: const EdgeInsets.all(3.0),
-        child: InkWell(
-          onTap: (){
-            onLesson.call(lesson);
-          },
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: StatusToColor.getColor(lessonStatus: lesson.status),
-              shape: BoxShape.circle,
-              border: Border.all(color: Theme.of(context).textTheme.displayMedium!.color!,
-              width: 0.5)
-            ),
-            child: Center(
-              child: Text(
-                day.toString(),
-                style:  TStyle.textStyleVelaSansBold(colorBlack),
+      return  ValueListenableBuilder<int>(
+          valueListenable: currentDayNotifi,
+        builder: (context,valueDay,child) {
+          return Padding(
+            padding: const EdgeInsets.all(3.0),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(60.0),
+              onTap: (){
+                onLesson.call(lesson);
+                  currentDayNotifi.value = day;
+
+                  },
+              child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: StatusToColor.getColor(lessonStatus: lesson.status),
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Theme.of(context).textTheme.displayMedium!.color!,
+                      width: valueDay == day?3.0:0.5)
+                    ),
+                    child: Center(
+                      child: Text(
+                        day.toString(),
+                        style:  TStyle.textStyleVelaSansBold(colorBlack),
+                      ),
+                    ),
+                  )
               ),
-            ),
-          ),
-        ),
+          );
+        }
       );
     }
 

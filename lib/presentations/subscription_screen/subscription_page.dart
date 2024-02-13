@@ -20,6 +20,7 @@ import 'package:virtuozy/utils/auth_mixin.dart';
 import '../../components/buttons.dart';
 import '../../components/dialogs/sealeds.dart';
 import '../../components/drawing_menu_selected.dart';
+import '../../di/locator.dart';
 import '../../utils/text_style.dart';
 import 'bloc/sub_state.dart';
 
@@ -33,6 +34,7 @@ class SubscriptionPage extends StatefulWidget{
 
 class _SubscriptionPageState extends State<SubscriptionPage>{
   int _selIndexDirection = 0;
+  final currentDayNotifi = locator.get<ValueNotifier<int>>();
 
 
 
@@ -48,6 +50,11 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
   void didChangeDependencies() {
     super.didChangeDependencies();
 
+  }
+
+
+  int _getIntCurrentDay(String date){
+    return DateFormat('yyyy-MM-dd').parse(date).day;
   }
 
 
@@ -116,10 +123,10 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                 Calendar(lessons: state.userEntity.directions[_selIndexDirection].lessons,
                   onLesson: (lesson){
                     Dialoger.showModalBottomMenu(
-                      height: 260.0,
+                      blurred: false,
                         title: 'Урок'.tr(),
                         context: context,
-                        args: [lesson,state.userEntity.directions[_selIndexDirection].name],
+                        args: [lesson,state.userEntity.directions[_selIndexDirection]],
                         content: DetailsLesson());
                   },),
                const Gap(10.0),
@@ -145,8 +152,11 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                            height: 40.0,
                            child: SubmitButton(
                              onTap: (){
-                               Dialoger.showBottomMenu(
-                                 args:[state.firstNotAcceptLesson,state.userEntity.directions[_selIndexDirection]],
+                               currentDayNotifi.value = _getIntCurrentDay(state.firstNotAcceptLesson.date);
+                               Dialoger.showModalBottomMenu(
+                                 blurred: false,
+                                 args:[state.firstNotAcceptLesson,
+                                   state.userEntity.directions[_selIndexDirection]],
                                    title:'Подтверждение урока'.tr(),context: context,
                                content: ConfirmLesson());
                              },
