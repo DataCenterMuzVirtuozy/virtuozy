@@ -24,6 +24,9 @@ import '../../di/locator.dart';
 import '../../utils/text_style.dart';
 import 'bloc/sub_state.dart';
 
+
+int globalCurrentMonthCalendar = 0;
+
 class SubscriptionPage extends StatefulWidget{
 
   const SubscriptionPage({super.key});
@@ -109,7 +112,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
          child: SingleChildScrollView(
            child: Column(
              children: [
-               //todo local
+
                Padding(
                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
                  child: DrawingMenuSelected(items: state.userEntity.directions.map((e) => e.name).toList(),
@@ -121,6 +124,9 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                ),
                const Gap(10.0),
                 Calendar(lessons: state.userEntity.directions[_selIndexDirection].lessons,
+                  onMonth: (month){
+                     globalCurrentMonthCalendar = month;
+                  },
                   onLesson: (lesson){
                     Dialoger.showModalBottomMenu(
                       blurred: false,

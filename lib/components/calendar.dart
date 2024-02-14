@@ -19,10 +19,12 @@ import '../utils/text_style.dart';
 //ValueNotifier<int> currentDayNotifi = ValueNotifier<int>(0);
 
 class Calendar extends StatefulWidget{
-  const Calendar({super.key, required this.lessons, required this.onLesson});
+  const Calendar({super.key, required this.lessons, required this.onLesson, required this.onMonth});
 
   final List<Lesson> lessons;
   final Function onLesson;
+  final Function onMonth;
+
 
 
   @override
@@ -33,6 +35,7 @@ class _CalendarState extends State<Calendar> {
 
 
   final currentDayNotifi = locator.get<ValueNotifier<int>>();
+  int month = 0;
 
 
 
@@ -80,6 +83,7 @@ class _CalendarState extends State<Calendar> {
            ),
            calendarBuilders: CalendarBuilders(
              markerBuilder: (context, day,values) {
+               _onMonth(day.month);
                return _handlerDay(lessons: widget.lessons,
                    day: day.day,context: context,
                onLesson: (lesson){
@@ -87,14 +91,20 @@ class _CalendarState extends State<Calendar> {
                });
              },
            ),
-           // selectedDayPredicate: (day){
-           //   return true;
-           // },
+
          ),
          const InfoColor()
        ],
      ),
    );
+  }
+
+
+  _onMonth(int currentMonth){
+    if(month == 0 || month!=currentMonth){
+      widget.onMonth.call(currentMonth);
+      month = currentMonth;
+    }
   }
 
    _handlerDay({required List<Lesson> lessons,required int day,required BuildContext context,

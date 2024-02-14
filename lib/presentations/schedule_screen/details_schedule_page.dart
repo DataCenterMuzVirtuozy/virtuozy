@@ -4,92 +4,82 @@
 
   import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtuozy/presentations/schedule_screen/schedule_page.dart';
 
 import '../../components/app_bar.dart';
 import '../../components/drawing_menu_selected.dart';
+import '../../domain/entities/schedule_lessons.dart';
+import '../../domain/entities/user_entity.dart';
 import '../../resourses/colors.dart';
 import '../../router/paths.dart';
 import '../../utils/text_style.dart';
+import 'bloc/schedule_bloc.dart';
+import 'bloc/schedule_state.dart';
 
-class DetailsSchedulePage extends StatelessWidget{
+class DetailsSchedulePage extends StatefulWidget{
   const DetailsSchedulePage({super.key});
+
+  @override
+  State<DetailsSchedulePage> createState() => _DetailsSchedulePageState();
+}
+
+class _DetailsSchedulePageState extends State<DetailsSchedulePage> {
+  int _selIndexDirection = 0;
 
   @override
   Widget build(BuildContext context) {
    return Scaffold(
      appBar: AppBarCustom(title: 'Подробное расписание'.tr()),
-     body: Padding(
-       padding: const EdgeInsets.symmetric(horizontal: 10.0),
-       child: SingleChildScrollView(
-         child: Column(
-           children: [
-             //todo local
-             Padding(
-               padding: const EdgeInsets.symmetric(horizontal: 10.0),
-               child: DrawingMenuSelected(items: [
-                 'Вокал'.tr(),
-                 'Академический вокал'.tr(),
-                 'Фортепиано'.tr(),
-                 'Все направления'.tr()
-               ], onSelected: (index){
+     body: BlocConsumer<ScheduleBloc,ScheduleState>(
+       listener: (c,s){
 
-               },),
-             ),
-             const Gap(10.0),
-             Column(
-               children: List.generate(10, (index) {
-                 return  ItemScheduleDetails();
-               }),
-             ),
+       },
+       builder: (context,state) {
+         return Padding(
+           padding: const EdgeInsets.symmetric(horizontal: 10.0),
+           child: SingleChildScrollView(
+             child: Column(
+               children: [
+                 Padding(
+                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                   child: DrawingMenuSelected(items: state.user.directions.map((e) => e.name).toList(),
+                   onSelected: (index){
+                     setState(() {
+                       _selIndexDirection = index;
+                     });
+                   },),
+                 ),
+                 const Gap(10.0),
+                 Column(
+                   children: List.generate(1, (index) {
+                     return  ItemScheduleDetails(scheduleLessons: state.scheduleLessons,
+                         listSchedule: state.schedulesList,
+                         nameDirection: state.user.directions[_selIndexDirection].name);
+                   }),
+                 ),
 
-           ],
-         ),
-       ),
+               ],
+             ),
+           ),
+         );
+       }
      ),
    );
   }
-
 }
 
 
   class ItemScheduleDetails extends StatelessWidget{
-    ItemScheduleDetails({super.key});
+    const ItemScheduleDetails({super.key, required this.scheduleLessons, required this.nameDirection, required this.listSchedule});
 
 
-    final List<Map<String,String>> lessonsTest = [
-      {
-        'date':'01.11.23',
-        'time_period':'10:00 - 10:55',
-        'name_direction':'Вокал',
-        'name_audience':'122',
-        'name_teacher':'Иванов И.И.'
-      },
-      {
-        'date':'01.11.23',
-        'time_period':'14:00 - 14:55',
-        'name_direction':'Вокал',
-        'name_audience':'122',
-        'name_teacher':'Иванов И.И.'
-      },
-      {
-        'date':'01.11.23',
-        'time_period':'15:00 - 15:55',
-        'name_direction':'Вокал',
-        'name_audience':'122',
-        'name_teacher':'Иванов И.И.'
-      },
-      {
-        'date':'01.11.23',
-        'time_period':'17:00 - 17:55',
-        'name_direction':'Вокал',
-        'name_audience':'1224',
-        'name_teacher':'Иванов И.И.'
-      },
+    final ScheduleLessons scheduleLessons;
+    final String nameDirection;
+    final List<ScheduleLessons> listSchedule;
 
-    ];
 
     @override
     Widget build(BuildContext context) {
@@ -103,13 +93,17 @@ class DetailsSchedulePage extends StatelessWidget{
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            //todo local
-            Text('Уроки в ноябре',style:TStyle.textStyleVelaSansExtraBolt(colorBlack,size: 18.0)),
+            Row(
+              children: [
+                Text('Уроки на '.tr(),style:TStyle.textStyleVelaSansExtraBolt(colorBlack,size: 18.0)),
+                Text(scheduleLessons.month,style:TStyle.textStyleVelaSansExtraBolt(colorBlack,size: 18.0)),
+              ],
+            ),
             const Gap(10.0),
-            ...List.generate(lessonsTest.length, (index) {
+            ...List.generate(scheduleLessons.lessons.length, (index) {
               return ItemLessonsDetails(
-                lastItem: index == (lessonsTest.length-1),
-                  map: lessonsTest[index]);
+                lastItem: index == (scheduleLessons.lessons.length-1),
+                  lesson: scheduleLessons.lessons[index], nameDirection: nameDirection);
             }),
           ],
         ),
@@ -119,9 +113,10 @@ class DetailsSchedulePage extends StatelessWidget{
   }
 
   class ItemLessonsDetails extends StatelessWidget{
-    const ItemLessonsDetails({super.key, required this.map, required this.lastItem});
+    const ItemLessonsDetails({super.key,  required this.lastItem, required this.nameDirection, required this.lesson});
 
-    final Map<String,String> map;
+    final String nameDirection;
+    final Lesson lesson;
     final bool lastItem;
 
     @override
@@ -136,10 +131,10 @@ class DetailsSchedulePage extends StatelessWidget{
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(map['date']!,
+                    Text(lesson.date,
                         style:TStyle.textStyleVelaSansMedium(colorOrange,size: 14.0)),
                     const Gap(5.0),
-                    Text(map['time_period']!,
+                    Text(lesson.timePeriod,
                         style:TStyle.textStyleVelaSansRegular(colorBlack,size: 12.0)),
                   ],
                 ),
@@ -153,12 +148,15 @@ class DetailsSchedulePage extends StatelessWidget{
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(map['name_direction']!,
-                      style:TStyle.textStyleVelaSansRegular(colorBlack,size: 14.0)),
-                  //todo local
-                  Text('Аудитория ${map['name_audience']!}',
-                      style:TStyle.textStyleVelaSansRegular(colorBlack,size: 14.0)),
-                  Text(map['name_teacher']!,
+                  Row(
+                    children: [
+                      Text('Аудитория '.tr(),
+                          style:TStyle.textStyleVelaSansRegular(colorBlack,size: 14.0)),
+                      Text('${lesson.idAuditory}',
+                          style:TStyle.textStyleVelaSansRegular(colorBlack,size: 14.0)),
+                    ],
+                  ),
+                  Text(lesson.nameTeacher,
                       style:TStyle.textStyleVelaSansRegular(colorBlack,size: 14.0)),
                 ],
               ),

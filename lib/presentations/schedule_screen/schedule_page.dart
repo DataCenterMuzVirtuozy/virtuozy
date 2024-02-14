@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:virtuozy/domain/entities/schedule_lessons.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/presentations/schedule_screen/bloc/schedule_bloc.dart';
 import 'package:virtuozy/presentations/schedule_screen/bloc/schedule_event.dart';
@@ -21,7 +22,9 @@ import '../../resourses/colors.dart';
 import '../../utils/text_style.dart';
 
 class SchedulePage extends StatefulWidget{
-   const SchedulePage({super.key});
+   const SchedulePage({super.key, required this.currentMonth});
+
+   final int currentMonth;
 
   @override
   State<SchedulePage> createState() => _SchedulePageState();
@@ -35,7 +38,9 @@ class _SchedulePageState extends State<SchedulePage> {
   @override
   void initState() {
     super.initState();
-    context.read<ScheduleBloc>().add(GetScheduleEvent());
+    context.read<ScheduleBloc>().add(GetScheduleEvent(
+        currentDirIndex: _selIndexDirection,
+        month: widget.currentMonth));
   }
 
 
@@ -92,14 +97,22 @@ class _SchedulePageState extends State<SchedulePage> {
                   },),
                 ),
                 const Gap(10.0),
-                 Calendar(lessons: state.user.directions[_selIndexDirection].lessons,
+                 Calendar(
+                     lessons: state.user.directions[_selIndexDirection].lessons,
+                     onMonth: (month){
+                       context.read<ScheduleBloc>().add(GetScheduleEvent(
+                           currentDirIndex: _selIndexDirection,
+                           month: month));
+                     },
                      onLesson: (lesson){
 
-                }),
+                      }),
                 const Gap(10.0),
                 Column(
                   children: List.generate(1, (index) {
-                    return  ItemSchedule();
+                    return  ItemSchedule(scheduleLessons: state.scheduleLessons,
+                    listSchedule: state.schedulesList,
+                    nameDirection: state.user.directions[_selIndexDirection].name);
                   }),
                 ),
 
@@ -116,40 +129,14 @@ class _SchedulePageState extends State<SchedulePage> {
 }
 
  class ItemSchedule extends StatelessWidget{
-   ItemSchedule({super.key});
+   const ItemSchedule({super.key, required this.scheduleLessons, required this.nameDirection, required this.listSchedule});
+
+   final ScheduleLessons scheduleLessons;
+   final String nameDirection;
+   final List<ScheduleLessons> listSchedule;
 
 
-  final List<Map<String,String>> lessonsTest = [
-    {
-   'date':'01.11.23',
-   'time_period':'10:00 - 10:55',
-   'name_direction':'Вокал',
-   'name_audience':'122',
-      'name_teacher':'Иванов И.И.'
-    },
-    {
-      'date':'01.11.23',
-      'time_period':'14:00 - 14:55',
-      'name_direction':'Вокал',
-      'name_audience':'122',
-      'name_teacher':'Иванов И.И.'
-    },
-    {
-      'date':'01.11.23',
-      'time_period':'15:00 - 15:55',
-      'name_direction':'Вокал',
-      'name_audience':'122',
-      'name_teacher':'Иванов И.И.'
-    },
-    {
-      'date':'01.11.23',
-      'time_period':'17:00 - 17:55',
-      'name_direction':'Вокал',
-      'name_audience':'1224',
-      'name_teacher':'Иванов И.И.'
-    },
 
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -163,11 +150,17 @@ class _SchedulePageState extends State<SchedulePage> {
       child: Column(
        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          //todo local
-          Text('Уроки в ноябре',style:TStyle.textStyleVelaSansExtraBolt(colorBlack,size: 18.0)),
+
+          Row(
+            children: [
+              Text('Уроки на '.tr(),style:TStyle.textStyleVelaSansExtraBolt(colorBlack,size: 18.0)),
+              Text(scheduleLessons.month,style:TStyle.textStyleVelaSansExtraBolt(colorBlack,size: 18.0)),
+            ],
+          ),
           const Gap(10.0),
-          ...List.generate(lessonsTest.length, (index) {
-            return ItemLessons(map: lessonsTest[index]);
+          ...List.generate(scheduleLessons.lessons.length, (index) {
+            return ItemLessons(nameDirection: nameDirection,
+            lesson: scheduleLessons.lessons[index]);
           }),
           Center(child: TextButton(onPressed: () {
               GoRouter.of(context).push(pathDetailsSchedule);
@@ -185,9 +178,10 @@ class _SchedulePageState extends State<SchedulePage> {
 
 
  class ItemLessons extends StatelessWidget{
-  const ItemLessons({super.key, required this.map});
+  const ItemLessons({super.key, required this.nameDirection, required this.lesson});
 
-  final Map<String,String> map;
+  final String nameDirection;
+  final Lesson lesson;
 
   @override
   Widget build(BuildContext context) {
@@ -201,10 +195,10 @@ class _SchedulePageState extends State<SchedulePage> {
                mainAxisAlignment: MainAxisAlignment.start,
                crossAxisAlignment: CrossAxisAlignment.start,
                children: [
-                 Text(map['date']!,
+                 Text(lesson.date,
                      style:TStyle.textStyleVelaSansMedium(colorOrange,size: 14.0)),
                  const Gap(5.0),
-                 Text(map['time_period']!,
+                 Text(lesson.timePeriod,
                      style:TStyle.textStyleVelaSansRegular(colorBlack,size: 12.0)),
                ],
              ),
@@ -218,12 +212,18 @@ class _SchedulePageState extends State<SchedulePage> {
            Column(
              crossAxisAlignment: CrossAxisAlignment.start,
              children: [
-               Text(map['name_direction']!,
+               Text(nameDirection,
                    style:TStyle.textStyleVelaSansRegular(colorBlack,size: 14.0)),
-               //todo local
-               Text('Аудитория ${map['name_audience']!}',
-                   style:TStyle.textStyleVelaSansRegular(colorBlack,size: 14.0)),
-               Text(map['name_teacher']!,
+
+               Row(
+                 children: [
+                   Text('Аудитория '.tr(),
+                       style:TStyle.textStyleVelaSansRegular(colorBlack,size: 14.0)),
+                   Text('${lesson.idAuditory}',
+                       style:TStyle.textStyleVelaSansRegular(colorBlack,size: 14.0)),
+                 ],
+               ),
+               Text(lesson.nameTeacher,
                    style:TStyle.textStyleVelaSansRegular(colorBlack,size: 14.0)),
              ],
            ),

@@ -148,7 +148,7 @@ class _MainPageState extends State<MainPage> {
   List<Widget> _buildScreens() {
     return [
       const SubscriptionPage(),
-      const SchedulePage(),
+      SchedulePage(currentMonth: globalCurrentMonthCalendar),
       const FinancePage(),
       const PromotionPage(),
       const WebPage()

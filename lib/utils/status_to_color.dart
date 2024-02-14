@@ -42,7 +42,7 @@ class StatusToColor{
      case LessonStatus.cancel: return _colors[2];
      case LessonStatus.out: return _colors[4];
      case LessonStatus.reservation: return _colors[3];
-     case LessonStatus.singly: return _colors[4];
+     case LessonStatus.singly: return _colors[5];
      case LessonStatus.trial: return _colors[1];
       case LessonStatus.awaitAccept:return _colors[7];
       case LessonStatus.unknown: return const Color.fromRGBO(255, 255, 255, 0.0);
