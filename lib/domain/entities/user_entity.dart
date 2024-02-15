@@ -31,7 +31,7 @@
    final String phoneNumber;
    final UserStatus userStatus;
    final UserType userType;
-   final List<Direction> directions;
+   final List<DirectionLesson> directions;
 
    const UserEntity({
      required this.userType,
@@ -59,7 +59,7 @@
     String? phoneNumber,
     UserStatus? userStatus,
     UserType? userType,
-    List<Direction>? directions
+    List<DirectionLesson>? directions
   }) {
     return UserEntity(
       userType: userType??this.userType,
@@ -74,14 +74,14 @@
 }
 
 
-class Direction{
+class DirectionLesson{
 
   final List<dynamic> bonus;
   final double balance;
   final String name;
   final List<Lesson> lessons;
 
-  const Direction({
+  const DirectionLesson({
     required this.bonus,
     required this.balance,
     required this.name,
@@ -91,13 +91,13 @@ class Direction{
 
 
 
-  Direction copyWith({
+  DirectionLesson copyWith({
     List<String>? bonus,
     double? balance,
     String? name,
     List<Lesson>? lessons,
   }) {
-    return Direction(
+    return DirectionLesson(
       bonus: bonus ?? this.bonus,
       balance: balance ?? this.balance,
       name: name ?? this.name,

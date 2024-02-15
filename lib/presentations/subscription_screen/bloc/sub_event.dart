@@ -23,7 +23,7 @@ class GetUserEvent extends SubEvent{
 
 class AcceptLessonEvent extends SubEvent{
   final Lesson lesson;
-  final Direction direction;
+  final DirectionLesson direction;
 
   const AcceptLessonEvent({
     required this.direction,

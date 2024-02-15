@@ -8,6 +8,8 @@ enum SubStatus{
  loading,
  error,
  unknown,
+  confirmation,
+  confirm,
  loaded
 }
 

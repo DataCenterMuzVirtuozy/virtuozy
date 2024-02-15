@@ -162,13 +162,16 @@ class _SchedulePageState extends State<SchedulePage> {
             return ItemLessons(nameDirection: nameDirection,
             lesson: scheduleLessons.lessons[index]);
           }),
-          Center(child: TextButton(onPressed: () {
-              GoRouter.of(context).push(pathDetailsSchedule);
-          },
-              child: Text('Подробное расписание'.tr(),
-                      style: TStyle.textStyleVelaSansRegularUnderline(
-                          colorBlack,
-                          size: 16.0)))),
+          Visibility(
+            visible: listSchedule.length>1,
+            child: Center(child: TextButton(onPressed: () {
+                GoRouter.of(context).push(pathDetailsSchedule);
+            },
+                child: Text('Подробное расписание'.tr(),
+                        style: TStyle.textStyleVelaSansRegularUnderline(
+                            colorBlack,
+                            size: 16.0)))),
+          ),
         ],
       ),
     );

@@ -56,12 +56,6 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
   }
 
 
-  int _getIntCurrentDay(String date){
-    return DateFormat('yyyy-MM-dd').parse(date).day;
-  }
-
-
-
 
 
 
@@ -158,11 +152,11 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                            height: 40.0,
                            child: SubmitButton(
                              onTap: (){
-                               currentDayNotifi.value = _getIntCurrentDay(state.firstNotAcceptLesson.date);
+
                                Dialoger.showModalBottomMenu(
                                  blurred: false,
                                  args:[state.firstNotAcceptLesson,
-                                   state.userEntity.directions[_selIndexDirection]],
+                                   state.userEntity.directions[_selIndexDirection],state.listNotAcceptLesson],
                                    title:'Подтверждение урока'.tr(),context: context,
                                content: ConfirmLesson());
                              },
@@ -206,7 +200,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
   const ItemSubscription({super.key,
   required this.direction});
 
-  final Direction direction;
+  final DirectionLesson direction;
 
 
   int _freeLessons({required List<Lesson> lessons}){

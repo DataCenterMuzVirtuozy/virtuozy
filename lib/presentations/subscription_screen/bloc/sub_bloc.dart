@@ -81,19 +81,22 @@ class SubBloc extends Bloc<SubEvent,SubState>{
 
   void _acceptLesson(AcceptLessonEvent event,emit) async {
     try{
+      emit(state.copyWith(subStatus: SubStatus.confirmation));
+      await Future.delayed(const Duration(seconds: 2));
+      final dateNow = DateTime.now().toUtc().toString();
       List<Lesson> lessons = event.direction.lessons;
       UserEntity user = _userCubit.userEntity;
       final indexLesson = lessons.indexOf(event.lesson);
       final updatedLesson = event.lesson.copyWith(status: LessonStatus.complete,
-          timeAccept: '${event.lesson.date}/12:30');
+          timeAccept: dateNow);
       lessons.update(indexLesson, updatedLesson);
       final updatedDirection = event.direction.copyWith(lessons: lessons);
-      List<Direction> directions = user.directions;
+      List<DirectionLesson> directions = user.directions;
       final indexDirection = directions.indexOf(event.direction);
       directions.update(indexDirection<0?0:indexDirection, updatedDirection);
       final newUser = user.copyWith(directions: directions);
       _userCubit.updateUser(newUser: newUser);
-
+      emit(state.copyWith(subStatus: SubStatus.confirm));
       //todo отнять с баланса сумму за урок
 
     }on Failure catch(e){

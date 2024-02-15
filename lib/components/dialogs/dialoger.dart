@@ -5,10 +5,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:virtuozy/components/calendar.dart';
 import 'package:virtuozy/components/dialogs/sealeds.dart';
+import 'package:virtuozy/presentations/subscription_screen/bloc/sub_bloc.dart';
+import 'package:virtuozy/presentations/subscription_screen/bloc/sub_state.dart';
 import 'package:virtuozy/resourses/colors.dart';
 
 import '../../di/locator.dart';
@@ -67,6 +70,7 @@ class Dialoger{
      showModalBottomSheet(
          isDismissible:false,
          enableDrag: false,
+         isScrollControlled: true,
          backgroundColor: Colors.transparent,
          context: context, builder: (_){
        final body = switch(content){
@@ -81,8 +85,9 @@ class Dialoger{
          child: Wrap(
            children: [
              Container(
-               width: MediaQuery.of(context).size.width,
-               padding: const EdgeInsets.only(
+               width: MediaQuery.of(_).size.width,
+               padding:  EdgeInsets.only(
+                 bottom: MediaQuery.of(_).viewInsets.bottom,
                    right: 10.0,
                    left: 10.0,
                    top: 10.0),
@@ -107,7 +112,8 @@ class Dialoger{
                          InkWell(
                              onTap: (){
                                currentDayNotifi.value = 0;
-                               Navigator.pop(_);
+                                 Navigator.pop(_);
+
                              },
                              child: Icon(Icons.close_rounded,color: colorWhite)),
 

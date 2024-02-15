@@ -41,8 +41,8 @@ class UserMapper{
     return LessonStatus.unknown;
   }
 
-  static Direction _fromDirectionModel(DirectionModel directionModel){
-    return Direction(bonus: directionModel.bonus,
+  static DirectionLesson _fromDirectionModel(DirectionModel directionModel){
+    return DirectionLesson(bonus: directionModel.bonus,
         balance: directionModel.balance,
         name: directionModel.name,
         lessons: directionModel.lessons.map((e) => _fromLessonModel(e)).toList());

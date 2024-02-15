@@ -9,6 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:virtuozy/components/app_bar.dart';
 import 'package:virtuozy/components/buttons.dart';
+import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/resourses/images.dart';
 
 import '../../components/drawing_menu_selected.dart';
@@ -18,7 +19,7 @@ import '../../utils/text_style.dart';
 class PayPage extends StatefulWidget{
    const PayPage({super.key, required this.direction});
 
-   final String direction;
+   final DirectionLesson direction;
 
 
   @override
@@ -45,7 +46,7 @@ class _PayPageState extends State<PayPage> {
         child: Column(
           children: [
             Visibility(
-              visible: widget.direction.isEmpty,
+              visible: widget.direction.name.isEmpty,
               child: DrawingMenuSelected(items:_listDirection, onSelected: (index){
                 setState(() {
                   _selIndexDirection = index;

@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/presentations/auth_screen/login_page.dart';
 import 'package:virtuozy/presentations/auth_screen/singin_page.dart';
 import 'package:virtuozy/presentations/auth_screen/success_send_sms_page.dart';
@@ -70,7 +71,7 @@ class AppRouter{
         pageBuilder: (context, state) {
           return CupertinoPage(
               key: state.pageKey,
-              child:   PayPage(direction: (state.extra as String) ?? '',));
+              child:   PayPage(direction: state.extra as DirectionLesson));
         },
       ),
       GoRoute(

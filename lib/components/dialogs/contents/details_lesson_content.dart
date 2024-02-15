@@ -19,7 +19,7 @@ class DetailsLessonContent extends StatelessWidget {
       {super.key, required this.lesson, required this.direction});
 
   final Lesson lesson;
-  final Direction direction;
+  final DirectionLesson direction;
 
 
   @override
@@ -120,7 +120,7 @@ class DetailsLessonContent extends StatelessWidget {
                     Navigator.pop(context);
                     Dialoger.showModalBottomMenu(
                         blurred: false,
-                        args:[lesson,direction],
+                        args:[lesson,direction,[lesson]],
                         title:'Подтверждение урока'.tr(),context: context,
                         content: ConfirmLesson());
                   },
