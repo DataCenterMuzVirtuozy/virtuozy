@@ -14,6 +14,7 @@ import 'package:virtuozy/presentations/schedule_screen/bloc/schedule_event.dart'
 import 'package:virtuozy/presentations/schedule_screen/bloc/schedule_state.dart';
 import 'package:virtuozy/router/paths.dart';
 import 'package:virtuozy/utils/auth_mixin.dart';
+import 'package:virtuozy/utils/status_to_color.dart';
 
 import '../../components/box_info.dart';
 import '../../components/calendar.dart';
@@ -203,6 +204,25 @@ class _SchedulePageState extends State<SchedulePage> {
                  const Gap(5.0),
                  Text(lesson.timePeriod,
                      style:TStyle.textStyleVelaSansRegular(colorBlack,size: 12.0)),
+                 const Gap(5.0),
+                 Row(
+                   children: [
+                     Container(
+                       decoration: BoxDecoration(
+                         shape: BoxShape.circle,
+                         color: StatusToColor.getColor(lessonStatus: lesson.status)
+                       ),
+                       width: 5.0,
+                       height: 5.0,
+                     ),
+                     const Gap(5.0),
+                     Expanded(
+                       child: Text(StatusToColor.getNameStatus(lesson.status),
+                           maxLines: 2,
+                           style:TStyle.textStyleVelaSansRegular(colorBlack,size: 10.0)),
+                     ),
+                   ],
+                 )
                ],
              ),
            ),

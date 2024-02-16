@@ -8,6 +8,7 @@ import 'package:virtuozy/presentations/auth_screen/bloc/auth_bloc.dart';
 import 'package:virtuozy/presentations/auth_screen/login_page.dart';
 import 'package:virtuozy/presentations/auth_screen/singin_page.dart';
 import 'package:virtuozy/presentations/branch_search_screen/branch_search_page.dart';
+import 'package:virtuozy/presentations/finance_screen/bloc/bloc_finance.dart';
 import 'package:virtuozy/presentations/main_screen/main_page.dart';
 import 'package:virtuozy/presentations/schedule_screen/bloc/schedule_bloc.dart';
 import 'package:virtuozy/presentations/splash_screen/splash_page.dart';
@@ -71,6 +72,7 @@ class _MyAppState extends State<MyApp> {
               BlocProvider<AuthBloc>(create: (_) => AuthBloc()),
               BlocProvider<SubBloc>(create: (_)=>SubBloc()),
               BlocProvider<ScheduleBloc>(create: (_)=>ScheduleBloc()),
+              BlocProvider<BlocFinance>(create: (_)=>BlocFinance()),
               BlocProvider<UserCubit>(create: (_)=>UserCubit())
             ],
             child: MaterialApp.router(

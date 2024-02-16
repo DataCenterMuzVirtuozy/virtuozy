@@ -5,10 +5,13 @@
  import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtuozy/components/buttons.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
+import 'package:virtuozy/presentations/subscription_screen/bloc/sub_bloc.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/router/paths.dart';
 import 'package:virtuozy/utils/auth_mixin.dart';
@@ -20,6 +23,8 @@ import '../../utils/text_style.dart';
 class FinancePage extends StatefulWidget{
   const FinancePage({super.key});
 
+
+
   @override
   State<FinancePage> createState() => _FinancePageState();
 }
@@ -27,12 +32,22 @@ class FinancePage extends StatefulWidget{
 class _FinancePageState extends State<FinancePage> with AuthMixin {
 
   int _selIndexDirection = 0;
-  List<String> _listDirection =  [
-    'Вокал'.tr(),
-    'Академический вокал'.tr(),
-    'Фортепиано'.tr(),
-    'Все направления'.tr()
-  ];
+  late List<DirectionLesson> _listDirection ;
+
+
+  @override
+  void initState() {
+    super.initState();
+
+  }
+
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _listDirection = context.watch<SubBloc>().state.userEntity.directions;
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -54,7 +69,7 @@ class _FinancePageState extends State<FinancePage> with AuthMixin {
      child: SingleChildScrollView(
        child: Column(
          children: [
-           DrawingMenuSelected(items: _listDirection,
+           DrawingMenuSelected(items: _listDirection.map((e) => e.name).toList(),
              onSelected: (index){
                 setState(() {
                    _selIndexDirection = index;
@@ -110,8 +125,7 @@ class _FinancePageState extends State<FinancePage> with AuthMixin {
                        ),
                        const Gap(10.0),
                        FloatingActionButton(onPressed: (){
-                         GoRouter.of(context).push(pathPay,extra: _selIndexDirection == 3?
-                         '':_listDirection[_selIndexDirection]);
+                         GoRouter.of(context).push(pathPay,extra:_listDirection[_selIndexDirection]);
                        },
                          backgroundColor: colorBeruza,
                          child:  Icon(Icons.add,color: colorWhite,),)

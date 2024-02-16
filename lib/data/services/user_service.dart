@@ -30,8 +30,9 @@ class UserService{
    'directions': [
     {
      'bonus': [],
-     'balance': 0.0,
-     'name': 'Хор',
+     'balance': 10000.0,
+     //todo добавить поле priceLesson and quantityLessonLeft
+     'name': 'Бас-гитара',
      'lessons': [
       {
        'id':1,

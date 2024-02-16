@@ -34,6 +34,28 @@ class StatusToColor{
 
  static List<String> get namesStatus => _namesStatus;
 
+ static String getNameStatus(LessonStatus status) {
+   switch (status) {
+     case LessonStatus.planned:
+       return StatusToColor.namesStatus[0];
+     case LessonStatus.complete:
+       return StatusToColor.namesStatus[6];
+     case LessonStatus.cancel:
+       return StatusToColor.namesStatus[2];
+     case LessonStatus.out:
+       return StatusToColor.namesStatus[4];
+     case LessonStatus.reservation:
+       return StatusToColor.namesStatus[3];
+     case LessonStatus.singly:
+       return StatusToColor.namesStatus[5];
+     case LessonStatus.trial:
+       return StatusToColor.namesStatus[1];
+     case LessonStatus.awaitAccept:
+       return StatusToColor.namesStatus[7];
+     case LessonStatus.unknown:
+       return '';
+   }
+ }
 
    static Color getColor({required LessonStatus lessonStatus}){
     switch(lessonStatus){
