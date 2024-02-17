@@ -52,18 +52,18 @@ class _PayPageState extends State<PayPage> {
       appBar: AppBarCustom(title: 'Пополнить счет'.tr()),
       body: BlocConsumer<BlocFinance,StateFinance>(
         listener: (c, s) {
-            if(s.status == FinanceStatus.loading){
+            if(s.paymentStatus == PaymentStatus.loading){
               _selPriceSubscription = s.pricesDirectionEntity.subscriptions[0];
             }
         },
         builder: (context,state) {
 
 
-          if(state.status == FinanceStatus.loading || state.status == FinanceStatus.payment){
+          if(state.paymentStatus == PaymentStatus.payment || state.status == PaymentStatus.loading){
             return const Center(child: CircularProgressIndicator());
           }
 
-          if(state.status == FinanceStatus.paymentComplete){
+          if(state.paymentStatus == PaymentStatus.paymentComplete){
             return Center(child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -175,7 +175,8 @@ class _PayPageState extends State<PayPage> {
                    child: SubmitButton(
                      onTap: (){
                        context.read<BlocFinance>()
-                           .add(PaySubscriptionEvent(priceSubscriptionEntity: _selPriceSubscription));
+                           .add(PaySubscriptionEvent(priceSubscriptionEntity: _selPriceSubscription,
+                       currentDirection: widget.direction));
                      },
                      textButton: 'К оплате'.tr(),
                    ).animate().fadeIn(),

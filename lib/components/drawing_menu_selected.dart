@@ -48,7 +48,7 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
     animationHeight=Tween<double>(begin: 40.0,end:_heightCalculate(widget.items.length)).animate(animationController);
     animationOpacity=Tween<double>(begin: 0.0,end: 0.1).animate(animationController);
     animationBorder=Tween<double>(begin: 0.0,end: 1.0).animate(animationController);
-    changeTextNotifier=ValueNotifier(widget.items[0]);
+    changeTextNotifier=ValueNotifier(widget.items.isEmpty?'':widget.items[0]);
 
   }
 

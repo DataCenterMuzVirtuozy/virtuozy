@@ -5,74 +5,81 @@
  import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:virtuozy/components/box_info.dart';
+import 'package:virtuozy/domain/entities/transaction_entity.dart';
+import 'package:virtuozy/presentations/finance_screen/bloc/bloc_finance.dart';
+import 'package:virtuozy/presentations/finance_screen/bloc/event_finance.dart';
+import 'package:virtuozy/presentations/finance_screen/bloc/state_finance.dart';
 import 'package:virtuozy/resourses/colors.dart';
+import 'package:virtuozy/utils/parser_price.dart';
 
 import '../../components/app_bar.dart';
 import '../../utils/text_style.dart';
 
-class ListTransactionsPage extends StatelessWidget{
-   ListTransactionsPage({super.key});
+class ListTransactionsPage extends StatefulWidget{
+   const ListTransactionsPage({super.key});
+
+  @override
+  State<ListTransactionsPage> createState() => _ListTransactionsPageState();
+}
+
+class _ListTransactionsPageState extends State<ListTransactionsPage> {
 
 
-
-  final List<Map<String,String>> testData = [
-    {
-      'time':'01.10.23',
-      'body':'Списание за урок',
-      'quantity':'-1 930 Р'
-    },
-
-    {
-      'time':'25.09.23',
-      'body':'Списание за урок',
-      'quantity':'-1 930 Р'
-    },
-
-    {
- 'time':'16.09.23',
- 'body':'Пополнение счета',
- 'quantity':'+46 320 Р'
- },
-    {
-      'time':'10.09.23',
-      'body':'Списание за урок',
-      'quantity':'-1 930 Р'
-    },
-
-    {
-      'time':'08.09.23',
-      'body':'Бонусный урок',
-      'quantity':'+1930 Р'
-    }
-  ];
+  @override
+  void initState() {
+   super.initState();
+   context.read<BlocFinance>().add(GetListTransactionsEvent());
+  }
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarCustom(title: 'Операции по счету'.tr()),
-      body: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-        itemCount: testData.length,
-          itemBuilder: (c,i){
-       return ItemTransaction(body: testData[i]['body']!,
-           time: testData[i]['time']!,
-           quantity: testData[i]['quantity']!);
-      }),
+      body: BlocConsumer<BlocFinance,StateFinance>(
+        listener: (c,s){
+
+        },
+
+        builder: (context,state) {
+
+          if(state.listTransactionStatus == ListTransactionStatus.loading){
+            return const Center(child: CircularProgressIndicator());
+          }
+
+
+          if(state.transactions.isEmpty){
+            return  BoxInfo(title: 'У вас нет транзакций'.tr(),
+                iconData: Icons.list_alt_sharp);
+          }
+
+          return ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            itemCount: state.transactions.length,
+              itemBuilder: (c,i){
+           return ItemTransaction(type: state.transactions[i].typeTransaction,
+               time: state.transactions[i].time,
+               quantity: '${ParserPrice.getBalance(state.transactions[i].quantity)} руб.');
+          });
+        }
+      ),
     );
   }
+
 
 }
 
  class ItemTransaction extends StatelessWidget{
    const ItemTransaction({super.key,
-     required this.body,
+     required this.type,
      required this.time,
      required this.quantity
       });
 
-   final String body;
+   final TypeTransaction type;
    final String time;
    final String quantity;
 
@@ -101,7 +108,11 @@ class ListTransactionsPage extends StatelessWidget{
                Expanded(child: Column(
                  crossAxisAlignment: CrossAxisAlignment.start,
                  children: [
-                   Text(body,style: TStyle.textStyleVelaSansBold(colorBlack,size: 14.0)),
+                   Text(type == TypeTransaction.addBalance?
+                       'Пополнение счета'.tr():
+                         type == TypeTransaction.minusLesson?
+                       'Списание за урок'.tr():'....',
+                       style: TStyle.textStyleVelaSansBold(colorBlack,size: 14.0)),
                    Row(
                      children: [
                        Icon(Icons.timelapse_rounded,color: colorBeruza,size: 10.0),

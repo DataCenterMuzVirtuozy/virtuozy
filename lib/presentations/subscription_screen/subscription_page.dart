@@ -227,7 +227,6 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              //todo local
               Text(direction.name,
                   style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
               Row(
@@ -235,12 +234,12 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                   Text('Осталось уроков '.tr(),style:TStyle.textStyleVelaSansMedium(colorGrey,size: 14.0)),
                   const Gap(5.0),
                   Container(
-                    padding: const EdgeInsets.all(5.0),
+                    padding: const EdgeInsets.all(3.0),
                     decoration: BoxDecoration(
                         color: Theme.of(context).colorScheme.secondary,
                         shape: BoxShape.circle),
                     child: Text('${direction.subscription.balanceLesson}',
-                        style:TStyle.textStyleVelaSansMedium(colorWhite,size: 14.0)),
+                        style:TStyle.textStyleVelaSansBold(colorWhite,size: 10.0)),
                   ),
                 ],
               ),

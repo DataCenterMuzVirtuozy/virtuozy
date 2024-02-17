@@ -2,6 +2,7 @@
 
  import 'package:equatable/equatable.dart';
 import 'package:virtuozy/domain/entities/price_subscription_entity.dart';
+import 'package:virtuozy/domain/entities/user_entity.dart';
 
 class EventFinance extends Equatable{
   @override
@@ -26,7 +27,9 @@ class GetBalanceSubscriptionEvent extends EventFinance{
 }
 
 class PaySubscriptionEvent extends EventFinance{
+  final DirectionLesson currentDirection;
   final PriceSubscriptionEntity priceSubscriptionEntity;
 
-  const PaySubscriptionEvent({required this.priceSubscriptionEntity});
+  const PaySubscriptionEvent({required this.priceSubscriptionEntity,required this.currentDirection});
 }
+class GetListTransactionsEvent extends EventFinance{}
