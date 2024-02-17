@@ -2,6 +2,7 @@
 
 
  import 'package:virtuozy/data/models/price_subscription_model.dart';
+import 'package:virtuozy/data/models/subscription_model.dart';
 
 class PricesDirectionModel{
 

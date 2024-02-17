@@ -4,7 +4,9 @@
 import 'package:virtuozy/domain/entities/price_subscription_entity.dart';
 import 'package:virtuozy/domain/entities/prices_direction_entity.dart';
 
+import '../../domain/entities/subscription_entity.dart';
 import '../models/prices_direction_model.dart';
+import '../models/subscription_model.dart';
 
 class PricesDirectionMapper{
 
@@ -22,7 +24,7 @@ class PricesDirectionMapper{
          name: e.name,
          price: e.price,
          priceOneLesson: e.priceOneLesson,
-         quantityLesson: e.quantityLesson)).toList();
+        quantityLesson: e.quantityLesson)).toList();
    }
 
 

@@ -21,6 +21,7 @@ import '../../components/buttons.dart';
 import '../../components/dialogs/sealeds.dart';
 import '../../components/drawing_menu_selected.dart';
 import '../../di/locator.dart';
+import '../../utils/parser_price.dart';
 import '../../utils/text_style.dart';
 import 'bloc/sub_state.dart';
 
@@ -203,9 +204,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
   final DirectionLesson direction;
 
 
-  int _freeLessons({required List<Lesson> lessons}){
-    return lessons.where((element) => element.status == LessonStatus.planned).length;
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -240,7 +239,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                     decoration: BoxDecoration(
                         color: Theme.of(context).colorScheme.secondary,
                         shape: BoxShape.circle),
-                    child: Text('${_freeLessons(lessons: direction.lessons)}',
+                    child: Text('${direction.subscription.balanceLesson}',
                         style:TStyle.textStyleVelaSansMedium(colorWhite,size: 14.0)),
                   ),
                 ],
@@ -260,8 +259,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
               const Gap(5.0),
               Row(
                 children: [
-                  Text(direction.balance>0.0?'${direction.balance}':
-                      '0.00',
+                  Text(ParserPrice.getBalance(direction.subscription.balanceSub),
                       style:TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 25.0)),
                   Icon(CupertinoIcons.money_rubl,color: Theme.of(context).iconTheme.color,size: 30.0,)
                 ],
@@ -283,6 +281,10 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
     );
 
   }
+
+
+
+
 
  }
 

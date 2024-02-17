@@ -8,8 +8,10 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
+import 'package:lottie/lottie.dart';
 import 'package:virtuozy/components/app_bar.dart';
 import 'package:virtuozy/components/buttons.dart';
+import 'package:virtuozy/domain/entities/price_subscription_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/presentations/finance_screen/bloc/bloc_finance.dart';
 import 'package:virtuozy/presentations/finance_screen/bloc/state_finance.dart';
@@ -35,11 +37,7 @@ class _PayPageState extends State<PayPage> {
   bool _sbpPay = false;
   bool _cardPay = false;
   int _selIndexDirection = 0;
-  List<String> _listDirection =  [
-    'Вокал'.tr(),
-    'Академический вокал'.tr(),
-    'Фортепиано'.tr(),
-  ];
+  late PriceSubscriptionEntity _selPriceSubscription;
 
 
   @override
@@ -54,13 +52,28 @@ class _PayPageState extends State<PayPage> {
       appBar: AppBarCustom(title: 'Пополнить счет'.tr()),
       body: BlocConsumer<BlocFinance,StateFinance>(
         listener: (c, s) {
-
+            if(s.status == FinanceStatus.loading){
+              _selPriceSubscription = s.pricesDirectionEntity.subscriptions[0];
+            }
         },
         builder: (context,state) {
 
 
-          if(state.status == FinanceStatus.loading){
+          if(state.status == FinanceStatus.loading || state.status == FinanceStatus.payment){
             return const Center(child: CircularProgressIndicator());
+          }
+
+          if(state.status == FinanceStatus.paymentComplete){
+            return Center(child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Lottie.asset(successAnim,repeat: false,width: 150.0,height: 150.0),
+                Text('Спасибо за оплату!'.tr(),
+                style: TStyle.textStyleVelaSansBold(colorGreenLight,size: 18.0),).animate().fadeIn(
+                  duration: const Duration(milliseconds: 700)
+                )
+              ],
+            ));
           }
 
 
@@ -81,7 +94,8 @@ class _PayPageState extends State<PayPage> {
                   items: state.pricesDirectionEntity.subscriptions
                       .map((e) => '${e.name} - ${e.price} руб.').toList(),
                   onSelected: (index){
-
+                    print('Seke ${ state.pricesDirectionEntity.subscriptions[index]}');
+                    _selPriceSubscription = state.pricesDirectionEntity.subscriptions[index];
                 },),
                 const Gap(20.0),
                 Container(
@@ -109,7 +123,7 @@ class _PayPageState extends State<PayPage> {
                              ],
                            ),
                            Checkbox(
-                             activeColor: colorOrange,
+                               checkColor: colorWhite,
                                value: _sbpPay,
                                onChanged: (v){
                                   setState(() {
@@ -140,7 +154,7 @@ class _PayPageState extends State<PayPage> {
                             ],
                           ),
                           Checkbox(
-                              activeColor: colorOrange,
+                            checkColor: colorWhite,
                               value: _cardPay, onChanged: (v){
                             setState(() {
                               _cardPay = v!;
@@ -159,6 +173,10 @@ class _PayPageState extends State<PayPage> {
                  Visibility(
                    visible: _sbpPay||_cardPay,
                    child: SubmitButton(
+                     onTap: (){
+                       context.read<BlocFinance>()
+                           .add(PaySubscriptionEvent(priceSubscriptionEntity: _selPriceSubscription));
+                     },
                      textButton: 'К оплате'.tr(),
                    ).animate().fadeIn(),
                  )

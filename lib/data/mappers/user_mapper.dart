@@ -1,7 +1,12 @@
 
 
- import 'package:virtuozy/data/models/user_model.dart';
+ import 'package:virtuozy/data/models/price_subscription_model.dart';
+import 'package:virtuozy/data/models/user_model.dart';
+import 'package:virtuozy/domain/entities/price_subscription_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
+
+import '../../domain/entities/subscription_entity.dart';
+import '../models/subscription_model.dart';
 
 class UserMapper{
 
@@ -43,11 +48,19 @@ class UserMapper{
 
   static DirectionLesson _fromDirectionModel(DirectionModel directionModel){
     return DirectionLesson(bonus: directionModel.bonus,
-        balance: directionModel.balance,
+        subscription: fromApiPriceSub(directionModel.subscription),
         name: directionModel.name,
         lessons: directionModel.lessons.map((e) => _fromLessonModel(e)).toList());
   }
 
+  static SubscriptionEntity fromApiPriceSub(SubscriptionModel subscriptionModel){
+    return SubscriptionEntity(
+        name: subscriptionModel.name,
+        price: subscriptionModel.price,
+        priceOneLesson: subscriptionModel.priceOneLesson,
+        balanceLesson: subscriptionModel.balanceLesson,
+        balanceSub: subscriptionModel.balanceSub);
+  }
 
   static Lesson _fromLessonModel(LessonModel lessonModel){
     return Lesson(

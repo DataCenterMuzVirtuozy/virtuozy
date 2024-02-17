@@ -9,6 +9,7 @@
    final int quantityLesson;
 
 
+
    const PriceSubscriptionModel({
     required this.name,
     required this.price,
@@ -18,12 +19,15 @@
 
 
 
+
+
+
   factory PriceSubscriptionModel.fromMap(Map<String, dynamic> map) {
     return PriceSubscriptionModel(
       name: map['name'] as String,
       price: map['price'] as double,
       priceOneLesson: map['priceOneLesson'] as double,
-      quantityLesson: map['quantityLesson'] as int,
+      quantityLesson: map['quantityLesson']??0,
 
     );
   }

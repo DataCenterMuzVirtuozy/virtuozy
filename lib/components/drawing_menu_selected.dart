@@ -3,6 +3,7 @@
 
 
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:virtuozy/resourses/colors.dart';
@@ -59,7 +60,7 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
   }
 
   double _heightCalculate(int indexItems){
-    return 58.0+(38*indexItems);
+    return 58.0+(65*indexItems);
   }
 
   @override
@@ -84,27 +85,29 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height:50.0),
+                      const SizedBox(height: 65.0),
                       ...List.generate(widget.items.length, (index){
-                        return Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: GestureDetector(
-                            onTap: (){
-                              changeTextNotifier.value=widget.items[index];
-                              widget.onSelected.call(index);
-                              animationController.reverse();
-                            },
-                            child: Container(
-                              color: Colors.transparent,
-                              width: double.infinity,
-                              height:30.0,
-                              child: Row(
-                                children: [
-                                  Text(widget.items[index],style:
+                        return GestureDetector(
+                          onTap: (){
+                            changeTextNotifier.value=widget.items[index];
+                            widget.onSelected.call(index);
+                            animationController.reverse();
+                          },
+                          child: Container(
+                            color: Colors.transparent,
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(vertical: 5.0),
+                            //height:30.0,
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(widget.items[index],
+                                      maxLines: 2,
+                                      style:
                                   TStyle.textStyleVelaSansMedium(colorGrey,
                                       size: 18.0)),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
                         );
@@ -135,8 +138,10 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
               builder: (context,child) {
                 return Container(
                     padding: const EdgeInsets.only(right: 26.0,
+                        top: 5.0,
+                        bottom: 5.0,
                         left:  26.0),
-                    height: 50.0,
+                    //height: 60.0,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                         border: Border.all(color: colorBeruzaLight.withOpacity(animationOpacity.value),width: 1.5),
@@ -148,9 +153,12 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
                       children: [
                         ValueListenableBuilder<String>(
                           builder: (context,value,child) {
-                            return Text(value,
-                                style:  TStyle.textStyleGaretHeavy(Theme.of(context).textTheme.displayMedium!.color!,
-                                    size: 18.0));
+                            return Expanded(
+                              child: Text(value,
+                                  maxLines: 2,
+                                  style:  TStyle.textStyleGaretHeavy(Theme.of(context).textTheme.displayMedium!.color!,
+                                      size: 16.0)),
+                            );
                           },
                           valueListenable: changeTextNotifier,
                         ),

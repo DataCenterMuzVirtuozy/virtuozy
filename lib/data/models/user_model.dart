@@ -1,7 +1,10 @@
 
 
 
- class UserModel{
+ import 'package:virtuozy/data/models/price_subscription_model.dart';
+import 'package:virtuozy/data/models/subscription_model.dart';
+
+class UserModel{
    final String lastName;
    final String firstName;
    final String branchName;
@@ -41,13 +44,13 @@
 
  class DirectionModel{
    final List<dynamic> bonus;
-   final double balance;
+   final SubscriptionModel subscription;
    final String name;
    final List<LessonModel> lessons;
 
    const DirectionModel({
     required this.bonus,
-    required this.balance,
+    required this.subscription,
     required this.name,
     required this.lessons,
   });
@@ -57,9 +60,10 @@
   factory DirectionModel.fromMap(Map<String, dynamic> map) {
 
     final lessons =  map['lessons'] as List<dynamic>;
+    final sub = SubscriptionModel.fromMap(map['subscription']);
     return DirectionModel(
       bonus: map['bonus'] as List<dynamic>,
-      balance: map['balance'] as double,
+      subscription: sub,
       name: map['name'] as String,
       lessons: lessons.map((e) => LessonModel.fromMap(e)).toList(),
     );

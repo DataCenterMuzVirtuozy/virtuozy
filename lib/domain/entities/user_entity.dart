@@ -1,5 +1,8 @@
 
- enum UserStatus{
+ import 'package:virtuozy/domain/entities/price_subscription_entity.dart';
+import 'package:virtuozy/domain/entities/subscription_entity.dart';
+
+enum UserStatus{
   notAuth,
    auth,
    moderation
@@ -77,13 +80,13 @@
 class DirectionLesson{
 
   final List<dynamic> bonus;
-  final double balance;
+  final SubscriptionEntity subscription;
   final String name;
   final List<Lesson> lessons;
 
   const DirectionLesson({
     required this.bonus,
-    required this.balance,
+    required this.subscription,
     required this.name,
     required this.lessons,
   });
@@ -93,13 +96,13 @@ class DirectionLesson{
 
   DirectionLesson copyWith({
     List<String>? bonus,
-    double? balance,
+    SubscriptionEntity? subscription,
     String? name,
     List<Lesson>? lessons,
   }) {
     return DirectionLesson(
       bonus: bonus ?? this.bonus,
-      balance: balance ?? this.balance,
+      subscription: subscription ?? this.subscription,
       name: name ?? this.name,
       lessons: lessons ?? this.lessons,
     );

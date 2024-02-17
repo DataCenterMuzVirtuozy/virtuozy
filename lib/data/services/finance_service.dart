@@ -31,7 +31,7 @@ class FinanceService{
   'nameDirection': 'Бас-гитара',
   'subscriptions': [
     {
-      'name': 'Абонемент 1',
+      'name': 'Абонемент “Утренний” 10 уроков',
       'price':  10000.0,
       'priceOneLesson':  1000.0,
       'quantityLesson':10,
@@ -39,13 +39,13 @@ class FinanceService{
 
     },
     {
-      'name': 'Абонемент 2',
+      'name': 'Абонемент “Утренний” 20 уроков',
       'price':  20000.0,
       'priceOneLesson':  1000.0,
       'quantityLesson': 20 ,
     },
     {
-      'name': 'Абонемент 3',
+      'name': 'Абонемент “Утренний” 30 уроков',
       'price':  30000.0,
       'priceOneLesson': 1000.0 ,
       'quantityLesson' : 30,
@@ -293,7 +293,7 @@ class FinanceService{
       'nameDirection': 'Баян',
       'subscriptions': [
         {
-          'name': 'Абонемент 1',
+          'name': 'Абонемент “Утренний” 10 уроков',
           'price':  10000.0,
           'priceOneLesson':  1000.0,
           'quantityLesson':10,
@@ -301,13 +301,13 @@ class FinanceService{
 
         },
         {
-          'name': 'Абонемент 2',
+          'name': 'Абонемент “Утренний” 20 уроков',
           'price':  20000.0,
           'priceOneLesson':  1000.0,
           'quantityLesson': 20 ,
         },
         {
-          'name': 'Абонемент 3',
+          'name': 'Абонемент “Утренний” 30 уроков',
           'price':  30000.0,
           'priceOneLesson': 1000.0 ,
           'quantityLesson' : 30,
@@ -322,7 +322,7 @@ class FinanceService{
       'nameDirection': 'Виолончель',
       'subscriptions': [
         {
-          'name': 'Абонемент 1',
+          'name': 'Абонемент “Утренний” 10 уроков',
           'price':  10000.0,
           'priceOneLesson':  1000.0,
           'quantityLesson':10,
@@ -330,13 +330,13 @@ class FinanceService{
 
         },
         {
-          'name': 'Абонемент 2',
+          'name': 'Абонемент “Утренний” 20 уроков',
           'price':  20000.0,
           'priceOneLesson':  1000.0,
           'quantityLesson': 20 ,
         },
         {
-          'name': 'Абонемент 3',
+          'name': 'Абонемент “Утренний” 30 уроков',
           'price':  30000.0,
           'priceOneLesson': 1000.0 ,
           'quantityLesson' : 30,

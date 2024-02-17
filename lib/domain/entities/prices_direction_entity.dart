@@ -2,6 +2,7 @@
 
 
  import 'package:virtuozy/domain/entities/price_subscription_entity.dart';
+import 'package:virtuozy/domain/entities/subscription_entity.dart';
 
 class PricesDirectionEntity{
 

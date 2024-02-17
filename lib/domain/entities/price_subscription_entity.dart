@@ -30,6 +30,7 @@
       price: price ?? this.price,
       priceOneLesson: priceOneLesson ?? this.priceOneLesson,
       quantityLesson: quantityLesson ?? this.quantityLesson,
+
     );
   }
 }
