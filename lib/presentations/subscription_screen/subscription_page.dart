@@ -11,6 +11,8 @@ import 'package:virtuozy/components/box_info.dart';
 import 'package:virtuozy/components/calendar.dart';
 import 'package:virtuozy/components/dialogs/dialoger.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
+import 'package:virtuozy/presentations/finance_screen/bloc/bloc_finance.dart';
+import 'package:virtuozy/presentations/finance_screen/bloc/event_finance.dart';
 import 'package:virtuozy/presentations/subscription_screen/bloc/sub_bloc.dart';
 import 'package:virtuozy/presentations/subscription_screen/bloc/sub_event.dart';
 import 'package:virtuozy/resourses/colors.dart';
@@ -39,6 +41,8 @@ class SubscriptionPage extends StatefulWidget{
 class _SubscriptionPageState extends State<SubscriptionPage>{
   int _selIndexDirection = 0;
   final currentDayNotifi = locator.get<ValueNotifier<int>>();
+  BonusEntity bonus = BonusEntity.unknown();
+  bool _hasBonus = false;
 
 
 
@@ -66,6 +70,18 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
 
     return BlocConsumer<SubBloc,SubState>(
      listener: (c,s){
+        if(s.subStatus == SubStatus.confirm){
+          context.read<BlocFinance>().add(WritingOfMoneyEvent(currentDirection: s.userEntity.directions[_selIndexDirection]));
+        }
+
+
+        if(s.userEntity.directions[_selIndexDirection].bonus.isNotEmpty){
+            bonus = s.userEntity.directions[_selIndexDirection].bonus[0];
+            _hasBonus = true;
+          }else{
+         _hasBonus = false;
+        }
+
 
      },
      builder: (context,state) {
@@ -172,15 +188,17 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                      ),
                      const Gap(10.0),
                      Visibility(
-                       visible: state.userEntity.directions[_selIndexDirection].bonus.isNotEmpty,
+                       visible: _hasBonus,
                        child: SizedBox(
                          height: 40.0,
                          child: OutLineButton(
                            onTap: (){
-
+                                GoRouter.of(context).push(pathDetailBonus, extra:
+                                [bonus,
+                                  state.userEntity.directions[_selIndexDirection]]);
                            },
                            borderRadius: 10.0,
-                           textButton: 'Получить бонусный урок'.tr(),
+                           textButton: bonus.title,
                          ),
                        ),
                      ),

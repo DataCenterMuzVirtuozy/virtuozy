@@ -29,7 +29,16 @@ class UserService{
    'userType': 1,
    'directions': [
     {
-     'bonus': [],
+     'bonus': [
+      {
+       'id':1,
+        'active':false,
+       'typeBonus': 1,
+       'title': 'Получи бонусный урок',
+       'description': '20% групповые занятия, концерты, практика публичных выступлений и участие в музыкальных коллективах',
+       'quantity': 1.0,
+      }
+     ],
      'subscription': {
       'name': 'Абонемент “Утренний” 10 уроков',
       'price':  10000.0,

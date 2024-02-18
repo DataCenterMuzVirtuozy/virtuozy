@@ -31,6 +31,15 @@ class AcceptLessonEvent extends SubEvent{
 
 }
 
+class ActivateBonusEvent extends SubEvent{
+  final int idBonus;
+  final bool activate;
+  final DirectionLesson direction;
+
+  const ActivateBonusEvent({required this.direction,required this.idBonus, required this.activate});
+
+}
+
 class UpdateUserEvent extends SubEvent{
   final int currentDirIndex;
   final UserEntity user;

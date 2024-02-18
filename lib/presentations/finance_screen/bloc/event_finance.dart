@@ -26,6 +26,12 @@ class GetBalanceSubscriptionEvent extends EventFinance{
   const GetBalanceSubscriptionEvent({required this.indexDirection});
 }
 
+ class ApplyBonusEvent extends EventFinance{
+   final int idBonus;
+   final DirectionLesson direction;
+   const ApplyBonusEvent({required this.idBonus, required this.direction});
+ }
+
 class PaySubscriptionEvent extends EventFinance{
   final DirectionLesson currentDirection;
   final PriceSubscriptionEntity priceSubscriptionEntity;
@@ -33,3 +39,9 @@ class PaySubscriptionEvent extends EventFinance{
   const PaySubscriptionEvent({required this.priceSubscriptionEntity,required this.currentDirection});
 }
 class GetListTransactionsEvent extends EventFinance{}
+
+ class WritingOfMoneyEvent extends EventFinance{
+   final DirectionLesson currentDirection;
+
+  const WritingOfMoneyEvent({required this.currentDirection});
+ }

@@ -12,6 +12,7 @@ import 'package:virtuozy/presentations/notification_screen/notification_page.dar
 import 'package:virtuozy/presentations/onboarding_screen/onboarding_page.dart';
 import 'package:virtuozy/presentations/promotion_screen/details_promo_page.dart';
 import 'package:virtuozy/presentations/schedule_screen/details_schedule_page.dart';
+import 'package:virtuozy/presentations/subscription_screen/details_bonus_page.dart';
 import 'package:virtuozy/presentations/theme_screen/theme_page.dart';
 import 'package:virtuozy/router/paths.dart';
 
@@ -26,6 +27,17 @@ class AppRouter{
   static GoRouter get router=>GoRouter(
     initialLocation: pathApp,
     routes: [
+
+      GoRoute(
+        path: pathDetailBonus,
+        pageBuilder: (context, state) {
+          final data = (state.extra as List<dynamic>);
+          return CupertinoPage(
+              key: state.pageKey,
+              child:  DetailsBonusPage(bonusEntity: (data[0] as BonusEntity),
+              directionLesson: (data[1] as DirectionLesson)));
+        },
+      ),
       GoRoute(
         path: pathBranchSearch,
         pageBuilder: (context, state) {

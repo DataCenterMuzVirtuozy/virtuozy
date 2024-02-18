@@ -47,7 +47,8 @@ class UserMapper{
   }
 
   static DirectionLesson _fromDirectionModel(DirectionModel directionModel){
-    return DirectionLesson(bonus: directionModel.bonus,
+    return DirectionLesson(
+        bonus: directionModel.bonus.map((e) => _fromApiBonus(bonusModel: e)).toList(),
         subscription: fromApiPriceSub(directionModel.subscription),
         name: directionModel.name,
         lessons: directionModel.lessons.map((e) => _fromLessonModel(e)).toList());
@@ -60,6 +61,18 @@ class UserMapper{
         priceOneLesson: subscriptionModel.priceOneLesson,
         balanceLesson: subscriptionModel.balanceLesson,
         balanceSub: subscriptionModel.balanceSub);
+  }
+
+  static BonusEntity _fromApiBonus({required BonusModel bonusModel}){
+    return BonusEntity(
+      active: bonusModel.active,
+        id: bonusModel.id,
+        typeBonus: bonusModel.typeBonus == 1?TypeBonus.subscription:
+        bonusModel.typeBonus == 2?TypeBonus.lesson: bonusModel.typeBonus == 3?
+        TypeBonus.money:TypeBonus.unknown,
+        title: bonusModel.title,
+        description: bonusModel.description,
+        quantity: bonusModel.quantity);
   }
 
   static Lesson _fromLessonModel(LessonModel lessonModel){

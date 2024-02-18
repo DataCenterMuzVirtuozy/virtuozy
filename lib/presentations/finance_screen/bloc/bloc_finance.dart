@@ -1,7 +1,8 @@
 
 
 
- import 'package:flutter_bloc/flutter_bloc.dart';
+ import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:virtuozy/di/locator.dart';
 import 'package:virtuozy/domain/entities/price_subscription_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
@@ -20,6 +21,8 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
     on<GetBalanceSubscriptionEvent>(_getBalanceSubscription);
     on<PaySubscriptionEvent>(_paySubscription);
     on<GetListTransactionsEvent>(_getListTransaction);
+    on<WritingOfMoneyEvent>(_writingOffMoney);
+    on<ApplyBonusEvent>(_applyBonus);
   }
 
   final _financeRepository = locator.get<FinanceRepository>();
@@ -31,7 +34,7 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
      try{
        emit(state.copyWith(listTransactionStatus: ListTransactionStatus.loading));
        await Future.delayed(const Duration(seconds: 1));
-       print('List ${_listTransaction.length}');
+       _listTransaction = _listTransaction.reversed.toList();
        emit(state.copyWith(listTransactionStatus: ListTransactionStatus.loaded,transactions: _listTransaction));
      }on Failure catch(e){
        emit(state.copyWith(listTransactionStatus: ListTransactionStatus.error,error: e.message));
@@ -87,13 +90,47 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
     final indexDirection = directions.indexWhere((element) => element.name == currentDirection.name);
     final finalDirectionList = directions.update(indexDirection,updateDirection);
     final newUser = user.copyWith(directions: finalDirectionList);
+    final timeNow = DateTime.now();
+    final parseTime = '${DateFormat.yMd().format(timeNow)} ${DateFormat.Hm().format(timeNow)}';
     _userCubit.updateUser(newUser: newUser);
     _listTransaction.add(TransactionEntity(
         typeTransaction: TypeTransaction.addBalance,
-        time: DateTime.now().toString(),
-        quantity: newBalanceSub));
+        time: parseTime,
+        quantity: priceSubscriptionEntity.price));
 
 
+  }
+
+
+  void _writingOffMoney(WritingOfMoneyEvent event,emit) async {
+    final user = _userCubit.userEntity;
+    final directions = user.directions;
+    final newBalance = event.currentDirection.subscription.balanceLesson - 1;
+    final newBalanceSub = event.currentDirection.subscription.balanceSub - event.currentDirection.subscription.priceOneLesson;
+    final supUpdate = event.currentDirection.subscription.copyWith(
+        balanceLesson: newBalance,
+        balanceSub: newBalanceSub
+    );
+    final updateDirection = event.currentDirection.copyWith(subscription: supUpdate);
+    final indexDirection = directions.indexWhere((element) => element.name == event.currentDirection.name);
+    final finalDirectionList = directions.update(indexDirection,updateDirection);
+    final newUser = user.copyWith(directions: finalDirectionList);
+    final timeNow = DateTime.now();
+    final parseTime = '${DateFormat.yMd().format(timeNow)} ${DateFormat.Hm().format(timeNow)}';
+    _userCubit.updateUser(newUser: newUser);
+    _listTransaction.add(TransactionEntity(
+        typeTransaction: TypeTransaction.minusLesson,
+        time: parseTime,
+        quantity: event.currentDirection.subscription.priceOneLesson));
+  }
+
+
+  void _applyBonus(ApplyBonusEvent event,emit) async {
+    try{
+      //todo
+    }on Failure catch(e){
+
+    }
   }
 
 

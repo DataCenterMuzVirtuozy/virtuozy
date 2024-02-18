@@ -13,9 +13,18 @@ enum SubStatus{
  loaded
 }
 
+enum BonusStatus{
+  loading,
+  loaded,
+  activate,
+  error,
+  unknown
+}
+
  class SubState extends Equatable{
 
   final SubStatus subStatus;
+  final BonusStatus bonusStatus;
   final String error;
   final Lesson firstNotAcceptLesson;
   final List<Lesson> listNotAcceptLesson;
@@ -24,6 +33,7 @@ enum SubStatus{
 
  factory SubState.unknown(){
   return SubState(
+    bonusStatus: BonusStatus.unknown,
     listNotAcceptLesson: const [],
       subStatus: SubStatus.unknown,
       error: '',
@@ -32,6 +42,7 @@ enum SubStatus{
  }
 
   const SubState({
+    required  this.bonusStatus,
     required this.listNotAcceptLesson,
     required this.firstNotAcceptLesson,
     required this.subStatus,
@@ -40,9 +51,10 @@ enum SubStatus{
   });
 
   @override
-  List<Object?> get props => [subStatus,error,userEntity,firstNotAcceptLesson,listNotAcceptLesson];
+  List<Object?> get props => [bonusStatus,subStatus,error,userEntity,firstNotAcceptLesson,listNotAcceptLesson];
 
   SubState copyWith({
+    BonusStatus? bonusStatus,
     SubStatus? subStatus,
     String? error,
     UserEntity? userEntity,
@@ -55,6 +67,7 @@ enum SubStatus{
       subStatus: subStatus ?? this.subStatus,
       error: error ?? this.error,
       userEntity: userEntity ?? this.userEntity,
+      bonusStatus: bonusStatus??this.bonusStatus,
     );
   }
 }

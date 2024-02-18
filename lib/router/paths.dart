@@ -14,3 +14,4 @@ const String pathPay = '/pay';
 const String pathTheme = '/theme';
 const String pathMain = '/main';
 const String pathBranchSearch = '/branch_search';
+const String pathDetailBonus = '/details_bonus';

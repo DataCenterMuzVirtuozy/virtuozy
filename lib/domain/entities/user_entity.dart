@@ -79,7 +79,7 @@ enum UserStatus{
 
 class DirectionLesson{
 
-  final List<dynamic> bonus;
+  final List<BonusEntity> bonus;
   final SubscriptionEntity subscription;
   final String name;
   final List<Lesson> lessons;
@@ -95,7 +95,7 @@ class DirectionLesson{
 
 
   DirectionLesson copyWith({
-    List<String>? bonus,
+    List<BonusEntity>? bonus,
     SubscriptionEntity? subscription,
     String? name,
     List<Lesson>? lessons,
@@ -168,6 +168,61 @@ class Lesson{
       nameTeacher: nameTeacher ?? this.nameTeacher,
       status: status ?? this.status,
       id: id,
+    );
+  }
+}
+
+   enum TypeBonus{
+     money,
+     subscription,
+     lesson,
+     unknown
+   }
+
+  class BonusEntity{
+
+    final TypeBonus typeBonus;
+    final String title;
+    final String description;
+    final double quantity;
+    final int id;
+    final bool active;
+
+    const BonusEntity({
+      required this.active,
+      required this.id,
+    required this.typeBonus,
+    required this.title,
+    required this.description,
+    required this.quantity,
+  });
+
+
+   factory BonusEntity.unknown(){
+     return const BonusEntity(
+         active: true,
+         id: 0,
+         typeBonus: TypeBonus.unknown,
+         title: '',
+         description: '',
+         quantity: 0.0);
+   }
+
+  BonusEntity copyWith({
+    TypeBonus? typeBonus,
+    String? title,
+    String? description,
+    double? quantity,
+    int? id,
+    bool? active,
+  }) {
+    return BonusEntity(
+      typeBonus: typeBonus ?? this.typeBonus,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      quantity: quantity ?? this.quantity,
+      id: id ?? this.id,
+      active: active ?? this.active,
     );
   }
 }

@@ -5,6 +5,7 @@
  import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -36,6 +37,7 @@ class FinancePage extends StatefulWidget{
 class _FinancePageState extends State<FinancePage> {
 
   int _selIndexDirection = 0;
+  bool _hasBonus = false;
 
 
 
@@ -61,6 +63,13 @@ class _FinancePageState extends State<FinancePage> {
    return BlocConsumer<BlocFinance,StateFinance>(
      listener: (c,s){
 
+       if(s.status == FinanceStatus.loaded){
+         if(s.user.directions[_selIndexDirection].bonus.isNotEmpty){
+           _hasBonus = s.user.directions[_selIndexDirection].bonus[0].active;
+         }else{
+           _hasBonus = false;
+         }
+       }
 
      },
      builder: (context,state) {
@@ -202,24 +211,28 @@ class _FinancePageState extends State<FinancePage> {
                  ),
                ),
                const Gap(20.0),
-               GestureDetector(
-                 onTap: (){},
-                 child: Container(
-                   padding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 20.0),
-                   decoration: BoxDecoration(
-                       color: colorBeruzaLight,
-                       borderRadius: BorderRadius.circular(20.0)
-                   ),
-                   child: Column(
-                     children: [
-                       Text('1 бонусный урок',style: TStyle.textStyleGaretHeavy(colorBlack,size: 22.0)),
-                       const Gap(20.0),
-                      SubmitButton(
-                        onTap: (){},
-                        borderRadius: 10.0,
-                        textButton: 'Потратить'.tr(),
-                      )
-                     ],
+               Visibility(
+                 visible: _hasBonus,
+                 child: GestureDetector(
+                   onTap: (){},
+                   child: Container(
+                     padding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 20.0),
+                     decoration: BoxDecoration(
+                         color: colorBeruzaLight,
+                         borderRadius: BorderRadius.circular(20.0)
+                     ),
+                     child: Column(
+                       children: [
+                         Text('1 бонусный урок',
+                             style: TStyle.textStyleGaretHeavy(colorBlack,size: 22.0)),
+                         const Gap(20.0),
+                        SubmitButton(
+                          onTap: (){},
+                          borderRadius: 10.0,
+                          textButton: 'Потратить'.tr(),
+                        )
+                       ],
+                     ),
                    ),
                  ),
                )

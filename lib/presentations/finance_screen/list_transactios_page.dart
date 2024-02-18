@@ -62,7 +62,8 @@ class _ListTransactionsPageState extends State<ListTransactionsPage> {
               itemBuilder: (c,i){
            return ItemTransaction(type: state.transactions[i].typeTransaction,
                time: state.transactions[i].time,
-               quantity: '${ParserPrice.getBalance(state.transactions[i].quantity)} руб.');
+               quantity: '${state.transactions[i].typeTransaction == TypeTransaction.minusLesson?'-':'+'}'
+                   '${ParserPrice.getBalance(state.transactions[i].quantity)} руб.');
           });
         }
       ),

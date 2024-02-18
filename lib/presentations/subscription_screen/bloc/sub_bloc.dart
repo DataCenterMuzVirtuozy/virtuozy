@@ -18,6 +18,7 @@ class SubBloc extends Bloc<SubEvent,SubState>{
     on<GetUserEvent>(_getUser);
     on<AcceptLessonEvent>(_acceptLesson);
     on<UpdateUserEvent>(_updateUser);
+    on<ActivateBonusEvent>(_activateBonus);
   }
 
 
@@ -97,11 +98,40 @@ class SubBloc extends Bloc<SubEvent,SubState>{
       final newUser = user.copyWith(directions: directions);
       _userCubit.updateUser(newUser: newUser);
       emit(state.copyWith(subStatus: SubStatus.confirm));
-      //todo отнять с баланса сумму за урок
 
     }on Failure catch(e){
 
     }
+  }
+
+
+
+  void _activateBonus(ActivateBonusEvent event,emit) async {
+    try{
+      emit(state.copyWith(bonusStatus: BonusStatus.loading));
+      await Future.delayed(const Duration(seconds: 2));
+      List<BonusEntity> listBonusNew = [];
+      UserEntity user = _userCubit.userEntity;
+      final listBonus = event.direction.bonus;
+      final bonus =  event.direction.bonus.firstWhere((element) => element.id == event.idBonus);
+      final indexBonus = listBonus.indexOf(bonus);
+      if(event.activate){
+         listBonusNew = listBonus.update(indexBonus, bonus.copyWith(active: true));
+      }else{
+        listBonus.removeAt(indexBonus);
+        listBonusNew = listBonus;
+      }
+      final updatedDirection = event.direction.copyWith(bonus: listBonusNew);
+      List<DirectionLesson> directions = user.directions;
+      final indexDirection = directions.indexOf(event.direction);
+      directions.update(indexDirection<0?0:indexDirection, updatedDirection);
+      final newUser = user.copyWith(directions: directions);
+      _userCubit.updateUser(newUser: newUser);
+      emit(state.copyWith(bonusStatus: BonusStatus.activate));
+    } on Failure catch(e){
+      emit(state.copyWith(bonusStatus: BonusStatus.error,error: e.message));
+    }
+
   }
 
 

@@ -52,14 +52,14 @@ class _PayPageState extends State<PayPage> {
       appBar: AppBarCustom(title: 'Пополнить счет'.tr()),
       body: BlocConsumer<BlocFinance,StateFinance>(
         listener: (c, s) {
-            if(s.paymentStatus == PaymentStatus.loading){
+            if(s.paymentStatus == PaymentStatus.loaded){
               _selPriceSubscription = s.pricesDirectionEntity.subscriptions[0];
             }
         },
         builder: (context,state) {
 
 
-          if(state.paymentStatus == PaymentStatus.payment || state.status == PaymentStatus.loading){
+          if(state.paymentStatus == PaymentStatus.payment || state.paymentStatus == PaymentStatus.loading){
             return const Center(child: CircularProgressIndicator());
           }
 
