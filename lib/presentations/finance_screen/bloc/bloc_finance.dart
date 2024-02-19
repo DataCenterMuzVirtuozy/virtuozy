@@ -127,9 +127,23 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
 
   void _applyBonus(ApplyBonusEvent event,emit) async {
     try{
-      //todo
+      emit(state.copyWith(applyBonusStatus: ApplyBonusStatus.loading));
+      final user = _userCubit.userEntity;
+      final directions = user.directions;
+      final newBalance = event.currentDirection.subscription.balanceLesson + 1;
+      final newBalanceSub = event.currentDirection.subscription.balanceSub - event.currentDirection.subscription.priceOneLesson;
+      final supUpdate = event.currentDirection.subscription.copyWith(
+          balanceLesson: newBalance,
+          balanceSub: newBalanceSub
+      );
+      final updateDirection = event.currentDirection.copyWith(subscription: supUpdate);
+      final indexDirection = directions.indexWhere((element) => element.name == event.currentDirection.name);
+      final finalDirectionList = directions.update(indexDirection,updateDirection);
+      final newUser = user.copyWith(directions: finalDirectionList);
+      _userCubit.updateUser(newUser: newUser);
+      emit(state.copyWith(applyBonusStatus: ApplyBonusStatus.loaded));
     }on Failure catch(e){
-
+      emit(state.copyWith(applyBonusStatus: ApplyBonusStatus.error,error: e.message));
     }
   }
 

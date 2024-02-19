@@ -28,8 +28,8 @@ class GetBalanceSubscriptionEvent extends EventFinance{
 
  class ApplyBonusEvent extends EventFinance{
    final int idBonus;
-   final DirectionLesson direction;
-   const ApplyBonusEvent({required this.idBonus, required this.direction});
+   final DirectionLesson currentDirection;
+   const ApplyBonusEvent({required this.idBonus, required this.currentDirection});
  }
 
 class PaySubscriptionEvent extends EventFinance{

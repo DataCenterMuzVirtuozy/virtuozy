@@ -27,6 +27,7 @@ class Calendar extends StatefulWidget{
 
 
 
+
   @override
   State<Calendar> createState() => _CalendarState();
 }
@@ -36,6 +37,7 @@ class _CalendarState extends State<Calendar> {
 
   final currentDayNotifi = locator.get<ValueNotifier<int>>();
   int month = 0;
+  int i = 0;
 
 
 
@@ -68,13 +70,9 @@ class _CalendarState extends State<Calendar> {
              disabledTextStyle: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!),
              todayTextStyle: TStyle.textStyleVelaSansBold(colorWhite),
              rangeEndTextStyle: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!),
-             weekendTextStyle: TStyle.textStyleVelaSansBold(colorGrey),
+             weekendTextStyle: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!),
              outsideTextStyle: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!),
              defaultTextStyle: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!),
-             // todayDecoration: BoxDecoration(
-             //   color: colorOrange,
-             //   shape: BoxShape.circle,
-             // )
            ),
            headerStyle:  HeaderStyle(
              titleCentered: true,
@@ -82,10 +80,14 @@ class _CalendarState extends State<Calendar> {
              formatButtonVisible: false,
            ),
            calendarBuilders: CalendarBuilders(
-             markerBuilder: (context, day,values) {
+             defaultBuilder: (context, day,values) {
                _onMonth(day.month);
-               return _handlerDay(lessons: widget.lessons,
-                   day: day.day,context: context,
+               return _handlerDay(
+                   t:day,
+                   monthOfDay: day.month,
+                   lessons: widget.lessons,
+                   day: day.day,
+                   context: context,
                onLesson: (lesson){
                  widget.onLesson.call(lesson);
                });
@@ -107,42 +109,58 @@ class _CalendarState extends State<Calendar> {
     }
   }
 
-   _handlerDay({required List<Lesson> lessons,required int day,required BuildContext context,
+   _handlerDay({
+     required List<Lesson> lessons,
+     required int day,
+     required DateTime t,
+     required int monthOfDay,
+     required BuildContext context,
    required Function onLesson}){
-    final intDays = lessons.map((e) => DateFormat('yyyy-MM-dd').parse(e.date).day).toList();
-    if(intDays.contains(day)){
-      final lesson = lessons.firstWhere((element) => DateFormat('yyyy-MM-dd').parse(element.date).day == day);
-      return  ValueListenableBuilder<int>(
-          valueListenable: currentDayNotifi,
-        builder: (context,valueDay,child) {
-          return Padding(
-            padding: const EdgeInsets.all(3.0),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(60.0),
-              onTap: (){
-                onLesson.call(lesson);
-                  currentDayNotifi.value = day;
-
-                  },
-              child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: StatusToColor.getColor(lessonStatus: lesson.status),
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Theme.of(context).textTheme.displayMedium!.color!,
-                      width: valueDay == day?3.0:0.5)
-                    ),
-                    child: Center(
-                      child: Text(
-                        day.toString(),
-                        style:  TStyle.textStyleVelaSansBold(colorBlack),
-                      ),
-                    ),
-                  )
-              ),
-          );
-        }
-      );
-    }
+    final stringDays = lessons.map((e) => e.date).toList();
+     try{
+       if(stringDays.contains(DateFormat('yyyy-MM-dd').format(t))){
+         final lesson = lessons.firstWhere((element) => DateFormat('yyyy-MM-dd').parse(element.date).day == day&&
+             DateFormat('yyyy-MM-dd').parse(element.date).month == month);
+         final monthLesson = DateFormat('yyyy-MM-dd').parse(lesson.date).month;
+         if(monthLesson == monthOfDay) {
+           return ValueListenableBuilder<int>(
+               valueListenable: currentDayNotifi,
+               builder: (context, valueDay, child) {
+                 return Padding(
+                   padding: const EdgeInsets.all(3.0),
+                   child: InkWell(
+                       borderRadius: BorderRadius.circular(60.0),
+                       onTap: () {
+                         onLesson.call(lesson);
+                         currentDayNotifi.value = day;
+                       },
+                       child: DecoratedBox(
+                         decoration: BoxDecoration(
+                             color: StatusToColor.getColor(
+                                 lessonStatus: lesson.status),
+                             shape: BoxShape.circle,
+                             border: Border.all(color: Theme
+                                 .of(context)
+                                 .textTheme
+                                 .displayMedium!
+                                 .color!,
+                                 width: valueDay == day ? 3.0 : 0.5)
+                         ),
+                         child: Center(
+                           child: Text(
+                             day.toString(),
+                             style: TStyle.textStyleVelaSansBold(colorBlack),
+                           ),
+                         ),
+                       )
+                   ),
+                 );
+               }
+           );
+         }}
+     }catch(e){
+       print('$e');
+     }
 
   }
 

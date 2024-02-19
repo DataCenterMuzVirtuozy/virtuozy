@@ -4,6 +4,7 @@
  import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
@@ -62,9 +63,6 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
 
 
 
-
-
-
   @override
   Widget build(BuildContext context) {
 
@@ -77,7 +75,12 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
 
         if(s.userEntity.directions[_selIndexDirection].bonus.isNotEmpty){
             bonus = s.userEntity.directions[_selIndexDirection].bonus[0];
-            _hasBonus = true;
+            if(bonus.active){
+              _hasBonus = false;
+            }else{
+              _hasBonus = true;
+            }
+
           }else{
          _hasBonus = false;
         }
@@ -128,9 +131,9 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
                  child: DrawingMenuSelected(items: state.userEntity.directions.map((e) => e.name).toList(),
                    onSelected: (index){
-                     setState(() {
-                       _selIndexDirection = index;
-                     });
+                     _selIndexDirection = index;
+                     context.read<SubBloc>().add(GetUserEvent(currentDirIndex: _selIndexDirection));
+
                  },),
                ),
                const Gap(10.0),
@@ -148,7 +151,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                   },),
                const Gap(10.0),
                Column(
-                 children: List.generate(state.userEntity.directions.length, (index) {
+                 children: List.generate(1, (index) {
                   return  ItemSubscription(
                       direction: state.userEntity.directions[_selIndexDirection]);
                  }),
@@ -208,7 +211,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
              ],
            ),
          ),
-       );
+       ).animate().fadeIn(duration: const Duration(milliseconds: 700));
      }
    );
   }

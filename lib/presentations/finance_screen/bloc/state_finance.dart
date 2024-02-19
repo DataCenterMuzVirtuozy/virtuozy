@@ -31,6 +31,13 @@ enum FinanceStatus{
    unknown
  }
 
+ enum ApplyBonusStatus{
+   loading,
+   loaded,
+   error,
+   unknown
+ }
+
 
 
 
@@ -39,6 +46,7 @@ enum FinanceStatus{
 
   final FinanceStatus status;
   final PaymentStatus paymentStatus;
+  final ApplyBonusStatus applyBonusStatus;
   final ListTransactionStatus listTransactionStatus;
   final String error;
   final PricesDirectionEntity pricesDirectionEntity;
@@ -47,6 +55,7 @@ enum FinanceStatus{
   final List<TransactionEntity> transactions;
 
   const StateFinance({
+    required this.applyBonusStatus,
     required this.listTransactionStatus,
     required this.paymentStatus,
     required this.transactions,
@@ -60,6 +69,7 @@ enum FinanceStatus{
 
   factory StateFinance.unknown(){
     return StateFinance(
+      applyBonusStatus: ApplyBonusStatus.unknown,
       listTransactionStatus: ListTransactionStatus.unknown,
       paymentStatus: PaymentStatus.unknown,
       transactions: [],
@@ -78,9 +88,11 @@ enum FinanceStatus{
     ListTransactionStatus? listTransactionStatus,
     String? error,
     PricesDirectionEntity? pricesDirectionEntity,
-    UserEntity? user
+    UserEntity? user,
+    ApplyBonusStatus? applyBonusStatus
   }) {
     return StateFinance(
+      applyBonusStatus: applyBonusStatus??this.applyBonusStatus,
       listTransactionStatus: listTransactionStatus??this.listTransactionStatus,
       paymentStatus: paymentStatus??this.paymentStatus,
       transactions: transactions??this.transactions,

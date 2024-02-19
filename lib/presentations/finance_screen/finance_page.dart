@@ -22,6 +22,7 @@ import 'package:virtuozy/utils/auth_mixin.dart';
 import 'package:virtuozy/utils/parser_price.dart';
 
 import '../../components/box_info.dart';
+import '../../components/dialogs/dialoger.dart';
 import '../../components/drawing_menu_selected.dart';
 import '../../utils/text_style.dart';
 
@@ -63,6 +64,12 @@ class _FinancePageState extends State<FinancePage> {
    return BlocConsumer<BlocFinance,StateFinance>(
      listener: (c,s){
 
+       if(s.applyBonusStatus == ApplyBonusStatus.loading){
+         _hasBonus = false;
+       }
+
+
+
        if(s.status == FinanceStatus.loaded){
          if(s.user.directions[_selIndexDirection].bonus.isNotEmpty){
            _hasBonus = s.user.directions[_selIndexDirection].bonus[0].active;
@@ -73,7 +80,6 @@ class _FinancePageState extends State<FinancePage> {
 
      },
      builder: (context,state) {
-
 
        if(state.status == FinanceStatus.loading){
          return const Center(child: CircularProgressIndicator());
@@ -211,28 +217,36 @@ class _FinancePageState extends State<FinancePage> {
                  ),
                ),
                const Gap(20.0),
+
+               if(state.applyBonusStatus == ApplyBonusStatus.loading)...{
+                 const CircularProgressIndicator()
+               },
+
+
                Visibility(
                  visible: _hasBonus,
-                 child: GestureDetector(
-                   onTap: (){},
-                   child: Container(
-                     padding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 20.0),
-                     decoration: BoxDecoration(
-                         color: colorBeruzaLight,
-                         borderRadius: BorderRadius.circular(20.0)
-                     ),
-                     child: Column(
-                       children: [
-                         Text('1 бонусный урок',
-                             style: TStyle.textStyleGaretHeavy(colorBlack,size: 22.0)),
-                         const Gap(20.0),
-                        SubmitButton(
-                          onTap: (){},
-                          borderRadius: 10.0,
-                          textButton: 'Потратить'.tr(),
-                        )
-                       ],
-                     ),
+                 child: Container(
+                   padding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 20.0),
+                   decoration: BoxDecoration(
+                       color: colorBeruzaLight,
+                       borderRadius: BorderRadius.circular(20.0)
+                   ),
+                   child: Column(
+                     children: [
+                       Text('1 бонусный урок',
+                           style: TStyle.textStyleGaretHeavy(colorBlack,size: 22.0)),
+                       const Gap(20.0),
+                      SubmitButton(
+                        onTap: (){
+                          Dialoger.showMessage('В разработке');
+                          // context.read<BlocFinance>().add(ApplyBonusEvent(
+                          //     idBonus: state.directions[_selIndexDirection].bonus[0].id,
+                          //     currentDirection: state.directions[_selIndexDirection]));
+                        },
+                        borderRadius: 10.0,
+                        textButton: 'Потратить'.tr(),
+                      )
+                     ],
                    ),
                  ),
                )
