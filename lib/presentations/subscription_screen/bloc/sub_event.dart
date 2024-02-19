@@ -17,8 +17,9 @@ class SubEvent extends Equatable{
 
 class GetUserEvent extends SubEvent{
   final int currentDirIndex;
+  final bool refreshDirection;
 
-  const GetUserEvent({required this.currentDirIndex});
+  const GetUserEvent({required this.refreshDirection, required this.currentDirIndex});
 }
 
 class AcceptLessonEvent extends SubEvent{

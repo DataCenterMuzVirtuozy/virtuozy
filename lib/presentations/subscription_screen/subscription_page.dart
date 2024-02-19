@@ -43,6 +43,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
   int _selIndexDirection = 0;
   final currentDayNotifi = locator.get<ValueNotifier<int>>();
   BonusEntity bonus = BonusEntity.unknown();
+  List<String> _titlesDirections = [];
   bool _hasBonus = false;
 
 
@@ -51,7 +52,8 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
   @override
   void initState() {
     super.initState();
-   context.read<SubBloc>().add(GetUserEvent(currentDirIndex: _selIndexDirection));
+   context.read<SubBloc>().add(GetUserEvent(currentDirIndex: _selIndexDirection,
+   refreshDirection: false));
   }
 
 
@@ -73,7 +75,10 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
         }
 
 
-        if(s.userEntity.directions[_selIndexDirection].bonus.isNotEmpty){
+
+
+        if(s.subStatus == SubStatus.loaded){
+          if(s.userEntity.directions[_selIndexDirection].bonus.isNotEmpty){
             bonus = s.userEntity.directions[_selIndexDirection].bonus[0];
             if(bonus.active){
               _hasBonus = false;
@@ -82,7 +87,13 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
             }
 
           }else{
-         _hasBonus = false;
+            _hasBonus = false;
+          }
+          int length = s.userEntity.directions.length;
+          _titlesDirections = s.userEntity.directions.map((e) => e.name).toList();
+          if(length>1){
+           _titlesDirections.insert(length, 'Все направления'.tr());
+          }
         }
 
 
@@ -129,12 +140,13 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
 
                Padding(
                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                 child: DrawingMenuSelected(items: state.userEntity.directions.map((e) => e.name).toList(),
+                 child: DrawingMenuSelected(items: _titlesDirections,
                    onSelected: (index){
                      _selIndexDirection = index;
-                     context.read<SubBloc>().add(GetUserEvent(currentDirIndex: _selIndexDirection));
+                     context.read<SubBloc>().add(GetUserEvent(currentDirIndex: _selIndexDirection,
+                     refreshDirection: true));
 
-                 },),
+                   },)
                ),
                const Gap(10.0),
                 Calendar(lessons: state.userEntity.directions[_selIndexDirection].lessons,
@@ -210,8 +222,8 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                )
              ],
            ),
-         ),
-       ).animate().fadeIn(duration: const Duration(milliseconds: 700));
+         ).animate().fadeIn(duration: const Duration(milliseconds: 700)),
+       );
      }
    );
   }

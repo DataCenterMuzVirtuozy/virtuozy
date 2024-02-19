@@ -26,29 +26,33 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
 
   bool isDraw = false;
   late final AnimationController animationController;
-  late final Animation<double> animationHeight;
+  late  Animation<double> animationHeight;
   late final Animation<double> animationOpacity;
   late final Animation<double> animationBorder;
   late final ValueNotifier<String> changeTextNotifier;
+  final GlobalKey _textKey = GlobalKey();
+  late Size textSize;
+  double _itemBox = 40.0;
+
 
 
 
   @override
   void initState() {
     super.initState();
-
-
+    animationController=AnimationController(vsync: this,duration: const Duration(milliseconds: 300));
+    animationHeight=Tween<double>(begin: 40.0,end:_heightCalculate(widget.items.length,40.0)).animate(animationController);
+    animationOpacity=Tween<double>(begin: 0.0,end: 0.1).animate(animationController);
+    animationBorder=Tween<double>(begin: 0.0,end: 1.0).animate(animationController);
+    changeTextNotifier=ValueNotifier(widget.items.isEmpty?'':widget.items[0]);
+    WidgetsBinding.instance.addPostFrameCallback((_) => getSizeAndPosition());
   }
 
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    animationController=AnimationController(vsync: this,duration: const Duration(milliseconds: 300));
-    animationHeight=Tween<double>(begin: 40.0,end:_heightCalculate(widget.items.length)).animate(animationController);
-    animationOpacity=Tween<double>(begin: 0.0,end: 0.1).animate(animationController);
-    animationBorder=Tween<double>(begin: 0.0,end: 1.0).animate(animationController);
-    changeTextNotifier=ValueNotifier(widget.items.isEmpty?'':widget.items[0]);
+
 
   }
 
@@ -59,8 +63,21 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
     super.dispose();
   }
 
-  double _heightCalculate(int indexItems){
-    return 58.0+(65*indexItems);
+  getSizeAndPosition() {
+    RenderBox? cardBox = _textKey.currentContext!.findRenderObject() as RenderBox?;
+    textSize = cardBox!.size;
+    setState(() {
+     double i = textSize.height<50.0?14.0:28.0;
+     _itemBox =  textSize.height + i;
+     animationHeight= Tween<double>(
+         begin: _itemBox,
+         end: _heightCalculate(widget.items.length, _itemBox))
+         .animate(animationController);
+   });
+  }
+
+  double _heightCalculate(int indexItems,double sizeText){
+    return (sizeText*indexItems)+(15.0*indexItems);
   }
 
   @override
@@ -85,7 +102,7 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 65.0),
+                       SizedBox(height: _itemBox+10),
                       ...List.generate(widget.items.length, (index){
                         return GestureDetector(
                           onTap: (){
@@ -138,10 +155,10 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
               builder: (context,child) {
                 return Container(
                     padding: const EdgeInsets.only(right: 26.0,
-                        top: 5.0,
-                        bottom: 5.0,
+                        top: 10.0,
+                        bottom: 10.0,
                         left:  26.0),
-                    //height: 60.0,
+
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                         border: Border.all(color: colorBeruzaLight.withOpacity(animationOpacity.value),width: 1.5),
@@ -155,9 +172,10 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
                           builder: (context,value,child) {
                             return Expanded(
                               child: Text(value,
+                                  key: _textKey,
                                   maxLines: 2,
                                   style:  TStyle.textStyleGaretHeavy(Theme.of(context).textTheme.displayMedium!.color!,
-                                      size: 16.0)),
+                                      size: 18.0))
                             );
                           },
                           valueListenable: changeTextNotifier,

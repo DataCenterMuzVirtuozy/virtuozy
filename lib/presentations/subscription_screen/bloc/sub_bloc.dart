@@ -27,8 +27,10 @@ class SubBloc extends Bloc<SubEvent,SubState>{
 
   void _getUser(GetUserEvent event,emit) async {
      try{
-      // emit(state.copyWith(subStatus: SubStatus.loading));
-      // await Future.delayed(const Duration(milliseconds: 1500));
+       if(!event.refreshDirection){
+         emit(state.copyWith(subStatus: SubStatus.loading));
+         await Future.delayed(const Duration(milliseconds: 1500));
+       }
        final user = _userCubit.userEntity;
        final firstNotAcceptLesson = _firstNotAcceptLesson(lessons: user.directions[event.currentDirIndex].lessons);
        final listNotAcceptLesson = _getListNotAcceptLesson(lessons: user.directions[event.currentDirIndex].lessons);
