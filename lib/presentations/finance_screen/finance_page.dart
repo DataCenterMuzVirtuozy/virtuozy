@@ -111,23 +111,23 @@ class _FinancePageState extends State<FinancePage> {
                const Gap(20.0),
                Container(
                  decoration: BoxDecoration(
-                   color: colorBeruzaLight,
+                   color: Theme.of(context).colorScheme.surfaceVariant,
                    borderRadius: BorderRadius.circular(20.0)
                  ),
                  child: Column(
                    crossAxisAlignment: CrossAxisAlignment.center,
                    children: [
                      const Gap(20.0),
-                     Text('Баланс счета'.tr(),style: TStyle.textStyleVelaSansBold(colorBlack,size: 16.0)),
+                     Text('Баланс счета'.tr(),style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 16.0)),
                      Row(
                        crossAxisAlignment: CrossAxisAlignment.center,
                        mainAxisAlignment: MainAxisAlignment.center,
                        children: [
                          Text(ParserPrice.getBalance(state.directions[_selIndexDirection].subscription.balanceSub),
-                             style: TStyle.textStyleVelaSansExtraBolt(colorBlack,size: 30.0)),
+                             style: TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,size: 30.0)),
                          Padding(
                            padding: const EdgeInsets.only(top: 2.0),
-                           child: Icon(CupertinoIcons.money_rubl,color: colorBlack,size: 35.0),
+                           child: Icon(CupertinoIcons.money_rubl,color: Theme.of(context).textTheme.displayMedium!.color!,size: 35.0),
                          )
                        ],
                      ),
@@ -150,13 +150,13 @@ class _FinancePageState extends State<FinancePage> {
                                  crossAxisAlignment: CrossAxisAlignment.start,
                                  children: [
                                    Text(state.directions[_selIndexDirection].subscription.name,
-                                       style: TStyle.textStyleVelaSansBold(colorBlack,size: 16.0)),
+                                       style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 16.0)),
                                    const Gap(5.0),
                                    Row(
                                      children: [
-                                       Text('Осталось уроков '.tr(),style: TStyle.textStyleVelaSansMedium(colorBlack,size: 14.0)),
+                                       Text('Осталось уроков '.tr(),style: TStyle.textStyleVelaSansMedium(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
                                        Text('${state.directions[_selIndexDirection].subscription.balanceLesson}',
-                                           style: TStyle.textStyleVelaSansMedium(colorBlack,size: 14.0)),
+                                           style: TStyle.textStyleVelaSansMedium(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
                                      ],
                                    ),
                                  ],
@@ -183,15 +183,15 @@ class _FinancePageState extends State<FinancePage> {
                  child: Container(
                    padding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 20.0),
                    decoration: BoxDecoration(
-                       color: colorBeruzaLight,
+                       color: Theme.of(context).colorScheme.surfaceVariant,
                        borderRadius: BorderRadius.circular(20.0)
                    ),
                    child: Row(
                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                      children: [
                        Expanded(child: Text('История абонементов'.tr(),
-                           style: TStyle.textStyleVelaSansMedium(colorBlack,size: 22.0))),
-                       Icon(Icons.arrow_forward_ios_rounded,color: colorBlack)
+                           style: TStyle.textStyleVelaSansMedium(Theme.of(context).textTheme.displayMedium!.color!,size: 22.0))),
+                       Icon(Icons.arrow_forward_ios_rounded,color: Theme.of(context).textTheme.displayMedium!.color!)
                      ],
                    ),
                  ),
@@ -204,14 +204,14 @@ class _FinancePageState extends State<FinancePage> {
                  child: Container(
                    padding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 20.0),
                    decoration: BoxDecoration(
-                       color: colorBeruzaLight,
+                       color: Theme.of(context).colorScheme.surfaceVariant,
                        borderRadius: BorderRadius.circular(20.0)
                    ),
                    child: Row(
                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                      children: [
-                       Text('Операции по счету'.tr(),style: TStyle.textStyleVelaSansMedium(colorBlack,size: 22.0)),
-                       Icon(Icons.arrow_forward_ios_rounded,color: colorBlack)
+                       Text('Операции по счету'.tr(),style: TStyle.textStyleVelaSansMedium(Theme.of(context).textTheme.displayMedium!.color!,size: 22.0)),
+                       Icon(Icons.arrow_forward_ios_rounded,color: Theme.of(context).textTheme.displayMedium!.color!)
                      ],
                    ),
                  ),

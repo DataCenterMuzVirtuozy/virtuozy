@@ -25,10 +25,11 @@ class DetailsLessonContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+      padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15.0),
+      margin: const EdgeInsets.only(bottom: 20.0),
       width: double.infinity,
       decoration: BoxDecoration(
-          color: colorBeruzaLight,
+          color: Theme.of(context).colorScheme.surfaceVariant,
           borderRadius: BorderRadius.circular(10.0)
       ),
       child: Column(
@@ -39,20 +40,20 @@ class DetailsLessonContent extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Icon(Icons.calendar_month, color: colorBlack, size: 15.0),
+                  Icon(Icons.calendar_month, color: Theme.of(context).textTheme.displayMedium!.color!, size: 15.0),
                   const Gap(5.0),
                   Text(lesson.date,
                       style: TStyle.textStyleVelaSansMedium(
-                          colorBlack, size: 16.0)),
+                          Theme.of(context).textTheme.displayMedium!.color!, size: 16.0)),
                 ],
               ),
               Row(
                 children: [
-                  Icon(Icons.timelapse_rounded, color: colorBlack, size: 15.0),
+                  Icon(Icons.timelapse_rounded, color: Theme.of(context).textTheme.displayMedium!.color!, size: 15.0),
                   const Gap(5.0),
                   Text(lesson.timePeriod,
                       style: TStyle.textStyleVelaSansMedium(
-                          colorBlack, size: 16.0)),
+                          Theme.of(context).textTheme.displayMedium!.color!, size: 16.0)),
                 ],
               ),
             ],
@@ -69,7 +70,7 @@ class DetailsLessonContent extends StatelessWidget {
           ),
           const Gap(10.0),
           Text(lesson.nameTeacher,
-              style: TStyle.textStyleVelaSansBold(colorBlack, size: 18.0)),
+              style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!, size: 18.0)),
           const Gap(10.0),
           Text(direction.name,
               style: TStyle.textStyleVelaSansMedium(colorGrey, size: 16.0)),
@@ -133,6 +134,7 @@ class DetailsLessonContent extends StatelessWidget {
               ),
             )
             ),
+
 
         ],
       ),

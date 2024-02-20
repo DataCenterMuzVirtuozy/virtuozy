@@ -168,7 +168,7 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson> {
         padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
         width: double.infinity,
         decoration: BoxDecoration(
-            color: colorBeruzaLight,
+            color: Theme.of(context).colorScheme.surfaceVariant,
             borderRadius: BorderRadius.circular(10.0)
         ),
         child: Column(
@@ -179,20 +179,20 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson> {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.calendar_month, color: colorBlack, size: 15.0),
+                    Icon(Icons.calendar_month, color: Theme.of(context).textTheme.displayMedium!.color!, size: 15.0),
                     const Gap(5.0),
                     Text(lesson.date,
                         style: TStyle.textStyleVelaSansMedium(
-                            colorBlack, size: 16.0)),
+                            Theme.of(context).textTheme.displayMedium!.color!, size: 16.0)),
                   ],
                 ),
                 Row(
                   children: [
-                    Icon(Icons.timelapse_rounded, color: colorBlack, size: 15.0),
+                    Icon(Icons.timelapse_rounded, color: Theme.of(context).textTheme.displayMedium!.color!, size: 15.0),
                     const Gap(5.0),
                     Text(lesson.timePeriod,
                         style: TStyle.textStyleVelaSansMedium(
-                            colorBlack, size: 16.0)),
+                            Theme.of(context).textTheme.displayMedium!.color!, size: 16.0)),
                   ],
                 ),
               ],
@@ -209,7 +209,7 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson> {
             ),
             const Gap(10.0),
             Text(lesson.nameTeacher,
-                style: TStyle.textStyleVelaSansBold(colorBlack, size: 18.0)),
+                style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!, size: 18.0)),
             const Gap(10.0),
             Text(direction.name,
                 style: TStyle.textStyleVelaSansMedium(colorGrey, size: 16.0)),
@@ -261,14 +261,14 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson> {
               padding: const EdgeInsets.symmetric(vertical: 15.0),
               width: double.infinity,
               decoration: BoxDecoration(
-                  color: colorBeruzaLight,
+                  color: Theme.of(context).colorScheme.surfaceVariant,
                   borderRadius:  BorderRadius.circular(10.0)
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text('Урок состоялся?'.tr(),
-                      style: TStyle.textStyleVelaSansBold(colorBlack,size: 20.0)),
+                      style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 20.0)),
                   const Gap(20.0),
                   SizedBox(
                     height: 30.0,
@@ -311,15 +311,17 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson> {
           padding: const EdgeInsets.symmetric(vertical: 15.0),
           width: double.infinity,
           decoration: BoxDecoration(
-              color: colorBeruzaLight,
+              color: Theme.of(context).colorScheme.surfaceVariant,
               borderRadius:  BorderRadius.circular(10.0)
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text('Спасибо, что подтвердили урок!'.tr(),style: TStyle.textStyleVelaSansMedium(colorBlack,size: 18.0)),
+              Text('Спасибо, что подтвердили урок!'.tr(),
+                  style: TStyle.textStyleVelaSansMedium(Theme.of(context).textTheme.displayMedium!.color!,size: 18.0)),
               const Gap(10.0),
-              Text('Оцените, как прошло занятие'.tr(),style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
+              Text('Оцените, как прошло занятие'.tr(),
+                  style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
               const Gap(20.0),
               RatingBar.builder(
                 initialRating: 5,
@@ -368,7 +370,7 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson> {
           padding: const EdgeInsets.symmetric(vertical: 15.0,horizontal: 15.0),
           width: double.infinity,
           decoration: BoxDecoration(
-              color: colorBeruzaLight,
+              color: Theme.of(context).colorScheme.surfaceVariant,
               borderRadius:  BorderRadius.circular(10.0)
           ),
           child: Column(
@@ -377,7 +379,7 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson> {
               Text(_rating<2.0&&_rating>0.0?'Сожалеем, что урок вам \nне понравился'.tr():
               'Расскажите о причине, по которой урок не состоялся'.tr(),
                   textAlign: TextAlign.center,
-                  style: TStyle.textStyleVelaSansBold(colorBlack,size: 18.0)),
+                  style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18.0)),
               const Gap(10.0),
               Visibility(
                   visible: _rating<2.0&&_rating>0.0,
@@ -388,11 +390,11 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson> {
                 maxLines: 3,
                 textAlign: TextAlign.start,
                 controller: _editingControllerReview,
-                style: TextStyle(color: colorBlack),
+                style: TextStyle(color: Theme.of(context).textTheme.displayMedium!.color!),
                 cursorColor: colorBeruza,
                 decoration: InputDecoration(
                     filled: true,
-                    fillColor: colorWhite,
+                    fillColor: Theme.of(context).colorScheme.background,
                     hintText: 'Ваш комментарий'.tr(),
                     hintStyle: TStyle.textStyleVelaSansMedium(colorGrey.withOpacity(0.4)),
                     contentPadding:const EdgeInsets.only(left: 20,right: 20,top: 12,bottom: 12),

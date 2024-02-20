@@ -31,11 +31,17 @@ class SubBloc extends Bloc<SubEvent,SubState>{
          emit(state.copyWith(subStatus: SubStatus.loading));
          await Future.delayed(const Duration(milliseconds: 1500));
        }
+
        final user = _userCubit.userEntity;
-       final firstNotAcceptLesson = _firstNotAcceptLesson(lessons: user.directions[event.currentDirIndex].lessons);
-       final listNotAcceptLesson = _getListNotAcceptLesson(lessons: user.directions[event.currentDirIndex].lessons);
+       final firstNotAcceptLesson = _firstNotAcceptLesson(user: user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
+       final listNotAcceptLesson = _getListNotAcceptLesson(user: user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
+       final lessons = _getAllLessons(user, event.allViewDir, event.currentDirIndex);
+       final directions = _getDirections(user: user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
+
        emit(state.copyWith(
            userEntity: user,
+           lessons: lessons,
+           directions: directions,
            subStatus: SubStatus.loaded,
            firstNotAcceptLesson: firstNotAcceptLesson,
            listNotAcceptLesson: listNotAcceptLesson));
@@ -50,14 +56,36 @@ class SubBloc extends Bloc<SubEvent,SubState>{
 
   void _listenUser(GetUserEvent event) {
      _userCubit.stream.listen((user) async {
-       add(UpdateUserEvent(currentDirIndex: event.currentDirIndex, user: user));
+       add(UpdateUserEvent(currentDirIndex: event.currentDirIndex, user: user,allViewDir: event.allViewDir));
      });
+  }
+
+  List<DirectionLesson> _getDirections({required UserEntity user, required indexDir,required bool allViewDir}){
+    if(allViewDir){
+      return user.directions;
+    }
+    return [user.directions[indexDir]];
+  }
+
+  List<Lesson> _getAllLessons(UserEntity user,bool allViewLessons,int indexDir){
+    List<Lesson> resLes = [];
+
+    if(allViewLessons){
+      for(var dir in user.directions){
+         resLes.addAll(dir.lessons);
+      }
+    }else{
+      resLes = user.directions[indexDir].lessons;
+    }
+
+
+    return resLes;
   }
 
 
   void _updateUser(UpdateUserEvent event,emit) async {
-    final firstNotAcceptLesson = _firstNotAcceptLesson(lessons: event.user.directions[event.currentDirIndex].lessons);
-    final listNotAcceptLesson = _getListNotAcceptLesson(lessons: event.user.directions[event.currentDirIndex].lessons);
+    final firstNotAcceptLesson = _firstNotAcceptLesson(user: event.user,allViewDir: event.allViewDir,indexDir: event.currentDirIndex);
+    final listNotAcceptLesson = _getListNotAcceptLesson(user: event.user,allViewDir: event.allViewDir,indexDir: event.currentDirIndex);
     emit(state.copyWith(
         userEntity: event.user,
         subStatus: SubStatus.loaded,
@@ -66,20 +94,41 @@ class SubBloc extends Bloc<SubEvent,SubState>{
   }
 
 
-  Lesson _firstNotAcceptLesson({required List<Lesson> lessons}){
-    final list = lessons.where((element) => element.status == LessonStatus.awaitAccept).toList();
-    if(list.isNotEmpty){
-      final listDateEpoch = list.map((e) => DateFormat('yyyy-MM-dd').parse(e.date).millisecondsSinceEpoch).toList();
-      final indexLessonFirst = listDateEpoch.indexOf(listDateEpoch.reduce(min));
-      return list[indexLessonFirst];
+  Lesson _firstNotAcceptLesson({required UserEntity user, required indexDir,required bool allViewDir}){
+    if(!allViewDir){
+      final list = user.directions[indexDir].lessons.where((element) => element.status == LessonStatus.awaitAccept).toList();
+      if(list.isNotEmpty){
+        final listDateEpoch = list.map((e) => DateFormat('yyyy-MM-dd').parse(e.date).millisecondsSinceEpoch).toList();
+        final indexLessonFirst = listDateEpoch.indexOf(listDateEpoch.reduce(min));
+        return list[indexLessonFirst];
+      }
+    }else{
+      List<Lesson> allLes =[];
+      for(var dir in user.directions){
+        allLes.addAll(dir.lessons);
+      }
+      final list = allLes.where((element) => element.status == LessonStatus.awaitAccept).toList();
+      if(list.isNotEmpty){
+        final listDateEpoch = list.map((e) => DateFormat('yyyy-MM-dd').parse(e.date).millisecondsSinceEpoch).toList();
+        final indexLessonFirst = listDateEpoch.indexOf(listDateEpoch.reduce(min));
+        return list[indexLessonFirst];
+      }
     }
 
     return Lesson.unknown();
 
   }
 
-  List<Lesson> _getListNotAcceptLesson({required List<Lesson> lessons}){
-    return lessons.where((element) => element.status == LessonStatus.awaitAccept).toList();
+  List<Lesson> _getListNotAcceptLesson({required UserEntity user, required indexDir,required bool allViewDir}){
+    if(allViewDir){
+      List<Lesson> allLes = [];
+      for(var dir in user.directions){
+        allLes.addAll(dir.lessons);
+     }
+     return allLes.where((element) => element.status == LessonStatus.awaitAccept).toList();
+  }
+
+    return user.directions[indexDir].lessons.where((element) => element.status == LessonStatus.awaitAccept).toList();
   }
 
   void _acceptLesson(AcceptLessonEvent event,emit) async {

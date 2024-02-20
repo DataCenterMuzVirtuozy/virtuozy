@@ -52,7 +52,9 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
   @override
   void initState() {
     super.initState();
-   context.read<SubBloc>().add(GetUserEvent(currentDirIndex: _selIndexDirection,
+   context.read<SubBloc>().add(GetUserEvent(
+     allViewDir: false,
+       currentDirIndex: _selIndexDirection,
    refreshDirection: false));
   }
 
@@ -70,25 +72,25 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
 
     return BlocConsumer<SubBloc,SubState>(
      listener: (c,s){
+
+       print('Lessons ${s.lessons.length}');
         if(s.subStatus == SubStatus.confirm){
           context.read<BlocFinance>().add(WritingOfMoneyEvent(currentDirection: s.userEntity.directions[_selIndexDirection]));
         }
 
 
-
-
         if(s.subStatus == SubStatus.loaded){
-          if(s.userEntity.directions[_selIndexDirection].bonus.isNotEmpty){
-            bonus = s.userEntity.directions[_selIndexDirection].bonus[0];
-            if(bonus.active){
-              _hasBonus = false;
-            }else{
-              _hasBonus = true;
-            }
-
-          }else{
-            _hasBonus = false;
-          }
+          // if(s.userEntity.directions[_selIndexDirection].bonus.isNotEmpty){
+          //   bonus = s.userEntity.directions[_selIndexDirection].bonus[0];
+          //   if(bonus.active){
+          //     _hasBonus = false;
+          //   }else{
+          //     _hasBonus = true;
+          //   }
+          //
+          // }else{
+          //   _hasBonus = false;
+          // }
           int length = s.userEntity.directions.length;
           _titlesDirections = s.userEntity.directions.map((e) => e.name).toList();
           if(length>1){
@@ -119,7 +121,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
        }
 
 
-       if(state.userEntity.directions.isEmpty && state.subStatus == SubStatus.loaded){
+       if(state.directions.isEmpty && state.subStatus == SubStatus.loaded){
          return Center(
            child: BoxInfo(
                buttonVisible:false,
@@ -128,7 +130,6 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                iconData: CupertinoIcons.music_note_list),
          );
        }
-
 
 
 
@@ -142,14 +143,16 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
                  child: DrawingMenuSelected(items: _titlesDirections,
                    onSelected: (index){
-                     _selIndexDirection = index;
-                     context.read<SubBloc>().add(GetUserEvent(currentDirIndex: _selIndexDirection,
-                     refreshDirection: true));
+                   _selIndexDirection = index;
+                   context.read<SubBloc>().add(GetUserEvent(
+                       allViewDir: index == _titlesDirections.length-1,
+                       currentDirIndex: _selIndexDirection,
+                       refreshDirection: true));
 
                    },)
                ),
                const Gap(10.0),
-                Calendar(lessons: state.userEntity.directions[_selIndexDirection].lessons,
+                Calendar(lessons: state.lessons,
                   onMonth: (month){
                      globalCurrentMonthCalendar = month;
                   },
@@ -163,9 +166,9 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                   },),
                const Gap(10.0),
                Column(
-                 children: List.generate(1, (index) {
+                 children: List.generate(state.directions.length, (index) {
                   return  ItemSubscription(
-                      direction: state.userEntity.directions[_selIndexDirection]);
+                      direction: state.directions[index]);
                  }),
                ),
                const Gap(10.0),
@@ -188,7 +191,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                                Dialoger.showModalBottomMenu(
                                  blurred: false,
                                  args:[state.firstNotAcceptLesson,
-                                   state.userEntity.directions[_selIndexDirection],state.listNotAcceptLesson],
+                                   state.directions[_selIndexDirection], state.listNotAcceptLesson],
                                    title:'Подтверждение урока'.tr(),context: context,
                                content: ConfirmLesson());
                              },

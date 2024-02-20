@@ -55,7 +55,7 @@ class _NotificationPageState extends State<NotificationPage> {
      padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 15.0),
      decoration: BoxDecoration(
          borderRadius: BorderRadius.circular(15.0),
-         color: colorBeruzaLight
+         color: Theme.of(context).colorScheme.surfaceVariant
      ),
      child: Column(
        children: [
@@ -70,7 +70,7 @@ class _NotificationPageState extends State<NotificationPage> {
                child: Icon(Icons.notifications_none_rounded,color: colorOrange),
              ),
              const Gap(15.0),
-             Expanded(child: Text(body,style: TStyle.textStyleVelaSansBold(colorBlack,size: 14.0))),
+             Expanded(child: Text(body,style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0))),
            ],
          ),
          const Gap(10.0),

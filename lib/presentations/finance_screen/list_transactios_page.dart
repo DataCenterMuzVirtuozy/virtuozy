@@ -91,7 +91,7 @@ class _ListTransactionsPageState extends State<ListTransactionsPage> {
        padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 15.0),
        decoration: BoxDecoration(
            borderRadius: BorderRadius.circular(15.0),
-           color: colorBeruzaLight
+           color: Theme.of(context).colorScheme.surfaceVariant
        ),
        child: Column(
          children: [
@@ -113,7 +113,7 @@ class _ListTransactionsPageState extends State<ListTransactionsPage> {
                        'Пополнение счета'.tr():
                          type == TypeTransaction.minusLesson?
                        'Списание за урок'.tr():'....',
-                       style: TStyle.textStyleVelaSansBold(colorBlack,size: 14.0)),
+                       style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
                    Row(
                      children: [
                        Icon(Icons.timelapse_rounded,color: colorBeruza,size: 10.0),
@@ -130,7 +130,8 @@ class _ListTransactionsPageState extends State<ListTransactionsPage> {
              crossAxisAlignment: CrossAxisAlignment.center,
              mainAxisAlignment: MainAxisAlignment.end,
              children: [
-               Text(quantity,style: TStyle.textStyleVelaSansExtraBolt(colorBlack,size: 14.0)),
+               Text(quantity,
+                   style: TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
              ],
            )
          ],

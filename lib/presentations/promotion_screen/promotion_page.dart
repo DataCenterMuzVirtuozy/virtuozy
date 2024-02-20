@@ -49,7 +49,7 @@ class _PromotionPageState extends State<PromotionPage> with AuthMixin{
         if(index==0) {
           return Padding(
             padding: const EdgeInsets.only(left: 20.0,bottom: 10.0,top: 20.0),
-            child: Text('Специальные предложения'.tr(),style: TStyle.textStyleGaretHeavy(colorBlack,size: 20.0)),
+            child: Text('Специальные предложения'.tr(),style: TStyle.textStyleGaretHeavy(Theme.of(context).textTheme.displayMedium!.color!,size: 20.0)),
           );
         }
 
@@ -75,14 +75,14 @@ class _PromotionPageState extends State<PromotionPage> with AuthMixin{
          padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 15.0),
          decoration: BoxDecoration(
              borderRadius: BorderRadius.circular(15.0),
-             color: colorBeruzaLight
+             color: Theme.of(context).colorScheme.surfaceVariant
          ),
          child: Column(
            crossAxisAlignment: CrossAxisAlignment.start,
            children: [
              Padding(
                padding: const EdgeInsets.only(left: 47.0),
-               child: Text(title,style: TStyle.textStyleVelaSansExtraBolt(colorBlack,size: 18.0)),
+               child: Text(title,style: TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,size: 18.0)),
              ),
              const Gap(5.0),
              Row(

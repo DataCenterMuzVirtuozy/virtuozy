@@ -146,7 +146,7 @@ class _SchedulePageState extends State<SchedulePage> {
     padding: const EdgeInsets.all(20.0),
     width: MediaQuery.sizeOf(context).width,
     decoration: BoxDecoration(
-    color: colorBeruzaLight,
+    color: Theme.of(context).colorScheme.surfaceVariant,
     borderRadius: BorderRadius.circular(20.0)),
       child: Column(
        crossAxisAlignment: CrossAxisAlignment.start,
@@ -154,8 +154,8 @@ class _SchedulePageState extends State<SchedulePage> {
 
           Row(
             children: [
-              Text('Уроки на '.tr(),style:TStyle.textStyleVelaSansExtraBolt(colorBlack,size: 18.0)),
-              Text(scheduleLessons.month,style:TStyle.textStyleVelaSansExtraBolt(colorBlack,size: 18.0)),
+              Text('Уроки на '.tr(),style:TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,size: 18.0)),
+              Text(scheduleLessons.month,style:TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,size: 18.0)),
             ],
           ),
           const Gap(10.0),
@@ -170,7 +170,7 @@ class _SchedulePageState extends State<SchedulePage> {
             },
                 child: Text('Подробное расписание'.tr(),
                         style: TStyle.textStyleVelaSansRegularUnderline(
-                            colorBlack,
+                            Theme.of(context).textTheme.displayMedium!.color!,
                             size: 16.0)))),
           ),
         ],
@@ -203,7 +203,7 @@ class _SchedulePageState extends State<SchedulePage> {
                      style:TStyle.textStyleVelaSansMedium(colorOrange,size: 14.0)),
                  const Gap(5.0),
                  Text(lesson.timePeriod,
-                     style:TStyle.textStyleVelaSansRegular(colorBlack,size: 12.0)),
+                     style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 12.0)),
                  const Gap(5.0),
                  Row(
                    children: [
@@ -219,7 +219,7 @@ class _SchedulePageState extends State<SchedulePage> {
                      Expanded(
                        child: Text(StatusToColor.getNameStatus(lesson.status),
                            maxLines: 2,
-                           style:TStyle.textStyleVelaSansRegular(colorBlack,size: 10.0)),
+                           style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 10.0)),
                      ),
                    ],
                  )
@@ -236,18 +236,18 @@ class _SchedulePageState extends State<SchedulePage> {
              crossAxisAlignment: CrossAxisAlignment.start,
              children: [
                Text(nameDirection,
-                   style:TStyle.textStyleVelaSansRegular(colorBlack,size: 14.0)),
+                   style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
 
                Row(
                  children: [
                    Text('Аудитория '.tr(),
-                       style:TStyle.textStyleVelaSansRegular(colorBlack,size: 14.0)),
+                       style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
                    Text('${lesson.idAuditory}',
-                       style:TStyle.textStyleVelaSansRegular(colorBlack,size: 14.0)),
+                       style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
                  ],
                ),
                Text(lesson.nameTeacher,
-                   style:TStyle.textStyleVelaSansRegular(colorBlack,size: 14.0)),
+                   style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
              ],
            ),
          ],

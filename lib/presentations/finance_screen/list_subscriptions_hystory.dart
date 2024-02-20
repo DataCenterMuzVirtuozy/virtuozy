@@ -54,7 +54,7 @@ class ItemSubHistory extends StatelessWidget{
       padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 15.0),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15.0),
-          color: colorBeruzaLight
+          color: Theme.of(context).colorScheme.surfaceVariant
       ),
       child: Column(
         children: [
@@ -62,7 +62,7 @@ class ItemSubHistory extends StatelessWidget{
             alignment: Alignment.centerLeft,
             child: Padding(
               padding: const EdgeInsets.only(left: 50.0),
-              child: Text(title,style: TStyle.textStyleVelaSansExtraBolt(colorBlack,size: 18.0)),
+              child: Text(title,style: TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,size: 18.0)),
             ),
           ),
           Row(
@@ -79,7 +79,7 @@ class ItemSubHistory extends StatelessWidget{
               Expanded(child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(body,style: TStyle.textStyleVelaSansBold(colorBlack,size: 14.0)),
+                  Text(body,style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
                   Row(
                     children: [
                       Icon(Icons.timelapse_rounded,color: colorBeruza,size: 10.0),
@@ -103,8 +103,8 @@ class ItemSubHistory extends StatelessWidget{
             children: [
               Row(
                 children: [
-                  Text(quantity,style: TStyle.textStyleVelaSansExtraBolt(colorBlack,size: 14.0)),
-                  Icon(CupertinoIcons.money_rubl,color: colorBlack,size: 16.0)
+                  Text(quantity,style: TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
+                  Icon(CupertinoIcons.money_rubl,color: Theme.of(context).textTheme.displayMedium!.color!,size: 16.0)
                 ],
               ),
             ],

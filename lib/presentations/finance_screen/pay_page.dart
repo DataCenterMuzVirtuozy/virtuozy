@@ -102,13 +102,14 @@ class _PayPageState extends State<PayPage> {
                   padding: const EdgeInsets.all(20.0),
                   width: double.infinity,
                   decoration: BoxDecoration(
-                      color: colorBeruzaLight,
+                      color: Theme.of(context).colorScheme.surfaceVariant,
                       borderRadius: BorderRadius.circular(20.0)
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Способ оплаты'.tr(),style: TStyle.textStyleVelaSansBold(colorBlack,size: 16.0)),
+                      Text('Способ оплаты'.tr(),
+                          style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 16.0)),
                       const Gap(20.0),
                        Row(
                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -119,7 +120,8 @@ class _PayPageState extends State<PayPage> {
                                  borderRadius: BorderRadius.circular(30.0),
                                    child: Image.asset(spbPay,width: 30.0,height: 30.0,)),
                                const Gap(20.0),
-                               Text('СБП',style: TStyle.textStyleVelaSansBold(colorBlack,size: 20.0),),
+                               Text('СБП',
+                                 style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 20.0),),
                              ],
                            ),
                            Checkbox(
@@ -150,7 +152,8 @@ class _PayPageState extends State<PayPage> {
                                 child: Icon(Icons.payment,color: colorOrange),
                               ),
                               const Gap(20.0),
-                              Text('Картой'.tr(),style: TStyle.textStyleVelaSansBold(colorBlack,size: 20.0),),
+                              Text('Картой'.tr(),
+                                style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 20.0),),
                             ],
                           ),
                           Checkbox(

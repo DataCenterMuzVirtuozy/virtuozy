@@ -24,7 +24,7 @@ class DetailsPromoPage extends StatelessWidget{
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text('Самоучитель игры на гитаре - это теоритеческая база о том как играть на гитаре самостоятельно. Этими знаниями имеет смысл пользоваться, если Вы что-то подзабыли или Вам нужно уточнить на верном ли Вы пути, но не для того, чтобы научиться играть на гитаре самостоятельно с нуля!',
-                style: TStyle.textStyleVelaSansRegular(colorBlack,size: 18.0)),
+                style: TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 18.0)),
             // const Gap(20.0),
             // SubmitButton(
             //   //todo local

@@ -28,11 +28,15 @@ enum BonusStatus{
   final String error;
   final Lesson firstNotAcceptLesson;
   final List<Lesson> listNotAcceptLesson;
+  final List<Lesson> lessons;
   final UserEntity userEntity;
+  final List<DirectionLesson> directions;
 
 
  factory SubState.unknown(){
   return SubState(
+    directions: [],
+      lessons: [],
     bonusStatus: BonusStatus.unknown,
     listNotAcceptLesson: const [],
       subStatus: SubStatus.unknown,
@@ -42,6 +46,8 @@ enum BonusStatus{
  }
 
   const SubState({
+    required this.directions,
+    required this.lessons,
     required  this.bonusStatus,
     required this.listNotAcceptLesson,
     required this.firstNotAcceptLesson,
@@ -51,7 +57,7 @@ enum BonusStatus{
   });
 
   @override
-  List<Object?> get props => [bonusStatus,subStatus,error,userEntity,firstNotAcceptLesson,listNotAcceptLesson];
+  List<Object?> get props => [lessons,bonusStatus,subStatus,error,userEntity,firstNotAcceptLesson,listNotAcceptLesson,directions];
 
   SubState copyWith({
     BonusStatus? bonusStatus,
@@ -59,9 +65,13 @@ enum BonusStatus{
     String? error,
     UserEntity? userEntity,
     Lesson? firstNotAcceptLesson,
-     List<Lesson>? listNotAcceptLesson
+     List<Lesson>? listNotAcceptLesson,
+    List<Lesson>? lessons,
+    List<DirectionLesson>? directions
   }) {
     return SubState(
+      directions: directions??this.directions,
+      lessons: lessons??this.lessons,
       listNotAcceptLesson: listNotAcceptLesson??this.listNotAcceptLesson,
       firstNotAcceptLesson: firstNotAcceptLesson??this.firstNotAcceptLesson,
       subStatus: subStatus ?? this.subStatus,
