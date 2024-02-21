@@ -15,8 +15,8 @@ sealed class DialogsContent{
 class DetailsLesson extends DialogsContent{
   @override
   build({required BuildContext context, Object? args}) {
-    return DetailsLessonContent(lesson: (args as List<dynamic>)[0] as Lesson,
-        direction: (args)[1] as DirectionLesson);
+    return DetailsLessonContent(lessons: (args as List<dynamic>)[0] as List<Lesson>,
+        directions: (args)[1] as List<DirectionLesson>);
   }
 
 }
@@ -26,7 +26,9 @@ class ConfirmLesson extends DialogsContent{
   @override
   build({required BuildContext context,Object? args}) {
     return  StepsConfirmLesson(lesson: (args as List<dynamic>)[0] as Lesson,
-        direction: (args)[1] as DirectionLesson,listNotAcceptLesson: (args)[2] as List<Lesson>);
+        directions: (args)[1] as List<DirectionLesson>,
+        listNotAcceptLesson: (args)[2] as List<Lesson>,
+         allViewDirection: (args)[3] as bool);
   }
 }
 

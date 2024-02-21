@@ -16,7 +16,8 @@ class StatusToColor{
    const Color.fromRGBO(120, 63, 4, 1.0),
    const Color.fromRGBO(153, 0, 255, 1.0),
    const Color.fromRGBO(255, 255, 255, 1.0),
-    const Color.fromRGBO(0, 148, 77, 1.0)
+    const Color.fromRGBO(0, 148, 77, 1.0),
+    const Color.fromRGBO(3, 252, 244,1.0)
   ];
 
   static final List<String> _namesStatus = [
@@ -27,7 +28,9 @@ class StatusToColor{
     'Пропуск',
     'Самостоятельные',
     'Проведен',
-     'Ожидает подтверждения ученика'
+     'Ожидает подтверждения ученика',
+    'Совпадение дней из нескольких направлений'
+
   ];
 
   static List<Color> get statusColors => _colors;
@@ -52,8 +55,11 @@ class StatusToColor{
        return StatusToColor.namesStatus[1];
      case LessonStatus.awaitAccept:
        return StatusToColor.namesStatus[7];
+     case LessonStatus.layering:
+       return StatusToColor.namesStatus[8];
      case LessonStatus.unknown:
        return '';
+       // TODO: Handle this case.
    }
  }
 
@@ -67,6 +73,7 @@ class StatusToColor{
      case LessonStatus.singly: return _colors[5];
      case LessonStatus.trial: return _colors[1];
       case LessonStatus.awaitAccept:return _colors[7];
+      case LessonStatus.layering: return _colors[8];
       case LessonStatus.unknown: return const Color.fromRGBO(255, 255, 255, 0.0);
 
     }

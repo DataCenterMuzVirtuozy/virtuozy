@@ -109,7 +109,7 @@ class UserService{
        'idAuditory': 120,
        'nameTeacher': 'Данилина Д.Д.',
        'timeAccept':'',
-       'status': 1,
+       'status': 8,
       },
       {
        'id':8,
@@ -174,7 +174,7 @@ class UserService{
        'idAuditory': 120,
        'nameTeacher': 'Данилина Д.Д.',
        'timeAccept':'',
-       'status': 1,
+       'status': 8,
       },
 
      ],
@@ -238,7 +238,7 @@ class UserService{
        'idAuditory': 120,
        'nameTeacher': 'Данилина Д.Д.',
        'timeAccept':'2024-02-08/12:50',
-       'status': 2,
+       'status': 8,
       },
 
 
@@ -278,7 +278,16 @@ class UserService{
        'idAuditory': 120,
        'nameTeacher': 'Данилина Д.Д.',
        'timeAccept':'',
-       'status': 1,
+       'status': 8,
+      },
+      {
+       'id':15,
+       'date': '2024-03-21',
+       'timePeriod': '10:00-11:00',
+       'idAuditory': 125,
+       'nameTeacher': 'Данилина Д.Д.',
+       'timeAccept':'',
+       'status': 8,
       },
 
      ],

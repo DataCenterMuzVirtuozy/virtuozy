@@ -2,6 +2,7 @@
 
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -22,11 +23,13 @@ final currentDayNotifi = locator.get<ValueNotifier<int>>();
 
 class StepsConfirmLesson extends StatefulWidget{
   const StepsConfirmLesson({super.key, required this.lesson,
-    required this.direction, required this.listNotAcceptLesson});
+    required this.directions, required this.listNotAcceptLesson,
+  required this.allViewDirection});
 
   final Lesson lesson;
-  final DirectionLesson direction;
+  final List<DirectionLesson> directions;
   final List<Lesson> listNotAcceptLesson;
+  final bool allViewDirection;
 
 
   @override
@@ -51,7 +54,7 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson> {
     _editingControllerReview = TextEditingController();
     _lesson = widget.lesson;
     if(widget.listNotAcceptLesson.length>1){
-      _heightBody.insert(0, 130.0);
+      _heightBody.insert(0, 250.0);
     }
   }
 
@@ -61,6 +64,11 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson> {
     super.dispose();
     _editingControllerReview.dispose();
     _pageController.dispose();
+  }
+
+
+  DirectionLesson _getDirectionByLesson({required Lesson lessonEntity}){
+    return widget.directions.firstWhere((element) => element.name == lessonEntity.nameDirection);
   }
 
   @override
@@ -94,7 +102,7 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson> {
                         _stepIndex = widget.listNotAcceptLesson.length==1?1:2;
                       });
                     }, lesson: _lesson,
-                        direction: widget.direction,
+                        direction: _getDirectionByLesson(lessonEntity: _lesson),
                         context: context),
                     step_2(negative: (value){
                       setState(() {
@@ -145,7 +153,9 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson> {
       child: Column(
          children: [
            ...List.generate(widget.listNotAcceptLesson.length, (index) {
-             return ItemNotAcceptLesson(lesson: widget.listNotAcceptLesson[index],
+             return ItemNotAcceptLesson(
+               allViewDirection: widget.allViewDirection,
+               lesson: widget.listNotAcceptLesson[index],
                next: (lesson) {
                  next.call(lesson);
              },);
@@ -286,7 +296,7 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson> {
                         SubmitButton(
                           width: 100.0,
                           onTap: (){
-                            context.read<SubBloc>().add(AcceptLessonEvent(direction: widget.direction,
+                            context.read<SubBloc>().add(AcceptLessonEvent(direction: _getDirectionByLesson(lessonEntity: _lesson),
                                 lesson: _lesson));
                           },
                           textButton: 'Да'.tr(),
@@ -449,10 +459,12 @@ class ItemNotAcceptLesson extends StatefulWidget{
       {super.key,
       required this.lesson,
       required this.next,
+        required this.allViewDirection
       });
 
   final Lesson lesson;
   final Function next;
+  final bool allViewDirection;
 
   @override
   State<ItemNotAcceptLesson> createState() => _ItemNotAcceptLessonState();
@@ -467,9 +479,9 @@ class _ItemNotAcceptLessonState extends State<ItemNotAcceptLesson> {
   Widget build(BuildContext context) {
    return Container(
      margin:  const EdgeInsets.only(right: 10.0,left: 10.0,bottom: 10.0),
-     padding: const EdgeInsets.symmetric(horizontal: 10.0),
+     padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 5.0),
      decoration: BoxDecoration(
-       color: colorBeruzaLight,
+       color: Theme.of(context).colorScheme.surfaceVariant,
        borderRadius: BorderRadius.circular(10.0)
      ),
      child: Row(
@@ -492,8 +504,18 @@ class _ItemNotAcceptLessonState extends State<ItemNotAcceptLesson> {
                mainAxisAlignment: MainAxisAlignment.center,
                crossAxisAlignment: CrossAxisAlignment.start,
                children: [
-                 Text(widget.lesson.date,style: TStyle.textStyleVelaSansBold(colorBlack,size: 16.0)),
+                 Row(
+                   children: [
+                     Text(widget.lesson.date,
+                         style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 16.0)),
+                     Visibility(
+                         visible: widget.allViewDirection,
+                         child: Text(' - ${widget.lesson.nameDirection}',
+                             style: TStyle.textStyleVelaSansRegular(colorGrey,size: 12.0))),
+                   ],
+                 ),
                  Text(widget.lesson.timePeriod,style: TStyle.textStyleVelaSansRegular(colorGrey,size: 12.0)),
+
                ],
              ),
            ],

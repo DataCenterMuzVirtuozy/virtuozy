@@ -45,6 +45,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
   BonusEntity bonus = BonusEntity.unknown();
   List<String> _titlesDirections = [];
   bool _hasBonus = false;
+  bool _allViewDirection = false;
 
 
 
@@ -73,11 +74,9 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
     return BlocConsumer<SubBloc,SubState>(
      listener: (c,s){
 
-       print('Lessons ${s.lessons.length}');
         if(s.subStatus == SubStatus.confirm){
           context.read<BlocFinance>().add(WritingOfMoneyEvent(currentDirection: s.userEntity.directions[_selIndexDirection]));
         }
-
 
         if(s.subStatus == SubStatus.loaded){
           // if(s.userEntity.directions[_selIndexDirection].bonus.isNotEmpty){
@@ -144,8 +143,13 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                  child: DrawingMenuSelected(items: _titlesDirections,
                    onSelected: (index){
                    _selIndexDirection = index;
+                   if(index == _titlesDirections.length-1){
+                     _allViewDirection = true;
+                   }else{
+                     _allViewDirection = false;
+                   }
                    context.read<SubBloc>().add(GetUserEvent(
-                       allViewDir: index == _titlesDirections.length-1,
+                       allViewDir: _allViewDirection,
                        currentDirIndex: _selIndexDirection,
                        refreshDirection: true));
 
@@ -156,12 +160,12 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                   onMonth: (month){
                      globalCurrentMonthCalendar = month;
                   },
-                  onLesson: (lesson){
+                  onLesson: (lessons){
                     Dialoger.showModalBottomMenu(
                       blurred: false,
                         title: 'Урок'.tr(),
                         context: context,
-                        args: [lesson,state.userEntity.directions[_selIndexDirection]],
+                        args: [lessons,state.userEntity.directions],
                         content: DetailsLesson());
                   },),
                const Gap(10.0),
@@ -191,7 +195,8 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                                Dialoger.showModalBottomMenu(
                                  blurred: false,
                                  args:[state.firstNotAcceptLesson,
-                                   state.directions[_selIndexDirection], state.listNotAcceptLesson],
+                                   state.directions, state.listNotAcceptLesson,
+                                    _allViewDirection],
                                    title:'Подтверждение урока'.tr(),context: context,
                                content: ConfirmLesson());
                              },

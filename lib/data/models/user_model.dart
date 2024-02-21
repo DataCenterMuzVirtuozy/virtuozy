@@ -60,13 +60,14 @@ class UserModel{
   factory DirectionModel.fromMap(Map<String, dynamic> map) {
 
     final lessons =  map['lessons'] as List<dynamic>;
+    final nameDirection = map['name'] as String;
     final sub = SubscriptionModel.fromMap(map['subscription']);
     final bonus = map['bonus'] as List<dynamic>;
     return DirectionModel(
       bonus: bonus.map((e) => BonusModel.fromMap(e)).toList(),
       subscription: sub,
-      name: map['name'] as String,
-      lessons: lessons.map((e) => LessonModel.fromMap(e)).toList(),
+      name: nameDirection,
+      lessons: lessons.map((e) => LessonModel.fromMap(e,nameDirection)).toList(),
     );
   }
 }
@@ -82,8 +83,10 @@ class UserModel{
    final String nameTeacher;
    final int status;
    final String timeAccept;
+   final String nameDirection;
 
    const LessonModel({
+     required this.nameDirection,
      required this.id,
      required this.timeAccept,
     required this.date,
@@ -95,7 +98,8 @@ class UserModel{
 
 
 
-  factory LessonModel.fromMap(Map<String, dynamic> map) {
+  factory LessonModel.fromMap(Map<String, dynamic> map,String nameDirection) {
+
     return LessonModel(
       id: map['id'] as int,
       timeAccept: map['timeAccept'] as String,
@@ -104,6 +108,7 @@ class UserModel{
       idAuditory: map['idAuditory'] as int,
       nameTeacher: map['nameTeacher'] as String,
       status: map['status'] as int,
+      nameDirection: nameDirection
     );
   }
 }

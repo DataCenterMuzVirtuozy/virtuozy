@@ -77,6 +77,7 @@ class UserMapper{
 
   static Lesson _fromLessonModel(LessonModel lessonModel){
     return Lesson(
+      nameDirection: lessonModel.nameDirection,
         id: lessonModel.id,
         date: lessonModel.date,
         timePeriod: lessonModel.timePeriod,

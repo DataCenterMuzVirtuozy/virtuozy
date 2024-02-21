@@ -6,6 +6,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:virtuozy/di/locator.dart';
@@ -45,6 +46,7 @@ class _CalendarState extends State<Calendar> {
   @override
   Widget build(BuildContext context) {
 
+
    return Container(
      decoration: BoxDecoration(
        color: Theme.of(context).colorScheme.surfaceVariant,
@@ -83,13 +85,13 @@ class _CalendarState extends State<Calendar> {
              defaultBuilder: (context, day,values) {
                _onMonth(day.month);
                return _handlerDay(
-                   t:day,
+                   dateTime:day,
                    monthOfDay: day.month,
                    lessons: widget.lessons,
                    day: day.day,
                    context: context,
-               onLesson: (lesson){
-                 widget.onLesson.call(lesson);
+               onLesson: (lessons){
+                 widget.onLesson.call(lessons);
                });
              },
            ),
@@ -112,17 +114,18 @@ class _CalendarState extends State<Calendar> {
    _handlerDay({
      required List<Lesson> lessons,
      required int day,
-     required DateTime t,
+     required DateTime dateTime,
      required int monthOfDay,
      required BuildContext context,
    required Function onLesson}){
     final stringDays = lessons.map((e) => e.date).toList();
      try{
-       if(stringDays.contains(DateFormat('yyyy-MM-dd').format(t))){
+       if(stringDays.contains(DateFormat('yyyy-MM-dd').format(dateTime))){
          final lesson = lessons.firstWhere((element) => DateFormat('yyyy-MM-dd').parse(element.date).day == day&&
              DateFormat('yyyy-MM-dd').parse(element.date).month == month);
          final monthLesson = DateFormat('yyyy-MM-dd').parse(lesson.date).month;
          if(monthLesson == monthOfDay) {
+           final lessonsDay = _handleLessonsDay(lesson,lessons);
            return ValueListenableBuilder<int>(
                valueListenable: currentDayNotifi,
                builder: (context, valueDay, child) {
@@ -131,13 +134,15 @@ class _CalendarState extends State<Calendar> {
                    child: InkWell(
                        borderRadius: BorderRadius.circular(60.0),
                        onTap: () {
-                         onLesson.call(lesson);
+                         onLesson.call(lessonsDay);
                          currentDayNotifi.value = day;
                        },
                        child: DecoratedBox(
                          decoration: BoxDecoration(
                              color: StatusToColor.getColor(
-                                 lessonStatus: lesson.status),
+                                 lessonStatus:
+                                 lessonsDay.length==1?lesson.status:
+                                 LessonStatus.layering),
                              shape: BoxShape.circle,
                              border: Border.all(color: Theme
                                  .of(context)
@@ -162,6 +167,11 @@ class _CalendarState extends State<Calendar> {
        print('$e');
      }
 
+  }
+
+  List<Lesson> _handleLessonsDay(Lesson lesson,List<Lesson> lessons){
+    final resultLessons = lessons.where((e) => e.date == lesson.date).toList();
+    return resultLessons;
   }
 
   DateTime _getFirstDate({required List<Lesson> lessons}){
@@ -203,10 +213,12 @@ class InfoColor extends StatefulWidget{
 class _InfoColorState extends State<InfoColor> {
 
    double _heightBoxInfo = 45.0;
+   final double _heightBoxInfoOpened = 290.0;
 
   @override
   Widget build(BuildContext context) {
    return AnimatedContainer(
+     padding: const EdgeInsets.symmetric(horizontal: 10.0),
      alignment: Alignment.topCenter,
       curve: Curves.easeIn,
       height: _heightBoxInfo,
@@ -217,7 +229,7 @@ class _InfoColorState extends State<InfoColor> {
           onTap: (){
             setState(() {
               if(_heightBoxInfo == 45.0){
-                _heightBoxInfo = 250.0;
+                _heightBoxInfo = _heightBoxInfoOpened;
               }else{
                 _heightBoxInfo = 45.0;
               }
@@ -238,7 +250,7 @@ class _InfoColorState extends State<InfoColor> {
                     onPressed: () {
                       setState(() {
                         if(_heightBoxInfo == 45.0){
-                          _heightBoxInfo = 250.0;
+                          _heightBoxInfo = _heightBoxInfoOpened;
                         }else{
                           _heightBoxInfo = 45.0;
                         }
@@ -270,8 +282,10 @@ class _InfoColorState extends State<InfoColor> {
                         height: 20.0,
                       ),
                       const Gap(10.0),
-                      Text(StatusToColor.namesStatus[index],
-                        style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!),)
+                      Expanded(
+                        child: Text(StatusToColor.namesStatus[index],
+                          style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!),),
+                      )
                     ],
                   ),
                 );

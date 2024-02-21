@@ -118,6 +118,7 @@ class DirectionLesson{
    reservation,
    singly,
    awaitAccept,
+   layering,
    unknown
  }
 
@@ -129,6 +130,7 @@ class Lesson{
    final int idAuditory;
    final String nameTeacher;
    final LessonStatus status;
+   final String nameDirection;
 
   const Lesson({
     required this.id,
@@ -138,11 +140,13 @@ class Lesson{
     required this.idAuditory,
     required this.nameTeacher,
     required this.status,
+    required this.nameDirection
   });
 
 
   factory Lesson.unknown(){
     return const Lesson(
+      nameDirection: '',
         timeAccept: '',
         date: '',
         timePeriod: '',
@@ -158,9 +162,11 @@ class Lesson{
     int? idAuditory,
     String? nameTeacher,
     LessonStatus? status,
-    String? timeAccept
+    String? timeAccept,
+    String? nameDirection
   }) {
     return Lesson(
+      nameDirection: nameDirection??this.nameDirection,
       timeAccept: timeAccept??this.timeAccept,
       date: date ?? this.date,
       timePeriod: timePeriod ?? this.timePeriod,
