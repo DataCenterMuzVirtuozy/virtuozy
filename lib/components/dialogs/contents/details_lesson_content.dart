@@ -20,6 +20,7 @@ class DetailsLessonContent extends StatelessWidget {
 
   final List<Lesson> lessons;
   final List<DirectionLesson> directions;
+  final double _heightBox = 295.0;
 
   DirectionLesson _getDirectionByLesson({required Lesson lessonEntity}){
     return directions.firstWhere((element) => element.name == lessonEntity.nameDirection);
@@ -27,8 +28,9 @@ class DetailsLessonContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return SizedBox(
-      height: 295.0,
+      height: _heightBox,
       child: PageView.builder(
         itemCount: lessons.length,
           itemBuilder: (context,index){

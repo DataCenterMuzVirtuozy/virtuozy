@@ -137,25 +137,42 @@ class _CalendarState extends State<Calendar> {
                          onLesson.call(lessonsDay);
                          currentDayNotifi.value = day;
                        },
-                       child: DecoratedBox(
-                         decoration: BoxDecoration(
-                             color: StatusToColor.getColor(
-                                 lessonStatus:
-                                 lessonsDay.length==1?lesson.status:
-                                 LessonStatus.layering),
-                             shape: BoxShape.circle,
-                             border: Border.all(color: Theme
-                                 .of(context)
-                                 .textTheme
-                                 .displayMedium!
-                                 .color!,
-                                 width: valueDay == day ? 3.0 : 0.5)
+                       child: Container(
+                         width: 45.0,
+                         height: 45.0,
+                         decoration: const BoxDecoration(
+                           shape: BoxShape.circle
                          ),
-                         child: Center(
-                           child: Text(
-                             day.toString(),
-                             style: TStyle.textStyleVelaSansBold(colorBlack),
-                           ),
+                         child: Stack(
+                           children: [
+                             ...List.generate(lessonsDay.length, (index) {
+                               return  RotationTransition(
+                                 turns:  const AlwaysStoppedAnimation(135 / 360),
+                                 child: Container(
+                                   // margin: index == 2?const EdgeInsets.only(left: 19.0):
+                                   // index == 1?const EdgeInsets.only(right: 20.0,top: 10.0):EdgeInsets.zero,
+                                   width: index==2?18.0:index==1?35.0:40.0,
+                                   height: index == 1?18.0:40.0,
+                                   decoration: BoxDecoration(
+                                       borderRadius: index == 0?null:index == 2?
+                                           const BorderRadius.horizontal(right: Radius.circular(20.0)):
+                                       index == 1?const BorderRadius.vertical(bottom: Radius.circular(25.0)):null,
+                                       color: StatusToColor.getColor(
+                                           lessonStatus: lessonsDay.length>3?LessonStatus.layering:lessonsDay[index].status),
+                                       shape: index==0?BoxShape.circle:BoxShape.rectangle,
+                                       border: Border.all(color: colorOrange,
+                                           width: valueDay == day ? 3.0 : 1.0)
+                                   ),
+                                 ),
+                               );
+                             }),
+                             Center(
+                               child: Text(
+                                 day.toString(),
+                                 style: TStyle.textStyleVelaSansBold(colorBlack),
+                               ),
+                             ),
+                           ],
                          ),
                        )
                    ),
@@ -217,6 +234,7 @@ class _InfoColorState extends State<InfoColor> {
 
   @override
   Widget build(BuildContext context) {
+
    return AnimatedContainer(
      padding: const EdgeInsets.symmetric(horizontal: 10.0),
      alignment: Alignment.topCenter,

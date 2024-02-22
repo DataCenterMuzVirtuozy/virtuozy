@@ -4,6 +4,7 @@
  import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -169,12 +170,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                         content: DetailsLesson());
                   },),
                const Gap(10.0),
-               Column(
-                 children: List.generate(state.directions.length, (index) {
-                  return  ItemSubscription(
-                      direction: state.directions[index]);
-                 }),
-               ),
+               ItemSubscription(directions: state.directions),
                const Gap(10.0),
                Padding(
                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -240,11 +236,18 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
 
  class ItemSubscription extends StatelessWidget{
   const ItemSubscription({super.key,
-  required this.direction});
+  required this.directions});
 
-  final DirectionLesson direction;
+  final List<DirectionLesson> directions;
 
+  double _summaBalance({required List<DirectionLesson> directions}){
+     double sum = 0.0;
+     for(var dir in directions){
+       sum +=dir.subscription.balanceSub;
+     }
 
+    return sum;
+  }
 
 
   @override
@@ -260,32 +263,90 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          //todo local
-          Text('Баланс абонемента'.tr(),
+
+          Text(directions.length>1?'Баланс абонементов'.tr():'Баланс абонемента'.tr(),
               style:TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,
               size: 18.0)),
-          const Gap(5.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(direction.name,
-                  style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
-              Row(
+          const Gap(10.0),
+          ...List.generate(directions.length, (index) {
+
+            // if(index==0){
+            //   return                   Column(
+            //     children: [
+            //       Row(
+            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //         children: [
+            //           Text(directions[index].name,
+            //               style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
+            //           Container(
+            //             padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 2.0),
+            //             decoration: BoxDecoration(
+            //                 color: colorRed,
+            //                 borderRadius: BorderRadius.circular(10.0)),
+            //             child: Text('неактивный',
+            //                 style:TStyle.textStyleVelaSansBold(colorWhite,size: 10.0)),
+            //           ),
+            //         ],
+            //       ),
+            //       const Gap(5.0),
+            //       const Divider()
+            //     ],
+            //   );
+            // }
+
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 5.0),
+              child: Column(
                 children: [
-                  Text('Осталось уроков '.tr(),style:TStyle.textStyleVelaSansMedium(colorGrey,size: 14.0)),
-                  const Gap(5.0),
-                  Container(
-                    padding: const EdgeInsets.all(3.0),
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.secondary,
-                        shape: BoxShape.circle),
-                    child: Text('${direction.subscription.balanceLesson}',
-                        style:TStyle.textStyleVelaSansBold(colorWhite,size: 10.0)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(directions[index].name,
+                          style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
+                      Row(
+                        children: [
+                          Text('Осталось уроков '.tr(),style:TStyle.textStyleVelaSansMedium(colorGrey,size: 14.0)),
+                          const Gap(5.0),
+                          Container(
+                            padding: const EdgeInsets.all(3.0),
+                            decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.secondary,
+                                shape: BoxShape.circle),
+                            child: Text('${directions[index].subscription.balanceLesson}',
+                                style:TStyle.textStyleVelaSansBold(colorWhite,size: 10.0)),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
+                  const Gap(5.0),
+                  Visibility(
+                    visible: directions.length>1,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('${directions[index].subscription.balanceSub} руб.',
+                            style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 2.0),
+                          decoration: BoxDecoration(
+                              color: colorGreen,
+                              borderRadius: BorderRadius.circular(10.0)),
+                          child: Text('активный',
+                              style:TStyle.textStyleVelaSansBold(colorWhite,size: 10.0)),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Gap(5.0),
+                  Visibility(
+                    visible: directions.length>1,
+                      child: const Divider()),
+
                 ],
               ),
-            ],
-          ),
+            );
+          }),
           const Gap(5.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -299,7 +360,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
               const Gap(5.0),
               Row(
                 children: [
-                  Text(ParserPrice.getBalance(direction.subscription.balanceSub),
+                  Text(ParserPrice.getBalance(_summaBalance(directions: directions)),
                       style:TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 25.0)),
                   Icon(CupertinoIcons.money_rubl,color: Theme.of(context).iconTheme.color,size: 30.0,)
                 ],
@@ -312,7 +373,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
             child: SubmitButton(
               textButton: 'Пополнить'.tr(),
               onTap: () {
-                GoRouter.of(context).push(pathPay,extra: direction);
+                //GoRouter.of(context).push(pathPay,extra: direction);
               }
             ),
           )
