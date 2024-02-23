@@ -325,10 +325,11 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('${directions[index].subscription.balanceSub} руб.',
+                        Text('${ParserPrice.getBalance(directions[index].subscription.balanceSub)} руб.',
                             style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 2.0),
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
                           decoration: BoxDecoration(
                               color: colorGreen,
                               borderRadius: BorderRadius.circular(10.0)),
@@ -352,6 +353,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
+                margin: const EdgeInsets.only(top: 2.0),
                 decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.secondary,
                     shape: BoxShape.circle
@@ -359,10 +361,14 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                 child: Icon(CupertinoIcons.money_rubl_circle,color: colorWhite,size: 20.0,),),
               const Gap(5.0),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(ParserPrice.getBalance(_summaBalance(directions: directions)),
                       style:TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 25.0)),
-                  Icon(CupertinoIcons.money_rubl,color: Theme.of(context).iconTheme.color,size: 30.0,)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5.0),
+                    child: Icon(CupertinoIcons.money_rubl,color: Theme.of(context).iconTheme.color,size: 30.0,),
+                  )
                 ],
               ),
             ],

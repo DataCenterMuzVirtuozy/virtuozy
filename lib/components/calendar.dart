@@ -145,20 +145,18 @@ class _CalendarState extends State<Calendar> {
                          ),
                          child: Stack(
                            children: [
+
                              ...List.generate(lessonsDay.length, (index) {
                                return  RotationTransition(
                                  turns:  const AlwaysStoppedAnimation(135 / 360),
                                  child: Container(
-                                   // margin: index == 2?const EdgeInsets.only(left: 19.0):
-                                   // index == 1?const EdgeInsets.only(right: 20.0,top: 10.0):EdgeInsets.zero,
-                                   width: index==2?18.0:index==1?35.0:40.0,
-                                   height: index == 1?18.0:40.0,
+                                   margin:  EdgeInsets.only(top: index>0?6.5:0.0,left: index>0?4.5:0.0),
+                                   height: index>0?18.0:45.0,
+                                   width: index>0?34.0:45.0,
                                    decoration: BoxDecoration(
-                                       borderRadius: index == 0?null:index == 2?
-                                           const BorderRadius.horizontal(right: Radius.circular(20.0)):
-                                       index == 1?const BorderRadius.vertical(bottom: Radius.circular(25.0)):null,
+                                       borderRadius: index == 0?null:const BorderRadius.vertical(bottom: Radius.circular(23.0)),
                                        color: StatusToColor.getColor(
-                                           lessonStatus: lessonsDay.length>3?LessonStatus.layering:lessonsDay[index].status),
+                                           lessonStatus: lessonsDay.length>2?LessonStatus.layering:lessonsDay[index].status),
                                        shape: index==0?BoxShape.circle:BoxShape.rectangle,
                                        border: Border.all(color: colorOrange,
                                            width: valueDay == day ? 3.0 : 1.0)
