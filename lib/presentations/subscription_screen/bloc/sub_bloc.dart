@@ -27,7 +27,7 @@ class SubBloc extends Bloc<SubEvent,SubState>{
 
   void _getUser(GetUserEvent event,emit) async {
      try{
-       if(!event.refreshDirection){
+       if(event.refreshDirection){
          emit(state.copyWith(subStatus: SubStatus.loading));
          await Future.delayed(const Duration(milliseconds: 1500));
        }

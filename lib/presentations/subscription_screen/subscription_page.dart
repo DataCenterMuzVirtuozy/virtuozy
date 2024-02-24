@@ -57,7 +57,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
    context.read<SubBloc>().add(GetUserEvent(
      allViewDir: false,
        currentDirIndex: _selIndexDirection,
-   refreshDirection: false));
+   refreshDirection: true));
   }
 
 
@@ -152,7 +152,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                    context.read<SubBloc>().add(GetUserEvent(
                        allViewDir: _allViewDirection,
                        currentDirIndex: _selIndexDirection,
-                       refreshDirection: true));
+                       refreshDirection: false));
 
                    },)
                ),

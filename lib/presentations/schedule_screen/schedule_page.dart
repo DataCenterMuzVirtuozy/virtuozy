@@ -4,6 +4,7 @@
  import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
@@ -21,6 +22,9 @@ import '../../components/calendar.dart';
 import '../../components/drawing_menu_selected.dart';
 import '../../resourses/colors.dart';
 import '../../utils/text_style.dart';
+import '../subscription_screen/subscription_page.dart';
+
+
 
 class SchedulePage extends StatefulWidget{
    const SchedulePage({super.key, required this.currentMonth});
@@ -35,11 +39,16 @@ class _SchedulePageState extends State<SchedulePage> {
 
 
   int _selIndexDirection = 0;
+  List<String> _titlesDirections = [];
+  bool _allViewDirection = false;
 
   @override
   void initState() {
     super.initState();
     context.read<ScheduleBloc>().add(GetScheduleEvent(
+      refreshMonth: false,
+      allViewDir: false,
+      refreshDirection: true,
         currentDirIndex: _selIndexDirection,
         month: widget.currentMonth));
   }
@@ -50,6 +59,15 @@ class _SchedulePageState extends State<SchedulePage> {
 
     return BlocConsumer<ScheduleBloc,ScheduleState>(
       listener: (c,s){
+        if(s.status == ScheduleStatus.loaded){
+          int length = s.user.directions.length;
+          _titlesDirections = s.user.directions.map((e) => e.name).toList();
+          if(length>1){
+            _titlesDirections.insert(length, 'Все направления'.tr());
+          }
+        }
+
+
 
       },
       builder: (context,state) {
@@ -90,31 +108,57 @@ class _SchedulePageState extends State<SchedulePage> {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: DrawingMenuSelected(items:state.user.directions.map((e) => e.name).toList(),
+                  child: DrawingMenuSelected(items:_titlesDirections,
                   onSelected: (index){
-                    setState(() {
-                      _selIndexDirection = index;
-                    });
+                    _selIndexDirection = index;
+                    if(index == _titlesDirections.length-1){
+                      _allViewDirection = true;
+                    }else{
+                      _allViewDirection = false;
+                    }
+                    context.read<ScheduleBloc>().add(GetScheduleEvent(
+                        refreshMonth: false,
+                        allViewDir: _allViewDirection,
+                        currentDirIndex: _selIndexDirection,
+                        month: globalCurrentMonthCalendar,
+                        refreshDirection: false));
                   },),
                 ),
                 const Gap(10.0),
                  Calendar(
-                     lessons: state.user.directions[_selIndexDirection].lessons,
+                   clickableDay: false,
+                     lessons: state.lessons,
                      onMonth: (month){
+                     if(globalCurrentMonthCalendar == month){
+                       return;
+                     }
+                       globalCurrentMonthCalendar = month;
                        context.read<ScheduleBloc>().add(GetScheduleEvent(
+                           refreshMonth: true,
                            currentDirIndex: _selIndexDirection,
-                           month: month));
+                           month: month,
+                           refreshDirection: false,
+                           allViewDir: _allViewDirection));
                      },
                      onLesson: (lesson){
 
                       }),
                 const Gap(10.0),
-                Column(
-                  children: List.generate(1, (index) {
-                    return  ItemSchedule(scheduleLessons: state.scheduleLessons,
-                    listSchedule: state.schedulesList,
-                    nameDirection: state.user.directions[_selIndexDirection].name);
-                  }),
+                ValueListenableBuilder<List<ScheduleLessons>>(
+                  valueListenable: listScheduleNotifier,
+                  builder: (context,schedules,child) {
+
+                    if(schedules.isNotEmpty){
+                      return Column(
+                        children: List.generate(schedules.length, (index) {
+                          return  ItemSchedule(lengthSchedule: state.schedulesLength,
+                              scheduleLessons: schedules[index]);
+                        }),
+                      );
+                    }
+                    return const CircularProgressIndicator();
+
+                  }
                 ),
 
               ],
@@ -130,11 +174,10 @@ class _SchedulePageState extends State<SchedulePage> {
 }
 
  class ItemSchedule extends StatelessWidget{
-   const ItemSchedule({super.key, required this.scheduleLessons, required this.nameDirection, required this.listSchedule});
+   const ItemSchedule({super.key, required this.scheduleLessons,required this.lengthSchedule});
 
    final ScheduleLessons scheduleLessons;
-   final String nameDirection;
-   final List<ScheduleLessons> listSchedule;
+   final int lengthSchedule;
 
 
 
@@ -160,11 +203,11 @@ class _SchedulePageState extends State<SchedulePage> {
           ),
           const Gap(10.0),
           ...List.generate(scheduleLessons.lessons.length, (index) {
-            return ItemLessons(nameDirection: nameDirection,
+            return ItemLessons(
             lesson: scheduleLessons.lessons[index]);
           }),
           Visibility(
-            visible: listSchedule.length>1,
+            visible: lengthSchedule>1,
             child: Center(child: TextButton(onPressed: () {
                 GoRouter.of(context).push(pathDetailsSchedule);
             },
@@ -182,9 +225,9 @@ class _SchedulePageState extends State<SchedulePage> {
 
 
  class ItemLessons extends StatelessWidget{
-  const ItemLessons({super.key, required this.nameDirection, required this.lesson});
+  const ItemLessons({super.key,required this.lesson});
 
-  final String nameDirection;
+
   final Lesson lesson;
 
   @override
@@ -235,7 +278,7 @@ class _SchedulePageState extends State<SchedulePage> {
            Column(
              crossAxisAlignment: CrossAxisAlignment.start,
              children: [
-               Text(nameDirection,
+               Text(lesson.nameDirection,
                    style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
 
                Row(

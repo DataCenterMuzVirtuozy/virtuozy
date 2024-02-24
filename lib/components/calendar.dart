@@ -10,6 +10,7 @@ import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:virtuozy/di/locator.dart';
+import 'package:virtuozy/presentations/subscription_screen/subscription_page.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/utils/status_to_color.dart';
 
@@ -19,12 +20,14 @@ import '../utils/text_style.dart';
 
 //ValueNotifier<int> currentDayNotifi = ValueNotifier<int>(0);
 
+
 class Calendar extends StatefulWidget{
-  const Calendar({super.key, required this.lessons, required this.onLesson, required this.onMonth});
+  const Calendar({super.key, required this.lessons, required this.onLesson, required this.onMonth,this.clickableDay = true});
 
   final List<Lesson> lessons;
   final Function onLesson;
   final Function onMonth;
+  final bool clickableDay;
 
 
 
@@ -63,7 +66,7 @@ class _CalendarState extends State<Calendar> {
              weekendStyle: TStyle.textStyleVelaSansBold(colorRed)
            ),
            firstDay: _getFirstDate(lessons: widget.lessons),
-           lastDay:_getLastDate(lessons: widget.lessons),
+           lastDay:  _getLastDate(lessons: widget.lessons),
            focusedDay: DateTime.now(),
            calendarStyle: CalendarStyle(
              tablePadding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -85,6 +88,7 @@ class _CalendarState extends State<Calendar> {
              defaultBuilder: (context, day,values) {
                _onMonth(day.month);
                return _handlerDay(
+                 clickableDay: widget.clickableDay,
                    dateTime:day,
                    monthOfDay: day.month,
                    lessons: widget.lessons,
@@ -117,6 +121,7 @@ class _CalendarState extends State<Calendar> {
      required DateTime dateTime,
      required int monthOfDay,
      required BuildContext context,
+     required bool clickableDay,
    required Function onLesson}){
     final stringDays = lessons.map((e) => e.date).toList();
      try{
@@ -134,8 +139,10 @@ class _CalendarState extends State<Calendar> {
                    child: InkWell(
                        borderRadius: BorderRadius.circular(60.0),
                        onTap: () {
-                         onLesson.call(lessonsDay);
-                         currentDayNotifi.value = day;
+                         if(clickableDay){
+                           onLesson.call(lessonsDay);
+                           currentDayNotifi.value = day;
+                         }
                        },
                        child: Container(
                          width: 45.0,
@@ -179,7 +186,7 @@ class _CalendarState extends State<Calendar> {
            );
          }}
      }catch(e){
-       print('$e');
+
      }
 
   }
@@ -215,6 +222,8 @@ class _CalendarState extends State<Calendar> {
     final dayLast = DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpochList[indexLast]).day;
     return DateTime.utc(yearLast, monthLast, dayLast);
   }
+
+
 }
 
 

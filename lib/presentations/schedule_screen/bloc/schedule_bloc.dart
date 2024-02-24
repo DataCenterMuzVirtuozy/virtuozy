@@ -2,6 +2,7 @@
 
 
  import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:virtuozy/di/locator.dart';
 import 'package:virtuozy/domain/entities/schedule_lessons.dart';
@@ -11,25 +12,64 @@ import 'package:virtuozy/presentations/schedule_screen/bloc/schedule_event.dart'
 import 'package:virtuozy/presentations/schedule_screen/bloc/schedule_state.dart';
 import 'package:virtuozy/utils/failure.dart';
 
+ValueNotifier<List<ScheduleLessons>> listScheduleNotifier = ValueNotifier<List<ScheduleLessons>>([]);
+
 class ScheduleBloc extends Bloc<ScheduleEvent,ScheduleState>{
   ScheduleBloc():super(ScheduleState.unknown()){
    on<GetScheduleEvent>(_getSchedule);
    on<UpdateUserEvent>(_updateUser);
+   on<GetDetailsScheduleEvent>(_getDetailsSchedule);
   }
 
   final _userCubit = locator.get<UserCubit>();
 
 
+  void _getDetailsSchedule(GetDetailsScheduleEvent event,emit) async {
+    try{
+      if(event.refreshDirection){
+        emit(state.copyWith(status: ScheduleStatus.loading));
+        await Future.delayed(const Duration(milliseconds: 1000));
+      }
+      final user = _userCubit.userEntity;
+      final  schedulesList = _getDetailsListSchedules(
+          userEntity: user, indexSelDirection: event.currentDirIndex,
+          allViewDir: event.allViewDir);
+      emit(state.copyWith(
+          status: ScheduleStatus.loaded,
+          user: user,
+          schedulesList: schedulesList));
+    }on Failure catch(e){
+
+    }
+  }
+
+
   void _getSchedule(GetScheduleEvent event,emit) async {
      try{
-      //emit(state.copyWith(status: ScheduleStatus.loading));
+       if(event.refreshDirection){
+         emit(state.copyWith(status: ScheduleStatus.loading));
+         await Future.delayed(const Duration(milliseconds: 1000));
+       }
       final user = _userCubit.userEntity;
-      final  schedulesList = _getListSchedules(userEntity: user, indexSelDirection: event.currentDirIndex);
-      final scheduleMonth = _getScheduleMonth(list: schedulesList,month: event.month);
+      final  schedulesList = _getListSchedules(
+        currentMonth: event.month,
+          userEntity: user, indexSelDirection: event.currentDirIndex,
+      allViewDir: event.allViewDir);
+      final schedulesLength = _getSchedulesLength(userEntity: user,indexSelDirection: event.currentDirIndex,
+      allViewDir: event.allViewDir);
+       final lessons = _getAllLessons(user, event.allViewDir, event.currentDirIndex);
+       if(!event.refreshMonth){
+         emit(state.copyWith(
+             status: ScheduleStatus.loaded,
+             user: user,
+             lessons: lessons,
+             schedulesLength: schedulesLength));
+         listScheduleNotifier.value = schedulesList;
+         _listenUser(event);
+       }else {
+         listScheduleNotifier.value = schedulesList;
+       }
 
-      emit(state.copyWith(status: ScheduleStatus.loaded,user: user,
-          scheduleLessons: scheduleMonth,schedulesList: schedulesList));
-     _listenUser(event);
 
      }on Failure catch(e){
 
@@ -39,22 +79,110 @@ class ScheduleBloc extends Bloc<ScheduleEvent,ScheduleState>{
 
   }
 
-  List<ScheduleLessons> _getListSchedules({required UserEntity userEntity,required int indexSelDirection}){
-    final lessons = userEntity.directions[indexSelDirection].lessons;
+  List<Lesson> _getAllLessons(UserEntity user,bool allViewLessons,int indexDir){
+    List<Lesson> resLes = [];
+
+    if(allViewLessons){
+      for(var dir in user.directions){
+        resLes.addAll(dir.lessons);
+      }
+    }else{
+      resLes = user.directions[indexDir].lessons;
+    }
+
+
+    return resLes;
+  }
+
+
+  int _getSchedulesLength({ required UserEntity userEntity,required int indexSelDirection,required bool allViewDir}){
+    if(allViewDir){
+      return 2;
+    }
+   final lessons = userEntity.directions[indexSelDirection].lessons;
+   final lesTS = lessons.map((e) => (DateFormat('yyyy-MM-dd').parse(e.date).millisecondsSinceEpoch)).toList();
+   List<int> m = [];
+   List<int> listResult = [];
+   lesTS.sort();
+   for(var a in lesTS){
+     var b = DateTime.fromMillisecondsSinceEpoch(a).month;
+     if(!m.contains(b)){
+       m.add(b);
+       listResult.add(a);
+
+     }
+   }
+
+    return listResult.length;
+  }
+
+
+
+
+
+
+  List<ScheduleLessons> _getListSchedules({
+    required int currentMonth,
+    required UserEntity userEntity,required int indexSelDirection,
+  required bool allViewDir}){
+    List<Lesson> lessons = [];
+     if(allViewDir){
+       for(var dir in userEntity.directions){
+         lessons.addAll(dir.lessons);
+       }
+     }else{
+       lessons = userEntity.directions[indexSelDirection].lessons;
+     }
+
     final lesTS = lessons.map((e) => (DateFormat('yyyy-MM-dd').parse(e.date).millisecondsSinceEpoch)).toList();
+    List<ScheduleLessons> listResult = [];
+    lesTS.sort();
+    listResult.add(
+        ScheduleLessons(month: _getMonthFromInt(currentMonth),
+            lessons: _createListLessons(month: currentMonth, lesTS: lesTS, firstLessons: lessons))
+    );
+
+    return listResult;
+  }
+
+  List<ScheduleLessons> _getDetailsListSchedules({
+    required UserEntity userEntity,required int indexSelDirection,
+    required bool allViewDir}){
+    List<Lesson> lessons = [];
     List<int> m = [];
+    if(allViewDir){
+      for(var dir in userEntity.directions){
+        lessons.addAll(dir.lessons);
+      }
+    }else{
+      lessons = userEntity.directions[indexSelDirection].lessons;
+    }
+
+    final lesTS = lessons.map((e) => (DateFormat('yyyy-MM-dd').parse(e.date).millisecondsSinceEpoch)).toList();
     List<ScheduleLessons> listResult = [];
     lesTS.sort();
     for(var a in lesTS){
       var b = DateTime.fromMillisecondsSinceEpoch(a).month;
-      if(!m.contains(b)){
+      if(allViewDir){
+        if(!m.contains(b)){
           m.add(b);
           listResult.add(
               ScheduleLessons(month: _getMonthFromInt(b),
                   lessons: _createListLessons(month: b, lesTS: lesTS, firstLessons: lessons))
           );
 
+        }
+      }else{
+        if(!m.contains(b)){
+          m.add(b);
+          listResult.add(
+              ScheduleLessons(month: _getMonthFromInt(b),
+                  lessons: _createListLessons(month: b, lesTS: lesTS, firstLessons: lessons))
+          );
+
+        }
       }
+
     }
 
 
@@ -62,15 +190,19 @@ class ScheduleBloc extends Bloc<ScheduleEvent,ScheduleState>{
   }
 
 
+
   List<Lesson> _createListLessons({required int month,required List<int> lesTS, required List<Lesson> firstLessons}){
     List<Lesson> listResult = [];
+    List<int> ts = [];
     for(var lts in lesTS){
-      if(month == DateTime.fromMillisecondsSinceEpoch(lts).month){
-        listResult.add(firstLessons.firstWhere((element) => DateFormat('yyyy-MM-dd').parse(element.date).millisecondsSinceEpoch == lts));
+      if(!ts.contains(lts)&&month == DateTime.fromMillisecondsSinceEpoch(lts).month){
+        ts.add(lts);
+        listResult.addAll(firstLessons.where((element) =>
+        DateFormat('yyyy-MM-dd').parse(element.date).millisecondsSinceEpoch == lts));
       }
     }
 
-    return firstLessons;
+    return listResult;
   }
 
 
@@ -112,7 +244,10 @@ class ScheduleBloc extends Bloc<ScheduleEvent,ScheduleState>{
 
   void _listenUser(GetScheduleEvent event) {
     _userCubit.stream.listen((user) async {
-      final  schedulesList = _getListSchedules(userEntity: user, indexSelDirection: event.currentDirIndex);
+      final  schedulesList = _getListSchedules(
+         currentMonth: event.month,
+          userEntity: user, indexSelDirection: event.currentDirIndex,
+      allViewDir: event.allViewDir);
       final scheduleMonth = _getScheduleMonth(list:schedulesList, month: event.month);
       add(UpdateUserEvent(currentDirIndex: 0, user: user,scheduleLessons: scheduleMonth));
     });
