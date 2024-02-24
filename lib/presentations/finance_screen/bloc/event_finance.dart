@@ -14,16 +14,21 @@ class EventFinance extends Equatable{
 
 class GetListSubscriptionsEvent extends EventFinance{
   final String nameDirection;
+  final bool refreshDirection;
 
   const GetListSubscriptionsEvent({
+    required this.refreshDirection,
     required this.nameDirection,
   });
 }
 
 class GetBalanceSubscriptionEvent extends EventFinance{
   final int indexDirection;
-
-  const GetBalanceSubscriptionEvent({required this.indexDirection});
+  final bool allViewDir;
+  final bool refreshDirection;
+  const GetBalanceSubscriptionEvent( {
+    required this.refreshDirection,
+    required this.allViewDir,required this.indexDirection});
 }
 
  class ApplyBonusEvent extends EventFinance{

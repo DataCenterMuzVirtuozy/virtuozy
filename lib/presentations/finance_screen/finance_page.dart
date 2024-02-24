@@ -39,13 +39,17 @@ class _FinancePageState extends State<FinancePage> {
 
   int _selIndexDirection = 0;
   bool _hasBonus = false;
+  bool _allViewDirection = false;
+  List<String> _titlesDirections = [];
 
 
 
   @override
   void initState() {
     super.initState();
-  context.read<BlocFinance>().add(GetBalanceSubscriptionEvent(indexDirection: _selIndexDirection));
+  context.read<BlocFinance>().add(GetBalanceSubscriptionEvent(
+    refreshDirection: true,
+      indexDirection: _selIndexDirection, allViewDir: false));
   }
 
 
@@ -53,6 +57,16 @@ class _FinancePageState extends State<FinancePage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
+  }
+
+
+  double _summaBalance({required List<DirectionLesson> directions}){
+    double sum = 0.0;
+    for(var dir in directions){
+      sum +=dir.subscription.balanceSub;
+    }
+
+    return sum;
   }
 
   @override
@@ -71,11 +85,18 @@ class _FinancePageState extends State<FinancePage> {
 
 
        if(s.status == FinanceStatus.loaded){
-         if(s.user.directions[_selIndexDirection].bonus.isNotEmpty){
-           _hasBonus = s.user.directions[_selIndexDirection].bonus[0].active;
-         }else{
-           _hasBonus = false;
+         // if(s.user.directions[_selIndexDirection].bonus.isNotEmpty){
+         //   _hasBonus = s.user.directions[_selIndexDirection].bonus[0].active;
+         // }else{
+         //   _hasBonus = false;
+         // }
+
+         int length = s.user.directions.length;
+         _titlesDirections = s.user.directions.map((e) => e.name).toList();
+         if(length>1){
+           _titlesDirections.insert(length, 'Все направления'.tr());
          }
+
        }
 
      },
@@ -102,11 +123,19 @@ class _FinancePageState extends State<FinancePage> {
          child: SingleChildScrollView(
            child: Column(
              children: [
-               DrawingMenuSelected(items: state.directions.map((e) => e.name).toList(),
+               DrawingMenuSelected(items: _titlesDirections,
                  onSelected: (index){
-                    setState(() {
-                       _selIndexDirection = index;
-                    });
+                   _selIndexDirection = index;
+                   if(index == _titlesDirections.length-1){
+                     _allViewDirection = true;
+                   }else{
+                     _allViewDirection = false;
+                   }
+
+                   context.read<BlocFinance>().add(GetBalanceSubscriptionEvent(
+                       indexDirection: _selIndexDirection,
+                       refreshDirection: false,
+                       allViewDir: _allViewDirection));
                },),
                const Gap(20.0),
                Container(
@@ -114,64 +143,138 @@ class _FinancePageState extends State<FinancePage> {
                    color: Theme.of(context).colorScheme.surfaceVariant,
                    borderRadius: BorderRadius.circular(20.0)
                  ),
-                 child: Column(
-                   crossAxisAlignment: CrossAxisAlignment.center,
+                 child: Stack(
+                   alignment: Alignment.bottomRight,
                    children: [
-                     const Gap(20.0),
-                     Text('Баланс счета'.tr(),style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 16.0)),
-                     Row(
+                     Column(
                        crossAxisAlignment: CrossAxisAlignment.center,
-                       mainAxisAlignment: MainAxisAlignment.center,
                        children: [
-                         Text(ParserPrice.getBalance(state.directions[_selIndexDirection].subscription.balanceSub),
-                             style: TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,size: 30.0)),
-                         Padding(
-                           padding: const EdgeInsets.only(top: 2.0),
-                           child: Icon(CupertinoIcons.money_rubl,color: Theme.of(context).textTheme.displayMedium!.color!,size: 35.0),
-                         )
+                         const Gap(20.0),
+                         Text('Баланс счета'.tr(),style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 16.0)),
+                         Row(
+                           crossAxisAlignment: CrossAxisAlignment.center,
+                           mainAxisAlignment: MainAxisAlignment.center,
+                           children: [
+                             Text(ParserPrice.getBalance(_summaBalance(directions: state.directions)),
+                                 style: TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,size: 30.0)),
+                             Padding(
+                               padding: const EdgeInsets.only(top: 5.0),
+                               child: Icon(CupertinoIcons.money_rubl,color: Theme.of(context).textTheme.displayMedium!.color!,size: 35.0),
+                             )
+                           ],
+                         ),
+                         const Gap(10.0),
+                         ...List.generate(state.directions.length, (index) {
+                           return Container(
+                            margin: const EdgeInsets.all(5.0),
+                            decoration: BoxDecoration(
+                                color: colorBeruza.withOpacity(0.3),
+                                borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(10.0),
+                                    topRight: Radius.circular(20.0),
+                                    bottomRight: Radius.circular(20.0),
+                                    bottomLeft: Radius.circular(20.0))),
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 15.0,right: 15.0,top: 10.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                            state.directions[index]
+                                                .subscription.name,
+                                            style: TStyle.textStyleVelaSansBold(
+                                                Theme.of(context)
+                                                    .textTheme
+                                                    .displayMedium!
+                                                    .color!,
+                                                size: 16.0)),
+                                      ),
+                                      Visibility(
+                                        visible:   state.directions[index]
+                                            .subscription.balanceSub>0.0,
+                                        child: Container(
+                                          width: 90.0,
+                                          alignment: Alignment.center,
+                                          padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
+                                          decoration: BoxDecoration(
+                                              color: colorGreen,
+                                              borderRadius: BorderRadius.circular(10.0)),
+                                          child: Text('активный',
+                                              style:TStyle.textStyleVelaSansBold(colorWhite,size: 10.0)),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                const Gap(5.0),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 15.0),
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      if(state.directions[index].subscription.balanceSub>0.0)...{
+                                        Row(
+                                          children: [
+                                            Text('Осталось уроков '.tr(),
+                                                style: TStyle
+                                                    .textStyleVelaSansMedium(
+                                                    Theme.of(context)
+                                                        .textTheme
+                                                        .displayMedium!
+                                                        .color!,
+                                                    size: 14.0)),
+                                            Text(
+                                                '${ state.directions[index].subscription.balanceLesson}',
+                                                style: TStyle
+                                                    .textStyleVelaSansBold(
+                                                    Theme.of(context)
+                                                        .textTheme
+                                                        .displayMedium!
+                                                        .color!,
+                                                    size: 14.0)),
+                                          ],
+                                        )
+                                      }else ...{
+                                        Container(
+                                          alignment: Alignment.center,
+                                          width: 100.0,
+                                          padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
+                                          decoration: BoxDecoration(
+                                              color: colorRed,
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      10.0)),
+                                          child: Text('неактивный',
+                                              style: TStyle
+                                                  .textStyleVelaSansBold(
+                                                      colorWhite,
+                                                      size: 10.0)),
+                                        ),
+                                      },
+                                      SizedBox(
+                                        width: 50.0,
+                                        height: 50.0,
+                                        child: FloatingActionButton(onPressed: (){
+                                          GoRouter.of(context).push(pathPay,extra:state.directions[index]);
+                                        },
+                                          backgroundColor: colorBeruza,
+                                          child:  Icon(Icons.add,color: colorWhite,),),
+                                      )
+                                    ],
+                                  ),
+                                ),
+
+
+                              ],
+                            ),
+                          );
+                        })
                        ],
                      ),
-                     const Gap(10.0),
-                     Container(
-                       padding: const EdgeInsets.only(left: 10.0),
-                       margin: const EdgeInsets.all(5.0),
-                       decoration: BoxDecoration(
-                         color: colorBeruza.withOpacity(0.3),
-                         borderRadius: const BorderRadius.only(topLeft: Radius.circular(10.0),topRight: Radius.circular(20.0),
-                         bottomRight: Radius.circular(20.0),bottomLeft: Radius.circular(20.0))
-                       ),
-                       child: Row(
-                         crossAxisAlignment: CrossAxisAlignment.end,
-                         children: [
-                           Expanded(
-                             child: Padding(
-                               padding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 5.0),
-                               child: Column(
-                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                 children: [
-                                   Text(state.directions[_selIndexDirection].subscription.name,
-                                       style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 16.0)),
-                                   const Gap(5.0),
-                                   Row(
-                                     children: [
-                                       Text('Осталось уроков '.tr(),style: TStyle.textStyleVelaSansMedium(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
-                                       Text('${state.directions[_selIndexDirection].subscription.balanceLesson}',
-                                           style: TStyle.textStyleVelaSansMedium(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
-                                     ],
-                                   ),
-                                 ],
-                               ),
-                             ),
-                           ),
-                           const Gap(10.0),
-                           FloatingActionButton(onPressed: (){
-                             GoRouter.of(context).push(pathPay,extra:state.directions[_selIndexDirection]);
-                           },
-                             backgroundColor: colorBeruza,
-                             child:  Icon(Icons.add,color: colorWhite,),)
-                         ],
-                       ),
-                     )
                    ],
                  ),
                ),
@@ -259,4 +362,33 @@ class _FinancePageState extends State<FinancePage> {
      }
    );
   }
+}
+
+class StatusSubscriptionWidget extends StatelessWidget{
+  const StatusSubscriptionWidget({super.key, required this.direction});
+
+  final DirectionLesson direction;
+
+  @override
+  Widget build(BuildContext context) {
+   return Column(
+     children: [
+       Visibility(
+         visible:  direction
+             .subscription.balanceSub>0.0,
+         child: Container(
+           width: 90.0,
+           alignment: Alignment.center,
+           padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
+           decoration: BoxDecoration(
+               color: colorGreen,
+               borderRadius: BorderRadius.circular(10.0)),
+           child: Text('активный',
+               style:TStyle.textStyleVelaSansBold(colorWhite,size: 10.0)),
+         ),
+       ),
+     ],
+   );
+  }
+
 }

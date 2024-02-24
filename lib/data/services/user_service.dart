@@ -40,7 +40,7 @@ class UserService{
       }
      ],
      'subscription': {
-      'name': 'Абонемент “Утренний” 10 уроков',
+      'name': 'Абонемент “Утренний”',
       'price':  10000.0,
       'priceOneLesson':  1000.0,
       'balanceSub': 10000.0,
@@ -187,7 +187,7 @@ class UserService{
 
      ],
      'subscription': {
-      'name': 'Абонемент “Утренний” 10 уроков',
+      'name': 'Абонемент 1',
       'price':  20000.0,
       'priceOneLesson':  1000.0,
       'balanceSub': 20000.0,

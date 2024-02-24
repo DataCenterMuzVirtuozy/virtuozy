@@ -55,15 +55,17 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
   void initState() {
     super.initState();
    context.read<SubBloc>().add(GetUserEvent(
-     allViewDir: false,
+       allViewDir: false,
        currentDirIndex: _selIndexDirection,
-   refreshDirection: true));
+       refreshDirection: true));
   }
 
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
+
 
   }
 
@@ -366,7 +368,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                   Text(ParserPrice.getBalance(_summaBalance(directions: directions)),
                       style:TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 25.0)),
                   Padding(
-                    padding: const EdgeInsets.only(top: 5.0),
+                    padding: const EdgeInsets.only(top: 4.0),
                     child: Icon(CupertinoIcons.money_rubl,color: Theme.of(context).iconTheme.color,size: 30.0,),
                   )
                 ],
@@ -379,7 +381,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
             child: SubmitButton(
               textButton: 'Пополнить'.tr(),
               onTap: () {
-                //GoRouter.of(context).push(pathPay,extra: direction);
+                GoRouter.of(context).push(pathPay,extra: directions);
               }
             ),
           )

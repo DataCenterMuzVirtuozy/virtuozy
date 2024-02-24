@@ -44,9 +44,13 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
 
   void _getPriceSubscription(GetListSubscriptionsEvent event,emit) async {
     try{
-      emit(state.copyWith(paymentStatus: PaymentStatus.loading));
-      await Future.delayed(const Duration(seconds: 1));
+      if(event.refreshDirection) {
+        emit(state.copyWith(paymentStatus: PaymentStatus.loading));
+        await Future.delayed(const Duration(seconds: 1));
+      }
+      print('Name Dir ${event.nameDirection}');
       final prices = await _financeRepository.getSubscriptionsByDirection(nameDirection: event.nameDirection);
+      print('Prices ${prices.subscriptions[0].name}');
       emit(state.copyWith(paymentStatus: PaymentStatus.loaded,pricesDirectionEntity: prices));
     }on Failure catch(e){
       emit(state.copyWith(paymentStatus: PaymentStatus.paymentError,error: e.message));
@@ -56,11 +60,21 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
 
 
   void _getBalanceSubscription(GetBalanceSubscriptionEvent event,emit) async {
-    emit(state.copyWith(status: FinanceStatus.loading));
+    if(event.refreshDirection){
+      emit(state.copyWith(status: FinanceStatus.loading));
+      await Future.delayed(const Duration(seconds: 1));
+    }
     final user  = _userCubit.userEntity;
-    final directions = _userCubit.userEntity.directions;
+    final directions = _getDirections(user: user,indexDir: event.indexDirection,allViewDir: event.allViewDir);
     emit(state.copyWith(status: FinanceStatus.loaded,user: user,directions: directions));
 
+  }
+
+  List<DirectionLesson> _getDirections({required UserEntity user, required indexDir,required bool allViewDir}){
+    if(allViewDir){
+      return user.directions;
+    }
+    return [user.directions[indexDir]];
   }
 
   void _paySubscription(PaySubscriptionEvent event,emit) async {

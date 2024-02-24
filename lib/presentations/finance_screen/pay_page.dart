@@ -23,9 +23,9 @@ import '../../utils/text_style.dart';
 import 'bloc/event_finance.dart';
 
 class PayPage extends StatefulWidget{
-   const PayPage({super.key, required this.direction});
+   const PayPage({super.key, required this.directions});
 
-   final DirectionLesson direction;
+   final List<DirectionLesson> directions;
 
 
   @override
@@ -38,12 +38,17 @@ class _PayPageState extends State<PayPage> {
   bool _cardPay = false;
   int _selIndexDirection = 0;
   late PriceSubscriptionEntity _selPriceSubscription;
+  List<String> _titlesDirections = [];
+  List<String> _titlePrices = [];
 
 
   @override
   void initState() {
     super.initState();
-    context.read<BlocFinance>().add(GetListSubscriptionsEvent(nameDirection: widget.direction.name));
+    context.read<BlocFinance>().add(GetListSubscriptionsEvent(nameDirection: widget.directions[_selIndexDirection].name,
+    refreshDirection: true));
+    _titlesDirections = widget.directions.map((e) => e.name).toList();
+
   }
 
   @override
@@ -53,11 +58,15 @@ class _PayPageState extends State<PayPage> {
       body: BlocConsumer<BlocFinance,StateFinance>(
         listener: (c, s) {
             if(s.paymentStatus == PaymentStatus.loaded){
-              _selPriceSubscription = s.pricesDirectionEntity.subscriptions[0];
+              _selPriceSubscription = s.pricesDirectionEntity.subscriptions[_selIndexDirection];
+               _titlePrices = s.pricesDirectionEntity.subscriptions.map((e) => '${e.name} - ${e.price} руб.').toList();
             }
         },
         builder: (context,state) {
 
+          if(state.paymentStatus == PaymentStatus.loading){
+            return const Center(child: CircularProgressIndicator());
+          }
 
           if(state.paymentStatus == PaymentStatus.payment || state.paymentStatus == PaymentStatus.loading){
             return const Center(child: CircularProgressIndicator());
@@ -81,20 +90,22 @@ class _PayPageState extends State<PayPage> {
             padding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 20.0),
             child: Column(
               children: [
-                // Visibility(
-                //   visible: false,
-                //   child: DrawingMenuSelected(items:_listDirection, onSelected: (index){
-                //     setState(() {
-                //       _selIndexDirection = index;
-                //     });
-                //   },),
-                // ),
-                // const Gap(10.0),
+                Visibility(
+                  visible: widget.directions.length>1,
+                  child: DrawingMenuSelected(
+                    items:_titlesDirections,
+                    onSelected: (index){
+                      _selIndexDirection = index;
+                       context.read<BlocFinance>().add(GetListSubscriptionsEvent(nameDirection: widget.directions[_selIndexDirection].name,
+                           refreshDirection: false));
+
+                  },),
+                ),
+                const Gap(10.0),
                 DrawingMenuSelected(
-                  items: state.pricesDirectionEntity.subscriptions
-                      .map((e) => '${e.name} - ${e.price} руб.').toList(),
+                  key: UniqueKey(),
+                  items: _titlePrices,
                   onSelected: (index){
-                    print('Seke ${ state.pricesDirectionEntity.subscriptions[index]}');
                     _selPriceSubscription = state.pricesDirectionEntity.subscriptions[index];
                 },),
                 const Gap(20.0),
@@ -179,7 +190,7 @@ class _PayPageState extends State<PayPage> {
                      onTap: (){
                        context.read<BlocFinance>()
                            .add(PaySubscriptionEvent(priceSubscriptionEntity: _selPriceSubscription,
-                       currentDirection: widget.direction));
+                       currentDirection: widget.directions[_selIndexDirection]));
                      },
                      textButton: 'К оплате'.tr(),
                    ).animate().fadeIn(),

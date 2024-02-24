@@ -77,7 +77,8 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
   }
 
   double _heightCalculate(int indexItems,double sizeText){
-    return (sizeText*indexItems)+(15.0*indexItems);
+    final s = widget.items.length == 2?25.0:15.0;
+    return (sizeText*indexItems)+(s*indexItems);
   }
 
   @override

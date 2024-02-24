@@ -1,6 +1,7 @@
 
 
- import 'package:virtuozy/domain/entities/prices_direction_entity.dart';
+ import 'package:equatable/equatable.dart';
+import 'package:virtuozy/domain/entities/prices_direction_entity.dart';
 
 import '../../../domain/entities/transaction_entity.dart';
 import '../../../domain/entities/user_entity.dart';
@@ -41,7 +42,7 @@ enum FinanceStatus{
 
 
 
- class StateFinance{
+ class StateFinance extends Equatable{
 
 
   final FinanceStatus status;
@@ -104,4 +105,16 @@ enum FinanceStatus{
           pricesDirectionEntity ?? this.pricesDirectionEntity,
     );
   }
+
+  @override
+  List<Object?> get props => [
+    applyBonusStatus,
+    listTransactionStatus,
+    paymentStatus,
+    transactions,
+    directions,
+    user,
+    status,
+    error,
+    pricesDirectionEntity];
 }

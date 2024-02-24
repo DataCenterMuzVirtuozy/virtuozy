@@ -83,7 +83,7 @@ class AppRouter{
         pageBuilder: (context, state) {
           return CupertinoPage(
               key: state.pageKey,
-              child:   PayPage(direction: state.extra as DirectionLesson));
+              child:   PayPage(directions: state.extra as List<DirectionLesson>));
         },
       ),
       GoRoute(
