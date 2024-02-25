@@ -14,10 +14,10 @@ import 'package:virtuozy/presentations/subscription_screen/bloc/sub_bloc.dart';
 import 'package:virtuozy/presentations/subscription_screen/bloc/sub_event.dart';
 import 'package:virtuozy/presentations/subscription_screen/bloc/sub_state.dart';
 
-import '../../../di/locator.dart';
-import '../../../resourses/colors.dart';
-import '../../../utils/text_style.dart';
-import '../../buttons.dart';
+import '../../../../di/locator.dart';
+import '../../../../resourses/colors.dart';
+import '../../../../utils/text_style.dart';
+import '../../../buttons.dart';
 
 final currentDayNotifi = locator.get<ValueNotifier<int>>();
 

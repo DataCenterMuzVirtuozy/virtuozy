@@ -193,6 +193,7 @@ class Lesson{
     final double quantity;
     final int id;
     final bool active;
+    final String nameDirection;
 
     const BonusEntity({
       required this.active,
@@ -201,6 +202,7 @@ class Lesson{
     required this.title,
     required this.description,
     required this.quantity,
+      required this.nameDirection
   });
 
 
@@ -211,6 +213,7 @@ class Lesson{
          typeBonus: TypeBonus.unknown,
          title: '',
          description: '',
+         nameDirection: '',
          quantity: 0.0);
    }
 
@@ -221,8 +224,10 @@ class Lesson{
     double? quantity,
     int? id,
     bool? active,
+    String? nameDirection
   }) {
     return BonusEntity(
+      nameDirection: nameDirection??this.nameDirection,
       typeBonus: typeBonus ?? this.typeBonus,
       title: title ?? this.title,
       description: description ?? this.description,

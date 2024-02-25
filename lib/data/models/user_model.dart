@@ -64,7 +64,7 @@ class UserModel{
     final sub = SubscriptionModel.fromMap(map['subscription']);
     final bonus = map['bonus'] as List<dynamic>;
     return DirectionModel(
-      bonus: bonus.map((e) => BonusModel.fromMap(e)).toList(),
+      bonus: bonus.map((e) => BonusModel.fromMap(e,nameDirection)).toList(),
       subscription: sub,
       name: nameDirection,
       lessons: lessons.map((e) => LessonModel.fromMap(e,nameDirection)).toList(),
@@ -121,8 +121,10 @@ class UserModel{
     final double quantity;
     final int id;
     final bool active;
+    final String nameDirection;
 
     const BonusModel({
+      required this.nameDirection,
       required this.id,
       required this.active,
     required this.typeBonus,
@@ -133,8 +135,9 @@ class UserModel{
 
 
 
-  factory BonusModel.fromMap(Map<String, dynamic> map) {
+  factory BonusModel.fromMap(Map<String, dynamic> map, String nameDirection) {
     return BonusModel(
+      nameDirection: nameDirection,
       id: map['id'] as int,
       active: map['active'] as bool,
       typeBonus: map['typeBonus'] as int,

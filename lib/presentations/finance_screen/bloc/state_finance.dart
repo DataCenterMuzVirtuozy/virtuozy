@@ -54,8 +54,10 @@ enum FinanceStatus{
   final UserEntity user;
   final List<DirectionLesson> directions;
   final List<TransactionEntity> transactions;
+  final List<String> titlesDrawingMenu;
 
   const StateFinance({
+    required this.titlesDrawingMenu,
     required this.applyBonusStatus,
     required this.listTransactionStatus,
     required this.paymentStatus,
@@ -70,11 +72,12 @@ enum FinanceStatus{
 
   factory StateFinance.unknown(){
     return StateFinance(
+      titlesDrawingMenu: const [],
       applyBonusStatus: ApplyBonusStatus.unknown,
       listTransactionStatus: ListTransactionStatus.unknown,
       paymentStatus: PaymentStatus.unknown,
-      transactions: [],
-      directions: [],
+      transactions: const [],
+      directions: const [],
       user: UserEntity.unknown(),
         status: FinanceStatus.unknown,
         error: '',
@@ -90,9 +93,11 @@ enum FinanceStatus{
     String? error,
     PricesDirectionEntity? pricesDirectionEntity,
     UserEntity? user,
-    ApplyBonusStatus? applyBonusStatus
+    ApplyBonusStatus? applyBonusStatus,
+    List<String>? titlesDrawingMenu
   }) {
     return StateFinance(
+      titlesDrawingMenu: titlesDrawingMenu??this.titlesDrawingMenu,
       applyBonusStatus: applyBonusStatus??this.applyBonusStatus,
       listTransactionStatus: listTransactionStatus??this.listTransactionStatus,
       paymentStatus: paymentStatus??this.paymentStatus,
@@ -116,5 +121,6 @@ enum FinanceStatus{
     user,
     status,
     error,
+    titlesDrawingMenu,
     pricesDirectionEntity];
 }

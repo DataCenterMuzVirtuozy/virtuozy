@@ -13,8 +13,8 @@ import 'package:virtuozy/presentations/auth_screen/bloc/auth_bloc.dart';
 import 'package:virtuozy/presentations/auth_screen/bloc/auth_event.dart';
 import 'package:virtuozy/resourses/colors.dart';
 
-import '../../../router/paths.dart';
-import '../../../utils/text_style.dart';
+import '../../../../router/paths.dart';
+import '../../../../utils/text_style.dart';
 
 class SearchLocationCompleteContent extends StatelessWidget{
 

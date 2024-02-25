@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:virtuozy/components/dialogs/dialoger.dart';
 import 'package:virtuozy/di/locator.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/domain/user_cubit.dart';
@@ -140,6 +141,10 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                    GoRouter.of(context).push(pathTheme);
                   },),
 
+                  DrawerItem(title: 'Уведомления'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+                    Dialoger.showMessage('В разработке');
+                  },),
+
 
                   DrawerItem(title: 'Сайт'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
                     widget.onSelectedPage.call(4);
@@ -149,8 +154,7 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                   user.userStatus.isModeration || user.userStatus.isAuth?'Выйти'.tr():
                   'Войти'.tr(),
                     textColor: colorRed, onPressed: ()  {
-                    context.read<AuthBloc>().add(LogOutEvent(user: user));
-
+                     Dialoger.showLogOut(context: context,user: user);
                   },),
                 ],
               ),

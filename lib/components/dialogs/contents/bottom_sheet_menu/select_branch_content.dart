@@ -10,11 +10,11 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtuozy/router/paths.dart';
 
-import '../../../presentations/auth_screen/bloc/auth_bloc.dart';
-import '../../../presentations/auth_screen/bloc/auth_event.dart';
-import '../../../resourses/colors.dart';
-import '../../../utils/text_style.dart';
-import '../../buttons.dart';
+import '../../../../presentations/auth_screen/bloc/auth_bloc.dart';
+import '../../../../presentations/auth_screen/bloc/auth_event.dart';
+import '../../../../resourses/colors.dart';
+import '../../../../utils/text_style.dart';
+import '../../../buttons.dart';
 
 class SelectBranchContent extends StatefulWidget{
   const SelectBranchContent({super.key});

@@ -61,6 +61,7 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   provider: ^6.1.1
   timer_count_down: ^2.2.2
+  page_view_dot_indicator: ^2.3.0
 
 
 

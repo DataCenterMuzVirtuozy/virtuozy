@@ -90,12 +90,7 @@ class _FinancePageState extends State<FinancePage> {
          // }else{
          //   _hasBonus = false;
          // }
-
-         int length = s.user.directions.length;
-         _titlesDirections = s.user.directions.map((e) => e.name).toList();
-         if(length>1){
-           _titlesDirections.insert(length, 'Все направления'.tr());
-         }
+         _titlesDirections = s.titlesDrawingMenu;
 
        }
 
@@ -259,7 +254,7 @@ class _FinancePageState extends State<FinancePage> {
                                         width: 50.0,
                                         height: 50.0,
                                         child: FloatingActionButton(onPressed: (){
-                                          GoRouter.of(context).push(pathPay,extra:state.directions[index]);
+                                          GoRouter.of(context).push(pathPay,extra:[state.directions[index]]);
                                         },
                                           backgroundColor: colorBeruza,
                                           child:  Icon(Icons.add,color: colorWhite,),),

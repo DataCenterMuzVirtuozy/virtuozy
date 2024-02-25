@@ -69,6 +69,19 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
 
   }
 
+  bool _visibleButtonBonus({required List<BonusEntity> bonuses}){
+    if(bonuses.isEmpty){
+      return false;
+    }else{
+       for(var b in bonuses){
+         if(!b.active){
+           return true;
+         }
+       }
+    }
+    return false;
+  }
+
 
 
   @override
@@ -82,22 +95,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
         }
 
         if(s.subStatus == SubStatus.loaded){
-          // if(s.userEntity.directions[_selIndexDirection].bonus.isNotEmpty){
-          //   bonus = s.userEntity.directions[_selIndexDirection].bonus[0];
-          //   if(bonus.active){
-          //     _hasBonus = false;
-          //   }else{
-          //     _hasBonus = true;
-          //   }
-          //
-          // }else{
-          //   _hasBonus = false;
-          // }
-          int length = s.userEntity.directions.length;
-          _titlesDirections = s.userEntity.directions.map((e) => e.name).toList();
-          if(length>1){
-           _titlesDirections.insert(length, 'Все направления'.tr());
-          }
+          _titlesDirections = s.titlesDrawingMenu;
         }
 
 
@@ -209,20 +207,45 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                      ),
                      const Gap(10.0),
                      Visibility(
-                       visible: _hasBonus,
-                       child: SizedBox(
-                         height: 40.0,
-                         child: OutLineButton(
-                           onTap: (){
-                                GoRouter.of(context).push(pathDetailBonus, extra:
-                                [bonus,
-                                  state.userEntity.directions[_selIndexDirection]]);
-                           },
-                           borderRadius: 10.0,
-                           textButton: bonus.title,
+                       visible: _visibleButtonBonus(bonuses: state.bonuses),
+                       child: Padding(
+                         padding: const EdgeInsets.only(bottom: 30.0),
+                         child: badges.Badge(
+                           position: badges.BadgePosition.topEnd(end: -5.0,top: -8.0),
+                           showBadge: state.bonuses.length>1,
+                           badgeContent: Text('${state.bonuses.length}',
+                               style: TStyle.textStyleVelaSansBold(colorWhite)),
+                           child: SizedBox(
+                             height: 40.0,
+                             child: OutLineButton(
+                               onTap: () {
+                                 if(state.bonuses.length>1){
+                                  Dialoger.showModalBottomMenu(
+                                      title: 'Получить бонусы'.tr(),
+                                      context: context,
+                                      blurred: true,
+                                      args: state.bonuses,
+                                      content: ListBonuses());
+
+
+                                 }else{
+                                   GoRouter.of(context).push(pathDetailBonus,
+                                       extra: [
+                                         state.bonuses[0],
+                                         state.userEntity.directions[0]
+                                       ]);
+                                 }
+
+                               },
+                               borderRadius: 10.0,
+                               textButton: state.bonuses.length > 1
+                                  ? 'Получить бонусы'.tr()
+                                  : state.bonuses[0].title,
+                             ),
+                           ),
                          ),
                        ),
-                     ),
+                     )
                    ],
                  ),
                )
@@ -272,30 +295,6 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
           const Gap(10.0),
           ...List.generate(directions.length, (index) {
 
-            // if(index==0){
-            //   return                   Column(
-            //     children: [
-            //       Row(
-            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //         children: [
-            //           Text(directions[index].name,
-            //               style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
-            //           Container(
-            //             padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 2.0),
-            //             decoration: BoxDecoration(
-            //                 color: colorRed,
-            //                 borderRadius: BorderRadius.circular(10.0)),
-            //             child: Text('неактивный',
-            //                 style:TStyle.textStyleVelaSansBold(colorWhite,size: 10.0)),
-            //           ),
-            //         ],
-            //       ),
-            //       const Gap(5.0),
-            //       const Divider()
-            //     ],
-            //   );
-            // }
-
             return Padding(
               padding: const EdgeInsets.only(bottom: 5.0),
               child: Column(
@@ -305,25 +304,40 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                     children: [
                       Text(directions[index].name,
                           style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
-                      Row(
-                        children: [
-                          Text('Осталось уроков '.tr(),style:TStyle.textStyleVelaSansMedium(colorGrey,size: 14.0)),
-                          const Gap(5.0),
-                          Container(
-                            padding: const EdgeInsets.all(3.0),
-                            decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.secondary,
-                                shape: BoxShape.circle),
-                            child: Text('${directions[index].subscription.balanceLesson}',
-                                style:TStyle.textStyleVelaSansBold(colorWhite,size: 10.0)),
-                          ),
-                        ],
-                      ),
+                      if(directions[index].subscription.balanceSub>0.0)...{
+                        Row(
+                          children: [
+                            Text('Осталось уроков '.tr(),style:TStyle.textStyleVelaSansMedium(colorGrey,size: 14.0)),
+                            const Gap(5.0),
+                            Container(
+                              padding: const EdgeInsets.all(3.0),
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.secondary,
+                                  shape: BoxShape.circle),
+                              child: Text('${directions[index].subscription.balanceLesson}',
+                                  style:TStyle.textStyleVelaSansBold(colorWhite,size: 10.0)),
+                            ),
+                          ],
+                        )
+                      }else ...{
+                        Container(
+                          padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
+                          decoration: BoxDecoration(
+                              color: colorRed,
+                              borderRadius: BorderRadius.circular(10.0)),
+                          alignment: Alignment.center,
+                          child: Text('неактивный',
+                              style: TStyle.textStyleVelaSansBold(colorWhite,
+                                  size: 10.0)),
+                        ),
+                      }
+
+
                     ],
                   ),
                   const Gap(5.0),
                   Visibility(
-                    visible: directions.length>1,
+                    visible: directions[index].subscription.balanceSub>0.0,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

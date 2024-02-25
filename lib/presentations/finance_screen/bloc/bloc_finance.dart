@@ -48,9 +48,9 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
         emit(state.copyWith(paymentStatus: PaymentStatus.loading));
         await Future.delayed(const Duration(seconds: 1));
       }
-      print('Name Dir ${event.nameDirection}');
+
       final prices = await _financeRepository.getSubscriptionsByDirection(nameDirection: event.nameDirection);
-      print('Prices ${prices.subscriptions[0].name}');
+
       emit(state.copyWith(paymentStatus: PaymentStatus.loaded,pricesDirectionEntity: prices));
     }on Failure catch(e){
       emit(state.copyWith(paymentStatus: PaymentStatus.paymentError,error: e.message));
@@ -65,9 +65,22 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
       await Future.delayed(const Duration(seconds: 1));
     }
     final user  = _userCubit.userEntity;
+    final titlesDrawingMenu = _getTitlesDrawingMenu(directions: user.directions);
     final directions = _getDirections(user: user,indexDir: event.indexDirection,allViewDir: event.allViewDir);
-    emit(state.copyWith(status: FinanceStatus.loaded,user: user,directions: directions));
+    emit(state.copyWith(status: FinanceStatus.loaded,user: user,directions: directions,titlesDrawingMenu: titlesDrawingMenu));
 
+  }
+
+
+  List<String> _getTitlesDrawingMenu({required List<DirectionLesson> directions}){
+    List<String> resultList = [];
+    directions.sort((a,b)=>b.subscription.balanceSub.compareTo(a.subscription.balanceSub));
+    resultList = directions.map((e) => e.name).toList();
+    int length = resultList.length;
+    if(length>1){
+      resultList.insert(length, 'Все направления'.tr());
+    }
+    return resultList;
   }
 
   List<DirectionLesson> _getDirections({required UserEntity user, required indexDir,required bool allViewDir}){

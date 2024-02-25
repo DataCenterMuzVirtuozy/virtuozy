@@ -37,8 +37,11 @@ class SubBloc extends Bloc<SubEvent,SubState>{
        final listNotAcceptLesson = _getListNotAcceptLesson(user: user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
        final lessons = _getAllLessons(user, event.allViewDir, event.currentDirIndex);
        final directions = _getDirections(user: user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
-
+       final bonuses = _getBonuses(user: user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
+       final titlesDrawingMenu = _getTitlesDrawingMenu(directions: user.directions);
        emit(state.copyWith(
+         titlesDrawingMenu: titlesDrawingMenu,
+         bonuses: bonuses,
            userEntity: user,
            lessons: lessons,
            directions: directions,
@@ -58,6 +61,36 @@ class SubBloc extends Bloc<SubEvent,SubState>{
      _userCubit.stream.listen((user) async {
        add(UpdateUserEvent(currentDirIndex: event.currentDirIndex, user: user,allViewDir: event.allViewDir));
      });
+  }
+
+  List<String> _getTitlesDrawingMenu({required List<DirectionLesson> directions}){
+    List<String> resultList = [];
+    directions.sort((a,b)=>b.subscription.balanceSub.compareTo(a.subscription.balanceSub));
+    resultList = directions.map((e) => e.name).toList();
+    int length = resultList.length;
+    if(length>1){
+      resultList.insert(length, 'Все направления'.tr());
+    }
+    return resultList;
+  }
+
+
+  List<BonusEntity> _getBonuses({required UserEntity user, required indexDir,required bool allViewDir}){
+    List<BonusEntity> resultList = [];
+    if(allViewDir){
+      for(var dir in user.directions){
+        resultList.addAll(dir.bonus);
+      }
+    }else{
+      if(user.directions[indexDir].bonus.isEmpty){
+        resultList = [BonusEntity.unknown()];
+      }else{
+        resultList = user.directions[indexDir].bonus;
+      }
+
+    }
+
+    return resultList;
   }
 
   List<DirectionLesson> _getDirections({required UserEntity user, required indexDir,required bool allViewDir}){

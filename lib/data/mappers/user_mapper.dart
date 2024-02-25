@@ -65,6 +65,7 @@ class UserMapper{
 
   static BonusEntity _fromApiBonus({required BonusModel bonusModel}){
     return BonusEntity(
+      nameDirection: bonusModel.nameDirection,
       active: bonusModel.active,
         id: bonusModel.id,
         typeBonus: bonusModel.typeBonus == 1?TypeBonus.subscription:

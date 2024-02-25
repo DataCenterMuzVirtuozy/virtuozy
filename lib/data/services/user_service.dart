@@ -184,13 +184,20 @@ class UserService{
 
     {
      'bonus': [
-
+      {
+       'id':1,
+       'active':false,
+       'typeBonus': 1,
+       'title': 'Получи бонусный урок',
+       'description': '50% групповые занятия, концерты, практика публичных выступлений и участие в музыкальных коллективах',
+       'quantity': 1.0,
+      }
      ],
      'subscription': {
       'name': 'Абонемент 1',
       'price':  20000.0,
       'priceOneLesson':  1000.0,
-      'balanceSub': 20000.0,
+      'balanceSub': 0.0,
       'balanceLesson':20,
      },
      'name': 'Скрипка',

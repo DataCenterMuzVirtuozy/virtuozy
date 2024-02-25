@@ -4,26 +4,46 @@
  import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
+import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 
-import '../../../resourses/colors.dart';
-import '../../../utils/status_to_color.dart';
-import '../../../utils/text_style.dart';
-import '../../buttons.dart';
-import '../dialoger.dart';
-import '../sealeds.dart';
+import '../../../../resourses/colors.dart';
+import '../../../../utils/status_to_color.dart';
+import '../../../../utils/text_style.dart';
+import '../../../buttons.dart';
+import '../../dialoger.dart';
+import '../../sealeds.dart';
 
-class DetailsLessonContent extends StatelessWidget {
+class DetailsLessonContent extends StatefulWidget {
   const DetailsLessonContent(
       {super.key, required this.lessons, required this.directions});
 
   final List<Lesson> lessons;
   final List<DirectionLesson> directions;
-  final double _heightBox = 295.0;
+
+  @override
+  State<DetailsLessonContent> createState() => _DetailsLessonContentState();
+}
+
+class _DetailsLessonContentState extends State<DetailsLessonContent> {
+
+  final double _heightBox = 310.0;
+  late int selectedPage;
+  late final PageController _pageController;
 
   DirectionLesson _getDirectionByLesson({required Lesson lessonEntity}){
-    return directions.firstWhere((element) => element.name == lessonEntity.nameDirection);
+    return widget.directions.firstWhere((element) => element.name == lessonEntity.nameDirection);
+  }
+
+
+  @override
+  void initState() {
+    selectedPage = 0;
+    _pageController = PageController(initialPage: selectedPage);
+    super.initState();
   }
 
   @override
@@ -31,18 +51,50 @@ class DetailsLessonContent extends StatelessWidget {
 
     return SizedBox(
       height: _heightBox,
-      child: PageView.builder(
-        itemCount: lessons.length,
-          itemBuilder: (context,index){
-        return ItemDetailsLesson(
-            lesson: lessons[index],
-            direction: _getDirectionByLesson(lessonEntity: lessons[index]));
-      }),
+      child: Column(
+        children: [
+          Expanded(
+            child: PageView.builder(
+                controller: _pageController,
+                onPageChanged: (page) {
+                  setState(() {
+                    selectedPage = page;
+                  });
+                },
+              itemCount: widget.lessons.length,
+                itemBuilder: (context,index){
+              return ItemDetailsLesson(
+                  lesson: widget.lessons[index],
+                  direction: _getDirectionByLesson(lessonEntity: widget.lessons[index]));
+            }),
+          ),
+          Visibility(
+            visible: widget.lessons.length>1,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: PageViewDotIndicator(
+                size: const Size(8.0, 8.0),
+                currentItem: selectedPage,
+                count: widget.lessons.length,
+                unselectedColor: colorGrey,
+                selectedColor: Theme.of(context).textTheme.displayMedium!.color!,
+                duration: const Duration(milliseconds: 200),
+                boxShape: BoxShape.circle,
+                onItemClicked: (index) {
+                  _pageController.animateToPage(
+                    index,
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeInOut,
+                  );
+                },
+              ),
+            ),
+          ),
+          const Gap(10.0)
+        ],
+      ),
     );
   }
-
-
-
 }
 
 class ItemDetailsLesson extends StatelessWidget{
@@ -54,8 +106,9 @@ class ItemDetailsLesson extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
    return Container(
+
      padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15.0),
-     margin: const EdgeInsets.only(bottom: 20.0),
+     margin:  EdgeInsets.only(bottom: lesson.status == LessonStatus.awaitAccept?20.0:90.0),
      width: double.infinity,
      decoration: BoxDecoration(
          color: Theme.of(context).colorScheme.surfaceVariant,
@@ -142,7 +195,7 @@ class ItemDetailsLesson extends StatelessWidget{
          Visibility(
              visible: lesson.status == LessonStatus.awaitAccept,
              child: Padding(
-               padding: const EdgeInsets.only(top: 20.0,bottom: 20.0),
+               padding: const EdgeInsets.only(top: 20.0,bottom: 10.0),
                child: SizedBox(
                  height: 40.0,
                  child: SubmitButton(

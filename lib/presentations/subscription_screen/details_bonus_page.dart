@@ -15,6 +15,7 @@ import 'package:virtuozy/presentations/subscription_screen/bloc/sub_state.dart';
 
 import '../../components/app_bar.dart';
 import '../../components/buttons.dart';
+import '../../components/dialogs/dialoger.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../resourses/colors.dart';
 import '../../resourses/images.dart';
@@ -61,8 +62,8 @@ class DetailsBonusPage extends StatelessWidget{
           return Column(
            mainAxisAlignment: MainAxisAlignment.spaceBetween,
            children: [
-            Text('Самоучитель игры на гитаре - это теоритеческая база о том как играть на гитаре самостоятельно. Этими знаниями имеет смысл пользоваться, если Вы что-то подзабыли или Вам нужно уточнить на верном ли Вы пути, но не для того, чтобы научиться играть на гитаре самостоятельно с нуля!',
-                style: TStyle.textStyleVelaSansRegular(colorBlack,size: 18.0)),
+            Text(bonusEntity.description,
+                style: TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 18.0)),
             const Gap(40.0),
             Column(
               children: [
@@ -70,11 +71,12 @@ class DetailsBonusPage extends StatelessWidget{
                 height: 40.0,
                 child: OutLineButton(
                  onTap: (){
-                  _textResultBonus = 'Бонус удален!'.tr();
-                  context.read<SubBloc>().add(ActivateBonusEvent(
-                      direction: directionLesson,
-                      idBonus: bonusEntity.id,
-                      activate: false));
+                   Dialoger.showMessage('В разработке');
+                  // _textResultBonus = 'Бонус удален!'.tr();
+                  // context.read<SubBloc>().add(ActivateBonusEvent(
+                  //     direction: directionLesson,
+                  //     idBonus: bonusEntity.id,
+                  //     activate: false));
                  },
                  borderRadius: 10.0,
                  textButton: 'Удалить бонус'.tr(),
@@ -85,10 +87,11 @@ class DetailsBonusPage extends StatelessWidget{
                  height: 40.0,
                   child: SubmitButton(
                    onTap: (){
-                    context.read<SubBloc>().add(ActivateBonusEvent(
-                        direction: directionLesson,
-                        idBonus: bonusEntity.id,
-                        activate: true));
+                     Dialoger.showMessage('В разработке');
+                    // context.read<SubBloc>().add(ActivateBonusEvent(
+                    //     direction: directionLesson,
+                    //     idBonus: bonusEntity.id,
+                    //     activate: true));
                    },
                    borderRadius: 10.0,
                    textButton: 'Активировать бонус'.tr(),

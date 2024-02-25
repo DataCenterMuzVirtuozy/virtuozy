@@ -3,6 +3,7 @@
 
  import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +11,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:virtuozy/components/calendar.dart';
 import 'package:virtuozy/components/dialogs/sealeds.dart';
+import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/presentations/subscription_screen/bloc/sub_bloc.dart';
 import 'package:virtuozy/presentations/subscription_screen/bloc/sub_state.dart';
 import 'package:virtuozy/resourses/colors.dart';
@@ -24,6 +26,10 @@ import '../../utils/text_style.dart';
 
 
 class Dialoger{
+
+
+
+
 
    static void showActionMaterialSnackBar(
        { VoidCallback? onAction,
@@ -48,6 +54,8 @@ class Dialoger{
          ));
    }
 
+
+   ///Return toast message
    static void showMessage(String message) {
      Fluttertoast.showToast(
        msg: message,
@@ -77,7 +85,8 @@ class Dialoger{
          ConfirmLesson()=>ConfirmLesson().build(context: _,args: args),
          SelectBranch() => SelectBranch().build(context: _),
          SearchLocationComplete() => SearchLocationComplete().build(context: _,args: args),
-         DetailsLesson() => DetailsLesson().build(context: _,args: args)
+         DetailsLesson() => DetailsLesson().build(context: _,args: args),
+         ListBonuses() => ListBonuses().build(context: _,args: args),
        };
        return  BackdropFilter(
          filter:  blurred?ImageFilter.blur(sigmaX: 10, sigmaY: 5):
@@ -145,6 +154,7 @@ class Dialoger{
        SelectBranch() => SelectBranch().build(context: context),
        SearchLocationComplete() => SearchLocationComplete().build(context: context),
        DetailsLesson() => DetailsLesson().build(context: context,args: args),
+       ListBonuses() => ListBonuses().build(context: context,args: args),
      };
 
      showBottomSheet(
@@ -200,6 +210,58 @@ class Dialoger{
          ),
        );
      });
+   }
+
+
+   static void showLogOut({required BuildContext context,required UserEntity user}){
+     showCustomDialog(
+         contextUp: context,
+         args: user,
+         content: LogOut()
+
+     );
+
+
+   }
+
+
+
+
+   static Future<T?> showCustomDialog<T>({
+     required BuildContext contextUp,
+     required  AlertDialogContent  content,
+      Object? args
+   }) async {
+     final Widget body = switch(content){
+       LogOut()=>LogOut().build(context: contextUp,args: args),
+
+     };
+     return showDialog<T>(
+       context: contextUp,
+       useRootNavigator: false,
+       builder: (context) => AlertDialog(
+         contentPadding: const EdgeInsets.all(0.0),
+         backgroundColor: Theme.of(context).dialogBackgroundColor,
+         shape: RoundedRectangleBorder(
+             borderRadius: BorderRadius.circular(20.0)),
+         content: Container(
+           padding: const EdgeInsets.only(left: 30.0,right: 30.0,top: 15.0,bottom: 15.0),
+           decoration: BoxDecoration(
+             borderRadius: BorderRadius.circular(20.0),
+             color: Theme.of(context).dialogBackgroundColor,
+           ),
+           child: Column(
+             mainAxisSize: MainAxisSize.min,
+             crossAxisAlignment: CrossAxisAlignment.center,
+             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+             children: [
+               body,
+             ],
+           ),
+         ),
+
+       ),
+     );
    }
 
 
