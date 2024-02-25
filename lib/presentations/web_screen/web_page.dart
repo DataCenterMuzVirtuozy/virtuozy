@@ -22,6 +22,8 @@ class WebPage extends StatefulWidget{
 class _WebPageState extends State<WebPage> {
 
   late final WebViewController _controller;
+  bool _loadingPage = true;
+
   @override
   void initState() {
     super.initState();
@@ -53,10 +55,13 @@ class _WebPageState extends State<WebPage> {
             debugPrint('Page started loading: $url');
           },
           onPageFinished: (String url) {
+           setState(() {
+             _loadingPage = false;
+           });
             debugPrint('Page finished loading: $url');
           },
           onWebResourceError: (WebResourceError error) {
-            debugPrint('''
+            print('''
 Page resource error:
   code: ${error.errorCode}
   description: ${error.description}
@@ -100,6 +105,10 @@ Page resource error:
 
   @override
   Widget build(BuildContext context) {
+
+    if(_loadingPage){
+      return const Center(child: CircularProgressIndicator());
+    }
     return WebViewWidget(controller: _controller);
   }
 }

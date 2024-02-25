@@ -126,7 +126,7 @@ class _ThemePageState extends State<ThemePage> {
               ),
               Expanded(
                 child: GridView.builder(
-                  padding: const EdgeInsets.only(right: 20.0),
+                  padding: const EdgeInsets.only(right: 20.0,bottom: 100.0),
                   itemCount: _colors.length - 2,
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3, // number of items in each row

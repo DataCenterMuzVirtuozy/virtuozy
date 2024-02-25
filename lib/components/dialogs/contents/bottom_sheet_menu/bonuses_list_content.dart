@@ -29,7 +29,7 @@ class _BonusesListContentState extends State<BonusesListContent> with AuthMixin 
     child: Column(
      children: [
       ...List.generate(widget.bonuses.length, (index) {
-       return ItemBonus(bonus:widget.bonuses[index],directions: userCubit.userEntity.directions);
+       return ItemBonus(bonus:widget.bonuses[index],directions: user.directions);
       })
      ],
     ),

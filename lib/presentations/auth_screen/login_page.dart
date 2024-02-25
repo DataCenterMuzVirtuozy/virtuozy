@@ -22,6 +22,7 @@ import 'package:virtuozy/router/paths.dart';
 
 import '../../components/text_fields.dart';
 import '../../utils/text_style.dart';
+import '../../utils/theme_provider.dart';
 
 class LogInPage extends StatefulWidget{
   const LogInPage({super.key});
@@ -35,7 +36,7 @@ class _LogInPageState extends State<LogInPage> {
 
   late TextEditingController _codeController;
   late TextEditingController _phoneController;
-
+  bool _darkTheme = false;
   late MaskTextInputFormatter _maskFormatter;
 
 
@@ -51,6 +52,12 @@ class _LogInPageState extends State<LogInPage> {
     );
   }
 
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _darkTheme = context.watch<ThemeProvider>().themeStatus == ThemeStatus.dark;
+  }
 
   @override
   void dispose() {
@@ -99,7 +106,8 @@ class _LogInPageState extends State<LogInPage> {
                 children: [
                   Column(
                     children: [
-                      SvgPicture.asset(logo,width: 100.0,),
+                      _darkTheme?Image.asset(logoDark,width: 100.0):
+                      SvgPicture.asset(logo, width: 100.0),
                       const Gap(30.0),
                       Image.asset(illustration_5),
                       const Gap(30.0),
@@ -146,7 +154,7 @@ class _LogInPageState extends State<LogInPage> {
                         },
                         textButton:'Войти'.tr(),
                       ),
-                      const Gap(15.0),
+                      const Gap(10.0),
                       TextButton(onPressed: (){
                         if(state.authStatus != AuthStatus.sendRequestCode){
                           GoRouter.of(context).push(pathSingIn);
@@ -156,7 +164,7 @@ class _LogInPageState extends State<LogInPage> {
                           child: Text('Регистрация'.tr(),
                           style: TStyle.textStyleVelaSansRegularUnderline(Theme.of(context).textTheme.displayMedium!.color!,
                               size: 18.0),)),
-                      const Gap(20.0),
+                      const Gap(5.0),
                       InkWell(
                         onTap: () async {
                           await _launchUrl();

@@ -203,7 +203,7 @@ class ItemDetailsLesson extends StatelessWidget{
                      Navigator.pop(context);
                      Dialoger.showModalBottomMenu(
                          blurred: false,
-                         args:[lesson,direction,[lesson]],
+                         args:[lesson,[direction],[lesson],false],
                          title:'Подтверждение урока'.tr(),context: context,
                          content: ConfirmLesson());
                    },

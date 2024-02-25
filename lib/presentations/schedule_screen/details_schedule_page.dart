@@ -127,15 +127,15 @@ class _DetailsSchedulePageState extends State<DetailsSchedulePage> {
         padding: const EdgeInsets.all(20.0),
         width: MediaQuery.sizeOf(context).width,
         decoration: BoxDecoration(
-            color: colorBeruzaLight,
+            color: Theme.of(context).colorScheme.surfaceVariant,
             borderRadius: BorderRadius.circular(20.0)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Text('Уроки на '.tr(),style:TStyle.textStyleVelaSansExtraBolt(colorBlack,size: 18.0)),
-                Text(scheduleLessons.month,style:TStyle.textStyleVelaSansExtraBolt(colorBlack,size: 18.0)),
+                Text('Уроки на '.tr(),style:TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,size: 18.0)),
+                Text(scheduleLessons.month,style:TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,size: 18.0)),
               ],
             ),
             const Gap(10.0),
@@ -176,7 +176,7 @@ class _DetailsSchedulePageState extends State<DetailsSchedulePage> {
                         style:TStyle.textStyleVelaSansMedium(colorOrange,size: 14.0)),
                     const Gap(5.0),
                     Text(lesson.timePeriod,
-                        style:TStyle.textStyleVelaSansRegular(colorBlack,size: 12.0)),
+                        style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 12.0)),
                     const Gap(5.0),
                     Row(
                       children: [
@@ -217,13 +217,13 @@ class _DetailsSchedulePageState extends State<DetailsSchedulePage> {
                   Row(
                     children: [
                       Text('Аудитория '.tr(),
-                          style:TStyle.textStyleVelaSansRegular(colorBlack,size: 14.0)),
+                          style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
                       Text('${lesson.idAuditory}',
-                          style:TStyle.textStyleVelaSansRegular(colorBlack,size: 14.0)),
+                          style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
                     ],
                   ),
                   Text(lesson.nameTeacher,
-                      style:TStyle.textStyleVelaSansRegular(colorBlack,size: 14.0)),
+                      style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
                 ],
               ),
             ],

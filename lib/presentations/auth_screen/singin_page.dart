@@ -19,6 +19,7 @@ import '../../components/text_fields.dart';
 import '../../resourses/colors.dart';
 import '../../resourses/images.dart';
 import '../../utils/text_style.dart';
+import '../../utils/theme_provider.dart';
 import 'bloc/auth_event.dart';
 
 class SingInPage extends StatefulWidget{
@@ -34,6 +35,7 @@ class _SingInPageState extends State<SingInPage> {
   late TextEditingController _firsNameController;
   late TextEditingController _lastNameController;
   late MaskTextInputFormatter _maskFormatter;
+  bool _darkTheme = false;
 
 
   @override
@@ -47,6 +49,12 @@ class _SingInPageState extends State<SingInPage> {
         filter: { "#": RegExp(r'[0-9]') },
         type: MaskAutoCompletionType.lazy
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _darkTheme = context.watch<ThemeProvider>().themeStatus == ThemeStatus.dark;
   }
 
 
@@ -80,7 +88,8 @@ class _SingInPageState extends State<SingInPage> {
                 children: [
                   Column(
                     children: [
-                      SvgPicture.asset(logo),
+              _darkTheme?Image.asset(logoDark,width: 100.0):
+              SvgPicture.asset(logo, width: 100.0),
                       const Gap(30.0),
                       Image.asset(illustration_5),
                       const Gap(20.0),

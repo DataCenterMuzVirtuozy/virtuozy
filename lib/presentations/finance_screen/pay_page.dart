@@ -109,92 +109,12 @@ class _PayPageState extends State<PayPage> {
                     _selPriceSubscription = state.pricesDirectionEntity.subscriptions[index];
                 },),
                 const Gap(20.0),
-                Container(
-                  padding: const EdgeInsets.all(20.0),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surfaceVariant,
-                      borderRadius: BorderRadius.circular(20.0)
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Способ оплаты'.tr(),
-                          style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 16.0)),
-                      const Gap(20.0),
-                       Row(
-                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                         children: [
-                           Row(
-                             children: [
-                               ClipRRect(
-                                 borderRadius: BorderRadius.circular(30.0),
-                                   child: Image.asset(spbPay,width: 30.0,height: 30.0,)),
-                               const Gap(20.0),
-                               Text('СБП',
-                                 style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 20.0),),
-                             ],
-                           ),
-                           Checkbox(
-                               checkColor: colorWhite,
-                               value: _sbpPay,
-                               onChanged: (v){
-                                  setState(() {
-                                    _sbpPay = v!;
-                                    if(_sbpPay){
-                                      _cardPay = false;
-                                    }
-                                  });
-                               })
-                         ],
-                       ),
-                      const Gap(10.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(5.0),
-                                decoration: BoxDecoration(
-                                    color: colorOrange.withOpacity(0.2),
-                                    shape: BoxShape.circle
-                                ),
-                                child: Icon(Icons.payment,color: colorOrange),
-                              ),
-                              const Gap(20.0),
-                              Text('Картой'.tr(),
-                                style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 20.0),),
-                            ],
-                          ),
-                          Checkbox(
-                            checkColor: colorWhite,
-                              value: _cardPay, onChanged: (v){
-                            setState(() {
-                              _cardPay = v!;
-                              if(_cardPay){
-                                _sbpPay = false;
-                              }
-                            });
-                          })
-                        ],
-                      )
-
-                    ],
-                  ),
-                ),
-                 const Gap(20.0),
-                 Visibility(
-                   visible: _sbpPay||_cardPay,
-                   child: SubmitButton(
-                     onTap: (){
-                       context.read<BlocFinance>()
-                           .add(PaySubscriptionEvent(priceSubscriptionEntity: _selPriceSubscription,
-                       currentDirection: widget.directions[_selIndexDirection]));
-                     },
-                     textButton: 'К оплате'.tr(),
-                   ).animate().fadeIn(),
-                 )
+                PaymentList(onPay: (){
+                  print('Price ${_selPriceSubscription.price} ${widget.directions[_selIndexDirection].name}');
+                  context.read<BlocFinance>()
+                    .add(PaySubscriptionEvent(
+                    priceSubscriptionEntity: _selPriceSubscription,
+                    currentDirection: widget.directions[_selIndexDirection]));})
               ],
             ),
           );
@@ -203,3 +123,117 @@ class _PayPageState extends State<PayPage> {
     );
   }
 }
+
+ class PaymentList extends StatefulWidget{
+  const PaymentList({super.key, required this.onPay});
+
+
+
+  final VoidCallback onPay;
+
+  @override
+  State<PaymentList> createState() => _PaymentListState();
+}
+
+class _PaymentListState extends State<PaymentList> {
+
+
+
+   bool _sbpPay = false;
+  bool _cardPay = false;
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(20.0),
+          width: double.infinity,
+          decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceVariant,
+              borderRadius: BorderRadius.circular(20.0)
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Способ оплаты'.tr(),
+                  style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 16.0)),
+              const Gap(20.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      ClipRRect(
+                          borderRadius: BorderRadius.circular(30.0),
+                          child: Image.asset(spbPay,width: 30.0,height: 30.0,)),
+                      const Gap(20.0),
+                      Text('СБП',
+                        style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 20.0),),
+                    ],
+                  ),
+                  Checkbox(
+                      checkColor: colorWhite,
+                      value: _sbpPay,
+                      onChanged: (v){
+                        setState(() {
+                          _sbpPay = v!;
+                          if(_sbpPay){
+                            _cardPay = false;
+                          }
+                        });
+                      })
+                ],
+              ),
+              const Gap(10.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(5.0),
+                        decoration: BoxDecoration(
+                            color: colorOrange.withOpacity(0.2),
+                            shape: BoxShape.circle
+                        ),
+                        child: Icon(Icons.payment,color: colorOrange),
+                      ),
+                      const Gap(20.0),
+                      Text('Картой'.tr(),
+                        style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 20.0),),
+                    ],
+                  ),
+                  Checkbox(
+                      checkColor: colorWhite,
+                      value: _cardPay, onChanged: (v){
+                    setState(() {
+                      _cardPay = v!;
+                      if(_cardPay){
+                        _sbpPay = false;
+                      }
+                    });
+                  })
+                ],
+              )
+
+            ],
+          ),
+        ),
+        const Gap(20.0),
+        Visibility(
+          visible: _sbpPay||_cardPay,
+          child: SubmitButton(
+            onTap: (){
+              widget.onPay.call();
+            },
+            textButton: 'К оплате'.tr(),
+          ).animate().fadeIn(),
+        )
+      ],
+    );
+  }
+}
+
+

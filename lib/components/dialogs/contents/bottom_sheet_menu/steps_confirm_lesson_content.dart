@@ -9,10 +9,12 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:gap/gap.dart';
+import 'package:virtuozy/components/dialogs/dialoger.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/presentations/subscription_screen/bloc/sub_bloc.dart';
 import 'package:virtuozy/presentations/subscription_screen/bloc/sub_event.dart';
 import 'package:virtuozy/presentations/subscription_screen/bloc/sub_state.dart';
+import 'package:virtuozy/utils/auth_mixin.dart';
 
 import '../../../../di/locator.dart';
 import '../../../../resourses/colors.dart';
@@ -470,7 +472,7 @@ class ItemNotAcceptLesson extends StatefulWidget{
   State<ItemNotAcceptLesson> createState() => _ItemNotAcceptLessonState();
 }
 
-class _ItemNotAcceptLessonState extends State<ItemNotAcceptLesson> {
+class _ItemNotAcceptLessonState extends State<ItemNotAcceptLesson> with AuthMixin{
 
 
   final currentDayNotifi = locator.get<ValueNotifier<int>>();
@@ -522,8 +524,14 @@ class _ItemNotAcceptLessonState extends State<ItemNotAcceptLesson> {
          ),
          IconButton(
            onPressed: (){
-             currentDayNotifi.value = _getIntCurrentDay(widget.lesson.date);
-             widget.next.call(widget.lesson);
+             if(_getBalanceDirection(directions: user.directions, nameDirection: widget.lesson.nameDirection) == 0.0){
+               Dialoger.showMessage('Недостаточно средств на балансе'.tr());
+             }else{
+               currentDayNotifi.value = _getIntCurrentDay(widget.lesson.date);
+               widget.next.call(widget.lesson);
+             }
+
+
 
            },
            icon: Icon(Icons.navigate_next_rounded,
@@ -532,6 +540,11 @@ class _ItemNotAcceptLessonState extends State<ItemNotAcceptLesson> {
        ],
      ),
    );
+  }
+
+  double _getBalanceDirection({required List<DirectionLesson> directions,required String nameDirection}){
+    final dir = directions.firstWhere((element) => element.name == nameDirection);
+    return dir.subscription.balanceSub;
   }
 
   int _getIntCurrentDay(String date){

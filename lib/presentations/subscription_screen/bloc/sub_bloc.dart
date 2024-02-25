@@ -119,8 +119,16 @@ class SubBloc extends Bloc<SubEvent,SubState>{
   void _updateUser(UpdateUserEvent event,emit) async {
     final firstNotAcceptLesson = _firstNotAcceptLesson(user: event.user,allViewDir: event.allViewDir,indexDir: event.currentDirIndex);
     final listNotAcceptLesson = _getListNotAcceptLesson(user: event.user,allViewDir: event.allViewDir,indexDir: event.currentDirIndex);
+    final lessons = _getAllLessons(event.user, event.allViewDir, event.currentDirIndex);
+    final directions = _getDirections(user: event.user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
+    final bonuses = _getBonuses(user: event.user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
+    final titlesDrawingMenu = _getTitlesDrawingMenu(directions: event.user.directions);
     emit(state.copyWith(
+        titlesDrawingMenu: titlesDrawingMenu,
+        bonuses: bonuses,
         userEntity: event.user,
+        lessons: lessons,
+        directions: directions,
         subStatus: SubStatus.loaded,
         firstNotAcceptLesson: firstNotAcceptLesson,
         listNotAcceptLesson: listNotAcceptLesson));

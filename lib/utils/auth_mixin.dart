@@ -8,8 +8,8 @@ import '../bloc/app_bloc.dart';
 import '../di/locator.dart';
 
 mixin AuthMixin<T extends StatefulWidget> on State<T> {
-  final userCubit = locator.get<UserCubit>();
-  UserEntity get user =>userCubit.userEntity;
+  final _userCubit = locator.get<UserCubit>();
+  UserEntity get user =>_userCubit.userEntity;
 
 
 

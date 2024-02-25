@@ -170,7 +170,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                         content: DetailsLesson());
                   },),
                const Gap(10.0),
-               ItemSubscription(directions: state.directions),
+               ItemSubscription(directions: state.directions,allViewDirection: _allViewDirection),
                const Gap(10.0),
                Padding(
                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -261,9 +261,10 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
 
  class ItemSubscription extends StatelessWidget{
   const ItemSubscription({super.key,
-  required this.directions});
+  required this.directions, required this.allViewDirection});
 
   final List<DirectionLesson> directions;
+  final bool allViewDirection;
 
   double _summaBalance({required List<DirectionLesson> directions}){
      double sum = 0.0;
@@ -337,7 +338,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                   ),
                   const Gap(5.0),
                   Visibility(
-                    visible: directions[index].subscription.balanceSub>0.0,
+                    visible: directions[index].subscription.balanceSub>0.0&&allViewDirection,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
