@@ -52,6 +52,7 @@ class _WebPageState extends State<WebPage> {
             debugPrint('WebView is loading (progress : $progress%)');
           },
           onPageStarted: (String url) {
+
             debugPrint('Page started loading: $url');
           },
           onPageFinished: (String url) {
@@ -61,7 +62,7 @@ class _WebPageState extends State<WebPage> {
             debugPrint('Page finished loading: $url');
           },
           onWebResourceError: (WebResourceError error) {
-            print('''
+            debugPrint('''
 Page resource error:
   code: ${error.errorCode}
   description: ${error.description}
@@ -70,10 +71,10 @@ Page resource error:
           ''');
           },
           onNavigationRequest: (NavigationRequest request) {
-            if (request.url.startsWith('https://virtuozy-msk.ru')) {
-              debugPrint('blocking navigation to ${request.url}');
-              return NavigationDecision.prevent;
-            }
+            // if (request.url.startsWith('https://virtuozy-msk.ru')) {
+            //   debugPrint('blocking navigation to ${request.url}');
+            //   return NavigationDecision.prevent;
+            // }
             debugPrint('allowing navigation to ${request.url}');
             return NavigationDecision.navigate;
           },

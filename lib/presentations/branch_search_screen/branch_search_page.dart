@@ -59,7 +59,6 @@ class _BranchSearchPageState extends State<BranchSearchPage> with TickerProvider
           Dialoger.showModalBottomMenu(
             //height: 320.0,
               title: 'Ваш филиал'.tr(),
-              context: context,
               args: 'Москва',
               content: SearchLocationComplete());
         }
@@ -112,7 +111,6 @@ class _BranchSearchPageState extends State<BranchSearchPage> with TickerProvider
                     Dialoger.showModalBottomMenu(
                       //height: 240.0,
                         title:'Выбери свой филиал'.tr(),
-                        context: context,
                         content: SelectBranch());
                   }, child: Column(
                     children: [

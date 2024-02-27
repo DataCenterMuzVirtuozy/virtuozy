@@ -12,9 +12,10 @@
     </queries>
 
     <application
-        android:label="virtuozy"
+        android:label="Виртуозы"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:roundIcon="@mipmap/ic_app_round"
+        android:icon="@mipmap/ic_app">
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -9,6 +9,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
+import 'package:virtuozy/presentations/main_screen/main_page.dart';
 
 import '../../../../resourses/colors.dart';
 import '../../../../utils/status_to_color.dart';
@@ -204,7 +205,7 @@ class ItemDetailsLesson extends StatelessWidget{
                      Dialoger.showModalBottomMenu(
                          blurred: false,
                          args:[lesson,[direction],[lesson],false],
-                         title:'Подтверждение урока'.tr(),context: context,
+                         title:'Подтверждение урока'.tr(),
                          content: ConfirmLesson());
                    },
                    //colorFill: Theme.of(context).colorScheme.tertiary,

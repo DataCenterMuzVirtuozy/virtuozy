@@ -34,6 +34,16 @@ class AcceptLessonEvent extends SubEvent{
 
 }
 
+ class NotAcceptLessonEvent extends SubEvent{
+   final Lesson lesson;
+   final DirectionLesson direction;
+
+   const NotAcceptLessonEvent({
+     required this.direction,
+     required this.lesson});
+
+ }
+
 class ActivateBonusEvent extends SubEvent{
   final int idBonus;
   final bool activate;

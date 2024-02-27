@@ -12,6 +12,7 @@ import 'package:gap/gap.dart';
 import 'package:virtuozy/components/calendar.dart';
 import 'package:virtuozy/components/dialogs/sealeds.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
+import 'package:virtuozy/presentations/main_screen/main_page.dart';
 import 'package:virtuozy/presentations/subscription_screen/bloc/sub_bloc.dart';
 import 'package:virtuozy/presentations/subscription_screen/bloc/sub_state.dart';
 import 'package:virtuozy/resourses/colors.dart';
@@ -68,7 +69,6 @@ class Dialoger{
 
    static void showModalBottomMenu({
      required String title,
-     required BuildContext context,
      required DialogsContent content,
      bool blurred = false,
      Object? args}){
@@ -80,7 +80,7 @@ class Dialoger{
          enableDrag: false,
          isScrollControlled: true,
          backgroundColor: Colors.transparent,
-         context: context, builder: (_){
+         context: scaffoldKey.currentContext!, builder: (_){
        final body = switch(content){
          ConfirmLesson()=>ConfirmLesson().build(context: _,args: args),
          SelectBranch() => SelectBranch().build(context: _),
@@ -101,7 +101,7 @@ class Dialoger{
                    left: 10.0,
                    top: 10.0),
                decoration: BoxDecoration(
-                   color: Theme.of(context).colorScheme.background,
+                   color: Theme.of(_).colorScheme.background,
                    borderRadius: const BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30))
                ),
                child: Column(

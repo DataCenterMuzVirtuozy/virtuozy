@@ -177,6 +177,25 @@ class UserService{
        'status': 8,
       },
 
+      {
+       'id':13,
+       'date': '2023-11-18',
+       'timePeriod': '12:00-13:00',
+       'idAuditory': 120,
+       'nameTeacher': 'Данилина Д.Д.',
+       'timeAccept':'',
+       'status': 3,
+      },
+      {
+       'id':14,
+       'date': '2023-11-21',
+       'timePeriod': '12:00-13:00',
+       'idAuditory': 120,
+       'nameTeacher': 'Данилина Д.Д.',
+       'timeAccept':'',
+       'status': 6,
+      },
+
      ],
     },
 

@@ -17,6 +17,7 @@ class SubBloc extends Bloc<SubEvent,SubState>{
   SubBloc():super(SubState.unknown()){
     on<GetUserEvent>(_getUser);
     on<AcceptLessonEvent>(_acceptLesson);
+    on<NotAcceptLessonEvent>(_notAcceptLesson);
     on<UpdateUserEvent>(_updateUser);
     on<ActivateBonusEvent>(_activateBonus);
   }
@@ -190,6 +191,30 @@ class SubBloc extends Bloc<SubEvent,SubState>{
       final newUser = user.copyWith(directions: directions);
       _userCubit.updateUser(newUser: newUser);
       emit(state.copyWith(subStatus: SubStatus.confirm));
+
+    }on Failure catch(e){
+
+    }
+  }
+
+  void _notAcceptLesson(NotAcceptLessonEvent event,emit) async {
+    try{
+      // emit(state.copyWith(subStatus: SubStatus.confirmation));
+      // await Future.delayed(const Duration(seconds: 2));
+      final dateNow = DateTime.now().toUtc().toString();
+      List<Lesson> lessons = event.direction.lessons;
+      UserEntity user = _userCubit.userEntity;
+      final indexLesson = lessons.indexOf(event.lesson);
+      final updatedLesson = event.lesson.copyWith(status: LessonStatus.cancel,
+          timeAccept: dateNow);
+      lessons.update(indexLesson, updatedLesson);
+      final updatedDirection = event.direction.copyWith(lessons: lessons);
+      List<DirectionLesson> directions = user.directions;
+      final indexDirection = directions.indexOf(event.direction);
+      directions.update(indexDirection<0?0:indexDirection, updatedDirection);
+      final newUser = user.copyWith(directions: directions);
+      _userCubit.updateUser(newUser: newUser);
+      //emit(state.copyWith(subStatus: SubStatus.confirm));
 
     }on Failure catch(e){
 

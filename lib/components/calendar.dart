@@ -22,12 +22,14 @@ import '../utils/text_style.dart';
 
 
 class Calendar extends StatefulWidget{
-  const Calendar({super.key, required this.lessons, required this.onLesson, required this.onMonth,this.clickableDay = true});
+  const Calendar({super.key, required this.lessons, required this.onLesson, required this.onMonth,this.clickableDay = true,
+     this.resetFocusDay = true});
 
   final List<Lesson> lessons;
   final Function onLesson;
   final Function onMonth;
   final bool clickableDay;
+  final bool resetFocusDay;
 
 
 
@@ -42,13 +44,23 @@ class _CalendarState extends State<Calendar> {
   final currentDayNotifi = locator.get<ValueNotifier<int>>();
   int month = 0;
   int i = 0;
+  late DateTime _firstDay;
+  late DateTime _focusedDay;
 
 
-
+  @override
+  void initState() {
+    super.initState();
+    _firstDay = _getFirstDate(lessons: widget.lessons);
+    _focusedDay = DateTime.now();
+  }
 
   @override
   Widget build(BuildContext context) {
 
+    if(widget.resetFocusDay){
+       _focusedDay = DateTime.now();
+    }
 
    return Container(
      decoration: BoxDecoration(
@@ -65,9 +77,9 @@ class _CalendarState extends State<Calendar> {
              weekdayStyle: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!),
              weekendStyle: TStyle.textStyleVelaSansBold(colorRed)
            ),
-           firstDay: _getFirstDate(lessons: widget.lessons),
+           firstDay: _firstDay,
            lastDay:  _getLastDate(lessons: widget.lessons),
-           focusedDay: DateTime.now(),
+           focusedDay: _focusedDay,
            calendarStyle: CalendarStyle(
              tablePadding: const EdgeInsets.symmetric(horizontal: 10.0),
              selectedTextStyle: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!),
@@ -78,12 +90,17 @@ class _CalendarState extends State<Calendar> {
              weekendTextStyle: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!),
              outsideTextStyle: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!),
              defaultTextStyle: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!),
+
            ),
            headerStyle:  HeaderStyle(
              titleCentered: true,
              titleTextStyle: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18.0),
              formatButtonVisible: false,
            ),
+           onPageChanged: (day){
+             _focusedDay = day;
+             },
+
            calendarBuilders: CalendarBuilders(
              defaultBuilder: (context, day,values) {
                _onMonth(day.month);

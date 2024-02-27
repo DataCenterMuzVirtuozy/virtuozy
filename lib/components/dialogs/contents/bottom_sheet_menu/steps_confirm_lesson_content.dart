@@ -38,7 +38,7 @@ class StepsConfirmLesson extends StatefulWidget{
   State<StepsConfirmLesson> createState() => _StepsConfirmLessonState();
 }
 
-class _StepsConfirmLessonState extends State<StepsConfirmLesson> {
+class _StepsConfirmLessonState extends State<StepsConfirmLesson> with AuthMixin{
 
   final List<double> _heightBody = [270.0,180.0,270.0,300.0];
   late PageController _pageController;
@@ -106,9 +106,11 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson> {
                     }, lesson: _lesson,
                         direction: _getDirectionByLesson(lessonEntity: _lesson),
                         context: context),
-                    step_2(negative: (value){
+                    step_2(user: user,negative: (value){
                       setState(() {
                         if(value){
+                          context.read<SubBloc>().add(NotAcceptLessonEvent(direction: _getDirectionByLesson(lessonEntity: _lesson),
+                              lesson: _lesson));
                           _rating = -1;
                           _stepIndex = widget.listNotAcceptLesson.length==1?3:4;
                           _pageController.jumpToPage(_stepIndex);
@@ -245,7 +247,7 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson> {
           ],
     ),
   );
-  Widget step_2({required Function negative}) => SingleChildScrollView(
+  Widget step_2({required Function negative,required UserEntity user}) => SingleChildScrollView(
     child: BlocConsumer<SubBloc,SubState>(
       listener: (c,s){
         if(s.subStatus == SubStatus.confirm){
@@ -298,8 +300,14 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson> {
                         SubmitButton(
                           width: 100.0,
                           onTap: (){
-                            context.read<SubBloc>().add(AcceptLessonEvent(direction: _getDirectionByLesson(lessonEntity: _lesson),
-                                lesson: _lesson));
+
+                            if(_getBalanceDirection(directions: user.directions, nameDirection: widget.lesson.nameDirection) == 0.0){
+                              Dialoger.showMessage('Недостаточно средств на балансе'.tr());
+                            }else{
+                              context.read<SubBloc>().add(AcceptLessonEvent(direction: _getDirectionByLesson(lessonEntity: _lesson),
+                                  lesson: _lesson));
+                            }
+
                           },
                           textButton: 'Да'.tr(),
                         ),
@@ -315,6 +323,11 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson> {
       }
     ),
   );
+
+  double _getBalanceDirection({required List<DirectionLesson> directions,required String nameDirection}){
+    final dir = directions.firstWhere((element) => element.name == nameDirection);
+    return dir.subscription.balanceSub;
+  }
 
   Widget step_3({required VoidCallback next}) => SingleChildScrollView(
     child: Column(
@@ -479,65 +492,75 @@ class _ItemNotAcceptLessonState extends State<ItemNotAcceptLesson> with AuthMixi
 
   @override
   Widget build(BuildContext context) {
-   return Container(
-     margin:  const EdgeInsets.only(right: 10.0,left: 10.0,bottom: 10.0),
-     padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 5.0),
-     decoration: BoxDecoration(
-       color: Theme.of(context).colorScheme.surfaceVariant,
-       borderRadius: BorderRadius.circular(10.0)
-     ),
-     child: Row(
-       crossAxisAlignment: CrossAxisAlignment.center,
-       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-       children: [
-         Row(
-           crossAxisAlignment: CrossAxisAlignment.center,
-           children: [
-             Container(
-               width: 8.0,
-               height: 8.0,
-               decoration: BoxDecoration(
-                   shape: BoxShape.circle,
-                   color: colorGreen
-               ),
-             ),
-             const Gap(10.0),
-             Column(
-               mainAxisAlignment: MainAxisAlignment.center,
-               crossAxisAlignment: CrossAxisAlignment.start,
-               children: [
-                 Row(
-                   children: [
-                     Text(widget.lesson.date,
-                         style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 16.0)),
-                     Visibility(
-                         visible: widget.allViewDirection,
-                         child: Text(' - ${widget.lesson.nameDirection}',
-                             style: TStyle.textStyleVelaSansRegular(colorGrey,size: 12.0))),
-                   ],
+   return InkWell(
+     onTap: (){
+       if(_getBalanceDirection(directions: user.directions, nameDirection: widget.lesson.nameDirection) == 0.0){
+         Dialoger.showMessage('Недостаточно средств на балансе'.tr());
+       }else{
+         currentDayNotifi.value = _getIntCurrentDay(widget.lesson.date);
+         widget.next.call(widget.lesson);
+       }
+     },
+     child: Container(
+       margin:  const EdgeInsets.only(right: 10.0,left: 10.0,bottom: 10.0),
+       padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 5.0),
+       decoration: BoxDecoration(
+         color: Theme.of(context).colorScheme.surfaceVariant,
+         borderRadius: BorderRadius.circular(10.0)
+       ),
+       child: Row(
+         crossAxisAlignment: CrossAxisAlignment.center,
+         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+         children: [
+           Row(
+             crossAxisAlignment: CrossAxisAlignment.center,
+             children: [
+               Container(
+                 width: 8.0,
+                 height: 8.0,
+                 decoration: BoxDecoration(
+                     shape: BoxShape.circle,
+                     color: colorGreen
                  ),
-                 Text(widget.lesson.timePeriod,style: TStyle.textStyleVelaSansRegular(colorGrey,size: 12.0)),
+               ),
+               const Gap(10.0),
+               Column(
+                 mainAxisAlignment: MainAxisAlignment.center,
+                 crossAxisAlignment: CrossAxisAlignment.start,
+                 children: [
+                   Row(
+                     children: [
+                       Text(widget.lesson.date,
+                           style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 16.0)),
+                       Visibility(
+                           visible: widget.allViewDirection,
+                           child: Text(' - ${widget.lesson.nameDirection}',
+                               style: TStyle.textStyleVelaSansRegular(colorGrey,size: 12.0))),
+                     ],
+                   ),
+                   Text(widget.lesson.timePeriod,style: TStyle.textStyleVelaSansRegular(colorGrey,size: 12.0)),
 
-               ],
-             ),
-           ],
-         ),
-         IconButton(
-           onPressed: (){
-             if(_getBalanceDirection(directions: user.directions, nameDirection: widget.lesson.nameDirection) == 0.0){
-               Dialoger.showMessage('Недостаточно средств на балансе'.tr());
-             }else{
-               currentDayNotifi.value = _getIntCurrentDay(widget.lesson.date);
-               widget.next.call(widget.lesson);
-             }
+                 ],
+               ),
+             ],
+           ),
+           IconButton(
+             onPressed: (){
+               if(_getBalanceDirection(directions: user.directions, nameDirection: widget.lesson.nameDirection) == 0.0){
+                 Dialoger.showMessage('Недостаточно средств на балансе'.tr());
+               }else{
+                 currentDayNotifi.value = _getIntCurrentDay(widget.lesson.date);
+                 widget.next.call(widget.lesson);
+               }
 
 
 
-           },
-           icon: Icon(Icons.navigate_next_rounded,
-               color: colorOrange,size: 30.0),
-         ),
-       ],
+             },
+             icon: Icon(Icons.navigate_next_rounded,
+                 color: colorOrange,size: 30.0),
+           ),
+         ],
+       ),
      ),
    );
   }

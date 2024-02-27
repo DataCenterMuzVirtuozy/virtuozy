@@ -46,6 +46,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
   BonusEntity bonus = BonusEntity.unknown();
   List<String> _titlesDirections = [];
   bool _hasBonus = false;
+  bool _resetFocus = false;
   bool _allViewDirection = false;
 
 
@@ -101,6 +102,8 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
 
      },
      builder: (context,state) {
+
+       print('State ${state.subStatus}');
        if(state.subStatus == SubStatus.unknown){
          return Container();
        }
@@ -143,6 +146,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
                  child: DrawingMenuSelected(items: _titlesDirections,
                    onSelected: (index){
+                   _resetFocus = true;
                    _selIndexDirection = index;
                    if(index == _titlesDirections.length-1){
                      _allViewDirection = true;
@@ -157,15 +161,17 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                    },)
                ),
                const Gap(10.0),
-                Calendar(lessons: state.lessons,
+                Calendar(
+                  resetFocusDay: _resetFocus,
+                  lessons: state.lessons,
                   onMonth: (month){
+                    _resetFocus = false;
                      globalCurrentMonthCalendar = month;
                   },
                   onLesson: (lessons){
                     Dialoger.showModalBottomMenu(
                       blurred: false,
                         title: 'Урок'.tr(),
-                        context: context,
                         args: [lessons,state.userEntity.directions],
                         content: DetailsLesson());
                   },),
@@ -193,7 +199,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                                  args:[state.firstNotAcceptLesson,
                                    state.directions, state.listNotAcceptLesson,
                                     _allViewDirection],
-                                   title:'Подтверждение урока'.tr(),context: context,
+                                   title:'Подтверждение урока'.tr(),
                                content: ConfirmLesson());
                              },
                              //colorFill: Theme.of(context).colorScheme.tertiary,
@@ -222,7 +228,6 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                                  if(state.bonuses.length>1){
                                   Dialoger.showModalBottomMenu(
                                       title: 'Получить бонусы'.tr(),
-                                      context: context,
                                       blurred: true,
                                       args: state.bonuses,
                                       content: ListBonuses());
