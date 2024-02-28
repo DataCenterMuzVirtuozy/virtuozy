@@ -102,8 +102,6 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
 
      },
      builder: (context,state) {
-
-       print('State ${state.subStatus}');
        if(state.subStatus == SubStatus.unknown){
          return Container();
        }

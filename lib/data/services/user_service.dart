@@ -1,19 +1,33 @@
 
 
 
- import 'package:virtuozy/utils/failure.dart';
+ import 'package:dio/dio.dart';
+import 'package:virtuozy/data/rest/dio_client.dart';
+import 'package:virtuozy/data/rest/endpoints.dart';
+import 'package:virtuozy/utils/failure.dart';
 
+import '../../di/locator.dart';
 import '../models/user_model.dart';
 
 class UserService{
 
 
+   final _dio = locator.get<DioClient>().init();
+
+
    Future<UserModel> getUser() async {
     try{
        await Future.delayed(const Duration(seconds: 2));
+       // final res = await _dio.get(Endpoints.user,
+       // queryParameters: {
+       //    'phoneNumber':'+1(111)111-11-11'
+       // });
+       // print('Response ${res.data}');
         return UserModel.fromMap(_user);
     } on Failure catch(e){
        throw const Failure('Error get user');
+    } on DioException catch(e){
+     throw  Failure(e.message!);
     }
    }
 
@@ -21,6 +35,7 @@ class UserService{
 
 
   final Map<String,dynamic> _user = {
+    'id':1,
    'lastName': 'Данилов',
    'firstName': 'Евгений',
    'branchName': 'Москва',

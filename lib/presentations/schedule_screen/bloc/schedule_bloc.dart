@@ -19,9 +19,12 @@ class ScheduleBloc extends Bloc<ScheduleEvent,ScheduleState>{
    on<GetScheduleEvent>(_getSchedule);
    on<UpdateUserEvent>(_updateUser);
    on<GetDetailsScheduleEvent>(_getDetailsSchedule);
+
   }
 
   final _userCubit = locator.get<UserCubit>();
+
+
 
 
   void _getDetailsSchedule(GetDetailsScheduleEvent event,emit) async {
@@ -65,10 +68,11 @@ class ScheduleBloc extends Bloc<ScheduleEvent,ScheduleState>{
              lessons: lessons,
              schedulesLength: schedulesLength));
          listScheduleNotifier.value = schedulesList;
-         _listenUser(event);
        }else {
          listScheduleNotifier.value = schedulesList;
        }
+
+       _listenUser(event);
 
 
      }on Failure catch(e){
@@ -249,7 +253,8 @@ class ScheduleBloc extends Bloc<ScheduleEvent,ScheduleState>{
           userEntity: user, indexSelDirection: event.currentDirIndex,
       allViewDir: event.allViewDir);
       final scheduleMonth = _getScheduleMonth(list:schedulesList, month: event.month);
-      add(UpdateUserEvent(currentDirIndex: 0, user: user,scheduleLessons: scheduleMonth));
+      listScheduleNotifier.value = schedulesList;
+      add(UpdateUserEvent(currentDirIndex: event.currentDirIndex, user: user,scheduleLessons: scheduleMonth));
     });
   }
 

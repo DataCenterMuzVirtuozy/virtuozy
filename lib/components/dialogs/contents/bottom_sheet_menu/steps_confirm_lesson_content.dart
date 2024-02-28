@@ -376,6 +376,7 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson> with AuthMixin{
           height: 40.0,
           child: SubmitButton(
             onTap: (){
+              Dialoger.showMessage('Этот функционал в разработке');
               next.call();
             },
             borderRadius: 10.0,

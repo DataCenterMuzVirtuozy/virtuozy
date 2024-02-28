@@ -16,6 +16,8 @@ import 'package:virtuozy/domain/repository/user_repository.dart';
 import 'package:virtuozy/domain/user_cubit.dart';
 import 'package:virtuozy/utils/theme_provider.dart';
 
+import '../data/rest/dio_client.dart';
+
 final locator = GetIt.instance;
 
 void setup() {
@@ -34,6 +36,8 @@ void setup() {
   locator.registerLazySingleton<FinanceService>(() => FinanceService());
   locator.registerLazySingleton<FinanceUtil>(() => FinanceUtil());
   locator.registerFactory<FinanceRepository>(() => FinanceRepositoryImpl());
+
+  locator.registerLazySingleton<DioClient>(() => DioClient());
 
 
 }

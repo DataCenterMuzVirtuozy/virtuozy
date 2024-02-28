@@ -19,6 +19,8 @@ import 'package:virtuozy/utils/status_to_color.dart';
 
 import '../../components/box_info.dart';
 import '../../components/calendar.dart';
+import '../../components/dialogs/dialoger.dart';
+import '../../components/dialogs/sealeds.dart';
 import '../../components/drawing_menu_selected.dart';
 import '../../resourses/colors.dart';
 import '../../utils/text_style.dart';
@@ -126,7 +128,7 @@ class _SchedulePageState extends State<SchedulePage> {
                 ),
                 const Gap(10.0),
                  Calendar(
-                   clickableDay: false,
+                   clickableDay: true,
                      lessons: state.lessons,
                      onMonth: (month){
                      if(globalCurrentMonthCalendar == month){
@@ -140,14 +142,17 @@ class _SchedulePageState extends State<SchedulePage> {
                            refreshDirection: false,
                            allViewDir: _allViewDirection));
                      },
-                     onLesson: (lesson){
-
+                     onLesson: (lessons){
+                       Dialoger.showModalBottomMenu(
+                           blurred: false,
+                           title: 'Урок'.tr(),
+                           args: [lessons,state.user.directions],
+                           content: DetailsLesson());
                       }),
                 const Gap(10.0),
                 ValueListenableBuilder<List<ScheduleLessons>>(
                   valueListenable: listScheduleNotifier,
                   builder: (context,schedules,child) {
-
                     if(schedules.isNotEmpty){
                       return Column(
                         children: List.generate(schedules.length, (index) {
