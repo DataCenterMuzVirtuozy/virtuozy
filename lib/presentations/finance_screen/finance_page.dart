@@ -24,6 +24,7 @@ import 'package:virtuozy/utils/parser_price.dart';
 import '../../components/box_info.dart';
 import '../../components/dialogs/dialoger.dart';
 import '../../components/drawing_menu_selected.dart';
+import '../../domain/entities/subscription_entity.dart';
 import '../../utils/text_style.dart';
 
 class FinancePage extends StatefulWidget{
@@ -63,7 +64,7 @@ class _FinancePageState extends State<FinancePage> {
   double _summaBalance({required List<DirectionLesson> directions}){
     double sum = 0.0;
     for(var dir in directions){
-      sum +=dir.subscription.balanceSub;
+      sum +=dir.lastSubscription.balanceSub;
     }
 
     return sum;
@@ -179,7 +180,7 @@ class _FinancePageState extends State<FinancePage> {
                                       Expanded(
                                         child: Text(
                                             state.directions[index]
-                                                .subscription.name,
+                                                .lastSubscription.name,
                                             style: TStyle.textStyleVelaSansBold(
                                                 Theme.of(context)
                                                     .textTheme
@@ -189,7 +190,7 @@ class _FinancePageState extends State<FinancePage> {
                                       ),
                                       Visibility(
                                         visible:   state.directions[index]
-                                            .subscription.balanceSub>0.0,
+                                            .lastSubscription.status==StatusSub.active,
                                         child: Container(
                                           width: 90.0,
                                           alignment: Alignment.center,
@@ -211,7 +212,7 @@ class _FinancePageState extends State<FinancePage> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      if(state.directions[index].subscription.balanceSub>0.0)...{
+                                      if(state.directions[index].lastSubscription.status==StatusSub.active)...{
                                         Row(
                                           children: [
                                             Text('Осталось уроков '.tr(),
@@ -223,7 +224,7 @@ class _FinancePageState extends State<FinancePage> {
                                                         .color!,
                                                     size: 14.0)),
                                             Text(
-                                                '${ state.directions[index].subscription.balanceLesson}',
+                                                '${ state.directions[index].lastSubscription.balanceLesson}',
                                                 style: TStyle
                                                     .textStyleVelaSansBold(
                                                     Theme.of(context)
@@ -243,7 +244,9 @@ class _FinancePageState extends State<FinancePage> {
                                               borderRadius:
                                                   BorderRadius.circular(
                                                       10.0)),
-                                          child: Text('неактивный',
+                                          child: Text(
+                                              state.directions[index].lastSubscription.status==StatusSub.inactive?'неактивный':
+                                              'запланирован',
                                               style: TStyle
                                                   .textStyleVelaSansBold(
                                                       colorWhite,
@@ -370,7 +373,7 @@ class StatusSubscriptionWidget extends StatelessWidget{
      children: [
        Visibility(
          visible:  direction
-             .subscription.balanceSub>0.0,
+             .lastSubscription.balanceSub>0.0,
          child: Container(
            width: 90.0,
            alignment: Alignment.center,

@@ -80,13 +80,15 @@ enum UserStatus{
 class DirectionLesson{
 
   final List<BonusEntity> bonus;
-  final SubscriptionEntity subscription;
+  final List<SubscriptionEntity> subscriptionsAll;
+  final SubscriptionEntity lastSubscription;
   final String name;
   final List<Lesson> lessons;
 
   const DirectionLesson({
+    required this.lastSubscription,
     required this.bonus,
-    required this.subscription,
+    required this.subscriptionsAll,
     required this.name,
     required this.lessons,
   });
@@ -96,13 +98,15 @@ class DirectionLesson{
 
   DirectionLesson copyWith({
     List<BonusEntity>? bonus,
-    SubscriptionEntity? subscription,
+    List<SubscriptionEntity>? subscriptionsAll,
+    SubscriptionEntity? lastSubscription,
     String? name,
     List<Lesson>? lessons,
   }) {
     return DirectionLesson(
+      lastSubscription: lastSubscription??this.lastSubscription,
       bonus: bonus ?? this.bonus,
-      subscription: subscription ?? this.subscription,
+      subscriptionsAll: subscriptionsAll ?? this.subscriptionsAll,
       name: name ?? this.name,
       lessons: lessons ?? this.lessons,
     );
@@ -127,13 +131,17 @@ class Lesson{
   final String date; //2024-12-22
    final String timePeriod;
    final String timeAccept;
-   final int idAuditory;
+   final String idAuditory;
    final String nameTeacher;
    final LessonStatus status;
    final String nameDirection;
+  final int idSub;
+  final bool bonus;
 
   const Lesson({
     required this.id,
+    required this.idSub,
+    required this.bonus,
     required this.timeAccept,
     required this.date,
     required this.timePeriod,
@@ -146,11 +154,13 @@ class Lesson{
 
   factory Lesson.unknown(){
     return const Lesson(
+      idSub:0,
+      bonus:false,
       nameDirection: '',
         timeAccept: '',
         date: '',
         timePeriod: '',
-        idAuditory: 0,
+        idAuditory: '',
         nameTeacher: '',
         status: LessonStatus.unknown,
         id: 0);
@@ -159,13 +169,17 @@ class Lesson{
   Lesson copyWith({
     String? date,
     String? timePeriod,
-    int? idAuditory,
+    String? idAuditory,
     String? nameTeacher,
     LessonStatus? status,
     String? timeAccept,
-    String? nameDirection
+    String? nameDirection,
+     int? idSub,
+     bool? bonus,
   }) {
     return Lesson(
+      idSub: idSub??this.idSub,
+      bonus: bonus??this.bonus,
       nameDirection: nameDirection??this.nameDirection,
       timeAccept: timeAccept??this.timeAccept,
       date: date ?? this.date,

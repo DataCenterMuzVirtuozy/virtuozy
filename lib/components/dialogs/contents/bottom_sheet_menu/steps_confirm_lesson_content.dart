@@ -326,7 +326,7 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson> with AuthMixin{
 
   double _getBalanceDirection({required List<DirectionLesson> directions,required String nameDirection}){
     final dir = directions.firstWhere((element) => element.name == nameDirection);
-    return dir.subscription.balanceSub;
+    return dir.lastSubscription.balanceSub;
   }
 
   Widget step_3({required VoidCallback next}) => SingleChildScrollView(
@@ -568,7 +568,7 @@ class _ItemNotAcceptLessonState extends State<ItemNotAcceptLesson> with AuthMixi
 
   double _getBalanceDirection({required List<DirectionLesson> directions,required String nameDirection}){
     final dir = directions.firstWhere((element) => element.name == nameDirection);
-    return dir.subscription.balanceSub;
+    return dir.lastSubscription.balanceSub;
   }
 
   int _getIntCurrentDay(String date){

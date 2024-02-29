@@ -1,7 +1,10 @@
 
 
 
- import 'package:virtuozy/data/models/price_subscription_model.dart';
+ import 'dart:math';
+
+import 'package:easy_localization/easy_localization.dart';
+import 'package:virtuozy/data/models/price_subscription_model.dart';
 import 'package:virtuozy/data/models/subscription_model.dart';
 
 class UserModel{
@@ -44,13 +47,15 @@ class UserModel{
 
  class DirectionModel{
    final List<BonusModel> bonus;
-   final SubscriptionModel subscription;
+   final List<SubscriptionModel> subscriptionsAll;
+   final SubscriptionModel lastSubscription;
    final String name;
    final List<LessonModel> lessons;
 
    const DirectionModel({
     required this.bonus,
-    required this.subscription,
+     required this.subscriptionsAll,
+    required this.lastSubscription,
     required this.name,
     required this.lessons,
   });
@@ -61,14 +66,29 @@ class UserModel{
 
     final lessons =  map['lessons'] as List<dynamic>;
     final nameDirection = map['name'] as String;
-    final sub = SubscriptionModel.fromMap(map['subscription']);
+    final subsMap = map['subscriptions'] as List<dynamic>;
+    final subs = subsMap.map((e) => SubscriptionModel.fromMap(e)).toList();
+    final lastSub = _getLastSub(subs);
     final bonus = map['bonus'] as List<dynamic>;
     return DirectionModel(
       bonus: bonus.map((e) => BonusModel.fromMap(e,nameDirection)).toList(),
-      subscription: sub,
+      subscriptionsAll: subs,
       name: nameDirection,
       lessons: lessons.map((e) => LessonModel.fromMap(e,nameDirection)).toList(),
+      lastSubscription: lastSub,
+
     );
+  }
+
+   static SubscriptionModel _getLastSub(List<SubscriptionModel> subs){
+    final List<int> millisecondsSinceEpochList = [];
+
+    for(var element in subs){
+      millisecondsSinceEpochList.add(DateFormat('yyyy-MM-dd').parse(element.dateStart).millisecondsSinceEpoch);
+
+    }
+    final indexLast = millisecondsSinceEpochList.indexOf(millisecondsSinceEpochList.reduce(max));
+    return subs[indexLast];
   }
 }
 
@@ -77,23 +97,27 @@ class UserModel{
 
  class LessonModel{
   final int id;
+  final int idSub;
    final String date; //2024-12-22
    final String timePeriod;
-   final int idAuditory;
+   final String idAuditory;
    final String nameTeacher;
    final int status;
    final String timeAccept;
    final String nameDirection;
+   final bool bonus;
 
-   const LessonModel({
+   const LessonModel( {
      required this.nameDirection,
      required this.id,
+     required this.idSub,
      required this.timeAccept,
     required this.date,
     required this.timePeriod,
     required this.idAuditory,
     required this.nameTeacher,
     required this.status,
+     required this.bonus
   });
 
 
@@ -101,14 +125,16 @@ class UserModel{
   factory LessonModel.fromMap(Map<String, dynamic> map,String nameDirection) {
 
     return LessonModel(
+      idSub: map['idSub'] as int,
       id: map['id'] as int,
       timeAccept: map['timeAccept'] as String,
       date: map['date'] as String,
       timePeriod: map['timePeriod'] as String,
-      idAuditory: map['idAuditory'] as int,
+      idAuditory: map['idAuditory'] as String,
       nameTeacher: map['nameTeacher'] as String,
       status: map['status'] as int,
-      nameDirection: nameDirection
+      nameDirection: nameDirection,
+      bonus: map['bonus'] as bool
     );
   }
 }
@@ -143,7 +169,7 @@ class UserModel{
       typeBonus: map['typeBonus'] as int,
       title: map['title'] as String,
       description: map['description'] as String,
-      quantity: map['quantity'] as double,
+      quantity: (map['quantity'] as dynamic).toDouble(),
     );
   }
 }

@@ -74,7 +74,7 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
 
   List<String> _getTitlesDrawingMenu({required List<DirectionLesson> directions}){
     List<String> resultList = [];
-    directions.sort((a,b)=>b.subscription.balanceSub.compareTo(a.subscription.balanceSub));
+    directions.sort((a,b)=>b.lastSubscription.balanceSub.compareTo(a.lastSubscription.balanceSub));
     resultList = directions.map((e) => e.name).toList();
     int length = resultList.length;
     if(length>1){
@@ -107,13 +107,13 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
   void _updateDirectionUser({required PriceSubscriptionEntity priceSubscriptionEntity,required DirectionLesson currentDirection}){
     final user = _userCubit.userEntity;
     final directions = user.directions;
-    final newBalance = currentDirection.subscription.balanceLesson + priceSubscriptionEntity.quantityLesson;
-    final newBalanceSub = currentDirection.subscription.balanceSub + priceSubscriptionEntity.price;
-    final supUpdate = currentDirection.subscription.copyWith(
+    final newBalance = currentDirection.lastSubscription.balanceLesson + priceSubscriptionEntity.quantityLesson;
+    final newBalanceSub = currentDirection.lastSubscription.balanceSub + priceSubscriptionEntity.price;
+    final supUpdate = currentDirection.lastSubscription.copyWith(
       balanceLesson: newBalance,
       balanceSub: newBalanceSub
     );
-    final updateDirection = currentDirection.copyWith(subscription: supUpdate);
+    final updateDirection = currentDirection.copyWith(lastSubscription: supUpdate);
     final indexDirection = directions.indexWhere((element) => element.name == currentDirection.name);
     final finalDirectionList = directions.update(indexDirection,updateDirection);
     final newUser = user.copyWith(directions: finalDirectionList);
@@ -132,13 +132,13 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
   void _writingOffMoney(WritingOfMoneyEvent event,emit) async {
     final user = _userCubit.userEntity;
     final directions = user.directions;
-    final newBalance = event.currentDirection.subscription.balanceLesson - 1;
-    final newBalanceSub = event.currentDirection.subscription.balanceSub - event.currentDirection.subscription.priceOneLesson;
-    final supUpdate = event.currentDirection.subscription.copyWith(
+    final newBalance = event.currentDirection.lastSubscription.balanceLesson - 1;
+    final newBalanceSub = event.currentDirection.lastSubscription.balanceSub - event.currentDirection.lastSubscription.priceOneLesson;
+    final supUpdate = event.currentDirection.lastSubscription.copyWith(
         balanceLesson: newBalance,
         balanceSub: newBalanceSub
     );
-    final updateDirection = event.currentDirection.copyWith(subscription: supUpdate);
+    final updateDirection = event.currentDirection.copyWith(lastSubscription: supUpdate);
     final indexDirection = directions.indexWhere((element) => element.name == event.currentDirection.name);
     final finalDirectionList = directions.update(indexDirection,updateDirection);
     final newUser = user.copyWith(directions: finalDirectionList);
@@ -148,7 +148,7 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
     _listTransaction.add(TransactionEntity(
         typeTransaction: TypeTransaction.minusLesson,
         time: parseTime,
-        quantity: event.currentDirection.subscription.priceOneLesson));
+        quantity: event.currentDirection.lastSubscription.priceOneLesson));
   }
 
 
@@ -157,13 +157,13 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
       emit(state.copyWith(applyBonusStatus: ApplyBonusStatus.loading));
       final user = _userCubit.userEntity;
       final directions = user.directions;
-      final newBalance = event.currentDirection.subscription.balanceLesson + 1;
-      final newBalanceSub = event.currentDirection.subscription.balanceSub - event.currentDirection.subscription.priceOneLesson;
-      final supUpdate = event.currentDirection.subscription.copyWith(
+      final newBalance = event.currentDirection.lastSubscription.balanceLesson + 1;
+      final newBalanceSub = event.currentDirection.lastSubscription.balanceSub - event.currentDirection.lastSubscription.priceOneLesson;
+      final supUpdate = event.currentDirection.lastSubscription.copyWith(
           balanceLesson: newBalance,
           balanceSub: newBalanceSub
       );
-      final updateDirection = event.currentDirection.copyWith(subscription: supUpdate);
+      final updateDirection = event.currentDirection.copyWith(lastSubscription: supUpdate);
       final indexDirection = directions.indexWhere((element) => element.name == event.currentDirection.name);
       final finalDirectionList = directions.update(indexDirection,updateDirection);
       final newUser = user.copyWith(directions: finalDirectionList);

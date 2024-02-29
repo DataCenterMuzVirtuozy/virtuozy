@@ -17,13 +17,12 @@ class UserService{
 
    Future<UserModel> getUser() async {
     try{
-       await Future.delayed(const Duration(seconds: 2));
-       // final res = await _dio.get(Endpoints.user,
-       // queryParameters: {
-       //    'phoneNumber':'+1(111)111-11-11'
-       // });
-       // print('Response ${res.data}');
-        return UserModel.fromMap(_user);
+       await Future.delayed(const Duration(seconds: 1));
+       final res = await _dio.get(Endpoints.user,
+       queryParameters: {
+          'phoneNumber': "+(791)324-567-89"
+       });
+        return UserModel.fromMap(res.data[0]);
     } on Failure catch(e){
        throw const Failure('Error get user');
     } on DioException catch(e){
@@ -35,303 +34,596 @@ class UserService{
 
 
   final Map<String,dynamic> _user = {
-    'id':1,
-   'lastName': 'Данилов',
-   'firstName': 'Евгений',
-   'branchName': 'Москва',
-   'phoneNumber': '+1(111)111-11-11',
-   'userStatus': 1,
-   'userType': 1,
-   'directions': [
+   "id": 1,
+   "lastName": "Мананкова",
+   "firstName": "Маргарита",
+   "branchName": "Москва",
+   "phoneNumber": "+(791)324-567-89",
+   "userStatus": 1,
+   "userType": 1,
+   "directions": [
     {
-     'bonus': [
+     "name": "Скрипка",
+     "nameTeacher":"Евженко Кристина",
+     "idAuditory":"Свинг",
+     "bonus": [
       {
-       'id':1,
-        'active':false,
-       'typeBonus': 1,
-       'title': 'Получи бонусный урок',
-       'description': '20% групповые занятия, концерты, практика публичных выступлений и участие в музыкальных коллективах',
-       'quantity': 1.0,
+       "id": 1,
+       "active": false,
+       "typeBonus": 1,
+       "title": "Получи бонусный урок",
+       "description": "20% групповые занятия, концерты, практика публичных выступлений и участие в музыкальных коллективах",
+       "quantity": 1.0
       }
      ],
-     'subscription': {
-      'name': 'Абонемент “Утренний”',
-      'price':  10000.0,
-      'priceOneLesson':  1000.0,
-      'balanceSub': 10000.0,
-      'balanceLesson':10,
-     },
-     'name': 'Бас-гитара',
-     'lessons': [
+     "subscriptions": [
+
       {
-       'id':1,
-       'date': '2024-02-01',
-       'timePeriod': '12:00-13:00',
-       'idAuditory': 120,
-       'nameTeacher': 'Данилина Д.Д.',
-        'timeAccept':'',
-       'status': 7,
+       "id":1,
+       "name": "Абонемент на 1 занятие",
+       "dateStart":"2024-01-13",
+       "dateEnd":"2024-01-13",
+       "price": 1300.0,
+       "priceOneLesson": 1300.0,
+       "balanceSub": 0.0,
+       "balanceLesson": 0,
+        "status":0,
+       "commentary":""
+
+
       },
+
+
       {
-       'id':2,
-       'date': '2024-02-03',
-       'timePeriod': '12:00-13:00',
-       'idAuditory': 120,
-       'nameTeacher': 'Данилина Д.Д.',
-       'timeAccept':'',
-       'status': 6,
-      },
-      {
-       'id':3,
-       'date': '2024-02-04',
-       'timePeriod': '12:00-13:00',
-       'idAuditory': 120,
-       'nameTeacher': 'Данилина Д.Д.',
-       'timeAccept':'',
-       'status': 4,
-      },
-      {
-       'id':4,
-       'date': '2024-02-07',
-       'timePeriod': '12:00-13:00',
-       'idAuditory': 120,
-       'nameTeacher': 'Данилина Д.Д.',
-       'timeAccept':'',
-       'status': 5,
-      },
-      {
-       'id':5,
-       'date': '2024-02-08',
-       'timePeriod': '12:00-13:00',
-       'idAuditory': 120,
-       'nameTeacher': 'Данилина Д.Д.',
-       'timeAccept':'2024-02-08/12:50',
-       'status': 2,
-      },
-      {
-       'id':6,
-       'date': '2024-02-10',
-       'timePeriod': '12:00-13:00',
-       'idAuditory': 120,
-       'nameTeacher': 'Данилина Д.Д.',
-       'timeAccept':'',
-       'status': 3,
-      },
-      {
-       'id':7,
-       'date': '2024-02-13',
-       'timePeriod': '12:00-13:00',
-       'idAuditory': 120,
-       'nameTeacher': 'Данилина Д.Д.',
-       'timeAccept':'',
-       'status': 8,
-      },
-      {
-       'id':8,
-       'date': '2024-02-16',
-       'timePeriod': '12:00-13:00',
-       'idAuditory': 120,
-       'nameTeacher': 'Данилина Д.Д.',
-       'timeAccept':'',
-       'status': 1,
-      },
-      {
-       'id':9,
-       'date': '2024-02-22',
-       'timePeriod': '12:00-13:00',
-       'idAuditory': 120,
-       'nameTeacher': 'Данилина Д.Д.',
-       'timeAccept':'',
-       'status': 8,
-      },
-      {
-       'id':10,
-       'date': '2024-02-25',
-       'timePeriod': '12:00-13:00',
-       'idAuditory': 120,
-       'nameTeacher': 'Данилина Д.Д.',
-       'timeAccept':'',
-       'status': 1,
-      },
-      //March
-      {
-       'id':11,
-       'date': '2024-03-02',
-       'timePeriod': '12:00-13:00',
-       'idAuditory': 120,
-       'nameTeacher': 'Данилина Д.Д.',
-       'timeAccept':'',
-       'status': 1,
+       "id": 2,
+       "name": "Абонемент на 4 занятие",
+       "dateStart":"2024-01-13",
+       "dateEnd":"2024-02-13",
+       "price": 4400.0,
+       "priceOneLesson": 1100.0,
+       "balanceSub": 0.0,
+       "balanceLesson": 0,
+       "status":0,
+       "commentary":""
       },
 
       {
-       'id':12,
-       'date': '2024-03-10',
-       'timePeriod': '12:00-13:00',
-       'idAuditory': 120,
-       'nameTeacher': 'Данилина Д.Д.',
-       'timeAccept':'',
-       'status': 1,
-      },
-      {
-       'id':13,
-       'date': '2024-03-18',
-       'timePeriod': '12:00-13:00',
-       'idAuditory': 120,
-       'nameTeacher': 'Данилина Д.Д.',
-       'timeAccept':'',
-       'status': 1,
-      },
-      {
-       'id':14,
-       'date': '2024-03-21',
-       'timePeriod': '12:00-13:00',
-       'idAuditory': 120,
-       'nameTeacher': 'Данилина Д.Д.',
-       'timeAccept':'',
-       'status': 8,
-      },
+       "id": 3,
+       "name": "Абонемент на 8 занятие",
+       "dateStart":"2024-01-28",
+       "dateEnd":"2024-03-07",
+       "price": 8300.0,
+       "priceOneLesson": 1037.5,
+       "balanceSub": 4150.0,
+       "balanceLesson": 4,
+       "status":1,
+       "commentary":"28.02.24 дата окончания абонемента по договору. В связи с болезнью продлили ДО до 07.03.24"
 
-      {
-       'id':13,
-       'date': '2023-11-18',
-       'timePeriod': '12:00-13:00',
-       'idAuditory': 120,
-       'nameTeacher': 'Данилина Д.Д.',
-       'timeAccept':'',
-       'status': 3,
-      },
-      {
-       'id':14,
-       'date': '2023-11-21',
-       'timePeriod': '12:00-13:00',
-       'idAuditory': 120,
-       'nameTeacher': 'Данилина Д.Д.',
-       'timeAccept':'',
-       'status': 6,
       },
 
      ],
+
+     "lessons": [
+      {
+       "id": 1,
+       "idSub":1,
+       "date": "2024-01-13",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Свинг",
+       "nameTeacher":"Евженко Кристина.",
+       "timeAccept": "2024-01-13",
+       "bonus":false,
+       "status": 2
+      },
+
+      {
+       "id": 2,
+       "idSub": 2,
+       "date": "2024-01-15",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Свинг",
+       "nameTeacher":"Евженко Кристина.",
+       "timeAccept": "2024-01-15",
+       "bonus":false,
+       "status": 2
+      },
+
+      {
+       "id": 3,
+       "idSub": 2,
+       "date": "2024-01-18",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Свинг",
+       "nameTeacher":"Евженко Кристина.",
+       "timeAccept": "2024-01-18",
+       "bonus":false,
+       "status": 2
+      },
+
+      {
+       "id": 5,
+       "idSub":2,
+       "date": "2024-01-21",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Свинг",
+       "nameTeacher":"Евженко Кристина.",
+       "timeAccept": "2024-01-21",
+       "bonus":false,
+       "status": 2
+      },
+
+      {
+       "id": 6,
+       "idSub":3,
+       "date": "2024-01-24",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Свинг",
+       "nameTeacher":"Евженко Кристина.",
+       "timeAccept": "2024-01-24",
+       "bonus":false,
+       "status": 2
+      },
+
+      {
+       "id": 7,
+       "idSub":3,
+       "date": "2024-01-28",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Свинг",
+       "nameTeacher":"Евженко Кристина.",
+       "timeAccept": "2024-01-28",
+       "bonus":false,
+       "status": 2
+      },
+
+      {
+       "id": 8,
+       "idSub":3,
+       "date": "2024-01-31",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Свинг",
+       "nameTeacher":"Евженко Кристина.",
+       "timeAccept": "2024-01-31",
+       "bonus":false,
+       "status": 2
+      },
+
+      {
+       "id": 9,
+       "idSub":3,
+       "date": "2024-02-04",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Свинг",
+       "nameTeacher":"Евженко Кристина.",
+       "timeAccept": "2024-02-04",
+       "bonus":false,
+       "status": 2
+      },
+
+      {
+       "id": 10,
+       "idSub":3,
+       "date": "2024-02-07",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Свинг",
+       "nameTeacher":"Евженко Кристина.",
+       "timeAccept": "",
+       "bonus":false,
+       "status": 4
+      },
+
+
+      {
+       "id": 10,
+       "idSub":3,
+       "date": "2024-02-11",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Свинг",
+       "nameTeacher":"Евженко Кристина.",
+       "timeAccept": "2024-02-11",
+       "bonus":false,
+       "status": 2
+      },
+
+
+      {
+       "id": 11,
+       "idSub":3,
+       "date": "2024-02-14",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Свинг",
+       "nameTeacher":"Евженко Кристина.",
+       "timeAccept": "2024-02-14",
+       "bonus":false,
+       "status": 2
+      },
+
+      {
+       "id": 12,
+       "idSub":3,
+       "date": "2024-03-03",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Свинг",
+       "nameTeacher":"Евженко Кристина.",
+       "timeAccept": "",
+       "bonus":false,
+       "status": 1
+      },
+
+      {
+       "id": 13,
+       "idSub":3,
+       "date": "2024-03-06",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Свинг",
+       "nameTeacher":"Евженко Кристина.",
+       "timeAccept": "",
+       "bonus":false,
+       "status": 1
+      },
+
+      {
+       "id": 14,
+       "idSub":3,
+       "date": "2024-03-10",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Свинг",
+       "nameTeacher":"Евженко Кристина.",
+       "timeAccept": "",
+       "bonus":false,
+       "status": 5
+      },
+
+
+
+     ]
+
+
     },
 
 
-
     {
-     'bonus': [
+     "name": "Вокал",
+     "nameTeacher":"Перова Анастасия",
+     "idAuditory":"Авангард",
+     "bonus": [
       {
-       'id':1,
-       'active':false,
-       'typeBonus': 1,
-       'title': 'Получи бонусный урок',
-       'description': '50% групповые занятия, концерты, практика публичных выступлений и участие в музыкальных коллективах',
-       'quantity': 1.0,
+       "id": 1,
+       "active": false,
+       "typeBonus": 1,
+       "title": "Получи бонусный урок",
+       "description": "20% групповые занятия, концерты, практика публичных выступлений и участие в музыкальных коллективах",
+       "quantity": 1.0
       }
      ],
-     'subscription': {
-      'name': 'Абонемент 1',
-      'price':  20000.0,
-      'priceOneLesson':  1000.0,
-      'balanceSub': 0.0,
-      'balanceLesson':20,
-     },
-     'name': 'Скрипка',
-     'lessons': [
+
+     "subscriptions":[
+
       {
-       'id':1,
-       'date': '2024-02-01',
-       'timePeriod': '12:00-13:00',
-       'idAuditory': 120,
-       'nameTeacher': 'Данилина Д.Д.',
-       'timeAccept':'',
-       'status': 7,
+        "id":1,
+         "name": "Абонемент на 8 занятий Свобода",
+          "dateStart":"2023-12-23",
+           "dateEnd":"2024-02-01",
+            "price": 8300.0,
+          "priceOneLesson": 1037.5,
+          "balanceSub": 0.0,
+          "balanceLesson": 0,
+       "status":0,
+           "commentary":"",
       },
       {
-       'id':2,
-       'date': '2024-02-03',
-       'timePeriod': '12:00-13:00',
-       'idAuditory': 120,
-       'nameTeacher': 'Данилина Д.Д.',
-       'timeAccept':'',
-       'status': 6,
-      },
-      {
-       'id':3,
-       'date': '2024-02-04',
-       'timePeriod': '12:00-13:00',
-       'idAuditory': 120,
-       'nameTeacher': 'Данилина Д.Д.',
-       'timeAccept':'',
-       'status': 4,
-      },
-      {
-       'id':4,
-       'date': '2024-02-07',
-       'timePeriod': '12:00-13:00',
-       'idAuditory': 120,
-       'nameTeacher': 'Данилина Д.Д.',
-       'timeAccept':'',
-       'status': 5,
-      },
-      {
-       'id':5,
-       'date': '2024-02-08',
-       'timePeriod': '12:00-13:00',
-       'idAuditory': 120,
-       'nameTeacher': 'Данилина Д.Д.',
-       'timeAccept':'2024-02-08/12:50',
-       'status': 8,
+       "id":1,
+       "name": "Абонемент на 8 занятий Свобода",
+       "dateStart":"2023-12-23",
+       "dateEnd":"2024-02-01",
+       "price": 8300.0,
+       "priceOneLesson": 1037.5,
+       "balanceSub": 0.0,
+       "balanceLesson": 0,
+       "status":0,
+       "commentary":""
+
+
       },
 
 
-      //March
       {
-       'id':11,
-       'date': '2024-03-06',
-       'timePeriod': '12:00-13:00',
-       'idAuditory': 120,
-       'nameTeacher': 'Данилина Д.Д.',
-       'timeAccept':'',
-       'status': 1,
+       "id":2,
+       "name": "Абонемент на 12 занятий Свобода",
+       "dateStart":"2024-02-01",
+       "dateEnd":"2024-05-01",
+       "price": 12150.0,
+       "priceOneLesson": 1012.5,
+       "balanceSub": 8100.0,
+       "balanceLesson": 9,
+       "status":1,
+       "commentary":"1 бонусный урок за отзывы"
+
+
       },
 
-      {
-       'id':12,
-       'date': '2024-03-17',
-       'timePeriod': '12:00-13:00',
-       'idAuditory': 120,
-       'nameTeacher': 'Данилина Д.Д.',
-       'timeAccept':'',
-       'status': 1,
-      },
-      {
-       'id':13,
-       'date': '2024-03-23',
-       'timePeriod': '12:00-13:00',
-       'idAuditory': 120,
-       'nameTeacher': 'Данилина Д.Д.',
-       'timeAccept':'',
-       'status': 1,
-      },
-      {
-       'id':14,
-       'date': '2024-03-29',
-       'timePeriod': '12:00-13:00',
-       'idAuditory': 120,
-       'nameTeacher': 'Данилина Д.Д.',
-       'timeAccept':'',
-       'status': 8,
-      },
-      {
-       'id':15,
-       'date': '2024-03-21',
-       'timePeriod': '10:00-11:00',
-       'idAuditory': 125,
-       'nameTeacher': 'Данилина Д.Д.',
-       'timeAccept':'',
-       'status': 8,
-      },
 
      ],
+
+     "lessons":[
+
+      {
+       "id": 1,
+       "idSub":1,
+       "date": "2023-11-01",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Авангард",
+       "nameTeacher":"Перова Анастасия",
+       "timeAccept": "",
+       "bonus":false,
+       "status": 7
+      },
+
+      {
+       "id": 2,
+       "idSub":1,
+       "date": "2023-12-01",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Авангард",
+       "nameTeacher":"Перова Анастасия",
+       "timeAccept": "2023-12-01",
+       "bonus":false,
+       "status": 2
+      },
+
+      {
+       "id": 3,
+       "idSub":1,
+       "date": "2023-12-08",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Авангард",
+       "nameTeacher":"Перова Анастасия",
+       "timeAccept": "2023-12-08",
+       "bonus":false,
+       "status": 2
+      },
+
+      {
+       "id": 4,
+       "idSub":1,
+       "date": "2023-12-15",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Авангард",
+       "nameTeacher":"Перова Анастасия",
+       "timeAccept": "",
+       "bonus":false,
+       "status": 3
+      },
+      {
+       "id": 5,
+       "idSub":1,
+       "date": "2023-12-21",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Опера",
+       "nameTeacher":"Базарова Анна",
+       "timeAccept": "2023-12-21",
+       "bonus":false,
+       "status": 2
+      },
+
+      {
+       "id": 6,
+       "idSub":1,
+       "date": "2024-12-28",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Авангард",
+       "nameTeacher":"Перова Анастасия",
+       "timeAccept": "2024-12-28",
+       "bonus":false,
+       "status": 2
+      },
+
+
+      {
+       "id": 7,
+       "idSub":2,
+       "date": "2024-01-04",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Авангард",
+       "nameTeacher":"Перова Анастасия",
+       "timeAccept": "2024-01-04",
+       "bonus":false,
+       "status": 2
+      },
+
+      {
+       "id": 8,
+       "idSub":2,
+       "date": "2024-01-11",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Авангард",
+       "nameTeacher":"Перова Анастасия",
+       "timeAccept": "2024-01-11",
+       "bonus":false,
+       "status": 2
+      },
+
+      {
+       "id": 9,
+       "idSub":2,
+       "date": "2024-01-25",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Авангард",
+       "nameTeacher":"Перова Анастасия",
+       "timeAccept": "2024-01-25",
+       "bonus":false,
+       "status": 2
+      },
+
+
+      {
+       "id": 10,
+       "idSub":2,
+       "date": "2024-02-01",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Авангард",
+       "nameTeacher":"Перова Анастасия",
+       "timeAccept": "2024-02-01",
+       "bonus":false,
+       "status": 2
+      },
+
+      {
+       "id": 11,
+       "idSub":2,
+       "date": "2024-02-08",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Авангард",
+       "nameTeacher":"Перова Анастасия",
+       "timeAccept": "2024-02-0",
+       "bonus":false,
+       "status": 2
+      },
+
+
+      {
+       "id": 12,
+       "idSub":2,
+       "date": "2024-02-16",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Авангард",
+       "nameTeacher":"Перова Анастасия",
+       "timeAccept": "",
+       "bonus":false,
+       "status": 4
+      },
+
+      {
+       "id": 13,
+       "idSub":2,
+       "date": "2024-02-23",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Авангард",
+       "nameTeacher":"Перова Анастасия",
+       "timeAccept": "",
+       "bonus":false,
+       "status": 4
+      },
+
+
+      {
+       "id": 14,
+       "idSub":2,
+       "date": "2024-03-01",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Авангард",
+       "nameTeacher":"Перова Анастасия",
+       "timeAccept": "",
+       "bonus":false,
+       "status": 1
+      },
+
+      {
+       "id": 15,
+       "idSub":2,
+       "date": "2024-03-05",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Авангард",
+       "nameTeacher":"Перова Анастасия",
+       "timeAccept": "",
+       "bonus":false,
+       "status": 1
+      },
+
+
+      {
+       "id": 16,
+       "idSub":2,
+       "date": "2024-03-08",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Авангард",
+       "nameTeacher":"Перова Анастасия",
+       "timeAccept": "",
+       "bonus":false,
+       "status": 1
+      },
+
+
+      {
+       "id": 17,
+       "idSub":2,
+       "date": "2024-03-11",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Авангард",
+       "nameTeacher":"Перова Анастасия",
+       "timeAccept": "",
+       "bonus":false,
+       "status": 1
+      },
+
+
+      {
+       "id": 18,
+       "idSub":2,
+       "date": "2024-03-14",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Авангард",
+       "nameTeacher":"Перова Анастасия",
+       "timeAccept": "",
+       "bonus":false,
+       "status": 1
+      },
+      {
+       "id": 19,
+       "idSub":2,
+       "date": "2024-04-19",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Авангард",
+       "nameTeacher":"Перова Анастасия",
+       "timeAccept": "",
+       "bonus":false,
+       "status": 1
+      },
+      {
+       "id": 20,
+       "idSub":2,
+       "date": "2024-03-23",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Авангард",
+       "nameTeacher":"Перова Анастасия",
+       "timeAccept": "",
+       "bonus":false,
+       "status": 1
+      },
+
+      {
+       "id": 21,
+       "idSub":2,
+       "date": "2024-03-27",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Авангард",
+       "nameTeacher":"Перова Анастасия",
+       "timeAccept": "",
+       "bonus":false,
+       "status": 1
+      },
+
+      {
+       "id": 22,
+       "idSub":2,
+       "date": "2024-04-01",
+       "timePeriod": "12:00-13:00",
+       "idAuditory": "Авангард",
+       "nameTeacher":"Перова Анастасия",
+       "timeAccept": "",
+       "bonus":true,
+       "status": 1
+      },
+
+
+
+
+     ]
+
+
+
+
     }
-   ],
+
+   ]
   };

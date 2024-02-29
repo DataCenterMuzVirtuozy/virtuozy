@@ -49,18 +49,42 @@ class UserMapper{
   static DirectionLesson _fromDirectionModel(DirectionModel directionModel){
     return DirectionLesson(
         bonus: directionModel.bonus.map((e) => _fromApiBonus(bonusModel: e)).toList(),
-        subscription: fromApiPriceSub(directionModel.subscription),
+        subscriptionsAll: fromApiPriceSubAll(directionModel.subscriptionsAll),
         name: directionModel.name,
-        lessons: directionModel.lessons.map((e) => _fromLessonModel(e)).toList());
+        lessons: directionModel.lessons.map((e) => _fromLessonModel(e)).toList(),
+        lastSubscription: fromApiPriceSub(directionModel.lastSubscription));
   }
 
   static SubscriptionEntity fromApiPriceSub(SubscriptionModel subscriptionModel){
     return SubscriptionEntity(
+      status: subscriptionModel.status == 1?StatusSub.active:
+      subscriptionModel.status == 0?StatusSub.inactive:StatusSub.planned,
         name: subscriptionModel.name,
         price: subscriptionModel.price,
         priceOneLesson: subscriptionModel.priceOneLesson,
         balanceLesson: subscriptionModel.balanceLesson,
-        balanceSub: subscriptionModel.balanceSub);
+        balanceSub: subscriptionModel.balanceSub,
+        id: subscriptionModel.id,
+        dateStart: subscriptionModel.dateStart,
+      dateEnd: subscriptionModel.dateEnd,
+      commentary: subscriptionModel.commentary
+    );
+  }
+
+  static List<SubscriptionEntity> fromApiPriceSubAll(List<SubscriptionModel> subscriptionModelAll){
+     return subscriptionModelAll.map((e) =>  SubscriptionEntity(
+         name: e.name,
+         price: e.price,
+         priceOneLesson: e.priceOneLesson,
+         balanceLesson: e.balanceLesson,
+         balanceSub: e.balanceSub,
+         id: e.id,
+         dateStart: e.dateStart,
+         dateEnd: e.dateEnd,
+         commentary: e.commentary,
+         status: e.status == 1?StatusSub.active:
+         e.status == 0?StatusSub.inactive:StatusSub.planned
+     )).toList();
   }
 
   static BonusEntity _fromApiBonus({required BonusModel bonusModel}){
@@ -78,6 +102,8 @@ class UserMapper{
 
   static Lesson _fromLessonModel(LessonModel lessonModel){
     return Lesson(
+      idSub: lessonModel.idSub,
+      bonus: lessonModel.bonus,
       nameDirection: lessonModel.nameDirection,
         id: lessonModel.id,
         date: lessonModel.date,

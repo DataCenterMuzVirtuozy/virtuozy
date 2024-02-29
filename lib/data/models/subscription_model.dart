@@ -1,18 +1,28 @@
 
 
  class SubscriptionModel{
+  final int id;
   final String name;
    final double price;
   final double  priceOneLesson;
   final double balanceSub;
   final int balanceLesson;
+  final String dateStart;
+  final String dateEnd;
+  final String commentary;
+  final int status;
 
-  const SubscriptionModel({
+  const SubscriptionModel( {
+    required this.id,
+    required this.dateEnd,
+    required this.dateStart,
+    required this.commentary,
     required this.name,
     required this.price,
     required this.priceOneLesson,
     required this.balanceSub,
     required this.balanceLesson,
+    required this.status
   });
 
 
@@ -20,10 +30,15 @@
   factory SubscriptionModel.fromMap(Map<String, dynamic> map) {
     return SubscriptionModel(
       name: map['name'] as String,
-      price: map['price'] as double,
-      priceOneLesson: map['priceOneLesson'] as double,
-      balanceSub: map['balanceSub'] as double,
+      price: (map['price'] as dynamic).toDouble(),
+      priceOneLesson: (map['priceOneLesson'] as dynamic).toDouble(),
+      balanceSub: (map['balanceSub'] as dynamic).toDouble(),
       balanceLesson: map['balanceLesson'] as int,
+      id: map['id'] as int,
+      dateEnd: map['dateEnd'] as String,
+      dateStart: map['dateStart'] as String,
+      commentary: map['commentary'] as String,
+      status: map['status'] as int
     );
   }
 }

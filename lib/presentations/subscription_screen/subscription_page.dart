@@ -12,6 +12,7 @@ import 'package:go_router/go_router.dart';
 import 'package:virtuozy/components/box_info.dart';
 import 'package:virtuozy/components/calendar.dart';
 import 'package:virtuozy/components/dialogs/dialoger.dart';
+import 'package:virtuozy/domain/entities/subscription_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/presentations/finance_screen/bloc/bloc_finance.dart';
 import 'package:virtuozy/presentations/finance_screen/bloc/event_finance.dart';
@@ -272,7 +273,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
   double _summaBalance({required List<DirectionLesson> directions}){
      double sum = 0.0;
      for(var dir in directions){
-       sum +=dir.subscription.balanceSub;
+       sum +=dir.lastSubscription.balanceSub;
      }
 
     return sum;
@@ -308,7 +309,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                     children: [
                       Text(directions[index].name,
                           style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
-                      if(directions[index].subscription.balanceSub>0.0)...{
+                      if(directions[index].lastSubscription.status==StatusSub.active)...{
                         Row(
                           children: [
                             Text('Осталось уроков '.tr(),style:TStyle.textStyleVelaSansMedium(colorGrey,size: 14.0)),
@@ -318,7 +319,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                               decoration: BoxDecoration(
                                   color: Theme.of(context).colorScheme.secondary,
                                   shape: BoxShape.circle),
-                              child: Text('${directions[index].subscription.balanceLesson}',
+                              child: Text('${directions[index].lastSubscription.balanceLesson}',
                                   style:TStyle.textStyleVelaSansBold(colorWhite,size: 10.0)),
                             ),
                           ],
@@ -341,11 +342,11 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                   ),
                   const Gap(5.0),
                   Visibility(
-                    visible: directions[index].subscription.balanceSub>0.0&&allViewDirection,
+                    visible: directions[index].lastSubscription.status==StatusSub.active&&allViewDirection,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('${ParserPrice.getBalance(directions[index].subscription.balanceSub)} руб.',
+                        Text('${ParserPrice.getBalance(directions[index].lastSubscription.balanceSub)} руб.',
                             style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
                         Container(
                           alignment: Alignment.center,
