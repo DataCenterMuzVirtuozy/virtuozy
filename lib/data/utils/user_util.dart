@@ -12,8 +12,8 @@ class UserUtil{
     final _service = locator.get<UserService>();
 
 
-    Future<UserEntity> getUser() async {
-       final model = await _service.getUser();
+    Future<UserEntity> getUser({required String uid}) async {
+       final model = await _service.getUser(uid: uid);
        return UserMapper.fromApi(userModel: model);
     }
 

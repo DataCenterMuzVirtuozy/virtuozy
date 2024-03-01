@@ -12,8 +12,8 @@ class UserRepositoryImpl extends UserRepository{
   final _util = locator.get<UserUtil>();
 
   @override
-  Future<UserEntity> getUser() async {
-    return await _util.getUser();
+  Future<UserEntity> getUser({required String uid}) async {
+    return await _util.getUser(uid: uid);
   }
 
 }

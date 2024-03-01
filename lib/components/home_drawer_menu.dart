@@ -154,7 +154,12 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                   user.userStatus.isModeration || user.userStatus.isAuth?'Выйти'.tr():
                   'Войти'.tr(),
                     textColor: colorRed, onPressed: ()  {
-                     Dialoger.showLogOut(context: context,user: user);
+                    if(user.userStatus == UserStatus.notAuth){
+                      GoRouter.of(context).push(pathLogIn);
+                    }else{
+                      Dialoger.showLogOut(context: context,user: user);
+                    }
+
                   },),
                 ],
               ),

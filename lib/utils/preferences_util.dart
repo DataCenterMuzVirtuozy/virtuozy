@@ -14,6 +14,10 @@ class PreferencesUtil{
     return _prefsInstance;
   }
 
+  static Future<void> setUID({required String uid}) async {
+    await _prefsInstance!.setString(_keyUID, uid);
+  }
+
   // 0 - not auth 1 - auth 2 - moderation
   static Future<void> setStatusUser({required int status}) async{
     await _prefsInstance!.setInt(_keyStatus, status);
@@ -70,10 +74,11 @@ class PreferencesUtil{
   static String get firstNameUser => _prefsInstance!.getString(_keyFirstName)??'';
   static String get phoneUser => _prefsInstance!.getString(_keyPhoneNumber)??'';
   static String get branchUser => _prefsInstance!.getString(_keyBranch)??'';
+  static String get uid => _prefsInstance!.getString(_keyUID)??'';
 
   static ThemeStatus get getTheme{
-    final result = _prefsInstance!.getInt(_keyTheme)??0;
-
+    //final result = _prefsInstance!.getInt(_keyTheme)??0;
+    const result = 0;
     switch(result){
       case 0: return ThemeStatus.first;
       case 1: return ThemeStatus.dark;
@@ -103,3 +108,4 @@ String get _keyFirstName =>'key_first_name';
 String get _keyPhoneNumber => 'ky_phone';
 String get _keyBranch => 'key_branch';
 String get _keyStatus => 'key_status';
+String get _keyUID => 'key_uid';

@@ -117,6 +117,9 @@ class _InitPageState extends State<InitPage> {
   Widget build(BuildContext context) {
     return BlocConsumer<AppBloc,AppState>(
       listener: (c,s){
+        if(s.error.isNotEmpty){
+          Dialoger.showActionMaterialSnackBar(context: context, onAction: () {  }, title: s.error);
+        }
         if (s.statusNetwork.isDisconnect){
           Dialoger.showActionMaterialSnackBar(context: context, onAction: () {  }, title: 'Нет сети'.tr());
         }

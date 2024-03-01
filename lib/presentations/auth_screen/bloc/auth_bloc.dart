@@ -40,18 +40,10 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
         throw Failure('Введиде пароль'.tr());
       }
 
-       final phone = PreferencesUtil.phoneUser;
 
-      if(event.phone == '+1 (111) 111-11-11'){
-        final user = await _userRepository.getUser();
-        _userCubit.setUser(user: user);
-        await _createLocalUser(user);
-        await Future.delayed(const Duration(seconds: 2));
-        emit(state.copyWith(authStatus: AuthStatus.authenticated));
-        return;
-      }
+      final phone = PreferencesUtil.phoneUser;
 
-      if(phone == event.phone&& phone!='+1 (111) 111-11-11'){
+      if(phone == event.phone){
         await Future.delayed(const Duration(seconds: 2));
         _userCubit.setUser(user:  UserEntity(
             userStatus: UserStatus.moderation,
@@ -63,10 +55,16 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
             directions: []));
         emit(state.copyWith(authStatus: AuthStatus.moderation));
         return;
+      }else{
+        final user = await _userRepository.getUser(uid: event.phone);
+        await PreferencesUtil.setUID(uid: event.phone);
+        _userCubit.setUser(user: user);
+        await _createLocalUser(user);
+        await Future.delayed(const Duration(seconds: 2));
+        emit(state.copyWith(authStatus: AuthStatus.authenticated));
+        return;
       }
 
-      await Future.delayed(const Duration(seconds: 2));
-      emit(state.copyWith(authStatus: AuthStatus.error,error: 'Аккаунт не найден'.tr()));
     }on Failure catch (e){
       emit(state.copyWith(authStatus: AuthStatus.error,error: e.message));
     }

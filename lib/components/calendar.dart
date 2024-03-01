@@ -100,8 +100,20 @@ class _CalendarState extends State<Calendar> {
            onPageChanged: (day){
              _focusedDay = day;
              },
-
            calendarBuilders: CalendarBuilders(
+             todayBuilder: (context, day,values){
+               return _handlerDay(
+                   clickableDay: widget.clickableDay,
+                   dateTime:day,
+                   monthOfDay: day.month,
+                   lessons: widget.lessons,
+                   day: day.day,
+                   context: context,
+                   onLesson: (lessons){
+                     widget.onLesson.call(lessons);
+                   });
+
+             },
              defaultBuilder: (context, day,values) {
                _onMonth(day.month);
                return _handlerDay(
@@ -237,7 +249,11 @@ class _CalendarState extends State<Calendar> {
     final monthLast = DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpochList[indexLast]).month;
     final yearLast = DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpochList[indexLast]).year;
     final dayLast = DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpochList[indexLast]).day;
-    return DateTime.utc(yearLast, monthLast, dayLast);
+    final lastDay = DateTime.utc(yearLast, monthLast, dayLast);
+    if(!_focusedDay.isBefore(lastDay)){
+      return _focusedDay;
+    }
+    return lastDay;
   }
 
 

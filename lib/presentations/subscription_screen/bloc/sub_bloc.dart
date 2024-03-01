@@ -32,24 +32,28 @@ class SubBloc extends Bloc<SubEvent,SubState>{
          emit(state.copyWith(subStatus: SubStatus.loading));
          await Future.delayed(const Duration(milliseconds: 1500));
        }
-
        final user = _userCubit.userEntity;
-       final firstNotAcceptLesson = _firstNotAcceptLesson(user: user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
-       final listNotAcceptLesson = _getListNotAcceptLesson(user: user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
-       final lessons = _getAllLessons(user, event.allViewDir, event.currentDirIndex);
-       final directions = _getDirections(user: user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
-       final bonuses = _getBonuses(user: user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
-       final titlesDrawingMenu = _getTitlesDrawingMenu(directions: user.directions);
-       emit(state.copyWith(
-         titlesDrawingMenu: titlesDrawingMenu,
-         bonuses: bonuses,
-           userEntity: user,
-           lessons: lessons,
-           directions: directions,
-           subStatus: SubStatus.loaded,
-           firstNotAcceptLesson: firstNotAcceptLesson,
-           listNotAcceptLesson: listNotAcceptLesson));
-       _listenUser(event);
+       if(user.userStatus.isAuth){
+         final firstNotAcceptLesson = _firstNotAcceptLesson(user: user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
+         final listNotAcceptLesson = _getListNotAcceptLesson(user: user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
+         final lessons = _getAllLessons(user, event.allViewDir, event.currentDirIndex);
+         final directions = _getDirections(user: user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
+         final bonuses = _getBonuses(user: user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
+         final titlesDrawingMenu = _getTitlesDrawingMenu(directions: user.directions);
+         emit(state.copyWith(
+             titlesDrawingMenu: titlesDrawingMenu,
+             bonuses: bonuses,
+             userEntity: user,
+             lessons: lessons,
+             directions: directions,
+             subStatus: SubStatus.loaded,
+             firstNotAcceptLesson: firstNotAcceptLesson,
+             listNotAcceptLesson: listNotAcceptLesson));
+         _listenUser(event);
+       }else{
+         emit(state.copyWith( subStatus: SubStatus.loaded));
+       }
+
 
 
 

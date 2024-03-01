@@ -111,7 +111,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
          return Center(child: CircularProgressIndicator(color: colorOrange));
        }
 
-       if(state.userEntity.userStatus.isModeration || state.userEntity.userStatus.isModeration){
+       if(state.userEntity.userStatus.isModeration || state.userEntity.userStatus.isNotAuth){
          return Center(
            child: BoxInfo(
                buttonVisible: state.userEntity.userStatus.isNotAuth,
@@ -121,6 +121,10 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                iconData: CupertinoIcons.music_note_list),
          );
        }
+
+
+
+
 
 
        if(state.directions.isEmpty && state.subStatus == SubStatus.loaded){

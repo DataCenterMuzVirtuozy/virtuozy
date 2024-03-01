@@ -2,6 +2,7 @@
 
 
  import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:virtuozy/data/rest/dio_client.dart';
 import 'package:virtuozy/data/rest/endpoints.dart';
 import 'package:virtuozy/utils/failure.dart';
@@ -15,16 +16,20 @@ class UserService{
    final _dio = locator.get<DioClient>().init();
 
 
-   Future<UserModel> getUser() async {
+   Future<UserModel> getUser({required String uid}) async {
     try{
        await Future.delayed(const Duration(seconds: 1));
        final res = await _dio.get(Endpoints.user,
        queryParameters: {
-          'phoneNumber': "+(791)324-567-89"
+          'phoneNumber': uid.replaceAll(' ', '')
        });
+
+       if((res.data as List<dynamic>).isEmpty){
+        return throw   Failure('Пользователь не найден'.tr());
+       }
         return UserModel.fromMap(res.data[0]);
     } on Failure catch(e){
-       throw const Failure('Error get user');
+       throw  Failure(e.message);
     } on DioException catch(e){
      throw  Failure(e.message!);
     }

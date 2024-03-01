@@ -145,7 +145,7 @@ class ItemDetailsLesson extends StatelessWidget{
          Row(
            mainAxisAlignment: MainAxisAlignment.center,
            children: [
-             Text('Кабинет №',
+             Text('Кабинет '.tr(),
                  style: TStyle.textStyleVelaSansMedium(colorGrey, size: 16.0)),
              Text('${lesson.idAuditory}',
                  style: TStyle.textStyleVelaSansMedium(colorGrey, size: 16.0)),

@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/domain/repository/user_repository.dart';
 import 'package:virtuozy/domain/user_cubit.dart';
+import 'package:virtuozy/utils/failure.dart';
 import 'package:virtuozy/utils/preferences_util.dart';
 
 import '../di/locator.dart';
@@ -26,30 +27,42 @@ part 'app_state.dart';
 
 
   void _initApp(InitAppEvent event,emit) async {
+  try{
    emit(state.copyWith(authStatusCheck: AuthStatusCheck.unknown));
-    final user = await _getUser();
+   final uid = PreferencesUtil.uid;
+   if(uid.isEmpty){
+    _userCubit.setUser(user: UserEntity.unknown());
+    emit(state.copyWith(authStatusCheck: AuthStatusCheck.unauthenticated));
+   }else {
+    final user = await _getUser(uid: uid);
     _userCubit.setUser(user: user);
     if(user.userStatus == UserStatus.notAuth){
-    emit(state.copyWith(authStatusCheck: AuthStatusCheck.unauthenticated));
-   }else{
-    if(user.userStatus == UserStatus.auth){
-     emit(state.copyWith(authStatusCheck: AuthStatusCheck.authenticated));
-    }else if(user.userStatus == UserStatus.moderation){
-     emit(state.copyWith(authStatusCheck: AuthStatusCheck.moderation));
-    }
+     emit(state.copyWith(authStatusCheck: AuthStatusCheck.unauthenticated));
+    }else{
+     if(user.userStatus == UserStatus.auth){
+      emit(state.copyWith(authStatusCheck: AuthStatusCheck.authenticated));
+     }else if(user.userStatus == UserStatus.moderation){
+      emit(state.copyWith(authStatusCheck: AuthStatusCheck.moderation));
+     }
 
+    }
    }
+
+  }on Failure catch(e){
+   emit(state.copyWith(authStatusCheck: AuthStatusCheck.error,error: e.message));
+
+  }
 
   }
 
 
-  Future<UserEntity> _getUser() async {
+  Future<UserEntity> _getUser({required String uid}) async {
    // final phone = PreferencesUtil.phoneUser;
    // final status = PreferencesUtil.statusUser;
    // final lastName = PreferencesUtil.lastNameUser;
    // final firstName = PreferencesUtil.firstNameUser;
    // final branch = PreferencesUtil.branchUser;
-   return await _userRepository.getUser();
+   return await _userRepository.getUser(uid: uid);
   }
 
 

@@ -98,10 +98,6 @@ class _FinancePageState extends State<FinancePage> {
      },
      builder: (context,state) {
 
-       if(state.status == FinanceStatus.loading){
-         return const Center(child: CircularProgressIndicator());
-       }
-
        if(state.user.userStatus.isModeration || state.user.userStatus.isNotAuth){
          return Center(
            child: BoxInfo(
@@ -112,6 +108,11 @@ class _FinancePageState extends State<FinancePage> {
                iconData: CupertinoIcons.creditcard),
          );
        }
+
+       if(state.status == FinanceStatus.loading){
+         return const Center(child: CircularProgressIndicator());
+       }
+
 
 
        return Padding(
