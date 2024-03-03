@@ -5,10 +5,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:virtuozy/di/locator.dart';
 import 'package:virtuozy/domain/entities/price_subscription_entity.dart';
+import 'package:virtuozy/domain/entities/subscription_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/domain/repository/finance_repository.dart';
 import 'package:virtuozy/presentations/finance_screen/bloc/event_finance.dart';
 import 'package:virtuozy/presentations/finance_screen/bloc/state_finance.dart';
+import 'package:virtuozy/presentations/subscription_screen/bloc/sub_state.dart';
 import 'package:virtuozy/utils/failure.dart';
 import 'package:virtuozy/utils/update_list_ext.dart';
 
@@ -65,10 +67,37 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
       await Future.delayed(const Duration(seconds: 1));
     }
     final user  = _userCubit.userEntity;
+    if(user.userStatus == UserStatus.moderation || user.userStatus == UserStatus.notAuth){
+      emit(state.copyWith(
+          status: FinanceStatus.loaded));
+      return;
+    }
+    final expiredSubscriptions = _getExpiredSubscriptions(user,event.allViewDir,event.indexDirection);
     final titlesDrawingMenu = _getTitlesDrawingMenu(directions: user.directions);
     final directions = _getDirections(user: user,indexDir: event.indexDirection,allViewDir: event.allViewDir);
-    emit(state.copyWith(status: FinanceStatus.loaded,user: user,directions: directions,titlesDrawingMenu: titlesDrawingMenu));
+    emit(state.copyWith(
+        status: FinanceStatus.loaded,
+        user: user,
+        directions: directions,
+        titlesDrawingMenu: titlesDrawingMenu,
+        expiredSubscriptions: expiredSubscriptions));
+  }
 
+  List<SubscriptionEntity> _getExpiredSubscriptions(UserEntity user,bool allView,int indexDir){
+     List<SubscriptionEntity> resList = [];
+
+    if(allView){
+
+      for(var e in user.directions){
+        resList.addAll(e.subscriptionsAll);
+      }
+
+    }else{
+      resList = user.directions[indexDir].subscriptionsAll;
+    }
+
+
+    return resList.where((element) => element.status == StatusSub.inactive).toList();
   }
 
 

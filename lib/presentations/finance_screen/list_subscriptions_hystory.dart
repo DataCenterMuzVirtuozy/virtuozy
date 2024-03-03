@@ -5,29 +5,67 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:virtuozy/components/app_bar.dart';
+import 'package:virtuozy/presentations/finance_screen/bloc/bloc_finance.dart';
 
+import '../../components/box_info.dart';
+import '../../domain/entities/subscription_entity.dart';
 import '../../resourses/colors.dart';
 import '../../utils/text_style.dart';
 
-class ListSubscriptionHistory extends StatelessWidget{
-  const ListSubscriptionHistory({super.key});
+class ListSubscriptionHistory extends StatefulWidget{
+  const ListSubscriptionHistory({super.key, required this.listExpiredSubscriptions});
+
+  final List<SubscriptionEntity> listExpiredSubscriptions;
+
+  @override
+  State<ListSubscriptionHistory> createState() => _ListSubscriptionHistoryState();
+}
+
+class _ListSubscriptionHistoryState extends State<ListSubscriptionHistory> {
+
+
+
+
+
+  @override
+  void didChangeDependencies() {
+   super.didChangeDependencies();
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarCustom(title: 'История абонементов'.tr()),
-      body: ListView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          itemCount: 10,
-          itemBuilder: (c,i){
-            return ItemSubHistory(
-              title:'Вокал',
-                body: 'Абонемент утренний',
-                time: '22.04.2022',
-                quantity: '40000');
-          }),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if(widget.listExpiredSubscriptions.isEmpty)...{
+            BoxInfo(title: 'Список пуст'.tr(),
+    iconData: Icons.list_alt_sharp)
+
+          }else...{
+            Expanded(
+              child:  ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  itemCount: widget.listExpiredSubscriptions.length,
+                  itemBuilder: (c,i){
+                    return ItemSubHistory(
+                        title: widget.listExpiredSubscriptions[i].nameDir,
+                        body: widget.listExpiredSubscriptions[i].name,
+                        time: widget.listExpiredSubscriptions[i].dateEnd,
+                        quantity: widget.listExpiredSubscriptions[i].price.toString());
+                  }),
+            )
+
+          }
+
+        ],
+      ),
     );
   }
 

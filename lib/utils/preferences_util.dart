@@ -77,8 +77,7 @@ class PreferencesUtil{
   static String get uid => _prefsInstance!.getString(_keyUID)??'';
 
   static ThemeStatus get getTheme{
-    //final result = _prefsInstance!.getInt(_keyTheme)??0;
-    const result = 0;
+    final result = _prefsInstance!.getInt(_keyTheme)??0;
     switch(result){
       case 0: return ThemeStatus.first;
       case 1: return ThemeStatus.dark;

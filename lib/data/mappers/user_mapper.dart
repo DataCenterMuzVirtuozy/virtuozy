@@ -57,6 +57,7 @@ class UserMapper{
 
   static SubscriptionEntity fromApiPriceSub(SubscriptionModel subscriptionModel){
     return SubscriptionEntity(
+      nameDir: subscriptionModel.nameDir,
       status: subscriptionModel.status == 1?StatusSub.active:
       subscriptionModel.status == 0?StatusSub.inactive:StatusSub.planned,
         name: subscriptionModel.name,
@@ -73,6 +74,7 @@ class UserMapper{
 
   static List<SubscriptionEntity> fromApiPriceSubAll(List<SubscriptionModel> subscriptionModelAll){
      return subscriptionModelAll.map((e) =>  SubscriptionEntity(
+       nameDir: e.nameDir,
          name: e.name,
          price: e.price,
          priceOneLesson: e.priceOneLesson,

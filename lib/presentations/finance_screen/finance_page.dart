@@ -98,7 +98,12 @@ class _FinancePageState extends State<FinancePage> {
      },
      builder: (context,state) {
 
-       if(state.user.userStatus.isModeration || state.user.userStatus.isNotAuth){
+       if(state.status == FinanceStatus.loading){
+         return const Center(child: CircularProgressIndicator());
+       }
+
+       if(state.user.userStatus.isModeration ||
+           state.user.userStatus.isNotAuth&&state.status == FinanceStatus.loaded){
          return Center(
            child: BoxInfo(
                buttonVisible: state.user.userStatus.isNotAuth,
@@ -109,9 +114,7 @@ class _FinancePageState extends State<FinancePage> {
          );
        }
 
-       if(state.status == FinanceStatus.loading){
-         return const Center(child: CircularProgressIndicator());
-       }
+
 
 
 
@@ -280,7 +283,7 @@ class _FinancePageState extends State<FinancePage> {
                const Gap(20.0),
                GestureDetector(
                  onTap: (){
-                   GoRouter.of(context).push(pathListSubscriptionsHistory);
+                   GoRouter.of(context).push(pathListSubscriptionsHistory,extra: state.expiredSubscriptions);
                  },
                  child: Container(
                    padding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 20.0),

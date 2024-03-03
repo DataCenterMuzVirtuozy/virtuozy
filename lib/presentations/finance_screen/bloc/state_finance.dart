@@ -3,6 +3,7 @@
  import 'package:equatable/equatable.dart';
 import 'package:virtuozy/domain/entities/prices_direction_entity.dart';
 
+import '../../../domain/entities/subscription_entity.dart';
 import '../../../domain/entities/transaction_entity.dart';
 import '../../../domain/entities/user_entity.dart';
 
@@ -54,9 +55,11 @@ enum FinanceStatus{
   final UserEntity user;
   final List<DirectionLesson> directions;
   final List<TransactionEntity> transactions;
+  final List<SubscriptionEntity> expiredSubscriptions;
   final List<String> titlesDrawingMenu;
 
   const StateFinance({
+    required this.expiredSubscriptions,
     required this.titlesDrawingMenu,
     required this.applyBonusStatus,
     required this.listTransactionStatus,
@@ -72,6 +75,7 @@ enum FinanceStatus{
 
   factory StateFinance.unknown(){
     return StateFinance(
+      expiredSubscriptions: const [],
       titlesDrawingMenu: const [],
       applyBonusStatus: ApplyBonusStatus.unknown,
       listTransactionStatus: ListTransactionStatus.unknown,
@@ -85,6 +89,7 @@ enum FinanceStatus{
   }
 
   StateFinance copyWith({
+    List<SubscriptionEntity>? expiredSubscriptions,
     List<TransactionEntity>? transactions,
     List<DirectionLesson>? directions,
     FinanceStatus? status,
@@ -97,6 +102,7 @@ enum FinanceStatus{
     List<String>? titlesDrawingMenu
   }) {
     return StateFinance(
+      expiredSubscriptions: expiredSubscriptions??this.expiredSubscriptions,
       titlesDrawingMenu: titlesDrawingMenu??this.titlesDrawingMenu,
       applyBonusStatus: applyBonusStatus??this.applyBonusStatus,
       listTransactionStatus: listTransactionStatus??this.listTransactionStatus,
@@ -114,6 +120,7 @@ enum FinanceStatus{
   @override
   List<Object?> get props => [
     applyBonusStatus,
+    expiredSubscriptions,
     listTransactionStatus,
     paymentStatus,
     transactions,

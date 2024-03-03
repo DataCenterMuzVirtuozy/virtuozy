@@ -11,9 +11,11 @@
   final String dateEnd;
   final String commentary;
   final int status;
+  final String nameDir;
 
   const SubscriptionModel( {
     required this.id,
+    required this.nameDir,
     required this.dateEnd,
     required this.dateStart,
     required this.commentary,
@@ -27,8 +29,9 @@
 
 
 
-  factory SubscriptionModel.fromMap(Map<String, dynamic> map) {
+  factory SubscriptionModel.fromMap(Map<String, dynamic> map,String nameDir) {
     return SubscriptionModel(
+      nameDir: nameDir,
       name: map['name'] as String,
       price: (map['price'] as dynamic).toDouble(),
       priceOneLesson: (map['priceOneLesson'] as dynamic).toDouble(),

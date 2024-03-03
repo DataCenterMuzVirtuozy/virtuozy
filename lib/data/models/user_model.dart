@@ -67,7 +67,7 @@ class UserModel{
     final lessons =  map['lessons'] as List<dynamic>;
     final nameDirection = map['name'] as String;
     final subsMap = map['subscriptions'] as List<dynamic>;
-    final subs = subsMap.map((e) => SubscriptionModel.fromMap(e)).toList();
+    final subs = subsMap.map((e) => SubscriptionModel.fromMap(e,nameDirection)).toList();
     final lastSub = _getLastSub(subs);
     final bonus = map['bonus'] as List<dynamic>;
     return DirectionModel(
