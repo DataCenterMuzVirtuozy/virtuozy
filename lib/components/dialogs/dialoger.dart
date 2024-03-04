@@ -9,7 +9,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
-import 'package:virtuozy/components/calendar.dart';
+import 'package:virtuozy/components/calendar/calendar.dart';
 import 'package:virtuozy/components/dialogs/sealeds.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/presentations/main_screen/main_page.dart';

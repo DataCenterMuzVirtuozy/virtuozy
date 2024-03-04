@@ -14,8 +14,10 @@ import 'package:virtuozy/presentations/subscription_screen/subscription_page.dar
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/utils/status_to_color.dart';
 
-import '../domain/entities/user_entity.dart';
-import '../utils/text_style.dart';
+import '../../domain/entities/user_entity.dart';
+import '../../utils/text_style.dart';
+import '../dialogs/dialoger.dart';
+import 'custom_table_calendar.dart';
 
 
 //ValueNotifier<int> currentDayNotifi = ValueNotifier<int>(0);
@@ -46,18 +48,20 @@ class _CalendarState extends State<Calendar> {
   int i = 0;
   late DateTime _firstDay;
   late DateTime _focusedDay;
+  late DateTime _lastDay;
+
 
 
   @override
   void initState() {
     super.initState();
-    _firstDay = _getFirstDate(lessons: widget.lessons);
     _focusedDay = DateTime.now();
   }
 
   @override
   Widget build(BuildContext context) {
-
+    _firstDay = _getFirstDate(lessons: widget.lessons);
+    _lastDay = _getLastDate(lessons: widget.lessons);
     if(widget.resetFocusDay){
        _focusedDay = DateTime.now();
     }
@@ -69,7 +73,7 @@ class _CalendarState extends State<Calendar> {
      ),
      child: Column(
        children: [
-         TableCalendar(
+         CustomTableCalendar(
            daysOfWeekHeight: 20.0,
            rowHeight: 40.0,
            weekNumbersVisible: false,
@@ -78,7 +82,7 @@ class _CalendarState extends State<Calendar> {
              weekendStyle: TStyle.textStyleVelaSansBold(colorRed)
            ),
            firstDay: _firstDay,
-           lastDay:  _getLastDate(lessons: widget.lessons),
+           lastDay:  _lastDay,
            focusedDay: _focusedDay,
            calendarStyle: CalendarStyle(
              tablePadding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -100,6 +104,7 @@ class _CalendarState extends State<Calendar> {
            onPageChanged: (day){
              _focusedDay = day;
              },
+
            calendarBuilders: CalendarBuilders(
              todayBuilder: (context, day,values){
                return _handlerDay(
@@ -128,6 +133,17 @@ class _CalendarState extends State<Calendar> {
                });
              },
            ),
+           onLeftChevronTap: () {
+             if(_focusedDay.month == _firstDay.month){
+               Dialoger.showMessage('Cancel L');
+             }
+           },
+           onRightChevronTap: () {
+             if(_focusedDay.month == _lastDay.month){
+               Dialoger.showMessage('Cancel R');
+             }
+
+           },
 
          ),
          const InfoColor()

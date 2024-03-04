@@ -8,7 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
-import 'package:virtuozy/components/calendar.dart';
+import 'package:virtuozy/components/calendar/calendar.dart';
 import 'package:virtuozy/components/home_drawer_menu.dart';
 import 'package:virtuozy/presentations/auth_screen/bloc/auth_state.dart';
 import 'package:virtuozy/presentations/schedule_screen/schedule_page.dart';

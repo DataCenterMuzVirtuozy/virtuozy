@@ -18,7 +18,7 @@ import 'package:virtuozy/utils/auth_mixin.dart';
 import 'package:virtuozy/utils/status_to_color.dart';
 
 import '../../components/box_info.dart';
-import '../../components/calendar.dart';
+import '../../components/calendar/calendar.dart';
 import '../../components/dialogs/dialoger.dart';
 import '../../components/dialogs/sealeds.dart';
 import '../../components/drawing_menu_selected.dart';
