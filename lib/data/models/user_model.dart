@@ -80,6 +80,9 @@ class UserModel{
     );
   }
 
+
+
+
    static SubscriptionModel _getLastSub(List<SubscriptionModel> subs){
     final List<int> millisecondsSinceEpochList = [];
 
@@ -169,7 +172,7 @@ class UserModel{
       typeBonus: map['typeBonus'] as int,
       title: map['title'] as String,
       description: map['description'] as String,
-      quantity: (map['quantity'] as dynamic).toDouble(),
+      quantity: (map['quantity'] as dynamic).toDouble()??0.0,
     );
   }
 }

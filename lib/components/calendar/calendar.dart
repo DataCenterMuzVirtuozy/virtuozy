@@ -1,7 +1,8 @@
 
 
 
-  import 'dart:math';
+  import 'dart:async';
+import 'dart:math';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
@@ -49,6 +50,14 @@ class _CalendarState extends State<Calendar> {
   late DateTime _firstDay;
   late DateTime _focusedDay;
   late DateTime _lastDay;
+  late int interval = 2000;
+  var isClicked = false;
+  late Timer _timer;
+
+
+  _startTimer() {
+    _timer = Timer(Duration(milliseconds: interval), () => isClicked = false);
+  }
 
 
 
@@ -56,15 +65,21 @@ class _CalendarState extends State<Calendar> {
   void initState() {
     super.initState();
     _focusedDay = DateTime.now();
+
+
   }
 
   @override
   Widget build(BuildContext context) {
-    _firstDay = _getFirstDate(lessons: widget.lessons);
-    _lastDay = _getLastDate(lessons: widget.lessons);
+
+
     if(widget.resetFocusDay){
        _focusedDay = DateTime.now();
     }
+
+    _firstDay = _getFirstDate(lessons: widget.lessons);
+    _lastDay = _getLastDate(lessons: widget.lessons);
+
 
    return Container(
      decoration: BoxDecoration(
@@ -74,6 +89,7 @@ class _CalendarState extends State<Calendar> {
      child: Column(
        children: [
          CustomTableCalendar(
+           key: ValueKey(_firstDay),
            daysOfWeekHeight: 20.0,
            rowHeight: 40.0,
            weekNumbersVisible: false,
@@ -135,12 +151,23 @@ class _CalendarState extends State<Calendar> {
            ),
            onLeftChevronTap: () {
              if(_focusedDay.month == _firstDay.month){
-               Dialoger.showMessage('Cancel L');
+
+               if (isClicked == false) {
+                 _startTimer();
+                 Dialoger.showMessage('Нет записей на прошлый месяц'.tr());
+                 isClicked = true;
+               }
+
+
              }
            },
            onRightChevronTap: () {
              if(_focusedDay.month == _lastDay.month){
-               Dialoger.showMessage('Cancel R');
+               if (isClicked == false) {
+                 _startTimer();
+                 Dialoger.showMessage('Нет записей на следующий месяц'.tr());
+                 isClicked = true;
+               }
              }
 
            },
@@ -151,6 +178,8 @@ class _CalendarState extends State<Calendar> {
      ),
    );
   }
+
+
 
 
   _onMonth(int currentMonth){

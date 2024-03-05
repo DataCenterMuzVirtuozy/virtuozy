@@ -17,6 +17,7 @@ import 'package:virtuozy/presentations/finance_screen/bloc/bloc_finance.dart';
 import 'package:virtuozy/presentations/finance_screen/bloc/state_finance.dart';
 import 'package:virtuozy/resourses/images.dart';
 
+import '../../components/dialogs/dialoger.dart';
 import '../../components/drawing_menu_selected.dart';
 import '../../resourses/colors.dart';
 import '../../utils/text_style.dart';
@@ -58,8 +59,9 @@ class _PayPageState extends State<PayPage> {
       body: BlocConsumer<BlocFinance,StateFinance>(
         listener: (c, s) {
             if(s.paymentStatus == PaymentStatus.loaded){
-              _selPriceSubscription = s.pricesDirectionEntity.subscriptions[_selIndexDirection];
-               _titlePrices = s.pricesDirectionEntity.subscriptions.map((e) => '${e.name} - ${e.price} руб.').toList();
+              //_selPriceSubscription = s.pricesDirectionEntity.subscriptions[_selIndexDirection];
+              _selPriceSubscription = s.pricesSubscriptionsAll[0];
+               _titlePrices = s.pricesSubscriptionsAll.map((e) => '${e.name} - ${e.price} руб.').toList();
             }
         },
         builder: (context,state) {
@@ -88,34 +90,40 @@ class _PayPageState extends State<PayPage> {
 
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 20.0),
-            child: Column(
-              children: [
-                Visibility(
-                  visible: widget.directions.length>1,
-                  child: DrawingMenuSelected(
-                    items:_titlesDirections,
-                    onSelected: (index){
-                      _selIndexDirection = index;
-                       context.read<BlocFinance>().add(GetListSubscriptionsEvent(nameDirection: widget.directions[_selIndexDirection].name,
-                           refreshDirection: false));
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Visibility(
+                    visible: widget.directions.length>1,
+                    child: DrawingMenuSelected(
+                      items:_titlesDirections,
+                      onSelected: (index){
+                        _selIndexDirection = index;
+                         context.read<BlocFinance>().add(GetListSubscriptionsEvent(nameDirection: widget.directions[_selIndexDirection].name,
+                             refreshDirection: false));
 
+                    },),
+                  ),
+                  const Gap(10.0),
+                  DrawingMenuSelected(
+                    key: UniqueKey(),
+                    items: _titlePrices,
+                    onSelected: (index){
+                      _selPriceSubscription = state.pricesSubscriptionsAll[index];
                   },),
-                ),
-                const Gap(10.0),
-                DrawingMenuSelected(
-                  key: UniqueKey(),
-                  items: _titlePrices,
-                  onSelected: (index){
-                    _selPriceSubscription = state.pricesDirectionEntity.subscriptions[index];
-                },),
-                const Gap(20.0),
-                PaymentList(onPay: (){
-                  print('Price ${_selPriceSubscription.price} ${widget.directions[_selIndexDirection].name}');
-                  context.read<BlocFinance>()
-                    .add(PaySubscriptionEvent(
-                    priceSubscriptionEntity: _selPriceSubscription,
-                    currentDirection: widget.directions[_selIndexDirection]));})
-              ],
+                  const Gap(20.0),
+                  PaymentList(
+                      onPay: (){
+                    Dialoger.showMessage('В разработке');
+
+                    // context.read<BlocFinance>()
+                    //   .add(PaySubscriptionEvent(
+                    //   priceSubscriptionEntity: _selPriceSubscription,
+                    //   currentDirection: widget.directions[_selIndexDirection]));
+                      }
+                      )
+                ],
+              ),
             ),
           );
         },

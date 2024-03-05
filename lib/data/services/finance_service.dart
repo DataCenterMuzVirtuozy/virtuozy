@@ -1,13 +1,18 @@
 
 
 
- import 'package:virtuozy/data/models/prices_direction_model.dart';
+ import 'package:virtuozy/data/models/price_subscription_model.dart';
+import 'package:virtuozy/data/models/prices_direction_model.dart';
 import 'package:virtuozy/utils/failure.dart';
+
+import '../../di/locator.dart';
+import '../rest/dio_client.dart';
+import '../rest/endpoints.dart';
 
 class FinanceService{
 
 
-
+  final _dio = locator.get<DioClient>().init();
 
    Future<PricesDirectionModel> getSubscriptionsByDirection({required String nameDirection}) async {
      try{
@@ -17,6 +22,18 @@ class FinanceService{
         throw Failure(e.message);
      }
      }
+
+   Future<List<PriceSubscriptionModel>> getSubscriptionsAll() async {
+     try{
+
+       await Future.delayed(const Duration(seconds: 1));
+       final res = await _dio.get(Endpoints.subscriptions);
+       final subs = (res.data as List<dynamic>).map((e)=> PriceSubscriptionModel.fromMap(e)).toList();
+        return subs;
+     }on Failure catch(e){
+       throw Failure(e.message);
+     }
+   }
 
 
 

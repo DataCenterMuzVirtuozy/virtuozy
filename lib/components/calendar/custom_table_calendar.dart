@@ -292,22 +292,25 @@ class CustomTableCalendarState<T> extends State<CustomTableCalendar<T>> {
   }
 
 
-  // @override
-  // void didUpdateWidget(TableCalendar<T> oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  //
-  //   if (_focusedDay.value != widget.focusedDay) {
-  //     _focusedDay.value = widget.focusedDay;
-  //   }
-  //
-  //   if (_rangeSelectionMode != widget.rangeSelectionMode) {
-  //     _rangeSelectionMode = widget.rangeSelectionMode;
-  //   }
-  //
-  //   if (widget.rangeStartDay == null && widget.rangeEndDay == null) {
-  //     _firstSelectedDay = null;
-  //   }
-  // }
+   @override
+  void didUpdateWidget(CustomTableCalendar<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (_focusedDay.value != widget.focusedDay) {
+      _focusedDay.value = widget.focusedDay;
+    }
+
+    if (_rangeSelectionMode != widget.rangeSelectionMode) {
+      _rangeSelectionMode = widget.rangeSelectionMode;
+    }
+
+    if (widget.rangeStartDay == null && widget.rangeEndDay == null) {
+      _firstSelectedDay = null;
+    }
+  }
+
+
+
 
 
 

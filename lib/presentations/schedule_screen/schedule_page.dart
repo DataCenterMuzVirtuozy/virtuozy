@@ -74,6 +74,12 @@ class _SchedulePageState extends State<SchedulePage> {
       },
       builder: (context,state) {
 
+        if(state.status == ScheduleStatus.loading){
+          return Center(
+            child: CircularProgressIndicator(color: colorOrange),
+          );
+        }
+
         if(state.user.userStatus.isModeration || state.user.userStatus.isNotAuth){
           return Center(
             child: BoxInfo(
@@ -86,11 +92,7 @@ class _SchedulePageState extends State<SchedulePage> {
         }
 
 
-        if(state.status == ScheduleStatus.loading){
-          return Center(
-            child: CircularProgressIndicator(color: colorOrange),
-          );
-        }
+
 
 
 

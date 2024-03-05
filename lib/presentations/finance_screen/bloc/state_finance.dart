@@ -3,6 +3,7 @@
  import 'package:equatable/equatable.dart';
 import 'package:virtuozy/domain/entities/prices_direction_entity.dart';
 
+import '../../../domain/entities/price_subscription_entity.dart';
 import '../../../domain/entities/subscription_entity.dart';
 import '../../../domain/entities/transaction_entity.dart';
 import '../../../domain/entities/user_entity.dart';
@@ -56,9 +57,11 @@ enum FinanceStatus{
   final List<DirectionLesson> directions;
   final List<TransactionEntity> transactions;
   final List<SubscriptionEntity> expiredSubscriptions;
+  final List<PriceSubscriptionEntity> pricesSubscriptionsAll;
   final List<String> titlesDrawingMenu;
 
   const StateFinance({
+    required this.pricesSubscriptionsAll,
     required this.expiredSubscriptions,
     required this.titlesDrawingMenu,
     required this.applyBonusStatus,
@@ -75,6 +78,7 @@ enum FinanceStatus{
 
   factory StateFinance.unknown(){
     return StateFinance(
+      pricesSubscriptionsAll: const [],
       expiredSubscriptions: const [],
       titlesDrawingMenu: const [],
       applyBonusStatus: ApplyBonusStatus.unknown,
@@ -99,9 +103,11 @@ enum FinanceStatus{
     PricesDirectionEntity? pricesDirectionEntity,
     UserEntity? user,
     ApplyBonusStatus? applyBonusStatus,
-    List<String>? titlesDrawingMenu
+    List<String>? titlesDrawingMenu,
+    List<PriceSubscriptionEntity>? pricesSubscriptionsAll
   }) {
     return StateFinance(
+      pricesSubscriptionsAll: pricesSubscriptionsAll??this.pricesSubscriptionsAll,
       expiredSubscriptions: expiredSubscriptions??this.expiredSubscriptions,
       titlesDrawingMenu: titlesDrawingMenu??this.titlesDrawingMenu,
       applyBonusStatus: applyBonusStatus??this.applyBonusStatus,

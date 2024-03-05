@@ -21,6 +21,7 @@ class PricesDirectionMapper{
 
    static List<PriceSubscriptionEntity> fromApiPricesSubscription({required List<PriceSubscriptionModel> subscriptions}){
      return subscriptions.map((e) => PriceSubscriptionEntity(
+       id: e.id,
          name: e.name,
          price: e.price,
          priceOneLesson: e.priceOneLesson,

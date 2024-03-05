@@ -70,7 +70,7 @@ class SubBloc extends Bloc<SubEvent,SubState>{
 
   List<String> _getTitlesDrawingMenu({required List<DirectionLesson> directions}){
     List<String> resultList = [];
-    directions.sort((a,b)=>b.lastSubscription.balanceSub.compareTo(a.lastSubscription.balanceSub));
+    //directions.sort((a,b)=>b.lastSubscription.balanceSub.compareTo(a.lastSubscription.balanceSub));
     resultList = directions.map((e) => e.name).toList();
     int length = resultList.length;
     if(length>1){

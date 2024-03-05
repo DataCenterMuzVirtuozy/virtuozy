@@ -51,9 +51,9 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
         await Future.delayed(const Duration(seconds: 1));
       }
 
-      final prices = await _financeRepository.getSubscriptionsByDirection(nameDirection: event.nameDirection);
+      final prices = await _financeRepository.getSubscriptionsAll();
 
-      emit(state.copyWith(paymentStatus: PaymentStatus.loaded,pricesDirectionEntity: prices));
+      emit(state.copyWith(paymentStatus: PaymentStatus.loaded,pricesSubscriptionsAll: prices));
     }on Failure catch(e){
       emit(state.copyWith(paymentStatus: PaymentStatus.paymentError,error: e.message));
     }
