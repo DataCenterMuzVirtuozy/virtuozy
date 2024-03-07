@@ -11,6 +11,7 @@ import 'package:virtuozy/domain/repository/finance_repository.dart';
 import 'package:virtuozy/presentations/finance_screen/bloc/event_finance.dart';
 import 'package:virtuozy/presentations/finance_screen/bloc/state_finance.dart';
 import 'package:virtuozy/presentations/subscription_screen/bloc/sub_state.dart';
+import 'package:virtuozy/utils/date_time_parser.dart';
 import 'package:virtuozy/utils/failure.dart';
 import 'package:virtuozy/utils/update_list_ext.dart';
 
@@ -25,6 +26,7 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
     on<GetListTransactionsEvent>(_getListTransaction);
     on<WritingOfMoneyEvent>(_writingOffMoney);
     on<ApplyBonusEvent>(_applyBonus);
+    on<UpdateBalanceEvent>(_updateBalance);
   }
 
   final _financeRepository = locator.get<FinanceRepository>();
@@ -72,38 +74,104 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
           status: FinanceStatus.loaded));
       return;
     }
-    final expiredSubscriptions = _getExpiredSubscriptions(user,event.allViewDir,event.indexDirection);
+
     final titlesDrawingMenu = _getTitlesDrawingMenu(directions: user.directions);
     final directions = _getDirections(user: user,indexDir: event.indexDirection,allViewDir: event.allViewDir);
+    final expiredSubscriptions = _getExpiredSubscriptions(directions,event.allViewDir,event.indexDirection);
+    final listSubHistory = _getHistorySubscriptions(directions,event.allViewDir,event.indexDirection);
     emit(state.copyWith(
         status: FinanceStatus.loaded,
         user: user,
+        subscriptionHistory: listSubHistory,
+        directions: directions,
+        titlesDrawingMenu: titlesDrawingMenu,
+        expiredSubscriptions: expiredSubscriptions));
+    _listenBalance(event);
+  }
+
+  void _updateBalance(UpdateBalanceEvent event,emit) async {
+    if(event.refreshDirection){
+      emit(state.copyWith(status: FinanceStatus.loading));
+      await Future.delayed(const Duration(seconds: 1));
+    }
+    final user  = event.user;
+    if(user.userStatus == UserStatus.moderation || user.userStatus == UserStatus.notAuth){
+      emit(state.copyWith(
+          status: FinanceStatus.loaded));
+      return;
+    }
+
+    final titlesDrawingMenu = _getTitlesDrawingMenu(directions: user.directions);
+    final directions = _getDirections(user: user,indexDir: event.indexDirection,allViewDir: event.allViewDir);
+    final expiredSubscriptions = _getExpiredSubscriptions(directions,event.allViewDir,event.indexDirection);
+    final listSubHistory = _getHistorySubscriptions(directions,event.allViewDir,event.indexDirection);
+    emit(state.copyWith(
+        status: FinanceStatus.loaded,
+        user: user,
+        subscriptionHistory: listSubHistory,
         directions: directions,
         titlesDrawingMenu: titlesDrawingMenu,
         expiredSubscriptions: expiredSubscriptions));
   }
 
-  List<SubscriptionEntity> _getExpiredSubscriptions(UserEntity user,bool allView,int indexDir){
-     List<SubscriptionEntity> resList = [];
 
+
+  void _listenBalance(GetBalanceSubscriptionEvent  event) {
+    _userCubit.stream.listen((user) async {
+      add(UpdateBalanceEvent(user: user, refreshDirection: event.refreshDirection,
+          indexDirection: event.indexDirection, allViewDir: event.allViewDir));
+    });
+  }
+
+
+
+
+
+
+
+  List<SubscriptionEntity> _getHistorySubscriptions(List<DirectionLesson> directions,bool allView,int indexDir){
+    List<SubscriptionEntity> resList = [];
+    List<SubscriptionEntity> resListHis = [];
     if(allView){
 
-      for(var e in user.directions){
+      for(var e in directions){
         resList.addAll(e.subscriptionsAll);
       }
 
     }else{
-      resList = user.directions[indexDir].subscriptionsAll;
+      resList = directions[0].subscriptionsAll;
+    }
+
+    for(var s in resList){
+      if(s.status == StatusSub.inactive){
+        resListHis.add(s);
+      }
+    }
+    return resListHis;
+  }
+
+
+  List<SubscriptionEntity> _getExpiredSubscriptions(List<DirectionLesson> directions,bool allView,int indexDir){
+     List<SubscriptionEntity> resList = [];
+
+    if(allView){
+
+      for(var e in directions){
+        resList.addAll(e.lastSubscriptions);
+      }
+
+    }else{
+      resList = directions[0].lastSubscriptions;
     }
 
 
-    return resList.where((element) => element.status == StatusSub.inactive).toList();
+    return resList;
   }
 
 
   List<String> _getTitlesDrawingMenu({required List<DirectionLesson> directions}){
     List<String> resultList = [];
-    directions.sort((a,b)=>b.lastSubscription.balanceSub.compareTo(a.lastSubscription.balanceSub));
+    directions.sort((a,b)=>b.lastSubscriptions[0].balanceSub.compareTo(a.lastSubscriptions[0].balanceSub));
     resultList = directions.map((e) => e.name).toList();
     int length = resultList.length;
     if(length>1){
@@ -118,31 +186,62 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
     }
     return [user.directions[indexDir]];
   }
+  
+  
+  
 
   void _paySubscription(PaySubscriptionEvent event,emit) async {
     try{
       emit(state.copyWith(paymentStatus: PaymentStatus.payment));
       await Future.delayed(const Duration(seconds: 1));
-      _updateDirectionUser(
-          priceSubscriptionEntity: event.priceSubscriptionEntity,
-          currentDirection: event.currentDirection);
+      final user = _userCubit.userEntity;
+      final statusNewSub = _getStatusSubNew(event.currentDirection.subscriptionsAll);
+      final dateNow = DateTime.now();
+      var newSub = SubscriptionEntity(
+                id: 0,
+                idUser: user.id,
+                idDir: event.currentDirection.id,
+                nameDir: event.currentDirection.name,
+                name: event.priceSubscriptionEntity.name,
+                price: event.priceSubscriptionEntity.price,
+                priceOneLesson: event.priceSubscriptionEntity.priceOneLesson,
+                balanceSub: event.priceSubscriptionEntity.price,
+                balanceLesson: event.priceSubscriptionEntity.quantityLesson,
+                dateStart: statusNewSub == StatusSub.active?DateTimeParser.getDate(dateNow: dateNow):'',
+                dateEnd: '',
+                commentary: '',
+                status: statusNewSub);
+      final idSub = await _financeRepository.baySubscription(subscriptionEntity: newSub);
+       newSub = newSub.copyWith(id: idSub);
+      _updateDirectionUser(subscriptionEntity: newSub,currentDirection: event.currentDirection);
       emit(state.copyWith(paymentStatus: PaymentStatus.paymentComplete));
     }on Failure catch(e){
-
+      emit(state.copyWith(paymentStatus: PaymentStatus.paymentError,error: e.message));
     }
   }
 
+  StatusSub _getStatusSubNew(List<SubscriptionEntity> subscriptionsAll) {
+//todo error status
+    for(var e in subscriptionsAll){
+       if(e.status == StatusSub.active){
+         return StatusSub.planned;
+       }
+    }
+    return StatusSub.active;
+  }
 
-  void _updateDirectionUser({required PriceSubscriptionEntity priceSubscriptionEntity,required DirectionLesson currentDirection}){
+
+  void _updateDirectionUser({required SubscriptionEntity subscriptionEntity,required DirectionLesson currentDirection}){
     final user = _userCubit.userEntity;
     final directions = user.directions;
-    final newBalance = currentDirection.lastSubscription.balanceLesson + priceSubscriptionEntity.quantityLesson;
-    final newBalanceSub = currentDirection.lastSubscription.balanceSub + priceSubscriptionEntity.price;
-    final supUpdate = currentDirection.lastSubscription.copyWith(
-      balanceLesson: newBalance,
-      balanceSub: newBalanceSub
-    );
-    final updateDirection = currentDirection.copyWith(lastSubscription: supUpdate);
+    final lastSubsNew = currentDirection.lastSubscriptions;
+    if(currentDirection.lastSubscriptions[0].status == StatusSub.inactive){
+      lastSubsNew.update(0,subscriptionEntity);
+    }else{
+      lastSubsNew.add(subscriptionEntity);
+    }
+
+    final updateDirection = currentDirection.copyWith(lastSubscriptions: lastSubsNew);
     final indexDirection = directions.indexWhere((element) => element.name == currentDirection.name);
     final finalDirectionList = directions.update(indexDirection,updateDirection);
     final newUser = user.copyWith(directions: finalDirectionList);
@@ -152,7 +251,7 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
     _listTransaction.add(TransactionEntity(
         typeTransaction: TypeTransaction.addBalance,
         time: parseTime,
-        quantity: priceSubscriptionEntity.price));
+        quantity: subscriptionEntity.price));
 
 
   }
@@ -161,13 +260,14 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
   void _writingOffMoney(WritingOfMoneyEvent event,emit) async {
     final user = _userCubit.userEntity;
     final directions = user.directions;
-    final newBalance = event.currentDirection.lastSubscription.balanceLesson - 1;
-    final newBalanceSub = event.currentDirection.lastSubscription.balanceSub - event.currentDirection.lastSubscription.priceOneLesson;
-    final supUpdate = event.currentDirection.lastSubscription.copyWith(
+    final newBalance = event.currentDirection.lastSubscriptions[0].balanceLesson - 1;
+    final newBalanceSub = event.currentDirection.lastSubscriptions[0].balanceSub - event.currentDirection.lastSubscriptions[0].priceOneLesson;
+    final supUpdate = event.currentDirection.lastSubscriptions[0].copyWith(
         balanceLesson: newBalance,
         balanceSub: newBalanceSub
     );
-    final updateDirection = event.currentDirection.copyWith(lastSubscription: supUpdate);
+    final lastSubsNew = event.currentDirection.lastSubscriptions.update(0, supUpdate);
+    final updateDirection = event.currentDirection.copyWith(lastSubscriptions: lastSubsNew);
     final indexDirection = directions.indexWhere((element) => element.name == event.currentDirection.name);
     final finalDirectionList = directions.update(indexDirection,updateDirection);
     final newUser = user.copyWith(directions: finalDirectionList);
@@ -177,7 +277,7 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
     _listTransaction.add(TransactionEntity(
         typeTransaction: TypeTransaction.minusLesson,
         time: parseTime,
-        quantity: event.currentDirection.lastSubscription.priceOneLesson));
+        quantity: event.currentDirection.lastSubscriptions[0].priceOneLesson));
   }
 
 
@@ -186,13 +286,15 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
       emit(state.copyWith(applyBonusStatus: ApplyBonusStatus.loading));
       final user = _userCubit.userEntity;
       final directions = user.directions;
-      final newBalance = event.currentDirection.lastSubscription.balanceLesson + 1;
-      final newBalanceSub = event.currentDirection.lastSubscription.balanceSub - event.currentDirection.lastSubscription.priceOneLesson;
-      final supUpdate = event.currentDirection.lastSubscription.copyWith(
+      final newBalance = event.currentDirection.lastSubscriptions[0].balanceLesson + 1;
+      final newBalanceSub = event.currentDirection.lastSubscriptions[0].balanceSub - event.currentDirection.lastSubscriptions[0].priceOneLesson;
+      final supUpdate = event.currentDirection.lastSubscriptions[0].copyWith(
           balanceLesson: newBalance,
           balanceSub: newBalanceSub
       );
-      final updateDirection = event.currentDirection.copyWith(lastSubscription: supUpdate);
+
+      final lastSubsNew = event.currentDirection.lastSubscriptions.update(0, supUpdate);
+      final updateDirection = event.currentDirection.copyWith(lastSubscriptions: lastSubsNew);
       final indexDirection = directions.indexWhere((element) => element.name == event.currentDirection.name);
       final finalDirectionList = directions.update(indexDirection,updateDirection);
       final newUser = user.copyWith(directions: finalDirectionList);

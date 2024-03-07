@@ -9,6 +9,8 @@ enum StatusSub{
  class SubscriptionEntity{
 
    final int id;
+   final int idUser;
+   final int idDir;
    final String nameDir;
    final String name;
    final double price;
@@ -21,6 +23,8 @@ enum StatusSub{
    final StatusSub status;
 
    const SubscriptionEntity({
+     required this.idDir,
+     required this.idUser,
      required this.id,
      required this.nameDir,
     required this.name,
@@ -44,9 +48,15 @@ enum StatusSub{
       String? dateEnd,
       String? commentary,
      StatusSub? status,
-     String? nameDir
+     String? nameDir,
+      int? idUser,
+      int? idDir,
+     int? id
   }) {
     return SubscriptionEntity(
+      id:id??this.id,
+      idDir: idDir??this.idDir,
+      idUser: idUser??this.idUser,
       nameDir: nameDir??this.nameDir,
       status: status??this.status,
       dateEnd: dateEnd??this.dateEnd,
@@ -57,7 +67,6 @@ enum StatusSub{
       priceOneLesson: priceOneLesson ?? this.priceOneLesson,
       balanceSub: balanceSub ?? this.balanceSub,
       balanceLesson: balanceLesson ?? this.balanceLesson,
-      id: id,
     );
   }
 }

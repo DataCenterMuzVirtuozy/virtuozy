@@ -23,11 +23,16 @@ class UserService{
        queryParameters: {
           'phoneNumber': uid.replaceAll(' ', '')
        });
+       final idUser = res.data[0]['id'] as int;
+       final resSubs = await _dio.get(Endpoints.subsUser,
+           queryParameters: {
+            'idUser': idUser
+           });
 
        if((res.data as List<dynamic>).isEmpty){
         return throw   Failure('Пользователь не найден'.tr());
        }
-        return UserModel.fromMap(res.data[0]);
+        return UserModel.fromMap(mapUser: res.data[0],mapSubsAll: resSubs.data );
     } on Failure catch(e){
        throw  Failure(e.message);
     } on DioException catch(e){

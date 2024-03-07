@@ -13,7 +13,9 @@ class UserMapper{
 
 
   static UserEntity fromApi({required UserModel userModel}){
-    return UserEntity(lastName: userModel.lastName,
+    return UserEntity(
+      id: userModel.id,
+        lastName: userModel.lastName,
         firstName: userModel.firstName,
         branchName: userModel.branchName,
         phoneNumber: userModel.phoneNumber,
@@ -48,32 +50,41 @@ class UserMapper{
 
   static DirectionLesson _fromDirectionModel(DirectionModel directionModel){
     return DirectionLesson(
+      id: directionModel.id,
         bonus: directionModel.bonus.map((e) => _fromApiBonus(bonusModel: e)).toList(),
         subscriptionsAll: fromApiPriceSubAll(directionModel.subscriptionsAll),
         name: directionModel.name,
         lessons: directionModel.lessons.map((e) => _fromLessonModel(e)).toList(),
-        lastSubscription: fromApiPriceSub(directionModel.lastSubscription));
+        lastSubscriptions: fromApiPriceSub(directionModel.lastSubscriptions));
   }
 
-  static SubscriptionEntity fromApiPriceSub(SubscriptionModel subscriptionModel){
-    return SubscriptionEntity(
-      nameDir: subscriptionModel.nameDir,
-      status: subscriptionModel.status == 1?StatusSub.active:
-      subscriptionModel.status == 0?StatusSub.inactive:StatusSub.planned,
-        name: subscriptionModel.name,
-        price: subscriptionModel.price,
-        priceOneLesson: subscriptionModel.priceOneLesson,
-        balanceLesson: subscriptionModel.balanceLesson,
-        balanceSub: subscriptionModel.balanceSub,
-        id: subscriptionModel.id,
-        dateStart: subscriptionModel.dateStart,
-      dateEnd: subscriptionModel.dateEnd,
-      commentary: subscriptionModel.commentary
-    );
+  static List<SubscriptionEntity> fromApiPriceSub(List<SubscriptionModel> subscriptionModels){
+
+    return subscriptionModels.map((e) => SubscriptionEntity(
+        idUser: e.idUser,
+        idDir: e.idDir,
+        nameDir: e.nameDir,
+        status: e.status == 1?StatusSub.active:
+        e.status == 0?StatusSub.inactive:StatusSub.planned,
+        name: e.name,
+        price: e.price,
+        priceOneLesson: e.priceOneLesson,
+        balanceLesson: e.balanceLesson,
+        balanceSub: e.balanceSub,
+        id: e.id,
+        dateStart: e.dateStart,
+        dateEnd: e.dateEnd,
+        commentary: e.commentary
+    )).toList();
+
+
+
   }
 
   static List<SubscriptionEntity> fromApiPriceSubAll(List<SubscriptionModel> subscriptionModelAll){
      return subscriptionModelAll.map((e) =>  SubscriptionEntity(
+       idDir: e.idDir,
+       idUser: e.idUser,
        nameDir: e.nameDir,
          name: e.name,
          price: e.price,

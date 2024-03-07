@@ -30,12 +30,20 @@ class _ListSubscriptionHistoryState extends State<ListSubscriptionHistory> {
 
 
 
+
   @override
   void didChangeDependencies() {
    super.didChangeDependencies();
 
   }
 
+
+  @override
+  void initState() {
+    super.initState();
+
+
+  }
 
   @override
   Widget build(BuildContext context) {

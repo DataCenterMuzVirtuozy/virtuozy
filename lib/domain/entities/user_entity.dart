@@ -27,7 +27,7 @@ enum UserStatus{
  }
 
  class UserEntity{
-
+   final int id;
    final String lastName;
    final String firstName;
    final String branchName;
@@ -37,6 +37,7 @@ enum UserStatus{
    final List<DirectionLesson> directions;
 
    const UserEntity({
+     required this.id,
      required this.userType,
      required this.userStatus,
      required this.lastName,
@@ -50,6 +51,7 @@ enum UserStatus{
    factory UserEntity.unknown() {
     return const UserEntity(
         directions: [],
+        id: 0,
         userType: UserType.unknown,
         userStatus: UserStatus.notAuth,
         lastName: '', firstName: '', branchName: '', phoneNumber: '');
@@ -62,9 +64,11 @@ enum UserStatus{
     String? phoneNumber,
     UserStatus? userStatus,
     UserType? userType,
-    List<DirectionLesson>? directions
+    List<DirectionLesson>? directions,
+    int? id
   }) {
     return UserEntity(
+      id:id??this.id,
       userType: userType??this.userType,
       lastName: lastName ?? this.lastName,
       firstName: firstName ?? this.firstName,
@@ -78,15 +82,16 @@ enum UserStatus{
 
 
 class DirectionLesson{
-
+  final int id;
   final List<BonusEntity> bonus;
   final List<SubscriptionEntity> subscriptionsAll;
-  final SubscriptionEntity lastSubscription;
+  final List<SubscriptionEntity> lastSubscriptions;
   final String name;
   final List<Lesson> lessons;
 
   const DirectionLesson({
-    required this.lastSubscription,
+    required this.id,
+    required this.lastSubscriptions,
     required this.bonus,
     required this.subscriptionsAll,
     required this.name,
@@ -99,12 +104,14 @@ class DirectionLesson{
   DirectionLesson copyWith({
     List<BonusEntity>? bonus,
     List<SubscriptionEntity>? subscriptionsAll,
-    SubscriptionEntity? lastSubscription,
+    List<SubscriptionEntity>? lastSubscriptions,
     String? name,
     List<Lesson>? lessons,
+    int? id
   }) {
     return DirectionLesson(
-      lastSubscription: lastSubscription??this.lastSubscription,
+      id: id??this.id,
+      lastSubscriptions: lastSubscriptions??this.lastSubscriptions,
       bonus: bonus ?? this.bonus,
       subscriptionsAll: subscriptionsAll ?? this.subscriptionsAll,
       name: name ?? this.name,

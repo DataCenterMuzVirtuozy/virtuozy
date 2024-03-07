@@ -58,6 +58,11 @@ class _PayPageState extends State<PayPage> {
       appBar: AppBarCustom(title: 'Пополнить счет'.tr()),
       body: BlocConsumer<BlocFinance,StateFinance>(
         listener: (c, s) {
+
+            if(s.paymentStatus == PaymentStatus.paymentError){
+              Dialoger.showActionMaterialSnackBar(context: context, title: s.error);
+            }
+
             if(s.paymentStatus == PaymentStatus.loaded){
               //_selPriceSubscription = s.pricesDirectionEntity.subscriptions[_selIndexDirection];
               _selPriceSubscription = s.pricesSubscriptionsAll[0];
@@ -114,12 +119,10 @@ class _PayPageState extends State<PayPage> {
                   const Gap(20.0),
                   PaymentList(
                       onPay: (){
-                    Dialoger.showMessage('В разработке');
-
-                    // context.read<BlocFinance>()
-                    //   .add(PaySubscriptionEvent(
-                    //   priceSubscriptionEntity: _selPriceSubscription,
-                    //   currentDirection: widget.directions[_selIndexDirection]));
+                        context.read<BlocFinance>()
+                      .add(PaySubscriptionEvent(
+                      priceSubscriptionEntity: _selPriceSubscription,
+                      currentDirection: widget.directions[_selIndexDirection]));
                       }
                       )
                 ],

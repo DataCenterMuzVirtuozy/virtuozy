@@ -45,6 +45,7 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
 
       if(phone == event.phone){
         await Future.delayed(const Duration(seconds: 2));
+        //todo id
         _userCubit.setUser(user:  UserEntity(
             userStatus: UserStatus.moderation,
             lastName: PreferencesUtil.lastNameUser,
@@ -52,7 +53,8 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
             branchName: PreferencesUtil.branchUser,
             phoneNumber: PreferencesUtil.phoneUser,
             userType: UserType.student,
-            directions: []));
+            directions: [],
+            id: 0));
         emit(state.copyWith(authStatus: AuthStatus.moderation));
         return;
       }else{
@@ -91,7 +93,8 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
           branchName: '',
           phoneNumber: event.phone,
           userType: UserType.student,
-          directions: []);
+          directions: [],
+          id: 0);
       await _createLocalUser(user);
       emit(state.copyWith(authStatus: AuthStatus.onSearchLocation));
     }on Failure catch(e){

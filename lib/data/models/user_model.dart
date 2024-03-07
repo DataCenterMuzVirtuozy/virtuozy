@@ -6,8 +6,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:virtuozy/data/models/price_subscription_model.dart';
 import 'package:virtuozy/data/models/subscription_model.dart';
+import 'package:virtuozy/domain/entities/subscription_entity.dart';
 
 class UserModel{
+   final int id;
    final String lastName;
    final String firstName;
    final String branchName;
@@ -17,6 +19,7 @@ class UserModel{
    final List<DirectionModel> directions;
 
    const UserModel({
+     required this.id,
     required this.lastName,
     required this.firstName,
     required this.branchName,
@@ -28,17 +31,18 @@ class UserModel{
 
 
 
-  factory UserModel.fromMap(Map<String, dynamic> map) {
+  factory UserModel.fromMap({required Map<String, dynamic> mapUser,required List<dynamic> mapSubsAll}) {
 
-    final directions = map['directions'] as List<dynamic>;
+    final directions = mapUser['directions'] as List<dynamic>;
     return UserModel(
-      lastName: map['lastName'] as String,
-      firstName: map['firstName'] as String,
-      branchName: map['branchName'] as String,
-      phoneNumber: map['phoneNumber'] as String,
-      userStatus: map['userStatus'] as int,
-      userType: map['userType'] as int,
-      directions: directions.map((e) => DirectionModel.fromMap(e)).toList(),
+      id: mapUser['id'] as int,
+      lastName: mapUser['lastName'] as String,
+      firstName: mapUser['firstName'] as String,
+      branchName: mapUser['branchName'] as String,
+      phoneNumber: mapUser['phoneNumber'] as String,
+      userStatus: mapUser['userStatus'] as int,
+      userType: mapUser['userType'] as int,
+      directions: directions.map((e) => DirectionModel.fromMap(mapDirection: e,mapSubs: mapSubsAll)).toList(),
     );
   }
 }
@@ -46,36 +50,39 @@ class UserModel{
 
 
  class DirectionModel{
+   final int id;
    final List<BonusModel> bonus;
    final List<SubscriptionModel> subscriptionsAll;
-   final SubscriptionModel lastSubscription;
+   final List<SubscriptionModel> lastSubscriptions;
    final String name;
    final List<LessonModel> lessons;
 
    const DirectionModel({
+     required this.id,
     required this.bonus,
      required this.subscriptionsAll,
-    required this.lastSubscription,
+    required this.lastSubscriptions,
     required this.name,
     required this.lessons,
   });
 
 
 
-  factory DirectionModel.fromMap(Map<String, dynamic> map) {
+  factory DirectionModel.fromMap({required Map<String, dynamic> mapDirection,required List<dynamic> mapSubs}) {
 
-    final lessons =  map['lessons'] as List<dynamic>;
-    final nameDirection = map['name'] as String;
-    final subsMap = map['subscriptions'] as List<dynamic>;
-    final subs = subsMap.map((e) => SubscriptionModel.fromMap(e,nameDirection)).toList();
-    final lastSub = _getLastSub(subs);
-    final bonus = map['bonus'] as List<dynamic>;
+    final lessons =  mapDirection['lessons'] as List<dynamic>;
+    final nameDirection = mapDirection['name'] as String;
+    final subs = mapSubs.map((e) => SubscriptionModel.fromMap(e,nameDirection)).toList();
+    final subsDir = subs.where((element) => element.idDir == (mapDirection['id'] as int)).toList();
+    final lastSub = _getLastSub(subsDir);
+    final bonus = mapDirection['bonus'] as List<dynamic>;
     return DirectionModel(
+      id: mapDirection['id'],
       bonus: bonus.map((e) => BonusModel.fromMap(e,nameDirection)).toList(),
-      subscriptionsAll: subs,
+      subscriptionsAll: subsDir,
       name: nameDirection,
       lessons: lessons.map((e) => LessonModel.fromMap(e,nameDirection)).toList(),
-      lastSubscription: lastSub,
+      lastSubscriptions: lastSub,
 
     );
   }
@@ -83,15 +90,29 @@ class UserModel{
 
 
 
-   static SubscriptionModel _getLastSub(List<SubscriptionModel> subs){
+   static List<SubscriptionModel> _getLastSub(List<SubscriptionModel> subs){
     final List<int> millisecondsSinceEpochList = [];
-
+     SubscriptionModel? subAwait;
+    List<SubscriptionModel> listSubs = [];
+   if(subs.isEmpty){
+     return [];
+   }
     for(var element in subs){
-      millisecondsSinceEpochList.add(DateFormat('yyyy-MM-dd').parse(element.dateStart).millisecondsSinceEpoch);
+      if(element.dateStart.isNotEmpty){
+        millisecondsSinceEpochList.add(DateFormat('yyyy-MM-dd').parse(element.dateStart).millisecondsSinceEpoch);
+      }
 
+      if(element.status == 2){
+        subAwait = element;
+      }
     }
     final indexLast = millisecondsSinceEpochList.indexOf(millisecondsSinceEpochList.reduce(max));
-    return subs[indexLast];
+    listSubs.add(subs[indexLast]);
+
+    if(subAwait!=null){
+      listSubs.add(subAwait);
+    }
+    return listSubs;
   }
 }
 

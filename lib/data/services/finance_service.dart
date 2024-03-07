@@ -1,8 +1,12 @@
 
 
 
- import 'package:virtuozy/data/models/price_subscription_model.dart';
+ import 'package:dio/dio.dart';
+import 'package:virtuozy/data/models/price_subscription_model.dart';
 import 'package:virtuozy/data/models/prices_direction_model.dart';
+import 'package:virtuozy/data/models/subscription_model.dart';
+import 'package:virtuozy/domain/entities/subscription_entity.dart';
+import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/utils/failure.dart';
 
 import '../../di/locator.dart';
@@ -32,6 +36,18 @@ class FinanceService{
         return subs;
      }on Failure catch(e){
        throw Failure(e.message);
+     }
+   }
+
+   Future<int> baySubscription({required Map<String,dynamic> subscriptionModelApi}) async {
+     try{
+
+       final res = await _dio.post(Endpoints.subsUser,data: subscriptionModelApi);
+       return 0;
+     }on Failure catch(e){
+       throw Failure(e.message);
+     }on DioException catch(e){
+       throw Failure(e.toString());
      }
    }
 

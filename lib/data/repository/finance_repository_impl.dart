@@ -4,6 +4,7 @@
  import 'package:virtuozy/di/locator.dart';
 import 'package:virtuozy/domain/entities/price_subscription_entity.dart';
 import 'package:virtuozy/domain/entities/prices_direction_entity.dart';
+import 'package:virtuozy/domain/entities/subscription_entity.dart';
 import 'package:virtuozy/domain/repository/finance_repository.dart';
 
 import '../utils/finance_util.dart';
@@ -20,6 +21,11 @@ class FinanceRepositoryImpl extends FinanceRepository{
   @override
   Future<List<PriceSubscriptionEntity>> getSubscriptionsAll() async {
     return _util.getSubscriptionsAll();
+  }
+
+  @override
+  Future<int> baySubscription({required SubscriptionEntity subscriptionEntity}) async {
+    return await _util.baySubscription(subscriptionEntity: subscriptionEntity);
   }
 
 }

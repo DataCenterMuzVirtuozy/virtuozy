@@ -64,7 +64,11 @@ class _FinancePageState extends State<FinancePage> {
   double _summaBalance({required List<DirectionLesson> directions}){
     double sum = 0.0;
     for(var dir in directions){
-      sum +=dir.lastSubscription.balanceSub;
+      for(var s in dir.lastSubscriptions){
+        sum +=s.balanceSub;
+      }
+
+
     }
 
     return sum;
@@ -139,151 +143,161 @@ class _FinancePageState extends State<FinancePage> {
                },),
                const Gap(20.0),
                Container(
+                 padding: const EdgeInsets.symmetric(vertical: 20.0),
                  decoration: BoxDecoration(
                    color: Theme.of(context).colorScheme.surfaceVariant,
                    borderRadius: BorderRadius.circular(20.0)
                  ),
-                 child: Stack(
-                   alignment: Alignment.bottomRight,
+                 child: Column(
+                   crossAxisAlignment: CrossAxisAlignment.center,
                    children: [
-                     Column(
+                     Text('Баланс счета'.tr(),style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 16.0)),
+                     Row(
                        crossAxisAlignment: CrossAxisAlignment.center,
+                       mainAxisAlignment: MainAxisAlignment.center,
                        children: [
-                         const Gap(20.0),
-                         Text('Баланс счета'.tr(),style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 16.0)),
-                         Row(
-                           crossAxisAlignment: CrossAxisAlignment.center,
-                           mainAxisAlignment: MainAxisAlignment.center,
-                           children: [
-                             Text(ParserPrice.getBalance(_summaBalance(directions: state.directions)),
-                                 style: TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,size: 30.0)),
-                             Padding(
-                               padding: const EdgeInsets.only(top: 5.0),
-                               child: Icon(CupertinoIcons.money_rubl,color: Theme.of(context).textTheme.displayMedium!.color!,size: 35.0),
-                             )
-                           ],
-                         ),
-                         const Gap(10.0),
-                         ...List.generate(state.directions.length, (index) {
-                           return Container(
-                            margin: const EdgeInsets.all(5.0),
-                            decoration: BoxDecoration(
-                                color: colorBeruza.withOpacity(0.3),
-                                borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(10.0),
-                                    topRight: Radius.circular(20.0),
-                                    bottomRight: Radius.circular(20.0),
-                                    bottomLeft: Radius.circular(20.0))),
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 15.0,right: 15.0,top: 10.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                            state.directions[index]
-                                                .lastSubscription.name,
-                                            style: TStyle.textStyleVelaSansBold(
-                                                Theme.of(context)
-                                                    .textTheme
-                                                    .displayMedium!
-                                                    .color!,
-                                                size: 16.0)),
-                                      ),
-                                      Visibility(
-                                        visible:   state.directions[index]
-                                            .lastSubscription.status==StatusSub.active,
-                                        child: Container(
-                                          width: 90.0,
-                                          alignment: Alignment.center,
-                                          padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
-                                          decoration: BoxDecoration(
-                                              color: colorGreen,
-                                              borderRadius: BorderRadius.circular(10.0)),
-                                          child: Text('активный',
-                                              style:TStyle.textStyleVelaSansBold(colorWhite,size: 10.0)),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                const Gap(5.0),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 15.0),
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      if(state.directions[index].lastSubscription.status==StatusSub.active)...{
-                                        Row(
-                                          children: [
-                                            Text('Осталось уроков '.tr(),
-                                                style: TStyle
-                                                    .textStyleVelaSansMedium(
-                                                    Theme.of(context)
-                                                        .textTheme
-                                                        .displayMedium!
-                                                        .color!,
-                                                    size: 14.0)),
-                                            Text(
-                                                '${ state.directions[index].lastSubscription.balanceLesson}',
-                                                style: TStyle
-                                                    .textStyleVelaSansBold(
-                                                    Theme.of(context)
-                                                        .textTheme
-                                                        .displayMedium!
-                                                        .color!,
-                                                    size: 14.0)),
-                                          ],
-                                        )
-                                      }else ...{
-                                        Container(
-                                          alignment: Alignment.center,
-                                          width: 100.0,
-                                          padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
-                                          decoration: BoxDecoration(
-                                              color: colorRed,
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                      10.0)),
-                                          child: Text(
-                                              state.directions[index].lastSubscription.status==StatusSub.inactive?'неактивный':
-                                              'запланирован',
-                                              style: TStyle
-                                                  .textStyleVelaSansBold(
-                                                      colorWhite,
-                                                      size: 10.0)),
-                                        ),
-                                      },
-                                      SizedBox(
-                                        width: 50.0,
-                                        height: 50.0,
-                                        child: FloatingActionButton(onPressed: (){
-                                          GoRouter.of(context).push(pathPay,extra:[state.directions[index]]);
-                                        },
-                                          backgroundColor: colorBeruza,
-                                          child:  Icon(Icons.add,color: colorWhite,),),
-                                      )
-                                    ],
-                                  ),
-                                ),
-
-
-                              ],
-                            ),
-                          );
-                        })
+                         Text(ParserPrice.getBalance(_summaBalance(directions: state.directions)),
+                             style: TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,size: 30.0)),
+                         Padding(
+                           padding: const EdgeInsets.only(top: 5.0),
+                           child: Icon(CupertinoIcons.money_rubl,color: Theme.of(context).textTheme.displayMedium!.color!,size: 35.0),
+                         )
                        ],
+                     ),
+                     const Gap(10.0),
+                     Padding(
+                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                       child: SizedBox(
+                         height: 40.0,
+                         child: SubmitButton(
+                           borderRadius: 20.0,
+                            colorFill: colorBeruza,
+                             textButton: 'Пополнить'.tr(),
+                             onTap: () {
+                               GoRouter.of(context).push(pathPay,extra:state.directions);
+                             }
+                         ),
+                       ),
                      ),
                    ],
                  ),
                ),
+               const Gap(10.0),
+               ...List.generate(state.expiredSubscriptions.length, (index) {
+                 return Container(
+                   margin: const EdgeInsets.all(5.0),
+                   decoration: BoxDecoration(
+                       color: colorBeruza.withOpacity(0.3),
+                       borderRadius: const BorderRadius.only(
+                           topLeft: Radius.circular(10.0),
+                           topRight: Radius.circular(20.0),
+                           bottomRight: Radius.circular(20.0),
+                           bottomLeft: Radius.circular(20.0))),
+                   child: Column(
+                     children: [
+                       Padding(
+                         padding: const EdgeInsets.only(left: 15.0,right: 15.0,top: 10.0),
+                         child: Row(
+                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                           children: [
+                             Expanded(
+                               child: Text(
+                                   state.expiredSubscriptions[index].name,
+                                   style: TStyle.textStyleVelaSansBold(
+                                       Theme.of(context)
+                                           .textTheme
+                                           .displayMedium!
+                                           .color!,
+                                       size: 16.0)),
+                             ),
+                             Visibility(
+                               visible:  state.expiredSubscriptions[index].status==StatusSub.active,
+                               child: Container(
+                                 width: 90.0,
+                                 alignment: Alignment.center,
+                                 padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
+                                 decoration: BoxDecoration(
+                                     color: colorGreen,
+                                     borderRadius: BorderRadius.circular(10.0)),
+                                 child: Text('активный',
+                                     style:TStyle.textStyleVelaSansBold(colorWhite,size: 10.0)),
+                               ),
+                             )
+                           ],
+                         ),
+                       ),
+                       const Gap(5.0),
+                       Padding(
+                         padding: const EdgeInsets.only(left: 15.0,right: 20.0),
+                         child: Row(
+                           crossAxisAlignment: CrossAxisAlignment.center,
+                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                           children: [
+                             if(state.expiredSubscriptions[index].status==StatusSub.active)...{
+                               Row(
+                                 children: [
+                                   Text('Осталось уроков '.tr(),
+                                       style: TStyle
+                                           .textStyleVelaSansMedium(
+                                           Theme.of(context)
+                                               .textTheme
+                                               .displayMedium!
+                                               .color!,
+                                           size: 14.0)),
+                                   Text(
+                                       '${ state.expiredSubscriptions[index].balanceLesson}',
+                                       style: TStyle
+                                           .textStyleVelaSansBold(
+                                           Theme.of(context)
+                                               .textTheme
+                                               .displayMedium!
+                                               .color!,
+                                           size: 14.0)),
+                                 ],
+                               )
+                             }else ...{
+                               Container(
+                                 alignment: Alignment.center,
+                                 width: 100.0,
+                                 padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
+                                 decoration: BoxDecoration(
+                                     color: colorRed,
+                                     borderRadius:
+                                     BorderRadius.circular(
+                                         10.0)),
+                                 child: Text(
+                                     state.expiredSubscriptions[index].status==StatusSub.inactive?'неактивный':
+                                     'запланирован',
+                                     style: TStyle
+                                         .textStyleVelaSansBold(
+                                         colorWhite,
+                                         size: 10.0)),
+                               ),
+                             },
+                             Visibility(
+                               visible: _allViewDirection,
+                               child: Text(
+                                   state.expiredSubscriptions[index].nameDir,
+                                   style: TStyle.textStyleVelaSansBold(
+                                       Theme.of(context)
+                                           .textTheme
+                                           .displayMedium!
+                                           .color!,
+                                       size: 13.0)),
+                             )
+                           ],
+                         ),
+                       ),
+                       const Gap(10.0)
+                     ],
+                   ),
+                 );
+               }),
+
                const Gap(20.0),
                GestureDetector(
                  onTap: (){
-                   GoRouter.of(context).push(pathListSubscriptionsHistory,extra: state.expiredSubscriptions);
+                   GoRouter.of(context).push(pathListSubscriptionsHistory,extra: state.subscriptionHistory);
                  },
                  child: Container(
                    padding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 20.0),
@@ -367,17 +381,16 @@ class _FinancePageState extends State<FinancePage> {
 }
 
 class StatusSubscriptionWidget extends StatelessWidget{
-  const StatusSubscriptionWidget({super.key, required this.direction});
+  const StatusSubscriptionWidget({super.key, required this.subscriptionEntity});
 
-  final DirectionLesson direction;
+  final SubscriptionEntity subscriptionEntity;
 
   @override
   Widget build(BuildContext context) {
    return Column(
      children: [
        Visibility(
-         visible:  direction
-             .lastSubscription.balanceSub>0.0,
+         visible:  subscriptionEntity.balanceSub>0.0,
          child: Container(
            width: 90.0,
            alignment: Alignment.center,

@@ -277,10 +277,11 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
   double _summaBalance({required List<DirectionLesson> directions}){
      double sum = 0.0;
      for(var dir in directions){
-       sum +=dir.lastSubscription.balanceSub;
+       for(var s in dir.lastSubscriptions){
+         sum +=s.balanceSub;
+       }
      }
-
-    return sum;
+     return sum;
   }
 
 
@@ -313,7 +314,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                     children: [
                       Text(directions[index].name,
                           style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
-                      if(directions[index].lastSubscription.status==StatusSub.active)...{
+                      if(directions[index].lastSubscriptions[0].status==StatusSub.active)...{
                         Row(
                           children: [
                             Text('Осталось уроков '.tr(),style:TStyle.textStyleVelaSansMedium(colorGrey,size: 14.0)),
@@ -323,7 +324,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                               decoration: BoxDecoration(
                                   color: Theme.of(context).colorScheme.secondary,
                                   shape: BoxShape.circle),
-                              child: Text('${directions[index].lastSubscription.balanceLesson}',
+                              child: Text('${directions[index].lastSubscriptions[0].balanceLesson}',
                                   style:TStyle.textStyleVelaSansBold(colorWhite,size: 10.0)),
                             ),
                           ],
@@ -346,11 +347,11 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                   ),
                   const Gap(5.0),
                   Visibility(
-                    visible: directions[index].lastSubscription.status==StatusSub.active&&allViewDirection,
+                    visible: directions[index].lastSubscriptions[0].status==StatusSub.active&&allViewDirection,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('${ParserPrice.getBalance(directions[index].lastSubscription.balanceSub)} руб.',
+                        Text('${ParserPrice.getBalance(_summaBalance(directions: directions))} руб.',
                             style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
                         Container(
                           alignment: Alignment.center,
