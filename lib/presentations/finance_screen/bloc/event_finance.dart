@@ -30,19 +30,7 @@ class GetBalanceSubscriptionEvent extends EventFinance{
     required this.refreshDirection,
     required this.allViewDir,required this.indexDirection});
 }
-class UpdateBalanceEvent extends EventFinance{
-  final int indexDirection;
-  final bool allViewDir;
-  final bool refreshDirection;
-  final UserEntity user;
 
-  const UpdateBalanceEvent({
-    required this.user,
-    required this.indexDirection,
-    required this.allViewDir,
-    required this.refreshDirection,
-  });
-}
 
  class ApplyBonusEvent extends EventFinance{
    final int idBonus;
@@ -54,7 +42,8 @@ class PaySubscriptionEvent extends EventFinance{
   final DirectionLesson currentDirection;
   final PriceSubscriptionEntity priceSubscriptionEntity;
 
-  const PaySubscriptionEvent({required this.priceSubscriptionEntity,required this.currentDirection});
+  const PaySubscriptionEvent({
+    required this.priceSubscriptionEntity,required this.currentDirection});
 }
 class GetListTransactionsEvent extends EventFinance{}
 

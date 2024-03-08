@@ -64,7 +64,6 @@ class _PayPageState extends State<PayPage> {
             }
 
             if(s.paymentStatus == PaymentStatus.loaded){
-              //_selPriceSubscription = s.pricesDirectionEntity.subscriptions[_selIndexDirection];
               _selPriceSubscription = s.pricesSubscriptionsAll[0];
                _titlePrices = s.pricesSubscriptionsAll.map((e) => '${e.name} - ${e.price} руб.').toList();
             }

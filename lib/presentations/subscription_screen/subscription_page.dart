@@ -351,7 +351,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('${ParserPrice.getBalance(_summaBalance(directions: directions))} руб.',
+                        Text('${ParserPrice.getBalance(directions[index].lastSubscriptions[0].balanceSub)} руб.',
                             style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
                         Container(
                           alignment: Alignment.center,

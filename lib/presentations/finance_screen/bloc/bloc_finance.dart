@@ -26,7 +26,7 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
     on<GetListTransactionsEvent>(_getListTransaction);
     on<WritingOfMoneyEvent>(_writingOffMoney);
     on<ApplyBonusEvent>(_applyBonus);
-    on<UpdateBalanceEvent>(_updateBalance);
+
   }
 
   final _financeRepository = locator.get<FinanceRepository>();
@@ -86,43 +86,8 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
         directions: directions,
         titlesDrawingMenu: titlesDrawingMenu,
         expiredSubscriptions: expiredSubscriptions));
-    _listenBalance(event);
+
   }
-
-  void _updateBalance(UpdateBalanceEvent event,emit) async {
-    if(event.refreshDirection){
-      emit(state.copyWith(status: FinanceStatus.loading));
-      await Future.delayed(const Duration(seconds: 1));
-    }
-    final user  = event.user;
-    if(user.userStatus == UserStatus.moderation || user.userStatus == UserStatus.notAuth){
-      emit(state.copyWith(
-          status: FinanceStatus.loaded));
-      return;
-    }
-
-    final titlesDrawingMenu = _getTitlesDrawingMenu(directions: user.directions);
-    final directions = _getDirections(user: user,indexDir: event.indexDirection,allViewDir: event.allViewDir);
-    final expiredSubscriptions = _getExpiredSubscriptions(directions,event.allViewDir,event.indexDirection);
-    final listSubHistory = _getHistorySubscriptions(directions,event.allViewDir,event.indexDirection);
-    emit(state.copyWith(
-        status: FinanceStatus.loaded,
-        user: user,
-        subscriptionHistory: listSubHistory,
-        directions: directions,
-        titlesDrawingMenu: titlesDrawingMenu,
-        expiredSubscriptions: expiredSubscriptions));
-  }
-
-
-
-  void _listenBalance(GetBalanceSubscriptionEvent  event) {
-    _userCubit.stream.listen((user) async {
-      add(UpdateBalanceEvent(user: user, refreshDirection: event.refreshDirection,
-          indexDirection: event.indexDirection, allViewDir: event.allViewDir));
-    });
-  }
-
 
 
 
@@ -195,7 +160,8 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
       emit(state.copyWith(paymentStatus: PaymentStatus.payment));
       await Future.delayed(const Duration(seconds: 1));
       final user = _userCubit.userEntity;
-      final statusNewSub = _getStatusSubNew(event.currentDirection.subscriptionsAll);
+      final indexCurrentDir = _getIndexDir(user.directions, event.currentDirection);
+      final statusNewSub = _getStatusSubNew(user.directions[indexCurrentDir].subscriptionsAll);
       final dateNow = DateTime.now();
       var newSub = SubscriptionEntity(
                 id: 0,
@@ -217,17 +183,32 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
       emit(state.copyWith(paymentStatus: PaymentStatus.paymentComplete));
     }on Failure catch(e){
       emit(state.copyWith(paymentStatus: PaymentStatus.paymentError,error: e.message));
+    }catch (e){
+      emit(state.copyWith(paymentStatus: PaymentStatus.paymentError,error: e.toString()));
     }
   }
 
+
+  int _getIndexDir(List<DirectionLesson> directions,DirectionLesson currentDirection){
+    final dirNewCur = directions.firstWhere((element) => element.id == currentDirection.id);
+    return directions.indexOf(dirNewCur);
+  }
+
+
+
   StatusSub _getStatusSubNew(List<SubscriptionEntity> subscriptionsAll) {
-//todo error status
+  bool hasActiveSub = false;
     for(var e in subscriptionsAll){
        if(e.status == StatusSub.active){
-         return StatusSub.planned;
+        hasActiveSub = true;
        }
     }
-    return StatusSub.active;
+    if(hasActiveSub){
+      return StatusSub.planned;
+    }else{
+      return StatusSub.active;
+    }
+
   }
 
 
@@ -235,13 +216,15 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
     final user = _userCubit.userEntity;
     final directions = user.directions;
     final lastSubsNew = currentDirection.lastSubscriptions;
+    final allSubsNew = currentDirection.subscriptionsAll;
+    allSubsNew.add(subscriptionEntity);
     if(currentDirection.lastSubscriptions[0].status == StatusSub.inactive){
       lastSubsNew.update(0,subscriptionEntity);
     }else{
       lastSubsNew.add(subscriptionEntity);
     }
 
-    final updateDirection = currentDirection.copyWith(lastSubscriptions: lastSubsNew);
+    final updateDirection = currentDirection.copyWith(lastSubscriptions: lastSubsNew,subscriptionsAll: allSubsNew);
     final indexDirection = directions.indexWhere((element) => element.name == currentDirection.name);
     final finalDirectionList = directions.update(indexDirection,updateDirection);
     final newUser = user.copyWith(directions: finalDirectionList);
