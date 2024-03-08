@@ -301,6 +301,12 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson> with AuthMixin{
                           width: 100.0,
                           onTap: (){
 
+                            if(_lesson.bonus){
+                              context.read<SubBloc>().add(AcceptLessonEvent(direction: _getDirectionByLesson(lessonEntity: _lesson),
+                                  lesson: _lesson));
+                              return;
+                            }
+
                             if(_getBalanceDirection(directions: user.directions, nameDirection: widget.lesson.nameDirection) == 0.0){
                               Dialoger.showMessage('Недостаточно средств на балансе'.tr());
                             }else{

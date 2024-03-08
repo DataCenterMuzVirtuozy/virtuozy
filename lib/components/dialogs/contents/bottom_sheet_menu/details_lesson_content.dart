@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
+import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/steps_confirm_lesson_content.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/presentations/main_screen/main_page.dart';
 
@@ -50,49 +52,55 @@ class _DetailsLessonContentState extends State<DetailsLessonContent> {
   @override
   Widget build(BuildContext context) {
 
-    return SizedBox(
-      height: _heightBox,
-      child: Column(
-        children: [
-          Expanded(
-            child: PageView.builder(
-                controller: _pageController,
-                onPageChanged: (page) {
-                  setState(() {
-                    selectedPage = page;
-                  });
-                },
-              itemCount: widget.lessons.length,
-                itemBuilder: (context,index){
-              return ItemDetailsLesson(
-                  lesson: widget.lessons[index],
-                  direction: _getDirectionByLesson(lessonEntity: widget.lessons[index]));
-            }),
-          ),
-          Visibility(
-            visible: widget.lessons.length>1,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: PageViewDotIndicator(
-                size: const Size(8.0, 8.0),
-                currentItem: selectedPage,
-                count: widget.lessons.length,
-                unselectedColor: colorGrey,
-                selectedColor: Theme.of(context).textTheme.displayMedium!.color!,
-                duration: const Duration(milliseconds: 200),
-                boxShape: BoxShape.circle,
-                onItemClicked: (index) {
-                  _pageController.animateToPage(
-                    index,
-                    duration: const Duration(milliseconds: 200),
-                    curve: Curves.easeInOut,
-                  );
-                },
+    return InkWell(
+      onTap: (){
+        currentDayNotifi.value = 0;
+        Navigator.of(context).pop();
+      },
+      child: SizedBox(
+        height: _heightBox,
+        child: Column(
+          children: [
+            Expanded(
+              child: PageView.builder(
+                  controller: _pageController,
+                  onPageChanged: (page) {
+                    setState(() {
+                      selectedPage = page;
+                    });
+                  },
+                itemCount: widget.lessons.length,
+                  itemBuilder: (context,index){
+                return ItemDetailsLesson(
+                    lesson: widget.lessons[index],
+                    direction: _getDirectionByLesson(lessonEntity: widget.lessons[index]));
+              }),
+            ),
+            Visibility(
+              visible: widget.lessons.length>1,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: PageViewDotIndicator(
+                  size: const Size(8.0, 8.0),
+                  currentItem: selectedPage,
+                  count: widget.lessons.length,
+                  unselectedColor: colorGrey,
+                  selectedColor: Theme.of(context).textTheme.displayMedium!.color!,
+                  duration: const Duration(milliseconds: 200),
+                  boxShape: BoxShape.circle,
+                  onItemClicked: (index) {
+                    _pageController.animateToPage(
+                      index,
+                      duration: const Duration(milliseconds: 200),
+                      curve: Curves.easeInOut,
+                    );
+                  },
+                ),
               ),
             ),
-          ),
-          const Gap(10.0)
-        ],
+            const Gap(10.0)
+          ],
+        ),
       ),
     );
   }

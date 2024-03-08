@@ -184,6 +184,7 @@ class _PaymentListState extends State<PaymentList> {
                     ],
                   ),
                   Checkbox(
+                      side: BorderSide(color: Theme.of(context).textTheme.displayMedium!.color!),
                       checkColor: colorWhite,
                       value: _sbpPay,
                       onChanged: (v){
@@ -216,6 +217,7 @@ class _PaymentListState extends State<PaymentList> {
                     ],
                   ),
                   Checkbox(
+                      side: BorderSide(color: Theme.of(context).textTheme.displayMedium!.color!),
                       checkColor: colorWhite,
                       value: _cardPay, onChanged: (v){
                     setState(() {

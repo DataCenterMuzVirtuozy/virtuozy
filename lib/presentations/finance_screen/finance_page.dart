@@ -266,8 +266,8 @@ class _FinancePageState extends State<FinancePage> {
                                      BorderRadius.circular(
                                          10.0)),
                                  child: Text(
-                                     state.expiredSubscriptions[index].status==StatusSub.inactive?'неактивный':
-                                     'запланирован',
+                                     state.expiredSubscriptions[index].status==StatusSub.inactive?'неактивный'.tr():
+                                     'запланирован'.tr(),
                                      style: TStyle
                                          .textStyleVelaSansBold(
                                          colorWhite,

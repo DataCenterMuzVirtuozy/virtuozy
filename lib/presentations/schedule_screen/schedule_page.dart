@@ -107,6 +107,9 @@ class _SchedulePageState extends State<SchedulePage> {
         }
 
 
+
+
+
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: SingleChildScrollView(
@@ -154,21 +157,39 @@ class _SchedulePageState extends State<SchedulePage> {
                            content: DetailsLesson());
                       }),
                 const Gap(10.0),
-                ValueListenableBuilder<List<ScheduleLessons>>(
-                  valueListenable: listScheduleNotifier,
-                  builder: (context,schedules,child) {
-                    if(schedules.isNotEmpty){
-                      return Column(
-                        children: List.generate(schedules.length, (index) {
-                          return  ItemSchedule(lengthSchedule: state.schedulesLength,
-                              scheduleLessons: schedules[index]);
-                        }),
-                      );
-                    }
-                    return const CircularProgressIndicator();
 
-                  }
-                ),
+
+                  ValueListenableBuilder<List<ScheduleLessons>>(
+                      valueListenable: listScheduleNotifier,
+                      builder: (context,schedules,child) {
+                        if(schedules.isNotEmpty){
+                          return Column(
+                            children: List.generate(schedules.length, (index) {
+
+                              if(schedules[index].lessons.isEmpty){
+                                return  Padding(
+                                  padding: const EdgeInsets.only(top: 40.0),
+                                  child: Center(
+                                      child: BoxInfo(
+                                          buttonVisible: false,
+                                          title: 'График пуст'.tr(),
+                                          description: 'У вас нет занятий на текущий месяц'.tr(),
+                                          iconData: CupertinoIcons.calendar_badge_plus)),
+                                );
+                              }
+
+                              return  ItemSchedule(lengthSchedule: state.schedulesLength,
+                                  scheduleLessons: schedules[index]);
+                            }),
+                          );
+                        }
+
+                        return const CircularProgressIndicator();
+
+                      }
+                  )
+
+
 
               ],
             ),

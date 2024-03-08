@@ -49,6 +49,8 @@ class GetListTransactionsEvent extends EventFinance{}
 
  class WritingOfMoneyEvent extends EventFinance{
    final DirectionLesson currentDirection;
+   final Lesson lessonConfirm;
 
-  const WritingOfMoneyEvent({required this.currentDirection});
+
+  const WritingOfMoneyEvent({required this.currentDirection,required this.lessonConfirm});
  }

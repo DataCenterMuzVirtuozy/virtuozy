@@ -141,9 +141,9 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                    GoRouter.of(context).push(pathTheme);
                   },),
 
-                  DrawerItem(title: 'Уведомления'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
-                    Dialoger.showMessage('В разработке');
-                  },),
+                  // DrawerItem(title: 'Уведомления'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+                  //   GoRouter.of(context).push(pathNotification);
+                  // },),
 
 
                   DrawerItem(title: 'Сайт'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {

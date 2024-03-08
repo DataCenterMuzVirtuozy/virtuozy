@@ -89,7 +89,7 @@ class _MainPageState extends State<MainPage> {
                     SvgPicture.asset(logo, width: 100.0),
                     badges.Badge(
                         position: badges.BadgePosition.topStart(start: 5.0,top: 3.0),
-                      showBadge: true,
+                      showBadge: false,
                     badgeContent: Text('3',style: TStyle.textStyleVelaSansBold(colorWhite)),
                         child: IconButton(
                             onPressed: () {

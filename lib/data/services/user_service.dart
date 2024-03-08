@@ -18,7 +18,6 @@ class UserService{
 
    Future<UserModel> getUser({required String uid}) async {
     try{
-       await Future.delayed(const Duration(seconds: 1));
        final res = await _dio.get(Endpoints.user,
        queryParameters: {
           'phoneNumber': uid.replaceAll(' ', '')

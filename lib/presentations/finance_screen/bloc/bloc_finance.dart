@@ -247,20 +247,26 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
     final newBalanceSub = event.currentDirection.lastSubscriptions[0].balanceSub - event.currentDirection.lastSubscriptions[0].priceOneLesson;
     final supUpdate = event.currentDirection.lastSubscriptions[0].copyWith(
         balanceLesson: newBalance,
-        balanceSub: newBalanceSub
+        balanceSub: event.lessonConfirm.bonus?
+        event.currentDirection.lastSubscriptions[0].balanceSub:
+        newBalanceSub
     );
+
     final lastSubsNew = event.currentDirection.lastSubscriptions.update(0, supUpdate);
     final updateDirection = event.currentDirection.copyWith(lastSubscriptions: lastSubsNew);
     final indexDirection = directions.indexWhere((element) => element.name == event.currentDirection.name);
     final finalDirectionList = directions.update(indexDirection,updateDirection);
     final newUser = user.copyWith(directions: finalDirectionList);
-    final timeNow = DateTime.now();
-    final parseTime = '${DateFormat.yMd().format(timeNow)} ${DateFormat.Hm().format(timeNow)}';
     _userCubit.updateUser(newUser: newUser);
-    _listTransaction.add(TransactionEntity(
-        typeTransaction: TypeTransaction.minusLesson,
-        time: parseTime,
-        quantity: event.currentDirection.lastSubscriptions[0].priceOneLesson));
+    if(!event.lessonConfirm.bonus){
+      final timeNow = DateTime.now();
+      final parseTime = '${DateFormat.yMd().format(timeNow)} ${DateFormat.Hm().format(timeNow)}';
+      _listTransaction.add(TransactionEntity(
+          typeTransaction: TypeTransaction.minusLesson,
+          time: parseTime,
+          quantity: event.currentDirection.lastSubscriptions[0].priceOneLesson));
+    }
+
   }
 
 

@@ -93,7 +93,9 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
      listener: (c,s){
 
         if(s.subStatus == SubStatus.confirm){
-          context.read<BlocFinance>().add(WritingOfMoneyEvent(currentDirection: s.userEntity.directions[_selIndexDirection]));
+          context.read<BlocFinance>().add(WritingOfMoneyEvent(
+              lessonConfirm:s.lessonConfirm,
+              currentDirection: s.userEntity.directions[_selIndexDirection]));
         }
 
         if(s.subStatus == SubStatus.loaded){
@@ -215,9 +217,8 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                        ),
                      ),
                      const Gap(10.0),
-                     Visibility(
-                       visible: _visibleButtonBonus(bonuses: state.bonuses),
-                       child: Padding(
+                     if(_visibleButtonBonus(bonuses: state.bonuses))...{
+                       Padding(
                          padding: const EdgeInsets.only(bottom: 30.0),
                          child: badges.Badge(
                            position: badges.BadgePosition.topEnd(end: -5.0,top: -8.0),
@@ -229,11 +230,11 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                              child: OutLineButton(
                                onTap: () {
                                  if(state.bonuses.length>1){
-                                  Dialoger.showModalBottomMenu(
-                                      title: 'Получить бонусы'.tr(),
-                                      blurred: true,
-                                      args: state.bonuses,
-                                      content: ListBonuses());
+                                   Dialoger.showModalBottomMenu(
+                                       title: 'Получить бонусы'.tr(),
+                                       blurred: true,
+                                       args: state.bonuses,
+                                       content: ListBonuses());
 
 
                                  }else{
@@ -247,13 +248,14 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                                },
                                borderRadius: 10.0,
                                textButton: state.bonuses.length > 1
-                                  ? 'Получить бонусы'.tr()
-                                  : state.bonuses[0].title,
+                                   ? 'Получить бонусы'.tr()
+                                   : state.bonuses[0].title,
                              ),
                            ),
                          ),
-                       ),
-                     )
+                       )
+
+                     }
                    ],
                  ),
                )
@@ -303,77 +305,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
               style:TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,
               size: 18.0)),
           const Gap(10.0),
-          ...List.generate(directions.length, (index) {
-
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 5.0),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(directions[index].name,
-                          style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
-                      if(directions[index].lastSubscriptions[0].status==StatusSub.active)...{
-                        Row(
-                          children: [
-                            Text('Осталось уроков '.tr(),style:TStyle.textStyleVelaSansMedium(colorGrey,size: 14.0)),
-                            const Gap(5.0),
-                            Container(
-                              padding: const EdgeInsets.all(3.0),
-                              decoration: BoxDecoration(
-                                  color: Theme.of(context).colorScheme.secondary,
-                                  shape: BoxShape.circle),
-                              child: Text('${directions[index].lastSubscriptions[0].balanceLesson}',
-                                  style:TStyle.textStyleVelaSansBold(colorWhite,size: 10.0)),
-                            ),
-                          ],
-                        )
-                      }else ...{
-                        Container(
-                          padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
-                          decoration: BoxDecoration(
-                              color: colorRed,
-                              borderRadius: BorderRadius.circular(10.0)),
-                          alignment: Alignment.center,
-                          child: Text('неактивный',
-                              style: TStyle.textStyleVelaSansBold(colorWhite,
-                                  size: 10.0)),
-                        ),
-                      }
-
-
-                    ],
-                  ),
-                  const Gap(5.0),
-                  Visibility(
-                    visible: directions[index].lastSubscriptions[0].status==StatusSub.active&&allViewDirection,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('${ParserPrice.getBalance(directions[index].lastSubscriptions[0].balanceSub)} руб.',
-                            style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
-                        Container(
-                          alignment: Alignment.center,
-                          padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
-                          decoration: BoxDecoration(
-                              color: colorGreen,
-                              borderRadius: BorderRadius.circular(10.0)),
-                          child: Text('активный',
-                              style:TStyle.textStyleVelaSansBold(colorWhite,size: 10.0)),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Gap(5.0),
-                  Visibility(
-                    visible: directions.length>1,
-                      child: const Divider()),
-
-                ],
-              ),
-            );
-          }),
+           BoxSubscription(directions: directions,allViewDirection: allViewDirection),
           const Gap(5.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -417,6 +349,134 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
 
 
 
+
+
+ }
+
+
+ class BoxSubscription extends StatelessWidget{
+  const BoxSubscription({super.key, required this.directions, required this.allViewDirection});
+
+  final List<DirectionLesson> directions;
+  final bool allViewDirection;
+  @override
+  Widget build(BuildContext context) {
+     return Column(
+       children: [
+         ...List.generate(directions.length, (index) {
+
+           if(directions[index].lastSubscriptions.isEmpty){
+             return Container();
+           }
+
+           return Padding(
+             padding: const EdgeInsets.only(bottom: 5.0),
+             child: InkWell(
+               splashColor: Colors.transparent,
+               focusColor: Colors.transparent,
+               hoverColor: Colors.transparent,
+               highlightColor: Colors.transparent,
+               onTap: (){
+                 if(allViewDirection){
+                   GoRouter.of(context).push(pathPay,extra: [directions[index]]);
+                 }
+               },
+               child: Column(
+                 children: [
+                   Row(
+                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                     children: [
+                       Text(directions[index].name,
+                           style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
+                       if(directions[index].lastSubscriptions[0].status==StatusSub.active)...{
+                         Row(
+                           children: [
+                             Text('Осталось уроков '.tr(),style:TStyle.textStyleVelaSansMedium(colorGrey,size: 14.0)),
+                             const Gap(5.0),
+                             Container(
+                               padding: const EdgeInsets.all(3.0),
+                               decoration: BoxDecoration(
+                                   color: Theme.of(context).colorScheme.secondary,
+                                   shape: BoxShape.circle),
+                               child: Text('${directions[index].lastSubscriptions[0].balanceLesson}',
+                                   style:TStyle.textStyleVelaSansBold(colorWhite,size: 10.0)),
+                             ),
+                           ],
+                         )
+                       }else...{
+                         Container(
+                           padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
+                           decoration: BoxDecoration(
+                               color: colorRed,
+                               borderRadius: BorderRadius.circular(10.0)),
+                           alignment: Alignment.center,
+                           child: Text('неактивный',
+                               style: TStyle.textStyleVelaSansBold(colorWhite,
+                                   size: 10.0)),
+                         ),
+                       }
+
+
+                     ],
+                   ),
+                   const Gap(5.0),
+                   Visibility(
+                     visible: directions[index].lastSubscriptions[0].status==StatusSub.active &&allViewDirection
+                         ||directions[index].lastSubscriptions.length>1,
+                     child: Row(
+                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                       children: [
+                         Text('${ParserPrice.getBalance(directions[index].lastSubscriptions[0].balanceSub)} руб.',
+                             style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
+                         Container(
+                           alignment: Alignment.center,
+                           padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
+                           decoration: BoxDecoration(
+                               color: colorGreen,
+                               borderRadius: BorderRadius.circular(10.0)),
+                           child: Text('активный'.tr(),
+                               style:TStyle.textStyleVelaSansBold(colorWhite,size: 10.0)),
+                         ),
+                       ],
+                     ),
+                   ),
+                   const Gap(5.0),
+                   if(directions[index].lastSubscriptions.length>1)...{
+                     Column(
+                       children: [
+                         Row(
+                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                           children: [
+                             Text('${ParserPrice.getBalance(directions[index].lastSubscriptions[1].balanceSub)} руб.',
+                                 style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
+                             Container(
+                               alignment: Alignment.center,
+                               padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
+                               decoration: BoxDecoration(
+                                   color: colorRed,
+                                   borderRadius: BorderRadius.circular(10.0)),
+                               child: Text('запланирован'.tr(),
+                                   style:TStyle.textStyleVelaSansBold(colorWhite,size: 10.0)),
+                             ),
+                           ],
+                         ),
+                         const Gap(5.0),
+                       ],
+                     )
+                   },
+                   Visibility(
+                       visible: directions.length>1,
+                       child: const Divider()),
+
+                 ],
+               ),
+             ),
+           );
+
+         })
+       ],
+     );
+  }
 
 
  }

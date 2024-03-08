@@ -194,7 +194,7 @@ class SubBloc extends Bloc<SubEvent,SubState>{
       directions.update(indexDirection<0?0:indexDirection, updatedDirection);
       final newUser = user.copyWith(directions: directions);
       _userCubit.updateUser(newUser: newUser);
-      emit(state.copyWith(subStatus: SubStatus.confirm));
+      emit(state.copyWith(subStatus: SubStatus.confirm,lessonConfirm:event.lesson));
 
     }on Failure catch(e){
 
