@@ -55,7 +55,8 @@ class _PayPageState extends State<PayPage> {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-      appBar: AppBarCustom(title: 'Пополнить счет'.tr()),
+      appBar: AppBarCustom(title: widget.directions.length>1?'Пополнить счет'.tr():
+      'Пополнить счет напр. ${widget.directions[0].name}'),
       body: BlocConsumer<BlocFinance,StateFinance>(
         listener: (c, s) {
 

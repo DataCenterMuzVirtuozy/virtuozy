@@ -5,8 +5,10 @@
 import 'package:virtuozy/data/models/price_subscription_model.dart';
 import 'package:virtuozy/data/models/prices_direction_model.dart';
 import 'package:virtuozy/data/models/subscription_model.dart';
+import 'package:virtuozy/data/models/transaction_model.dart';
 import 'package:virtuozy/domain/entities/subscription_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
+import 'package:virtuozy/utils/date_time_parser.dart';
 import 'package:virtuozy/utils/failure.dart';
 
 import '../../di/locator.dart';
@@ -41,15 +43,51 @@ class FinanceService{
 
    Future<int> baySubscription({required Map<String,dynamic> subscriptionModelApi}) async {
      try{
-
        final res = await _dio.post(Endpoints.subsUser,data: subscriptionModelApi);
-       return 0;
+       return res.data['id'] as int;
      }on Failure catch(e){
        throw Failure(e.message);
      }on DioException catch(e){
        throw Failure(e.toString());
      }
    }
+
+   Future<List<TransactionModel>> getTransactions({required int idUser,required int idDirections}) async {
+     try{
+         Map<String,dynamic> data = {};
+         if(idDirections>0){
+           data = {
+             "idUser": idUser,
+             "idDir": idDirections,
+           };
+         }else{
+           data = {
+             "idUser": idUser,
+           };
+         }
+         final res = await _dio.get(Endpoints.transactions,queryParameters: data);
+         final trans = (res.data as List<dynamic>).map((e)=> TransactionModel.fromMap(e)).toList();
+         return trans;
+       }on Failure catch(e){
+         throw Failure(e.message);
+       }on DioException catch(e){
+         throw Failure(e.toString());
+       }
+
+   }
+
+  Future<void> addTransaction({required Map<String,dynamic> transactionModelApi}) async {
+     try{
+        await _dio.post(Endpoints.transactions,data: transactionModelApi);
+      }on Failure catch(e){
+        throw Failure(e.message);
+      }on DioException catch(e){
+        throw Failure(e.toString());
+      }
+
+  }
+
+
 
 
 

@@ -16,6 +16,7 @@ class SubscriptionModel{
   final String commentary;
   final int status;
   final String nameDir;
+  final String dateBay;
 
   const SubscriptionModel( {
     required this.idUser,
@@ -30,11 +31,11 @@ class SubscriptionModel{
     required this.priceOneLesson,
     required this.balanceSub,
     required this.balanceLesson,
-    required this.status
+    required this.status,
+    required this.dateBay
   });
 
  static Map<String, dynamic> toMap({required SubscriptionEntity subscriptionEntity}) {
-   print('Status ${subscriptionEntity.status}');
     return {
       'idUser': subscriptionEntity.idUser,
       'idDir': subscriptionEntity.idDir,
@@ -49,6 +50,7 @@ class SubscriptionModel{
       'status': subscriptionEntity.status == StatusSub.active?1:
       subscriptionEntity.status == StatusSub.planned?2:0,
       'nameDir': subscriptionEntity.nameDir,
+      'dateBay':subscriptionEntity.dateBay
     };
 
   }
@@ -67,6 +69,7 @@ class SubscriptionModel{
       dateEnd: map['dateEnd'] as String,
       commentary: map['commentary'] as String,
       status: map['status'] as int,
+      dateBay: map['dateBay'] as String,
       nameDir: nameDirection,
     );
   }

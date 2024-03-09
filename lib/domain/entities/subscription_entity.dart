@@ -17,12 +17,13 @@ enum StatusSub{
    final double  priceOneLesson;
    final double balanceSub;
    final int balanceLesson;
+   final String dateBay;
    final String dateStart;
    final String dateEnd;
    final String commentary;
    final StatusSub status;
 
-   const SubscriptionEntity({
+   const SubscriptionEntity( {
      required this.idDir,
      required this.idUser,
      required this.id,
@@ -34,6 +35,7 @@ enum StatusSub{
     required this.balanceLesson,
      required this.dateStart,
      required this.dateEnd,
+     required this.dateBay,
      required this.commentary,
      required this.status
   });
@@ -46,6 +48,7 @@ enum StatusSub{
     int? balanceLesson,
       String? dateStart,
       String? dateEnd,
+     String? dateBay,
       String? commentary,
      StatusSub? status,
      String? nameDir,
@@ -67,6 +70,7 @@ enum StatusSub{
       priceOneLesson: priceOneLesson ?? this.priceOneLesson,
       balanceSub: balanceSub ?? this.balanceSub,
       balanceLesson: balanceLesson ?? this.balanceLesson,
+      dateBay: dateBay??this.dateBay,
     );
   }
 }

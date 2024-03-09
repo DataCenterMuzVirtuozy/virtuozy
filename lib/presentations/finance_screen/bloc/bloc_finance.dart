@@ -37,12 +37,21 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
   void _getListTransaction(GetListTransactionsEvent event,emit) async {
      try{
        emit(state.copyWith(listTransactionStatus: ListTransactionStatus.loading));
-       await Future.delayed(const Duration(seconds: 1));
-       _listTransaction = _listTransaction.reversed.toList();
+        final idUser = _userCubit.userEntity.id;
+        final idDir = event.directions.length>1?-1:event.directions[0].id;
+       final listApi = await _financeRepository.getTransactions(idUser: idUser, idDirections: idDir);
+       _listTransaction = _listOrganized(list: listApi);
        emit(state.copyWith(listTransactionStatus: ListTransactionStatus.loaded,transactions: _listTransaction));
      }on Failure catch(e){
        emit(state.copyWith(listTransactionStatus: ListTransactionStatus.error,error: e.message));
      }
+  }
+
+  List<TransactionEntity> _listOrganized({required List<TransactionEntity> list}){
+    list.sort((a,b)=>DateTimeParser.getTimeMillisecondEpoch(time: a.time, date: a.date)
+        .compareTo(DateTimeParser.getTimeMillisecondEpoch(time: b.time, date: b.date)));
+    list = list.reversed.toList();
+     return list;
   }
 
 
@@ -173,7 +182,8 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
                 priceOneLesson: event.priceSubscriptionEntity.priceOneLesson,
                 balanceSub: event.priceSubscriptionEntity.price,
                 balanceLesson: event.priceSubscriptionEntity.quantityLesson,
-                dateStart: statusNewSub == StatusSub.active?DateTimeParser.getDate(dateNow: dateNow):'',
+                dateStart: statusNewSub == StatusSub.active?DateTimeParser.getDateToApi(dateNow: dateNow):'',
+                dateBay: DateTimeParser.getDateToApi(dateNow: dateNow),
                 dateEnd: '',
                 commentary: '',
                 status: statusNewSub);
@@ -212,7 +222,7 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
   }
 
 
-  void _updateDirectionUser({required SubscriptionEntity subscriptionEntity,required DirectionLesson currentDirection}){
+  void _updateDirectionUser({required SubscriptionEntity subscriptionEntity,required DirectionLesson currentDirection}) async {
     final user = _userCubit.userEntity;
     final directions = user.directions;
     final lastSubsNew = currentDirection.lastSubscriptions;
@@ -229,12 +239,18 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
     final finalDirectionList = directions.update(indexDirection,updateDirection);
     final newUser = user.copyWith(directions: finalDirectionList);
     final timeNow = DateTime.now();
-    final parseTime = '${DateFormat.yMd().format(timeNow)} ${DateFormat.Hm().format(timeNow)}';
+    final time = DateTimeParser.getTime(dateNow: timeNow);
+    final date = DateTimeParser.getDateToApi(dateNow: timeNow);
     _userCubit.updateUser(newUser: newUser);
-    _listTransaction.add(TransactionEntity(
+    final transactionEntity = TransactionEntity(
+        idDir: currentDirection.id,
+        idUser: user.id,
         typeTransaction: TypeTransaction.addBalance,
-        time: parseTime,
-        quantity: subscriptionEntity.price));
+        time: time,
+        quantity: subscriptionEntity.price,
+        date: date);
+    await _financeRepository.addTransaction(transactionEntity: transactionEntity);
+    _listTransaction.add(transactionEntity);
 
 
   }
@@ -260,11 +276,17 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
     _userCubit.updateUser(newUser: newUser);
     if(!event.lessonConfirm.bonus){
       final timeNow = DateTime.now();
-      final parseTime = '${DateFormat.yMd().format(timeNow)} ${DateFormat.Hm().format(timeNow)}';
-      _listTransaction.add(TransactionEntity(
+      final time = DateTimeParser.getTime(dateNow: timeNow);
+      final date = DateTimeParser.getDateToApi(dateNow: timeNow);
+      final transactionEntity = TransactionEntity(
+          idUser: user.id,
+          idDir: event.currentDirection.id,
           typeTransaction: TypeTransaction.minusLesson,
-          time: parseTime,
-          quantity: event.currentDirection.lastSubscriptions[0].priceOneLesson));
+          time: time,
+          date: date,
+          quantity: event.currentDirection.lastSubscriptions[0].priceOneLesson);
+      await _financeRepository.addTransaction(transactionEntity: transactionEntity);
+      _listTransaction.add(transactionEntity);
     }
 
   }

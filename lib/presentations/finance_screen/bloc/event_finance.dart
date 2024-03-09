@@ -45,7 +45,13 @@ class PaySubscriptionEvent extends EventFinance{
   const PaySubscriptionEvent({
     required this.priceSubscriptionEntity,required this.currentDirection});
 }
-class GetListTransactionsEvent extends EventFinance{}
+class GetListTransactionsEvent extends EventFinance{
+  final List<DirectionLesson> directions;
+
+  const GetListTransactionsEvent({
+    required this.directions,
+  });
+}
 
  class WritingOfMoneyEvent extends EventFinance{
    final DirectionLesson currentDirection;

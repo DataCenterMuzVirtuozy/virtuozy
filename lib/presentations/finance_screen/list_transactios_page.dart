@@ -9,17 +9,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:virtuozy/components/box_info.dart';
 import 'package:virtuozy/domain/entities/transaction_entity.dart';
+import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/presentations/finance_screen/bloc/bloc_finance.dart';
 import 'package:virtuozy/presentations/finance_screen/bloc/event_finance.dart';
 import 'package:virtuozy/presentations/finance_screen/bloc/state_finance.dart';
 import 'package:virtuozy/resourses/colors.dart';
+import 'package:virtuozy/utils/date_time_parser.dart';
 import 'package:virtuozy/utils/parser_price.dart';
 
 import '../../components/app_bar.dart';
 import '../../utils/text_style.dart';
 
 class ListTransactionsPage extends StatefulWidget{
-   const ListTransactionsPage({super.key});
+   const ListTransactionsPage({super.key, required this.directions});
+
+   final List<DirectionLesson> directions;
+
 
   @override
   State<ListTransactionsPage> createState() => _ListTransactionsPageState();
@@ -31,7 +36,7 @@ class _ListTransactionsPageState extends State<ListTransactionsPage> {
   @override
   void initState() {
    super.initState();
-   context.read<BlocFinance>().add(GetListTransactionsEvent());
+   context.read<BlocFinance>().add(GetListTransactionsEvent(directions: widget.directions));
   }
 
 
@@ -60,7 +65,9 @@ class _ListTransactionsPageState extends State<ListTransactionsPage> {
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
             itemCount: state.transactions.length,
               itemBuilder: (c,i){
-           return ItemTransaction(type: state.transactions[i].typeTransaction,
+           return ItemTransaction(
+             date: DateTimeParser.getDateFromApi(date: state.transactions[i].date),
+               type: state.transactions[i].typeTransaction,
                time: state.transactions[i].time,
                quantity: '${state.transactions[i].typeTransaction == TypeTransaction.minusLesson?'-':'+'}'
                    '${ParserPrice.getBalance(state.transactions[i].quantity)} руб.');
@@ -77,11 +84,13 @@ class _ListTransactionsPageState extends State<ListTransactionsPage> {
    const ItemTransaction({super.key,
      required this.type,
      required this.time,
-     required this.quantity
+     required this.quantity,
+     required this.date
       });
 
    final TypeTransaction type;
    final String time;
+   final String date;
    final String quantity;
 
    @override
@@ -118,7 +127,7 @@ class _ListTransactionsPageState extends State<ListTransactionsPage> {
                      children: [
                        Icon(Icons.timelapse_rounded,color: colorBeruza,size: 10.0),
                        const Gap(3.0),
-                       Text(time,style: TStyle.textStyleVelaSansRegular(colorBeruza,size: 10.0)),
+                       Text('$date/$time',style: TStyle.textStyleVelaSansRegular(colorBeruza,size: 10.0)),
                      ],
                    ),
                  ],

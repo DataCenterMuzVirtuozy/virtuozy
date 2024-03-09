@@ -33,6 +33,7 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
   final GlobalKey _textKey = GlobalKey();
   late Size textSize;
   double _itemBox = 40.0;
+  List<String> _items = [];
 
 
 
@@ -40,11 +41,12 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
   @override
   void initState() {
     super.initState();
+    _items = widget.items;
     animationController=AnimationController(vsync: this,duration: const Duration(milliseconds: 300));
     animationHeight=Tween<double>(begin: 40.0,end:_heightCalculate(widget.items.length,40.0)).animate(animationController);
     animationOpacity=Tween<double>(begin: 0.0,end: 0.1).animate(animationController);
     animationBorder=Tween<double>(begin: 0.0,end: 1.0).animate(animationController);
-    changeTextNotifier=ValueNotifier(widget.items.isEmpty?'':widget.items[0]);
+    changeTextNotifier=ValueNotifier(_items.isEmpty?'':_items[_items.length-1]);
     WidgetsBinding.instance.addPostFrameCallback((_) => getSizeAndPosition());
   }
 
@@ -63,6 +65,7 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
     super.dispose();
   }
 
+
   getSizeAndPosition() {
     RenderBox? cardBox = _textKey.currentContext!.findRenderObject() as RenderBox?;
     textSize = cardBox!.size;
@@ -71,13 +74,13 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
      _itemBox =  textSize.height + i;
      animationHeight= Tween<double>(
          begin: _itemBox,
-         end: _heightCalculate(widget.items.length, _itemBox))
+         end: _heightCalculate(_items.length, _itemBox))
          .animate(animationController);
    });
   }
 
   double _heightCalculate(int indexItems,double sizeText){
-    final s = widget.items.length == 2?25.0:15.0;
+    final s = _items.length == 2?25.0:15.0;
     return (sizeText*indexItems)+(s*indexItems);
   }
 
@@ -104,10 +107,10 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                        SizedBox(height: _itemBox+10),
-                      ...List.generate(widget.items.length, (index){
+                      ...List.generate(_items.length, (index){
                         return GestureDetector(
                           onTap: (){
-                            changeTextNotifier.value=widget.items[index];
+                            changeTextNotifier.value=_items[index];
                             widget.onSelected.call(index);
                             animationController.reverse();
                           },
@@ -119,7 +122,7 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
                             child: Row(
                               children: [
                                 Expanded(
-                                  child: Text(widget.items[index],
+                                  child: Text(_items[index],
                                       maxLines: 2,
                                       style:
                                   TStyle.textStyleVelaSansMedium(colorGrey,
@@ -139,7 +142,7 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
             }),
         GestureDetector(
           onTap: (){
-            if(widget.items.length>1){
+            if(_items.length>1){
               if(isDraw){
                 isDraw=false;
                 animationController.reverse();
@@ -182,7 +185,7 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
                           valueListenable: changeTextNotifier,
                         ),
                         Visibility(
-                          visible: widget.items.length>1,
+                          visible: _items.length>1,
                           child: RotatedBox(
                               quarterTurns: 1,
                               child: Icon(

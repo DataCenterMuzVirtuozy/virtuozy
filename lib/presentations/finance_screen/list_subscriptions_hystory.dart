@@ -63,10 +63,7 @@ class _ListSubscriptionHistoryState extends State<ListSubscriptionHistory> {
                   itemCount: widget.listExpiredSubscriptions.length,
                   itemBuilder: (c,i){
                     return ItemSubHistory(
-                        title: widget.listExpiredSubscriptions[i].nameDir,
-                        body: widget.listExpiredSubscriptions[i].name,
-                        time: widget.listExpiredSubscriptions[i].dateEnd,
-                        quantity: widget.listExpiredSubscriptions[i].price.toString());
+                       subscriptionEntity: widget.listExpiredSubscriptions[i]);
                   }),
             )
 
@@ -82,16 +79,11 @@ class _ListSubscriptionHistoryState extends State<ListSubscriptionHistory> {
 
 class ItemSubHistory extends StatelessWidget{
   const ItemSubHistory({super.key,
-    required this.body,
-    required this.time,
-    required this.quantity,
-    required this.title
+    required this.subscriptionEntity
   });
 
-  final String body;
-  final String title;
-  final String time;
-  final String quantity;
+
+  final SubscriptionEntity subscriptionEntity;
 
   @override
   Widget build(BuildContext context) {
@@ -108,10 +100,12 @@ class ItemSubHistory extends StatelessWidget{
             alignment: Alignment.centerLeft,
             child: Padding(
               padding: const EdgeInsets.only(left: 50.0),
-              child: Text(title,style: TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,size: 18.0)),
+              child: Text(subscriptionEntity.nameDir,
+                  style: TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,size: 18.0)),
             ),
           ),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 padding: const EdgeInsets.all(5.0),
@@ -125,7 +119,37 @@ class ItemSubHistory extends StatelessWidget{
               Expanded(child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(body,style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
+                  Text(subscriptionEntity.name,
+                      style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
+                  const Gap(5.0),
+                  Row(
+                    children: [
+                      Icon(Icons.timelapse_rounded,color: colorBeruza,size: 10.0),
+                      const Gap(3.0),
+                      Row(
+                        children: [
+                          Text('Дата покупки'.tr(),style: TStyle.textStyleVelaSansRegular(colorBeruza,size: 10.0)),
+                          Text(' ${subscriptionEntity.dateBay}',style: TStyle.textStyleVelaSansBold(colorBeruza,size: 10.0))
+                        ],
+                      ),
+                    ],
+
+                  ),
+                  const Gap(5.0),
+                  Row(
+                    children: [
+                      Icon(Icons.timelapse_rounded,color: colorBeruza,size: 10.0),
+                      const Gap(3.0),
+                      Row(
+                        children: [
+                          Text('Дата начала'.tr(),style: TStyle.textStyleVelaSansRegular(colorBeruza,size: 10.0)),
+                          Text(' ${subscriptionEntity.dateStart}',style: TStyle.textStyleVelaSansBold(colorBeruza,size: 10.0))
+                        ],
+                      ),
+                    ],
+
+                  ),
+                  const Gap(5.0),
                   Row(
                     children: [
                       Icon(Icons.timelapse_rounded,color: colorBeruza,size: 10.0),
@@ -133,11 +157,26 @@ class ItemSubHistory extends StatelessWidget{
                       Row(
                         children: [
                           Text('Дата окончания'.tr(),style: TStyle.textStyleVelaSansRegular(colorBeruza,size: 10.0)),
-                          Text(' $time',style: TStyle.textStyleVelaSansRegular(colorBeruza,size: 10.0))
+                          Text(' ${subscriptionEntity.dateEnd}',style: TStyle.textStyleVelaSansBold(colorBeruza,size: 10.0))
                         ],
                       ),
                     ],
+
+
                   ),
+                  Container(
+                    width: 100.0,
+                    margin: const EdgeInsets.only(top: 10.0),
+                    padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
+                    decoration: BoxDecoration(
+                        color: colorRed,
+                        borderRadius: BorderRadius.circular(10.0)),
+                    alignment: Alignment.center,
+                    child: Text('неактивный'.tr(),
+                        style: TStyle.textStyleVelaSansBold(colorWhite,
+                            size: 10.0)),
+                  ),
+
                 ],
               )),
             ],
@@ -149,7 +188,8 @@ class ItemSubHistory extends StatelessWidget{
             children: [
               Row(
                 children: [
-                  Text(quantity,style: TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
+                  Text(subscriptionEntity.price.toString(),
+                      style: TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
                   Icon(CupertinoIcons.money_rubl,color: Theme.of(context).textTheme.displayMedium!.color!,size: 16.0)
                 ],
               ),

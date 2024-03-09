@@ -318,7 +318,7 @@ class _FinancePageState extends State<FinancePage> {
                const Gap(20.0),
                GestureDetector(
                  onTap: (){
-                   GoRouter.of(context).push(pathListTransaction);
+                   GoRouter.of(context).push(pathListTransaction,extra: state.directions);
                  },
                  child: Container(
                    padding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 20.0),

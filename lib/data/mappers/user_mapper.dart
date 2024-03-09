@@ -74,7 +74,8 @@ class UserMapper{
         id: e.id,
         dateStart: e.dateStart,
         dateEnd: e.dateEnd,
-        commentary: e.commentary
+        commentary: e.commentary,
+        dateBay: e.dateBay
     )).toList();
 
 
@@ -96,7 +97,8 @@ class UserMapper{
          dateEnd: e.dateEnd,
          commentary: e.commentary,
          status: e.status == 1?StatusSub.active:
-         e.status == 0?StatusSub.inactive:StatusSub.planned
+         e.status == 0?StatusSub.inactive:StatusSub.planned,
+         dateBay: e.dateBay
      )).toList();
   }
 

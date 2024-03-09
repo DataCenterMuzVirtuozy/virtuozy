@@ -12,6 +12,7 @@ import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
 import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/steps_confirm_lesson_content.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/presentations/main_screen/main_page.dart';
+import 'package:virtuozy/utils/date_time_parser.dart';
 
 import '../../../../resourses/colors.dart';
 import '../../../../utils/status_to_color.dart';
@@ -133,7 +134,7 @@ class ItemDetailsLesson extends StatelessWidget{
                children: [
                  Icon(Icons.calendar_month, color: Theme.of(context).textTheme.displayMedium!.color!, size: 15.0),
                  const Gap(5.0),
-                 Text(lesson.date,
+                 Text(DateTimeParser.getDateFromApi(date: lesson.date),
                      style: TStyle.textStyleVelaSansMedium(
                          Theme.of(context).textTheme.displayMedium!.color!, size: 16.0)),
                ],

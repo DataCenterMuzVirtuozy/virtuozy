@@ -57,7 +57,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
   void initState() {
     super.initState();
    context.read<SubBloc>().add(GetUserEvent(
-       allViewDir: false,
+       allViewDir: true,
        currentDirIndex: _selIndexDirection,
        refreshDirection: true));
   }
@@ -99,6 +99,9 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
         }
 
         if(s.subStatus == SubStatus.loaded){
+          if(s.directions.length>1){
+            _allViewDirection =true;
+          }
           _titlesDirections = s.titlesDrawingMenu;
         }
 
@@ -410,7 +413,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                                color: colorRed,
                                borderRadius: BorderRadius.circular(10.0)),
                            alignment: Alignment.center,
-                           child: Text('неактивный',
+                           child: Text('неактивный'.tr(),
                                style: TStyle.textStyleVelaSansBold(colorWhite,
                                    size: 10.0)),
                          ),
