@@ -5,6 +5,7 @@
  import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:virtuozy/components/box_info.dart';
@@ -39,6 +40,15 @@ class _ListTransactionsPageState extends State<ListTransactionsPage> {
    context.read<BlocFinance>().add(GetListTransactionsEvent(directions: widget.directions));
   }
 
+  String _getNameDir(int idDir,List<DirectionLesson> directions){
+    try{
+      return directions.firstWhere((element) => element.id == idDir).name;
+    }catch (e){
+      return '';
+    }
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +76,8 @@ class _ListTransactionsPageState extends State<ListTransactionsPage> {
             itemCount: state.transactions.length,
               itemBuilder: (c,i){
            return ItemTransaction(
+             allView: widget.directions.length>1,
+             nameDir: _getNameDir(state.transactions[i].idDir, widget.directions),
              date: DateTimeParser.getDateFromApi(date: state.transactions[i].date),
                type: state.transactions[i].typeTransaction,
                time: state.transactions[i].time,
@@ -85,13 +97,17 @@ class _ListTransactionsPageState extends State<ListTransactionsPage> {
      required this.type,
      required this.time,
      required this.quantity,
-     required this.date
+     required this.date,
+     required this.nameDir,
+     required this.allView
       });
 
    final TypeTransaction type;
    final String time;
    final String date;
    final String quantity;
+   final String nameDir;
+   final bool allView;
 
    @override
    Widget build(BuildContext context) {
@@ -118,11 +134,22 @@ class _ListTransactionsPageState extends State<ListTransactionsPage> {
                Expanded(child: Column(
                  crossAxisAlignment: CrossAxisAlignment.start,
                  children: [
-                   Text(type == TypeTransaction.addBalance?
-                       'Пополнение счета'.tr():
-                         type == TypeTransaction.minusLesson?
-                       'Списание за урок'.tr():'....',
-                       style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
+                   Row(
+                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                     children: [
+                       Text(type == TypeTransaction.addBalance?
+                           'Пополнение счета'.tr():
+                             type == TypeTransaction.minusLesson?
+                           'Списание за урок'.tr():'....',
+                           style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
+                       Visibility(
+                         visible: allView,
+                         child: Text(nameDir,
+                             style: TStyle.textStyleVelaSansExtraBolt(Theme.of(context)
+                                 .textTheme.displayMedium!.color!,size: 14.0)),
+                       )
+                     ],
+                   ),
                    Row(
                      children: [
                        Icon(Icons.timelapse_rounded,color: colorBeruza,size: 10.0),

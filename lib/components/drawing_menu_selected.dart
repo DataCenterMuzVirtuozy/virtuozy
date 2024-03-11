@@ -12,10 +12,11 @@ import '../utils/text_style.dart';
 
 class DrawingMenuSelected extends StatefulWidget{
   const DrawingMenuSelected({super.key,required this.items,
-    required this.onSelected});
+    required this.onSelected,  this.initTitle = ''});
 
 
   final List<String> items;
+  final String initTitle;
   final Function onSelected;
 
   @override
@@ -42,11 +43,13 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
   void initState() {
     super.initState();
     _items = widget.items;
+    final itemsTitle = _items.isEmpty?'':_items[_items.length-1];
+    final title = widget.initTitle.isEmpty?itemsTitle:widget.initTitle;
     animationController=AnimationController(vsync: this,duration: const Duration(milliseconds: 300));
     animationHeight=Tween<double>(begin: 40.0,end:_heightCalculate(widget.items.length,40.0)).animate(animationController);
     animationOpacity=Tween<double>(begin: 0.0,end: 0.1).animate(animationController);
     animationBorder=Tween<double>(begin: 0.0,end: 1.0).animate(animationController);
-    changeTextNotifier=ValueNotifier(_items.isEmpty?'':_items[_items.length-1]);
+    changeTextNotifier=ValueNotifier(title);
     WidgetsBinding.instance.addPostFrameCallback((_) => getSizeAndPosition());
   }
 

@@ -19,6 +19,7 @@ import 'package:virtuozy/resourses/colors.dart';
 
 import '../../di/locator.dart';
 import '../../utils/text_style.dart';
+import 'contents/bottom_sheet_menu/steps_confirm_lesson_content.dart';
 
 
 
@@ -76,8 +77,8 @@ class Dialoger{
 
 
      showModalBottomSheet(
-         isDismissible:false,
-         enableDrag: false,
+         isDismissible:true,
+         enableDrag: true,
          isScrollControlled: true,
          backgroundColor: Colors.transparent,
          context: scaffoldKey.currentContext!, builder: (_){
@@ -120,7 +121,6 @@ class Dialoger{
                          Text(title,style: TStyle.textStyleGaretHeavy(colorWhite,size: 18.0),),
                          InkWell(
                              onTap: (){
-                               currentDayNotifi.value = 0;
                                  Navigator.pop(_);
 
                              },
@@ -137,6 +137,8 @@ class Dialoger{
            ],
          ),
        );
+     }).whenComplete(() {
+     currentDayNotifi.value = 0;
      });
    }
 
@@ -157,8 +159,9 @@ class Dialoger{
        ListBonuses() => ListBonuses().build(context: context,args: args),
      };
 
-     showBottomSheet(
-         enableDrag: false,
+     showModalBottomSheet(
+         isDismissible:true,
+         enableDrag: true,
          backgroundColor: Colors.transparent,
          context: context, builder: (_){
        return  BackdropFilter(
@@ -209,6 +212,8 @@ class Dialoger{
            ],
          ),
        );
+     }).whenComplete(() {
+       currentDayNotifi.value = 0;
      });
    }
 

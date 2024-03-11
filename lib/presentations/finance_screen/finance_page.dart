@@ -21,6 +21,7 @@ import 'package:virtuozy/router/paths.dart';
 import 'package:virtuozy/utils/auth_mixin.dart';
 import 'package:virtuozy/utils/parser_price.dart';
 
+import '../../components/app_bar.dart';
 import '../../components/box_info.dart';
 import '../../components/dialogs/dialoger.dart';
 import '../../components/drawing_menu_selected.dart';
@@ -28,7 +29,10 @@ import '../../domain/entities/subscription_entity.dart';
 import '../../utils/text_style.dart';
 
 class FinancePage extends StatefulWidget{
-  const FinancePage({super.key});
+  const FinancePage({super.key, required this.selIndexDirection});
+
+
+  final int selIndexDirection;
 
 
 
@@ -48,9 +52,14 @@ class _FinancePageState extends State<FinancePage> {
   @override
   void initState() {
     super.initState();
+
+    if(widget.selIndexDirection>0){
+      _selIndexDirection = widget.selIndexDirection;
+    }
   context.read<BlocFinance>().add(GetBalanceSubscriptionEvent(
     refreshDirection: true,
-      indexDirection: _selIndexDirection, allViewDir: false));
+      indexDirection: _selIndexDirection,
+      allViewDir: widget.selIndexDirection<0?true:false));
   }
 
 
@@ -80,302 +89,310 @@ class _FinancePageState extends State<FinancePage> {
 
 
 
-   return BlocConsumer<BlocFinance,StateFinance>(
-     listener: (c,s){
+   return Scaffold(
+       appBar: AppBarCustom(title: 'Финансы'.tr()),
+     body: BlocConsumer<BlocFinance,StateFinance>(
+       listener: (c,s){
 
-       if(s.applyBonusStatus == ApplyBonusStatus.loading){
-         _hasBonus = false;
-       }
-
-
-
-       if(s.status == FinanceStatus.loaded){
-         // if(s.user.directions[_selIndexDirection].bonus.isNotEmpty){
-         //   _hasBonus = s.user.directions[_selIndexDirection].bonus[0].active;
-         // }else{
-         //   _hasBonus = false;
-         // }
-         _titlesDirections = s.titlesDrawingMenu;
-
-       }
-
-     },
-     builder: (context,state) {
-
-       if(state.status == FinanceStatus.loading){
-         return const Center(child: CircularProgressIndicator());
-       }
-
-       if(state.user.userStatus.isModeration ||
-           state.user.userStatus.isNotAuth&&state.status == FinanceStatus.loaded){
-         return Center(
-           child: BoxInfo(
-               buttonVisible: state.user.userStatus.isNotAuth,
-               title: state.user.userStatus.isModeration?'Ваш аккаунт на модерации'.tr():'Финансы недоступны'.tr(),
-               description: state.user.userStatus.isModeration?'На период модерации работа с финансами недоступна'.tr():
-               'Для работы с балансом счета необходимо авторизироваться'.tr(),
-               iconData: CupertinoIcons.creditcard),
-         );
-       }
+         if(s.applyBonusStatus == ApplyBonusStatus.loading){
+           _hasBonus = false;
+         }
 
 
 
+         if(s.status == FinanceStatus.loaded){
+           // if(s.user.directions[_selIndexDirection].bonus.isNotEmpty){
+           //   _hasBonus = s.user.directions[_selIndexDirection].bonus[0].active;
+           // }else{
+           //   _hasBonus = false;
+           // }
+
+           if(s.directions.length>1){
+             _allViewDirection =true;
+           }
+           _titlesDirections = s.titlesDrawingMenu;
+         }
+
+       },
+       builder: (context,state) {
+
+         if(state.status == FinanceStatus.loading){
+           return const Center(child: CircularProgressIndicator());
+         }
+
+         if(state.user.userStatus.isModeration ||
+             state.user.userStatus.isNotAuth&&state.status == FinanceStatus.loaded){
+           return Center(
+             child: BoxInfo(
+                 buttonVisible: state.user.userStatus.isNotAuth,
+                 title: state.user.userStatus.isModeration?'Ваш аккаунт на модерации'.tr():'Финансы недоступны'.tr(),
+                 description: state.user.userStatus.isModeration?'На период модерации работа с финансами недоступна'.tr():
+                 'Для работы с балансом счета необходимо авторизироваться'.tr(),
+                 iconData: CupertinoIcons.creditcard),
+           );
+         }
 
 
-       return Padding(
-         padding: const EdgeInsets.symmetric(horizontal: 20.0),
-         child: SingleChildScrollView(
-           child: Column(
-             children: [
-               DrawingMenuSelected(items: _titlesDirections,
-                 onSelected: (index){
-                   _selIndexDirection = index;
-                   if(index == _titlesDirections.length-1){
-                     _allViewDirection = true;
-                   }else{
-                     _allViewDirection = false;
-                   }
 
-                   context.read<BlocFinance>().add(GetBalanceSubscriptionEvent(
-                       indexDirection: _selIndexDirection,
-                       refreshDirection: false,
-                       allViewDir: _allViewDirection));
-               },),
-               const Gap(20.0),
-               Container(
-                 padding: const EdgeInsets.symmetric(vertical: 20.0),
-                 decoration: BoxDecoration(
-                   color: Theme.of(context).colorScheme.surfaceVariant,
-                   borderRadius: BorderRadius.circular(20.0)
-                 ),
-                 child: Column(
-                   crossAxisAlignment: CrossAxisAlignment.center,
-                   children: [
-                     Text('Баланс счета'.tr(),style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 16.0)),
-                     Row(
-                       crossAxisAlignment: CrossAxisAlignment.center,
-                       mainAxisAlignment: MainAxisAlignment.center,
-                       children: [
-                         Text(ParserPrice.getBalance(_summaBalance(directions: state.directions)),
-                             style: TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,size: 30.0)),
-                         Padding(
-                           padding: const EdgeInsets.only(top: 5.0),
-                           child: Icon(CupertinoIcons.money_rubl,color: Theme.of(context).textTheme.displayMedium!.color!,size: 35.0),
-                         )
-                       ],
-                     ),
-                     const Gap(10.0),
-                     Padding(
-                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                       child: SizedBox(
-                         height: 40.0,
-                         child: SubmitButton(
-                           borderRadius: 20.0,
-                            colorFill: colorBeruza,
-                             textButton: 'Пополнить'.tr(),
-                             onTap: () {
-                               GoRouter.of(context).push(pathPay,extra:state.directions);
-                             }
-                         ),
-                       ),
-                     ),
-                   ],
-                 ),
-               ),
-               const Gap(10.0),
-               ...List.generate(state.expiredSubscriptions.length, (index) {
-                 return Container(
-                   margin: const EdgeInsets.all(5.0),
+
+
+         return Padding(
+           padding: const EdgeInsets.symmetric(horizontal: 20.0),
+           child: SingleChildScrollView(
+             child: Column(
+               children: [
+                 DrawingMenuSelected(
+                   initTitle: _titlesDirections.isNotEmpty?_titlesDirections[_selIndexDirection]:'',
+                   items: _titlesDirections,
+                   onSelected: (index){
+                     _selIndexDirection = index;
+                     if(index == _titlesDirections.length-1){
+                       _allViewDirection = true;
+                     }else{
+                       _allViewDirection = false;
+                     }
+
+                     context.read<BlocFinance>().add(GetBalanceSubscriptionEvent(
+                         indexDirection: _selIndexDirection,
+                         refreshDirection: false,
+                         allViewDir: _allViewDirection));
+                 },),
+                 const Gap(20.0),
+                 Container(
+                   padding: const EdgeInsets.symmetric(vertical: 20.0),
                    decoration: BoxDecoration(
-                       color: colorBeruza.withOpacity(0.3),
-                       borderRadius: const BorderRadius.only(
-                           topLeft: Radius.circular(10.0),
-                           topRight: Radius.circular(20.0),
-                           bottomRight: Radius.circular(20.0),
-                           bottomLeft: Radius.circular(20.0))),
+                     color: Theme.of(context).colorScheme.surfaceVariant,
+                     borderRadius: BorderRadius.circular(20.0)
+                   ),
                    child: Column(
+                     crossAxisAlignment: CrossAxisAlignment.center,
                      children: [
+                       Text('Баланс счета'.tr(),style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 16.0)),
+                       Row(
+                         crossAxisAlignment: CrossAxisAlignment.center,
+                         mainAxisAlignment: MainAxisAlignment.center,
+                         children: [
+                           Text(ParserPrice.getBalance(_summaBalance(directions: state.directions)),
+                               style: TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,size: 30.0)),
+                           Padding(
+                             padding: const EdgeInsets.only(top: 5.0),
+                             child: Icon(CupertinoIcons.money_rubl,color: Theme.of(context).textTheme.displayMedium!.color!,size: 35.0),
+                           )
+                         ],
+                       ),
+                       const Gap(10.0),
                        Padding(
-                         padding: const EdgeInsets.only(left: 15.0,right: 15.0,top: 10.0),
-                         child: Row(
-                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                           children: [
-                             Expanded(
-                               child: Text(
-                                   state.expiredSubscriptions[index].name,
-                                   style: TStyle.textStyleVelaSansBold(
-                                       Theme.of(context)
-                                           .textTheme
-                                           .displayMedium!
-                                           .color!,
-                                       size: 16.0)),
-                             ),
-                             Visibility(
-                               visible:  state.expiredSubscriptions[index].status==StatusSub.active,
-                               child: Container(
-                                 width: 90.0,
-                                 alignment: Alignment.center,
-                                 padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
-                                 decoration: BoxDecoration(
-                                     color: colorGreen,
-                                     borderRadius: BorderRadius.circular(10.0)),
-                                 child: Text('активный',
-                                     style:TStyle.textStyleVelaSansBold(colorWhite,size: 10.0)),
-                               ),
-                             )
-                           ],
+                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                         child: SizedBox(
+                           height: 40.0,
+                           child: SubmitButton(
+                             borderRadius: 20.0,
+                              colorFill: colorBeruza,
+                               textButton: 'Пополнить'.tr(),
+                               onTap: () {
+                                 GoRouter.of(context).push(pathPay,extra:state.directions);
+                               }
+                           ),
                          ),
                        ),
-                       const Gap(5.0),
-                       Padding(
-                         padding: const EdgeInsets.only(left: 15.0,right: 20.0),
-                         child: Row(
-                           crossAxisAlignment: CrossAxisAlignment.center,
-                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                           children: [
-                             if(state.expiredSubscriptions[index].status==StatusSub.active)...{
-                               Row(
-                                 children: [
-                                   Text('Осталось уроков '.tr(),
-                                       style: TStyle
-                                           .textStyleVelaSansMedium(
-                                           Theme.of(context)
-                                               .textTheme
-                                               .displayMedium!
-                                               .color!,
-                                           size: 14.0)),
-                                   Text(
-                                       '${ state.expiredSubscriptions[index].balanceLesson}',
+                     ],
+                   ),
+                 ),
+                 const Gap(10.0),
+                 ...List.generate(state.expiredSubscriptions.length, (index) {
+                   return Container(
+                     margin: const EdgeInsets.all(5.0),
+                     decoration: BoxDecoration(
+                         color: colorBeruza.withOpacity(0.3),
+                         borderRadius: const BorderRadius.only(
+                             topLeft: Radius.circular(10.0),
+                             topRight: Radius.circular(20.0),
+                             bottomRight: Radius.circular(20.0),
+                             bottomLeft: Radius.circular(20.0))),
+                     child: Column(
+                       children: [
+                         Padding(
+                           padding: const EdgeInsets.only(left: 15.0,right: 15.0,top: 10.0),
+                           child: Row(
+                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                             children: [
+                               Expanded(
+                                 child: Text(
+                                     state.expiredSubscriptions[index].name,
+                                     style: TStyle.textStyleVelaSansBold(
+                                         Theme.of(context)
+                                             .textTheme
+                                             .displayMedium!
+                                             .color!,
+                                         size: 16.0)),
+                               ),
+                               Visibility(
+                                 visible:  state.expiredSubscriptions[index].status==StatusSub.active,
+                                 child: Container(
+                                   width: 90.0,
+                                   alignment: Alignment.center,
+                                   padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
+                                   decoration: BoxDecoration(
+                                       color: colorGreen,
+                                       borderRadius: BorderRadius.circular(10.0)),
+                                   child: Text('активный',
+                                       style:TStyle.textStyleVelaSansBold(colorWhite,size: 10.0)),
+                                 ),
+                               )
+                             ],
+                           ),
+                         ),
+                         const Gap(5.0),
+                         Padding(
+                           padding: const EdgeInsets.only(left: 15.0,right: 20.0),
+                           child: Row(
+                             crossAxisAlignment: CrossAxisAlignment.center,
+                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                             children: [
+                               if(state.expiredSubscriptions[index].status==StatusSub.active)...{
+                                 Row(
+                                   children: [
+                                     Text('Осталось уроков '.tr(),
+                                         style: TStyle
+                                             .textStyleVelaSansMedium(
+                                             Theme.of(context)
+                                                 .textTheme
+                                                 .displayMedium!
+                                                 .color!,
+                                             size: 14.0)),
+                                     Text(
+                                         '${ state.expiredSubscriptions[index].balanceLesson}',
+                                         style: TStyle
+                                             .textStyleVelaSansBold(
+                                             Theme.of(context)
+                                                 .textTheme
+                                                 .displayMedium!
+                                                 .color!,
+                                             size: 14.0)),
+                                   ],
+                                 )
+                               }else ...{
+                                 Container(
+                                   alignment: Alignment.center,
+                                   width: 100.0,
+                                   padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
+                                   decoration: BoxDecoration(
+                                       color: colorRed,
+                                       borderRadius:
+                                       BorderRadius.circular(
+                                           10.0)),
+                                   child: Text(
+                                       state.expiredSubscriptions[index].status==StatusSub.inactive?'неактивный'.tr():
+                                       'запланирован'.tr(),
                                        style: TStyle
                                            .textStyleVelaSansBold(
-                                           Theme.of(context)
-                                               .textTheme
-                                               .displayMedium!
-                                               .color!,
-                                           size: 14.0)),
-                                 ],
-                               )
-                             }else ...{
-                               Container(
-                                 alignment: Alignment.center,
-                                 width: 100.0,
-                                 padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
-                                 decoration: BoxDecoration(
-                                     color: colorRed,
-                                     borderRadius:
-                                     BorderRadius.circular(
-                                         10.0)),
+                                           colorWhite,
+                                           size: 10.0)),
+                                 ),
+                               },
+                               Visibility(
+                                 visible: _allViewDirection,
                                  child: Text(
-                                     state.expiredSubscriptions[index].status==StatusSub.inactive?'неактивный'.tr():
-                                     'запланирован'.tr(),
-                                     style: TStyle
-                                         .textStyleVelaSansBold(
-                                         colorWhite,
-                                         size: 10.0)),
-                               ),
-                             },
-                             Visibility(
-                               visible: _allViewDirection,
-                               child: Text(
-                                   state.expiredSubscriptions[index].nameDir,
-                                   style: TStyle.textStyleVelaSansBold(
-                                       Theme.of(context)
-                                           .textTheme
-                                           .displayMedium!
-                                           .color!,
-                                       size: 13.0)),
-                             )
-                           ],
+                                     state.expiredSubscriptions[index].nameDir,
+                                     style: TStyle.textStyleVelaSansBold(
+                                         Theme.of(context)
+                                             .textTheme
+                                             .displayMedium!
+                                             .color!,
+                                         size: 13.0)),
+                               )
+                             ],
+                           ),
                          ),
-                       ),
-                       const Gap(10.0)
-                     ],
-                   ),
-                 );
-               }),
+                         const Gap(10.0)
+                       ],
+                     ),
+                   );
+                 }),
 
-               const Gap(20.0),
-               GestureDetector(
-                 onTap: (){
-                   GoRouter.of(context).push(pathListSubscriptionsHistory,extra: state.subscriptionHistory);
+                 const Gap(20.0),
+                 GestureDetector(
+                   onTap: (){
+                     GoRouter.of(context).push(pathListSubscriptionsHistory,extra: state.subscriptionHistory);
+                   },
+                   child: Container(
+                     padding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 20.0),
+                     decoration: BoxDecoration(
+                         color: Theme.of(context).colorScheme.surfaceVariant,
+                         borderRadius: BorderRadius.circular(20.0)
+                     ),
+                     child: Row(
+                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                       children: [
+                         Expanded(child: Text('История абонементов'.tr(),
+                             style: TStyle.textStyleVelaSansMedium(Theme.of(context).textTheme.displayMedium!.color!,size: 22.0))),
+                         Icon(Icons.arrow_forward_ios_rounded,color: Theme.of(context).textTheme.displayMedium!.color!)
+                       ],
+                     ),
+                   ),
+                 ),
+                 const Gap(20.0),
+                 GestureDetector(
+                   onTap: (){
+                     GoRouter.of(context).push(pathListTransaction,extra: state.directions);
+                   },
+                   child: Container(
+                     padding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 20.0),
+                     decoration: BoxDecoration(
+                         color: Theme.of(context).colorScheme.surfaceVariant,
+                         borderRadius: BorderRadius.circular(20.0)
+                     ),
+                     child: Row(
+                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                       children: [
+                         Text('Операции по счету'.tr(),style: TStyle.textStyleVelaSansMedium(Theme.of(context).textTheme.displayMedium!.color!,size: 22.0)),
+                         Icon(Icons.arrow_forward_ios_rounded,color: Theme.of(context).textTheme.displayMedium!.color!)
+                       ],
+                     ),
+                   ),
+                 ),
+                 const Gap(20.0),
+
+                 if(state.applyBonusStatus == ApplyBonusStatus.loading)...{
+                   const CircularProgressIndicator()
                  },
-                 child: Container(
-                   padding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 20.0),
-                   decoration: BoxDecoration(
-                       color: Theme.of(context).colorScheme.surfaceVariant,
-                       borderRadius: BorderRadius.circular(20.0)
-                   ),
-                   child: Row(
-                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                     children: [
-                       Expanded(child: Text('История абонементов'.tr(),
-                           style: TStyle.textStyleVelaSansMedium(Theme.of(context).textTheme.displayMedium!.color!,size: 22.0))),
-                       Icon(Icons.arrow_forward_ios_rounded,color: Theme.of(context).textTheme.displayMedium!.color!)
-                     ],
-                   ),
-                 ),
-               ),
-               const Gap(20.0),
-               GestureDetector(
-                 onTap: (){
-                   GoRouter.of(context).push(pathListTransaction,extra: state.directions);
-                 },
-                 child: Container(
-                   padding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 20.0),
-                   decoration: BoxDecoration(
-                       color: Theme.of(context).colorScheme.surfaceVariant,
-                       borderRadius: BorderRadius.circular(20.0)
-                   ),
-                   child: Row(
-                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                     children: [
-                       Text('Операции по счету'.tr(),style: TStyle.textStyleVelaSansMedium(Theme.of(context).textTheme.displayMedium!.color!,size: 22.0)),
-                       Icon(Icons.arrow_forward_ios_rounded,color: Theme.of(context).textTheme.displayMedium!.color!)
-                     ],
-                   ),
-                 ),
-               ),
-               const Gap(20.0),
-
-               if(state.applyBonusStatus == ApplyBonusStatus.loading)...{
-                 const CircularProgressIndicator()
-               },
 
 
-               Visibility(
-                 visible: _hasBonus,
-                 child: Container(
-                   padding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 20.0),
-                   decoration: BoxDecoration(
-                       color: colorBeruzaLight,
-                       borderRadius: BorderRadius.circular(20.0)
+                 Visibility(
+                   visible: _hasBonus,
+                   child: Container(
+                     padding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 20.0),
+                     decoration: BoxDecoration(
+                         color: colorBeruzaLight,
+                         borderRadius: BorderRadius.circular(20.0)
+                     ),
+                     child: Column(
+                       children: [
+                         Text('1 бонусный урок',
+                             style: TStyle.textStyleGaretHeavy(colorBlack,size: 22.0)),
+                         const Gap(20.0),
+                        SubmitButton(
+                          onTap: (){
+                            Dialoger.showMessage('В разработке');
+                            // context.read<BlocFinance>().add(ApplyBonusEvent(
+                            //     idBonus: state.directions[_selIndexDirection].bonus[0].id,
+                            //     currentDirection: state.directions[_selIndexDirection]));
+                          },
+                          borderRadius: 10.0,
+                          textButton: 'Потратить'.tr(),
+                        )
+                       ],
+                     ),
                    ),
-                   child: Column(
-                     children: [
-                       Text('1 бонусный урок',
-                           style: TStyle.textStyleGaretHeavy(colorBlack,size: 22.0)),
-                       const Gap(20.0),
-                      SubmitButton(
-                        onTap: (){
-                          Dialoger.showMessage('В разработке');
-                          // context.read<BlocFinance>().add(ApplyBonusEvent(
-                          //     idBonus: state.directions[_selIndexDirection].bonus[0].id,
-                          //     currentDirection: state.directions[_selIndexDirection]));
-                        },
-                        borderRadius: 10.0,
-                        textButton: 'Потратить'.tr(),
-                      )
-                     ],
-                   ),
-                 ),
-               )
+                 )
 
 
-             ],
+               ],
+             ),
            ),
-         ),
-       );
-     }
+         );
+       }
+     ),
    );
   }
 }

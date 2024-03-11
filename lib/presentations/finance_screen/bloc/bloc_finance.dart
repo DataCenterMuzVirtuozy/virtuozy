@@ -145,7 +145,7 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
 
   List<String> _getTitlesDrawingMenu({required List<DirectionLesson> directions}){
     List<String> resultList = [];
-    directions.sort((a,b)=>b.lastSubscriptions[0].balanceSub.compareTo(a.lastSubscriptions[0].balanceSub));
+    //directions.sort((a,b)=>b.lastSubscriptions[0].balanceSub.compareTo(a.lastSubscriptions[0].balanceSub));
     resultList = directions.map((e) => e.name).toList();
     int length = resultList.length;
     if(length>1){
@@ -153,6 +153,8 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
     }
     return resultList;
   }
+
+
 
   List<DirectionLesson> _getDirections({required UserEntity user, required indexDir,required bool allViewDir}){
     if(allViewDir){

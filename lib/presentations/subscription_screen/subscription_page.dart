@@ -184,7 +184,10 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                         content: DetailsLesson());
                   },),
                const Gap(10.0),
-               ItemSubscription(directions: state.directions,allViewDirection: _allViewDirection),
+               ItemSubscription(
+                 namesDir: _titlesDirections,
+                   directions: state.directions,
+                   allViewDirection: _allViewDirection),
                const Gap(10.0),
                Padding(
                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -274,10 +277,13 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
 
  class ItemSubscription extends StatelessWidget{
   const ItemSubscription({super.key,
-  required this.directions, required this.allViewDirection});
+  required this.directions,
+    required this.allViewDirection,
+    required this.namesDir});
 
   final List<DirectionLesson> directions;
   final bool allViewDirection;
+  final List<String> namesDir;
 
   double _summaBalance({required List<DirectionLesson> directions}){
      double sum = 0.0;
@@ -308,7 +314,8 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
               style:TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,
               size: 18.0)),
           const Gap(10.0),
-           BoxSubscription(directions: directions,allViewDirection: allViewDirection),
+           BoxSubscription(directions: directions,allViewDirection: allViewDirection,
+           namesDir: namesDir),
           const Gap(5.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -358,10 +365,11 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
 
 
  class BoxSubscription extends StatelessWidget{
-  const BoxSubscription({super.key, required this.directions, required this.allViewDirection});
+  const BoxSubscription({super.key, required this.directions, required this.allViewDirection, required this.namesDir});
 
   final List<DirectionLesson> directions;
   final bool allViewDirection;
+  final List<String> namesDir;
   @override
   Widget build(BuildContext context) {
      return Column(
@@ -381,7 +389,8 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                highlightColor: Colors.transparent,
                onTap: (){
                  if(allViewDirection){
-                   GoRouter.of(context).push(pathPay,extra: [directions[index]]);
+                   final selIndexDir = namesDir.indexWhere((element) => element == directions[index].name);
+                   GoRouter.of(context).push(pathFinance,extra: selIndexDir);
                  }
                },
                child: Column(

@@ -149,7 +149,7 @@ class _MainPageState extends State<MainPage> {
     return [
       const SubscriptionPage(),
       SchedulePage(currentMonth: globalCurrentMonthCalendar),
-      const FinancePage(),
+      const FinancePage(selIndexDirection: -1),
       const PromotionPage(),
       const WebPage()
     ];
