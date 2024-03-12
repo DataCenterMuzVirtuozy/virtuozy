@@ -116,12 +116,12 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
       resList = directions[0].subscriptionsAll;
     }
 
-    for(var s in resList){
-      if(s.status == StatusSub.inactive){
-        resListHis.add(s);
-      }
-    }
-    return resListHis;
+    // for(var s in resList){
+    //   if(s.status == StatusSub.inactive){
+    //     resListHis.add(s);
+    //   }
+    // }
+    return resList;
   }
 
 

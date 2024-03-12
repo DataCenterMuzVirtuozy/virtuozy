@@ -44,7 +44,7 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
       final phone = PreferencesUtil.phoneUser;
 
       if(phone == event.phone){
-        await Future.delayed(const Duration(seconds: 2));
+        await Future.delayed(const Duration(seconds: 1));
         //todo id
         _userCubit.setUser(user:  UserEntity(
             userStatus: UserStatus.moderation,
@@ -62,7 +62,7 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
         await PreferencesUtil.setUID(uid: event.phone);
         _userCubit.setUser(user: user);
         await _createLocalUser(user);
-        await Future.delayed(const Duration(seconds: 2));
+        await Future.delayed(const Duration(seconds: 1));
         emit(state.copyWith(authStatus: AuthStatus.authenticated));
         return;
       }

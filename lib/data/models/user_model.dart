@@ -91,27 +91,35 @@ class UserModel{
 
 
    static List<SubscriptionModel> _getLastSub(List<SubscriptionModel> subs){
-    final List<int> millisecondsSinceEpochList = [];
+    final List<int> millisecondsSinceEpochListActiveSub = [];
+    final List<int> millisecondsSinceEpochListPlanedSub = [];
+    List<SubscriptionModel> listSubsAllActive = [];
+    List<SubscriptionModel> listSubsAllPlaned = [];
      SubscriptionModel? subAwait;
     List<SubscriptionModel> listSubs = [];
    if(subs.isEmpty){
      return [];
    }
     for(var element in subs){
-      if(element.dateStart.isNotEmpty){
-        millisecondsSinceEpochList.add(DateFormat('yyyy-MM-dd').parse(element.dateStart).millisecondsSinceEpoch);
+      if(element.dateStart.isNotEmpty&&element.status == 1){
+          listSubsAllActive.add(element);
+        millisecondsSinceEpochListActiveSub.add(DateFormat('yyyy-MM-dd').parse(element.dateStart).millisecondsSinceEpoch);
       }
 
-      if(element.status == 2){
+      if(element.status == 2&&element.dateStart.isNotEmpty){
+        // print('Dir ${element.name} ${element.dateStart} - ${element.dateEnd} Status ${element.status}');
+         //millisecondsSinceEpochListPlanedSub.add(DateFormat('yyyy-MM-dd').parse(element.dateStart).millisecondsSinceEpoch);
         subAwait = element;
       }
     }
-    final indexLast = millisecondsSinceEpochList.indexOf(millisecondsSinceEpochList.reduce(max));
-    listSubs.add(subs[indexLast]);
 
+    final indexLastActiveSub = millisecondsSinceEpochListActiveSub.indexOf(millisecondsSinceEpochListActiveSub.reduce(max));
+    listSubs.add(listSubsAllActive[indexLastActiveSub]);
+    //final indexLastPlanedSub = millisecondsSinceEpochListPlanedSub.indexOf(millisecondsSinceEpochListPlanedSub.reduce(max));
     if(subAwait!=null){
       listSubs.add(subAwait);
     }
+
     return listSubs;
   }
 }

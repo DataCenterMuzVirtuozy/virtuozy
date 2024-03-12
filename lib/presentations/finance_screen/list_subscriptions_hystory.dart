@@ -5,6 +5,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:virtuozy/components/app_bar.dart';
@@ -135,44 +137,57 @@ class ItemSubHistory extends StatelessWidget{
                     ],
 
                   ),
-                  const Gap(5.0),
-                  Row(
-                    children: [
-                      Icon(Icons.timelapse_rounded,color: colorBeruza,size: 10.0),
-                      const Gap(3.0),
-                      Row(
+                  Visibility(
+                    visible: subscriptionEntity.status != StatusSub.planned,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child: Row(
                         children: [
-                          Text('Дата начала'.tr(),style: TStyle.textStyleVelaSansRegular(colorBeruza,size: 10.0)),
-                          Text(' ${subscriptionEntity.dateStart}',style: TStyle.textStyleVelaSansBold(colorBeruza,size: 10.0))
+                          Icon(Icons.timelapse_rounded,color: colorBeruza,size: 10.0),
+                          const Gap(3.0),
+                          Row(
+                            children: [
+                              Text('Дата начала'.tr(),style: TStyle.textStyleVelaSansRegular(colorBeruza,size: 10.0)),
+                              Text(' ${subscriptionEntity.dateStart}',style: TStyle.textStyleVelaSansBold(colorBeruza,size: 10.0))
+                            ],
+                          ),
                         ],
-                      ),
-                    ],
 
+                      ),
+                    ),
                   ),
-                  const Gap(5.0),
-                  Row(
-                    children: [
-                      Icon(Icons.timelapse_rounded,color: colorBeruza,size: 10.0),
-                      const Gap(3.0),
-                      Row(
+                  Visibility(
+                    visible: subscriptionEntity.status != StatusSub.planned,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child: Row(
                         children: [
-                          Text('Дата окончания'.tr(),style: TStyle.textStyleVelaSansRegular(colorBeruza,size: 10.0)),
-                          Text(' ${subscriptionEntity.dateEnd}',style: TStyle.textStyleVelaSansBold(colorBeruza,size: 10.0))
+                          Icon(Icons.timelapse_rounded,color: colorBeruza,size: 10.0),
+                          const Gap(3.0),
+                          Row(
+                            children: [
+                              Text('Дата окончания'.tr(),style: TStyle.textStyleVelaSansRegular(colorBeruza,size: 10.0)),
+                              Text(' ${subscriptionEntity.dateEnd}',style: TStyle.textStyleVelaSansBold(colorBeruza,size: 10.0))
+                            ],
+                          ),
                         ],
+
+
                       ),
-                    ],
-
-
+                    ),
                   ),
                   Container(
                     width: 100.0,
                     margin: const EdgeInsets.only(top: 10.0),
                     padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
                     decoration: BoxDecoration(
-                        color: colorRed,
+                        color: subscriptionEntity.status == StatusSub.inactive||
+                            subscriptionEntity.status == StatusSub.planned?colorRed:
+                        colorGreen,
                         borderRadius: BorderRadius.circular(10.0)),
                     alignment: Alignment.center,
-                    child: Text('неактивный'.tr(),
+                    child: Text(subscriptionEntity.status == StatusSub.inactive?'неактивный'.tr():
+                    subscriptionEntity.status == StatusSub.planned?'запланирован'.tr():'активный'.tr(),
                         style: TStyle.textStyleVelaSansBold(colorWhite,
                             size: 10.0)),
                   ),

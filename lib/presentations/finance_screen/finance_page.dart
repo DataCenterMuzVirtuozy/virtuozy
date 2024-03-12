@@ -90,7 +90,7 @@ class _FinancePageState extends State<FinancePage> {
 
 
    return Scaffold(
-       appBar: AppBarCustom(title: 'Финансы'.tr()),
+       appBar: const AppBarCustom(title: ''),
      body: BlocConsumer<BlocFinance,StateFinance>(
        listener: (c,s){
 
@@ -212,7 +212,7 @@ class _FinancePageState extends State<FinancePage> {
                      child: Column(
                        children: [
                          Padding(
-                           padding: const EdgeInsets.only(left: 15.0,right: 15.0,top: 10.0),
+                           padding: const EdgeInsets.only(left: 20.0,right: 15.0,top: 10.0),
                            child: Row(
                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                              children: [
@@ -242,33 +242,86 @@ class _FinancePageState extends State<FinancePage> {
                              ],
                            ),
                          ),
+                   Visibility(
+                           visible:state.expiredSubscriptions[index].status!=StatusSub.active,
+                           child: Padding(
+                             padding: const EdgeInsets.only(left: 20.0,bottom: 5.0),
+                             child: Row(
+                               children: [
+                                 Row(
+                                   children: [
+                                     Text('Дата окончания'.tr(),
+                                         style: TStyle.textStyleVelaSansRegular( Theme.of(context)
+                                         .textTheme
+                                         .displayMedium!
+                                         .color!,size: 10.0)),
+                                     const Gap(5.0),
+                                     Text(state.expiredSubscriptions[index].dateEnd,
+                                         style: TStyle.textStyleVelaSansBold( Theme.of(context)
+                                         .textTheme
+                                         .displayMedium!
+                                         .color!,size: 10.0))
+                                   ],
+                                 ),
+                               ],
+
+
+                             ),
+                           ),
+                         ),
                          const Gap(5.0),
                          Padding(
-                           padding: const EdgeInsets.only(left: 15.0,right: 20.0),
+                           padding: const EdgeInsets.only(left: 20.0,right: 20.0,bottom: 5.0),
                            child: Row(
                              crossAxisAlignment: CrossAxisAlignment.center,
                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                              children: [
                                if(state.expiredSubscriptions[index].status==StatusSub.active)...{
-                                 Row(
+                                 Column(
+                                   crossAxisAlignment: CrossAxisAlignment.start,
                                    children: [
-                                     Text('Осталось уроков '.tr(),
-                                         style: TStyle
-                                             .textStyleVelaSansMedium(
-                                             Theme.of(context)
+                                     Row(
+                                       children: [
+                                         Text('Осталось уроков '.tr(),
+                                             style: TStyle
+                                                 .textStyleVelaSansMedium(
+                                                 Theme.of(context)
+                                                     .textTheme
+                                                     .displayMedium!
+                                                     .color!,
+                                                 size: 14.0)),
+                                         Text(
+                                             '${ state.expiredSubscriptions[index].balanceLesson}',
+                                             style: TStyle
+                                                 .textStyleVelaSansBold(
+                                                 Theme.of(context)
+                                                     .textTheme
+                                                     .displayMedium!
+                                                     .color!,
+                                                 size: 14.0)),
+                                       ],
+                                     ),
+                                     const Gap(3.0),
+                                     Row(
+                                       children: [
+                                         Row(
+                                           children: [
+                                             Text('Дата окончания'.tr(),style: TStyle.textStyleVelaSansRegular( Theme.of(context)
                                                  .textTheme
                                                  .displayMedium!
-                                                 .color!,
-                                             size: 14.0)),
-                                     Text(
-                                         '${ state.expiredSubscriptions[index].balanceLesson}',
-                                         style: TStyle
-                                             .textStyleVelaSansBold(
-                                             Theme.of(context)
+                                                 .color!,size: 10.0)),
+                                             const Gap(5.0),
+                                             Text(' ${state.expiredSubscriptions[index].dateEnd}',style: TStyle.textStyleVelaSansBold( Theme.of(context)
                                                  .textTheme
                                                  .displayMedium!
-                                                 .color!,
-                                             size: 14.0)),
+                                                 .color!,size: 10.0))
+                                           ],
+                                         ),
+                                       ],
+
+
+                                     )
+
                                    ],
                                  )
                                }else ...{

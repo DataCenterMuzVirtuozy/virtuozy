@@ -93,6 +93,8 @@ class _CalendarState extends State<Calendar> {
            daysOfWeekHeight: 20.0,
            rowHeight: 40.0,
            weekNumbersVisible: false,
+           weekendDays: const [DateTime.saturday,DateTime.sunday],
+           startingDayOfWeek: StartingDayOfWeek.monday,
            daysOfWeekStyle: DaysOfWeekStyle(
              weekdayStyle: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!),
              weekendStyle: TStyle.textStyleVelaSansBold(colorRed)
