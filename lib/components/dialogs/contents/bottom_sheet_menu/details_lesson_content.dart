@@ -182,7 +182,7 @@ class ItemDetailsLesson extends StatelessWidget{
                    ),
                  ),
                  const Gap(10.0),
-                 Text(_getNameStatus(lesson.status),
+                 Text(StatusToColor.getNameStatus(lesson.status),
                      style: TStyle.textStyleVelaSansRegular(
                          colorGrey, size: 14.0)),
                ],
@@ -253,6 +253,10 @@ class ItemDetailsLesson extends StatelessWidget{
         return StatusToColor.namesStatus[7];
       case LessonStatus.layering:
         return StatusToColor.namesStatus[8];
+      case LessonStatus.firstLesson:
+        return StatusToColor.namesStatus[9];
+      case LessonStatus.lastLesson:
+        return StatusToColor.namesStatus[10];
       case LessonStatus.unknown:
         return '';
 

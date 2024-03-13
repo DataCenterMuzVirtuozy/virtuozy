@@ -22,6 +22,7 @@ import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/router/paths.dart';
 import 'package:virtuozy/utils/auth_mixin.dart';
  import 'package:badges/badges.dart' as badges;
+import 'package:virtuozy/utils/date_time_parser.dart';
 import '../../components/buttons.dart';
 import '../../components/dialogs/sealeds.dart';
 import '../../components/drawing_menu_selected.dart';
@@ -426,20 +427,56 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                                style: TStyle.textStyleVelaSansBold(colorWhite,
                                    size: 10.0)),
                          ),
-                       }
+                       },
 
 
                      ],
                    ),
                    const Gap(5.0),
                    Visibility(
+                     visible: directions[index].lastSubscriptions.length==1&&!allViewDirection,
+                       child: Padding(
+                         padding: const EdgeInsets.only(top: 5.0),
+                         child: Column(
+                          children: [
+                            Icon(Icons.timelapse,color: Theme.of(context).colorScheme.secondary,size: 15.0),
+                            const Gap(2.0),
+                            Text('Дата окончания'.tr(),
+                                style: TStyle.textStyleVelaSansMedium(colorGrey,
+                                    size: 13.0)),
+                            const Gap(5.0),
+                            Text(DateTimeParser.getDateFromApi(date:
+                            directions[index].lastSubscriptions[0].dateEnd),
+                                style: TStyle.textStyleVelaSansMedium(colorGrey,
+                                    size: 13.0)),
+                          ],
+                                               ),
+                       )),
+                   Visibility(
                      visible: directions[index].lastSubscriptions[0].status==StatusSub.active &&allViewDirection
                          ||directions[index].lastSubscriptions.length>1,
                      child: Row(
                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                        children: [
-                         Text('${ParserPrice.getBalance(directions[index].lastSubscriptions[0].balanceSub)} руб.',
-                             style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
+                         Column(
+                           crossAxisAlignment: CrossAxisAlignment.start,
+                           children: [
+                             Text('${ParserPrice.getBalance(directions[index].lastSubscriptions[0].balanceSub)} руб.',
+                                 style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
+                             Row(
+                               children: [
+                                 Icon(Icons.timelapse,color: colorGreen,size: 10.0),
+                                 const Gap(5.0),
+                                 Text('Дата окончания'.tr(),
+                                     style:TStyle.textStyleVelaSansMedium(colorGrey,size: 13.0)),
+                                 const Gap(5.0),
+                                 Text(DateTimeParser.getDateFromApi(date:
+                                 directions[index].lastSubscriptions[0].dateEnd),
+                                     style:TStyle.textStyleVelaSansMedium(colorGrey,size: 13.0)),
+                               ],
+                             ),
+                           ],
+                         ),
                          Container(
                            alignment: Alignment.center,
                            padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
@@ -459,8 +496,25 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                          Row(
                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                            children: [
-                             Text('${ParserPrice.getBalance(directions[index].lastSubscriptions[1].balanceSub)} руб.',
-                                 style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
+                             Column(
+                               crossAxisAlignment: CrossAxisAlignment.start,
+                               children: [
+                                 Text('${ParserPrice.getBalance(directions[index].lastSubscriptions[1].balanceSub)} руб.',
+                                     style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
+                                 Row(
+                                   children: [
+                                     Icon(Icons.timelapse,color: colorRed,size: 10.0),
+                                     const Gap(5.0),
+                                     Text('Дата окончания'.tr(),
+                                         style:TStyle.textStyleVelaSansMedium(colorGrey,size: 13.0)),
+                                     const Gap(5.0),
+                                     Text(DateTimeParser.getDateFromApi(date:
+                                     directions[index].lastSubscriptions[1].dateEnd),
+                                         style:TStyle.textStyleVelaSansMedium(colorGrey,size: 13.0)),
+                                   ],
+                                 ),
+                               ],
+                             ),
                              Container(
                                alignment: Alignment.center,
                                padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),

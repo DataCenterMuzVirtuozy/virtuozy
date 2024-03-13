@@ -130,6 +130,8 @@ class DirectionLesson{
    singly,
    awaitAccept,
    layering,
+   firstLesson,
+   lastLesson,
    unknown
  }
 

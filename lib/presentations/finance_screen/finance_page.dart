@@ -90,7 +90,7 @@ class _FinancePageState extends State<FinancePage> {
 
 
    return Scaffold(
-       appBar: const AppBarCustom(title: ''),
+       appBar: widget.selIndexDirection<0?null:const AppBarCustom(title: ''),
      body: BlocConsumer<BlocFinance,StateFinance>(
        listener: (c,s){
 

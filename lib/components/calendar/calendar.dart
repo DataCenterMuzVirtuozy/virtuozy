@@ -114,6 +114,14 @@ class _CalendarState extends State<Calendar> {
              defaultTextStyle: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!),
 
            ),
+           onDaySelected: (d1,d2){
+             final selDay  =  d2.day;
+             final nowDay = DateTime.now().day;
+             if(selDay == nowDay){
+               Dialoger.showMessage('Нет записей на текукщий день'.tr());
+             }
+
+           },
            headerStyle:  HeaderStyle(
              titleCentered: true,
              titleTextStyle: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18.0),
@@ -132,7 +140,7 @@ class _CalendarState extends State<Calendar> {
                    lessons: widget.lessons,
                    day: day.day,
                    context: context,
-                   onLesson: (lessons){
+                   onLesson: (List<Lesson> lessons){
                      widget.onLesson.call(lessons);
                    });
 
@@ -317,7 +325,7 @@ class InfoColor extends StatefulWidget{
 class _InfoColorState extends State<InfoColor> {
 
    double _heightBoxInfo = 45.0;
-   final double _heightBoxInfoOpened = 290.0;
+   final double _heightBoxInfoOpened = 340.0;
 
   @override
   Widget build(BuildContext context) {

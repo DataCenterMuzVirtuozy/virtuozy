@@ -17,7 +17,9 @@ class StatusToColor{
    const Color.fromRGBO(153, 0, 255, 1.0),
    const Color.fromRGBO(255, 255, 255, 1.0),
     const Color.fromRGBO(0, 148, 77, 1.0),
-    const Color.fromRGBO(3, 252, 244,1.0)
+    const Color.fromRGBO(3, 252, 244,1.0),
+    const Color.fromRGBO(0, 255, 0, 1),
+    const Color.fromRGBO(255, 230, 0, 1)
   ];
 
   static final List<String> _namesStatus = [
@@ -29,7 +31,9 @@ class StatusToColor{
     'Самостоятельные',
     'Проведен',
      'Ожидает подтверждения ученика',
-    'Совпадение дней из нескольких направлений'
+    'Совпадение дней из нескольких направлений',
+    'Первый урок',
+    'Последний урок'
 
   ];
 
@@ -57,9 +61,13 @@ class StatusToColor{
        return StatusToColor.namesStatus[7];
      case LessonStatus.layering:
        return StatusToColor.namesStatus[8];
+     case LessonStatus.firstLesson:
+       return StatusToColor.namesStatus[9];
+     case LessonStatus.lastLesson:
+       return StatusToColor.namesStatus[10];
      case LessonStatus.unknown:
        return '';
-       // TODO: Handle this case.
+
    }
  }
 
@@ -75,6 +83,8 @@ class StatusToColor{
       case LessonStatus.awaitAccept:return _colors[7];
       case LessonStatus.layering: return _colors[8];
       case LessonStatus.unknown: return const Color.fromRGBO(255, 255, 255, 0.0);
+      case LessonStatus.firstLesson: return _colors[9];
+      case LessonStatus.lastLesson: return _colors[10];
 
     }
 
