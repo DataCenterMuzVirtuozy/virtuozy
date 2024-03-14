@@ -11,15 +11,17 @@ import 'package:gap/gap.dart';
 import 'package:virtuozy/components/box_info.dart';
 import 'package:virtuozy/domain/entities/transaction_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
-import 'package:virtuozy/presentations/finance_screen/bloc/bloc_finance.dart';
-import 'package:virtuozy/presentations/finance_screen/bloc/event_finance.dart';
-import 'package:virtuozy/presentations/finance_screen/bloc/state_finance.dart';
+
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/utils/date_time_parser.dart';
 import 'package:virtuozy/utils/parser_price.dart';
 
-import '../../components/app_bar.dart';
-import '../../utils/text_style.dart';
+import '../../../components/app_bar.dart';
+import '../../../utils/text_style.dart';
+
+import 'bloc/bloc_finance.dart';
+import 'bloc/event_finance.dart';
+import 'bloc/state_finance.dart';
 
 class ListTransactionsPage extends StatefulWidget{
    const ListTransactionsPage({super.key, required this.directions});

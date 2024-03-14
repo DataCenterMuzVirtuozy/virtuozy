@@ -6,22 +6,23 @@ import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/presentations/auth_screen/login_page.dart';
 import 'package:virtuozy/presentations/auth_screen/singin_page.dart';
 import 'package:virtuozy/presentations/auth_screen/success_send_sms_page.dart';
-import 'package:virtuozy/presentations/branch_search_screen/branch_search_page.dart';
-import 'package:virtuozy/presentations/finance_screen/finance_page.dart';
-import 'package:virtuozy/presentations/finance_screen/pay_page.dart';
-import 'package:virtuozy/presentations/main_screen/main_page.dart';
-import 'package:virtuozy/presentations/notification_screen/notification_page.dart';
-import 'package:virtuozy/presentations/onboarding_screen/onboarding_page.dart';
-import 'package:virtuozy/presentations/promotion_screen/details_promo_page.dart';
-import 'package:virtuozy/presentations/schedule_screen/details_schedule_page.dart';
-import 'package:virtuozy/presentations/subscription_screen/details_bonus_page.dart';
-import 'package:virtuozy/presentations/theme_screen/theme_page.dart';
+
 import 'package:virtuozy/router/paths.dart';
 
 import '../main.dart';
-import '../presentations/finance_screen/list_subscriptions_hystory.dart';
-import '../presentations/finance_screen/list_transactios_page.dart';
-import '../presentations/schedule_screen/schedule_page.dart';
+import '../presentations/main_screen/main_page.dart';
+import '../presentations/student/branch_search_screen/branch_search_page.dart';
+import '../presentations/student/finance_screen/finance_page.dart';
+import '../presentations/student/finance_screen/list_subscriptions_hystory.dart';
+import '../presentations/student/finance_screen/list_transactios_page.dart';
+import '../presentations/student/finance_screen/pay_page.dart';
+import '../presentations/student/notification_screen/notification_page.dart';
+import '../presentations/student/onboarding_screen/onboarding_page.dart';
+import '../presentations/student/promotion_screen/details_promo_page.dart';
+import '../presentations/student/schedule_screen/details_schedule_page.dart';
+import '../presentations/student/subscription_screen/details_bonus_page.dart';
+import '../presentations/student/theme_screen/theme_page.dart';
+
 
 class AppRouter{
 

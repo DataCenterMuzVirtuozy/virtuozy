@@ -8,8 +8,8 @@ import 'package:virtuozy/di/locator.dart';
 import 'package:virtuozy/domain/entities/schedule_lessons.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/domain/user_cubit.dart';
-import 'package:virtuozy/presentations/schedule_screen/bloc/schedule_event.dart';
-import 'package:virtuozy/presentations/schedule_screen/bloc/schedule_state.dart';
+import 'package:virtuozy/presentations/student/schedule_screen/bloc/schedule_event.dart';
+import 'package:virtuozy/presentations/student/schedule_screen/bloc/schedule_state.dart';
 import 'package:virtuozy/utils/failure.dart';
 
 ValueNotifier<List<ScheduleLessons>> listScheduleNotifier = ValueNotifier<List<ScheduleLessons>>([]);

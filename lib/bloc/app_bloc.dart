@@ -34,18 +34,24 @@ part 'app_state.dart';
     _userCubit.setUser(user: UserEntity.unknown());
     emit(state.copyWith(authStatusCheck: AuthStatusCheck.unauthenticated));
    }else {
-    final user = await _getUser(uid: uid);
-    _userCubit.setUser(user: user);
-    if(user.userStatus == UserStatus.notAuth){
-     emit(state.copyWith(authStatusCheck: AuthStatusCheck.unauthenticated));
-    }else{
-     if(user.userStatus == UserStatus.auth){
-      emit(state.copyWith(authStatusCheck: AuthStatusCheck.authenticated));
-     }else if(user.userStatus == UserStatus.moderation){
-      emit(state.copyWith(authStatusCheck: AuthStatusCheck.moderation));
+      final userType = PreferencesUtil.userType;
+     if(userType.isUnknown){
+      emit(state.copyWith(authStatusCheck: AuthStatusCheck.unauthenticated));
+     }else{
+        if(userType.isStudent){
+         final user = await _getUser(uid: uid);
+         _userCubit.setUser(user: user);
+         if(user.userStatus == UserStatus.auth){
+          emit(state.copyWith(authStatusCheck: AuthStatusCheck.authenticated,userType: UserType.student));
+         }else if(user.userStatus == UserStatus.moderation){
+          emit(state.copyWith(authStatusCheck: AuthStatusCheck.moderation));
+         }
+        }else if(userType.isTeacher){
+
+            // get teacher
+        }
      }
 
-    }
    }
 
   }on Failure catch(e){

@@ -11,12 +11,12 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:gap/gap.dart';
 import 'package:virtuozy/components/dialogs/dialoger.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
-import 'package:virtuozy/presentations/subscription_screen/bloc/sub_bloc.dart';
-import 'package:virtuozy/presentations/subscription_screen/bloc/sub_event.dart';
-import 'package:virtuozy/presentations/subscription_screen/bloc/sub_state.dart';
 import 'package:virtuozy/utils/auth_mixin.dart';
 
 import '../../../../di/locator.dart';
+import '../../../../presentations/student/subscription_screen/bloc/sub_bloc.dart';
+import '../../../../presentations/student/subscription_screen/bloc/sub_event.dart';
+import '../../../../presentations/student/subscription_screen/bloc/sub_state.dart';
 import '../../../../resourses/colors.dart';
 import '../../../../utils/text_style.dart';
 import '../../../buttons.dart';

@@ -13,15 +13,15 @@ import 'package:virtuozy/components/app_bar.dart';
 import 'package:virtuozy/components/buttons.dart';
 import 'package:virtuozy/domain/entities/price_subscription_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
-import 'package:virtuozy/presentations/finance_screen/bloc/bloc_finance.dart';
-import 'package:virtuozy/presentations/finance_screen/bloc/state_finance.dart';
 import 'package:virtuozy/resourses/images.dart';
 
-import '../../components/dialogs/dialoger.dart';
-import '../../components/drawing_menu_selected.dart';
-import '../../resourses/colors.dart';
-import '../../utils/text_style.dart';
+import '../../../components/dialogs/dialoger.dart';
+import '../../../components/drawing_menu_selected.dart';
+import '../../../resourses/colors.dart';
+import '../../../utils/text_style.dart';
+import 'bloc/bloc_finance.dart';
 import 'bloc/event_finance.dart';
+import 'bloc/state_finance.dart';
 
 class PayPage extends StatefulWidget{
    const PayPage({super.key, required this.directions});

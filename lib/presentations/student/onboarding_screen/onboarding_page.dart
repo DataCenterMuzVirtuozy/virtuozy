@@ -7,9 +7,9 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:onboarding/onboarding.dart';
-import '../../resourses/colors.dart';
-import '../../resourses/images.dart';
-import '../../utils/text_style.dart';
+import '../../../resourses/colors.dart';
+import '../../../resourses/images.dart';
+import '../../../utils/text_style.dart';
 
 class OnBoardingPage extends StatefulWidget{
   const OnBoardingPage({super.key});

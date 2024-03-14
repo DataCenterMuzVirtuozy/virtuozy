@@ -43,6 +43,14 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
 
       final phone = PreferencesUtil.phoneUser;
 
+      if(event.phone == "+3 (333) 333-33-33"){
+        await PreferencesUtil.setTypeUser(userType: UserType.teacher);
+        await PreferencesUtil.setUID(uid: event.phone);
+        emit(state.copyWith(authStatus: AuthStatus.authenticated));
+        //todo teacher user
+        //_userCubit.setUser(user: user);
+      }
+
       if(phone == event.phone){
         await Future.delayed(const Duration(seconds: 1));
         //todo id
@@ -55,6 +63,7 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
             userType: UserType.student,
             directions: [],
             id: 0));
+        await PreferencesUtil.setTypeUser(userType: UserType.student);
         emit(state.copyWith(authStatus: AuthStatus.moderation));
         return;
       }else{
@@ -63,6 +72,7 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
         _userCubit.setUser(user: user);
         await _createLocalUser(user);
         await Future.delayed(const Duration(seconds: 1));
+        await PreferencesUtil.setTypeUser(userType: UserType.student);
         emit(state.copyWith(authStatus: AuthStatus.authenticated));
         return;
       }

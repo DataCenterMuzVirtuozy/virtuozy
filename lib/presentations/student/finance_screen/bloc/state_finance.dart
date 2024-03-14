@@ -3,10 +3,11 @@
  import 'package:equatable/equatable.dart';
 import 'package:virtuozy/domain/entities/prices_direction_entity.dart';
 
-import '../../../domain/entities/price_subscription_entity.dart';
-import '../../../domain/entities/subscription_entity.dart';
-import '../../../domain/entities/transaction_entity.dart';
-import '../../../domain/entities/user_entity.dart';
+import '../../../../domain/entities/price_subscription_entity.dart';
+import '../../../../domain/entities/subscription_entity.dart';
+import '../../../../domain/entities/transaction_entity.dart';
+import '../../../../domain/entities/user_entity.dart';
+
 
 enum FinanceStatus{
 

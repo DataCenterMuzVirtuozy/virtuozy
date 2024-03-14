@@ -17,6 +17,7 @@ enum StatusNetwork{
 
 }
 
+
 extension StatusNetworkExt on StatusNetwork{
   bool get isDisconnect=>this==StatusNetwork.disconnect;
   bool get isConnect=>this==StatusNetwork.connect;
@@ -26,10 +27,12 @@ extension StatusNetworkExt on StatusNetwork{
 
   final AuthStatusCheck authStatusCheck;
   final StatusNetwork statusNetwork;
+  final UserType userType;
   final String error;
 
 
   const AppState({
+    required this.userType,
    required this.authStatusCheck,
    required this.statusNetwork,
    required this.error,
@@ -37,6 +40,7 @@ extension StatusNetworkExt on StatusNetwork{
 
   factory AppState.unknown() {
     return const AppState(
+      userType: UserType.unknown,
         authStatusCheck: AuthStatusCheck.unknown,
         statusNetwork: StatusNetwork.unknown,
         error: '');
@@ -45,14 +49,16 @@ extension StatusNetworkExt on StatusNetwork{
 
 
   @override
-  List<Object?> get props => [authStatusCheck,statusNetwork,error];
+  List<Object?> get props => [authStatusCheck,statusNetwork,error,userType];
 
   AppState copyWith({
     AuthStatusCheck? authStatusCheck,
     StatusNetwork? statusNetwork,
     String? error,
+    UserType? userType
   }) {
     return AppState(
+      userType: userType??this.userType,
       authStatusCheck: authStatusCheck ?? this.authStatusCheck,
       statusNetwork: statusNetwork ?? this.statusNetwork,
       error: error ?? this.error,

@@ -17,6 +17,7 @@ enum UserStatus{
  extension UserTypeExt on UserType{
    bool get isTeacher => this == UserType.teacher;
    bool get isStudent => this == UserType.student;
+   bool get isUnknown => this == UserType.unknown;
  }
 
 

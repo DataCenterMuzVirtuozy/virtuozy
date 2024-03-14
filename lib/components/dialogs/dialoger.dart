@@ -12,12 +12,10 @@ import 'package:gap/gap.dart';
 import 'package:virtuozy/components/calendar/calendar.dart';
 import 'package:virtuozy/components/dialogs/sealeds.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
-import 'package:virtuozy/presentations/main_screen/main_page.dart';
-import 'package:virtuozy/presentations/subscription_screen/bloc/sub_bloc.dart';
-import 'package:virtuozy/presentations/subscription_screen/bloc/sub_state.dart';
 import 'package:virtuozy/resourses/colors.dart';
 
 import '../../di/locator.dart';
+import '../../presentations/main_screen/main_page.dart';
 import '../../utils/text_style.dart';
 import 'contents/bottom_sheet_menu/steps_confirm_lesson_content.dart';
 

@@ -10,12 +10,12 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:virtuozy/components/app_bar.dart';
-import 'package:virtuozy/presentations/finance_screen/bloc/bloc_finance.dart';
 
-import '../../components/box_info.dart';
-import '../../domain/entities/subscription_entity.dart';
-import '../../resourses/colors.dart';
-import '../../utils/text_style.dart';
+import '../../../components/box_info.dart';
+import '../../../domain/entities/subscription_entity.dart';
+import '../../../resourses/colors.dart';
+import '../../../utils/text_style.dart';
+
 
 class ListSubscriptionHistory extends StatefulWidget{
   const ListSubscriptionHistory({super.key, required this.listExpiredSubscriptions});

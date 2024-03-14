@@ -12,21 +12,22 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtuozy/components/buttons.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
-import 'package:virtuozy/presentations/finance_screen/bloc/bloc_finance.dart';
-import 'package:virtuozy/presentations/finance_screen/bloc/event_finance.dart';
-import 'package:virtuozy/presentations/finance_screen/bloc/state_finance.dart';
-import 'package:virtuozy/presentations/subscription_screen/bloc/sub_bloc.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/router/paths.dart';
 import 'package:virtuozy/utils/auth_mixin.dart';
 import 'package:virtuozy/utils/parser_price.dart';
 
-import '../../components/app_bar.dart';
-import '../../components/box_info.dart';
-import '../../components/dialogs/dialoger.dart';
-import '../../components/drawing_menu_selected.dart';
-import '../../domain/entities/subscription_entity.dart';
-import '../../utils/text_style.dart';
+import '../../../components/app_bar.dart';
+import '../../../components/box_info.dart';
+import '../../../components/dialogs/dialoger.dart';
+import '../../../components/drawing_menu_selected.dart';
+import '../../../domain/entities/subscription_entity.dart';
+import '../../../utils/text_style.dart';
+import 'bloc/bloc_finance.dart';
+import 'bloc/event_finance.dart';
+import 'bloc/state_finance.dart';
+
+
 
 class FinancePage extends StatefulWidget{
   const FinancePage({super.key, required this.selIndexDirection});

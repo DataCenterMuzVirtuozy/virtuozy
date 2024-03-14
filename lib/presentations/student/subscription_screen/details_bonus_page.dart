@@ -9,17 +9,18 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
-import 'package:virtuozy/presentations/subscription_screen/bloc/sub_bloc.dart';
-import 'package:virtuozy/presentations/subscription_screen/bloc/sub_event.dart';
-import 'package:virtuozy/presentations/subscription_screen/bloc/sub_state.dart';
 
-import '../../components/app_bar.dart';
-import '../../components/buttons.dart';
-import '../../components/dialogs/dialoger.dart';
-import '../../domain/entities/user_entity.dart';
-import '../../resourses/colors.dart';
-import '../../resourses/images.dart';
-import '../../utils/text_style.dart';
+import '../../../components/app_bar.dart';
+import '../../../components/buttons.dart';
+import '../../../components/dialogs/dialoger.dart';
+import '../../../domain/entities/user_entity.dart';
+import '../../../resourses/colors.dart';
+import '../../../resourses/images.dart';
+import '../../../utils/text_style.dart';
+import 'bloc/sub_bloc.dart';
+import 'bloc/sub_state.dart';
+
+
 
 class DetailsBonusPage extends StatelessWidget{
    DetailsBonusPage({super.key, required this.bonusEntity, required this.directionLesson});

@@ -3,6 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/utils/theme_provider.dart';
 
 class PreferencesUtil{
@@ -47,6 +48,15 @@ class PreferencesUtil{
     await _prefsInstance!.setStringList(_keyColor, [red,green,blue,opacity]);
   }
 
+  static Future<void> setTypeUser({required UserType userType}) async {
+    switch(userType){
+      case UserType.teacher:  await _prefsInstance!.setInt(_keyTypeUser, 2);
+      case UserType.student: await _prefsInstance!.setInt(_keyTypeUser, 1);
+      case UserType.unknown:  await _prefsInstance!.setInt(_keyTypeUser, 0);
+    }
+
+  }
+
   static Color get getColorScheme{
     final result = _prefsInstance!.getStringList(_keyColor)??['228', '96', '54','1.0'];
     int r = int.parse(result[0]);
@@ -75,6 +85,16 @@ class PreferencesUtil{
   static String get phoneUser => _prefsInstance!.getString(_keyPhoneNumber)??'';
   static String get branchUser => _prefsInstance!.getString(_keyBranch)??'';
   static String get uid => _prefsInstance!.getString(_keyUID)??'';
+  static UserType get userType {
+    final type = _prefsInstance!.getInt(_keyTypeUser)??0;
+    switch(type){
+      case 0: return UserType.unknown;
+      case 1: return UserType.student;
+      case 2: return UserType.teacher;
+      default: return UserType.unknown;
+
+    }
+  }
 
   static ThemeStatus get getTheme{
     final result = _prefsInstance!.getInt(_keyTheme)??0;
@@ -108,3 +128,4 @@ String get _keyPhoneNumber => 'ky_phone';
 String get _keyBranch => 'key_branch';
 String get _keyStatus => 'key_status';
 String get _keyUID => 'key_uid';
+String get _keyTypeUser => 'key_type_user';

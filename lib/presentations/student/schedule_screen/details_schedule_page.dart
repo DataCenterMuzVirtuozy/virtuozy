@@ -8,18 +8,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:virtuozy/presentations/schedule_screen/bloc/schedule_event.dart';
-import 'package:virtuozy/presentations/schedule_screen/schedule_page.dart';
-
-import '../../components/app_bar.dart';
-import '../../components/drawing_menu_selected.dart';
-import '../../domain/entities/schedule_lessons.dart';
-import '../../domain/entities/user_entity.dart';
-import '../../resourses/colors.dart';
-import '../../router/paths.dart';
-import '../../utils/status_to_color.dart';
-import '../../utils/text_style.dart';
+import '../../../components/app_bar.dart';
+import '../../../components/drawing_menu_selected.dart';
+import '../../../domain/entities/schedule_lessons.dart';
+import '../../../domain/entities/user_entity.dart';
+import '../../../resourses/colors.dart';
+import '../../../utils/status_to_color.dart';
+import '../../../utils/text_style.dart';
 import 'bloc/schedule_bloc.dart';
+import 'bloc/schedule_event.dart';
 import 'bloc/schedule_state.dart';
 
 class DetailsSchedulePage extends StatefulWidget{

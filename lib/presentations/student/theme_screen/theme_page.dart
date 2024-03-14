@@ -11,10 +11,11 @@ import 'package:virtuozy/components/app_bar.dart';
 import 'package:virtuozy/components/buttons.dart';
 import 'package:virtuozy/resourses/colors.dart';
 
-import '../../di/locator.dart';
-import '../../utils/preferences_util.dart';
-import '../../utils/text_style.dart';
-import '../../utils/theme_provider.dart';
+import '../../../di/locator.dart';
+import '../../../utils/preferences_util.dart';
+import '../../../utils/text_style.dart';
+import '../../../utils/theme_provider.dart';
+
 
 class ThemePage extends StatefulWidget{
   const ThemePage({super.key});

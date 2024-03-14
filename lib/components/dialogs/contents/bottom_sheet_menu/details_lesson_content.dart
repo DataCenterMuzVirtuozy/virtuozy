@@ -11,7 +11,6 @@ import 'package:go_router/go_router.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
 import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/steps_confirm_lesson_content.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
-import 'package:virtuozy/presentations/main_screen/main_page.dart';
 import 'package:virtuozy/utils/date_time_parser.dart';
 
 import '../../../../resourses/colors.dart';

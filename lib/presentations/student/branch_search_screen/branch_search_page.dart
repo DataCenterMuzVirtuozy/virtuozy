@@ -15,9 +15,10 @@ import 'package:virtuozy/presentations/auth_screen/bloc/auth_state.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/resourses/images.dart';
 
-import '../../components/dialogs/dialoger.dart';
-import '../../components/dialogs/sealeds.dart';
-import '../../utils/text_style.dart';
+import '../../../components/dialogs/dialoger.dart';
+import '../../../components/dialogs/sealeds.dart';
+import '../../../utils/text_style.dart';
+
 
 
 

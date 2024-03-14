@@ -9,9 +9,11 @@ import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/router/paths.dart';
 import 'package:virtuozy/utils/auth_mixin.dart';
 
-import '../../components/box_info.dart';
-import '../../resourses/colors.dart';
-import '../../utils/text_style.dart';
+import '../../../components/box_info.dart';
+import '../../../resourses/colors.dart';
+import '../../../utils/text_style.dart';
+
+
 
 class PromotionPage extends StatefulWidget{
   const PromotionPage({super.key});

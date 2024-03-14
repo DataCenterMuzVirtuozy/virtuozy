@@ -5,13 +5,14 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:virtuozy/di/locator.dart';
+import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/domain/user_cubit.dart';
-import 'package:virtuozy/presentations/subscription_screen/bloc/sub_event.dart';
-import 'package:virtuozy/presentations/subscription_screen/bloc/sub_state.dart';
+import 'package:virtuozy/presentations/student/subscription_screen/bloc/sub_event.dart';
+import 'package:virtuozy/presentations/student/subscription_screen/bloc/sub_state.dart';
+
 import 'package:virtuozy/utils/failure.dart';
 import 'package:virtuozy/utils/update_list_ext.dart';
 
-import '../../../domain/entities/user_entity.dart';
 
 class SubBloc extends Bloc<SubEvent,SubState>{
   SubBloc():super(SubState.unknown()){

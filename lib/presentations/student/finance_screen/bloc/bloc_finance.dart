@@ -8,15 +8,15 @@ import 'package:virtuozy/domain/entities/price_subscription_entity.dart';
 import 'package:virtuozy/domain/entities/subscription_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/domain/repository/finance_repository.dart';
-import 'package:virtuozy/presentations/finance_screen/bloc/event_finance.dart';
-import 'package:virtuozy/presentations/finance_screen/bloc/state_finance.dart';
-import 'package:virtuozy/presentations/subscription_screen/bloc/sub_state.dart';
+import 'package:virtuozy/presentations/student/finance_screen/bloc/state_finance.dart';
 import 'package:virtuozy/utils/date_time_parser.dart';
 import 'package:virtuozy/utils/failure.dart';
 import 'package:virtuozy/utils/update_list_ext.dart';
 
-import '../../../domain/entities/transaction_entity.dart';
-import '../../../domain/user_cubit.dart';
+import '../../../../domain/entities/transaction_entity.dart';
+import '../../../../domain/user_cubit.dart';
+import 'event_finance.dart';
+
 
 class BlocFinance extends Bloc<EventFinance,StateFinance>{
   BlocFinance():super(StateFinance.unknown()){

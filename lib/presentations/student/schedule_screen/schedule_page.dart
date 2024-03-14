@@ -10,21 +10,20 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtuozy/domain/entities/schedule_lessons.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
-import 'package:virtuozy/presentations/schedule_screen/bloc/schedule_bloc.dart';
-import 'package:virtuozy/presentations/schedule_screen/bloc/schedule_event.dart';
-import 'package:virtuozy/presentations/schedule_screen/bloc/schedule_state.dart';
 import 'package:virtuozy/router/paths.dart';
 import 'package:virtuozy/utils/auth_mixin.dart';
 import 'package:virtuozy/utils/status_to_color.dart';
-
-import '../../components/box_info.dart';
-import '../../components/calendar/calendar.dart';
-import '../../components/dialogs/dialoger.dart';
-import '../../components/dialogs/sealeds.dart';
-import '../../components/drawing_menu_selected.dart';
-import '../../resourses/colors.dart';
-import '../../utils/text_style.dart';
+import '../../../components/box_info.dart';
+import '../../../components/calendar/calendar.dart';
+import '../../../components/dialogs/dialoger.dart';
+import '../../../components/dialogs/sealeds.dart';
+import '../../../components/drawing_menu_selected.dart';
+import '../../../resourses/colors.dart';
+import '../../../utils/text_style.dart';
 import '../subscription_screen/subscription_page.dart';
+import 'bloc/schedule_bloc.dart';
+import 'bloc/schedule_event.dart';
+import 'bloc/schedule_state.dart';
 
 
 

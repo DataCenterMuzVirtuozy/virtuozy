@@ -7,7 +7,8 @@ import 'package:virtuozy/components/app_bar.dart';
 import 'package:virtuozy/components/buttons.dart';
 import 'package:virtuozy/resourses/colors.dart';
 
-import '../../utils/text_style.dart';
+import '../../../utils/text_style.dart';
+
 
 class DetailsPromoPage extends StatelessWidget{
   const DetailsPromoPage({super.key, required this.title});

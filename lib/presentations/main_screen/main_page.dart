@@ -10,22 +10,23 @@ import 'package:go_router/go_router.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:virtuozy/components/calendar/calendar.dart';
 import 'package:virtuozy/components/home_drawer_menu.dart';
+import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/presentations/auth_screen/bloc/auth_state.dart';
-import 'package:virtuozy/presentations/schedule_screen/schedule_page.dart';
-import 'package:virtuozy/presentations/web_screen/web_page.dart';
-import 'package:virtuozy/presentations/promotion_screen/promotion_page.dart';
+
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/resourses/images.dart';
  import 'package:badges/badges.dart' as badges;
 import 'package:virtuozy/router/paths.dart';
-
-import '../../utils/text_style.dart';
-import '../../utils/theme_provider.dart';
+import 'package:virtuozy/utils/auth_mixin.dart';
+import '../../../utils/text_style.dart';
+import '../../../utils/theme_provider.dart';
 import '../auth_screen/bloc/auth_bloc.dart';
-import '../finance_screen/finance_page.dart';
-import '../subscription_screen/bloc/sub_bloc.dart';
-import '../subscription_screen/bloc/sub_event.dart';
-import '../subscription_screen/subscription_page.dart';
+import '../student/finance_screen/finance_page.dart';
+import '../student/promotion_screen/promotion_page.dart';
+import '../student/schedule_screen/schedule_page.dart';
+import '../student/subscription_screen/subscription_page.dart';
+import '../student/web_screen/web_page.dart';
+
 
 
 
@@ -39,7 +40,7 @@ class MainPage extends StatefulWidget{
   State<MainPage> createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _MainPageState extends State<MainPage> with AuthMixin{
 
 
 
@@ -110,7 +111,7 @@ class _MainPageState extends State<MainPage> {
                 _indexPage = index;
               });
           },),
-        body: _buildScreens()[_indexPage],
+        body: _buildScreens(userType: userType)[_indexPage],
         //   body:  PersistentTabView(
         //   context,
         //   controller: _controller,
@@ -145,14 +146,29 @@ class _MainPageState extends State<MainPage> {
   }
 
 
-  List<Widget> _buildScreens() {
-    return [
-      const SubscriptionPage(),
-      SchedulePage(currentMonth: globalCurrentMonthCalendar),
-      const FinancePage(selIndexDirection: -1),
-      const PromotionPage(),
-      const WebPage()
-    ];
+  List<Widget> _buildScreens({required UserType userType}) {
+    if(userType.isStudent){
+      return [
+        const SubscriptionPage(),
+        SchedulePage(currentMonth: globalCurrentMonthCalendar),
+        const FinancePage(selIndexDirection: -1),
+        const PromotionPage(),
+        const WebPage()
+      ];
+    }else if(userType.isTeacher){
+      return [
+        Container(color: colorRed)
+      ];
+    }else{
+      return [
+        const SubscriptionPage(),
+        SchedulePage(currentMonth: globalCurrentMonthCalendar),
+        const FinancePage(selIndexDirection: -1),
+        const PromotionPage(),
+        const WebPage()
+      ];
+    }
+
   }
 
 

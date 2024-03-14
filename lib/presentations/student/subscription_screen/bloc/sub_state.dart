@@ -2,7 +2,8 @@
 
 import 'package:equatable/equatable.dart';
 
-import '../../../domain/entities/user_entity.dart';
+import '../../../../domain/entities/user_entity.dart';
+
 
 enum SubStatus{
  loading,

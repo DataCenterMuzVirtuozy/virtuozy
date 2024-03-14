@@ -11,7 +11,6 @@ import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:virtuozy/di/locator.dart';
-import 'package:virtuozy/presentations/subscription_screen/subscription_page.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/utils/status_to_color.dart';
 

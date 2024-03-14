@@ -6,6 +6,7 @@ import 'dart:ui';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
@@ -122,58 +123,17 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                     ],
                   ),
                   const Gap(20.0),
-                  DrawerItem(title: 'Мои абонементы'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
-                    widget.onSelectedPage.call(0);
-                  },),
+                  _getItemsMenu(userType: userType,
+                      context: context,
+                      user: user,
+                      onSelectedPage:(item){
+                        widget.onSelectedPage.call(item);
+                      })
 
-                  DrawerItem(title: 'Расписание'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
-                     widget.onSelectedPage.call(1);
-                  },),
-
-                  DrawerItem(title: 'Финансы'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
-                    widget.onSelectedPage.call(2);
-                  },),
-
-                  DrawerItem(title: 'Предложения'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
-                    widget.onSelectedPage.call(3);
-                  },),
-                  DrawerItem(title: 'Тема'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
-                   GoRouter.of(context).push(pathTheme);
-                  },),
-
-                  // DrawerItem(title: 'Уведомления'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
-                  //   GoRouter.of(context).push(pathNotification);
-                  // },),
-
-
-                  DrawerItem(title: 'Сайт'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
-                    widget.onSelectedPage.call(4);
-                  },),
-
-                  DrawerItem(title:
-                  user.userStatus.isModeration || user.userStatus.isAuth?'Выйти'.tr():
-                  'Войти'.tr(),
-                    textColor: colorRed, onPressed: ()  {
-                    if(user.userStatus == UserStatus.notAuth){
-                      GoRouter.of(context).push(pathLogIn);
-                    }else{
-                      Dialoger.showLogOut(context: context,user: user);
-                    }
-
-                  },),
                 ],
               ),
 
-              // Column(
-              //   children: [
-              //     TextButton(onPressed: (){},
-              //         child:  Text('Политика конфиденциальности'.tr(),style: TStyle.textStyleVelaSansRegularUnderline(colorGrey))),
-              //     TextButton(onPressed: (){},
-              //         child:  Text('Пользовательское соглашение'.tr(),style: TStyle.textStyleVelaSansRegularUnderline(colorGrey)))
-              //
-              //
-              //   ],
-              // )
+
 
 
             ],
@@ -183,6 +143,104 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
   }
 
 
+}
+
+Widget _getItemsMenu({required UserType userType,
+required Function onSelectedPage,
+required BuildContext context,
+required UserEntity user}){
+  if(userType.isStudent){
+    return Column(
+        children: [
+    DrawerItem(title: 'Мои абонементы'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+  onSelectedPage.call(0);
+  },),
+
+  DrawerItem(title: 'Расписание'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+  onSelectedPage.call(1);
+  },),
+
+  DrawerItem(title: 'Финансы'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+  onSelectedPage.call(2);
+  },),
+
+  DrawerItem(title: 'Предложения'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+  onSelectedPage.call(3);
+  },),
+  DrawerItem(title: 'Тема'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+  GoRouter.of(context).push(pathTheme);
+  },),
+
+  // DrawerItem(title: 'Уведомления'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+  //   GoRouter.of(context).push(pathNotification);
+  // },),
+
+
+  DrawerItem(title: 'Сайт'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+  onSelectedPage.call(4);
+  },),
+
+  DrawerItem(title:
+  user.userStatus.isModeration || user.userStatus.isAuth?'Выйти'.tr():
+  'Войти'.tr(),
+  textColor: colorRed, onPressed: ()  {
+  if(user.userStatus == UserStatus.notAuth){
+  GoRouter.of(context).push(pathLogIn);
+  }else{
+  Dialoger.showLogOut(context: context,user: user);
+  }
+
+  },),
+  // Column(
+  //   children: [
+  //     TextButton(onPressed: (){},
+  //         child:  Text('Политика конфиденциальности'.tr(),style: TStyle.textStyleVelaSansRegularUnderline(colorGrey))),
+  //     TextButton(onPressed: (){},
+  //         child:  Text('Пользовательское соглашение'.tr(),style: TStyle.textStyleVelaSansRegularUnderline(colorGrey)))
+  //
+  //
+  //   ],
+  // )
+   ]
+  );
+  }else{
+    return Column(
+        children: [
+          DrawerItem(title: 'Главная'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+            onSelectedPage.call(0);
+          },),
+
+          DrawerItem(title: 'Расписание'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+            onSelectedPage.call(1);
+          },),
+
+          DrawerItem(title: 'Лиды'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+            onSelectedPage.call(2);
+          },),
+
+          DrawerItem(title: 'Клиенты'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+            onSelectedPage.call(3);
+          },),
+          DrawerItem(title: 'Тема'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+            GoRouter.of(context).push(pathTheme);
+          },),
+          //todo
+          // DrawerItem(title:
+          // user.userStatus.isModeration || user.userStatus.isAuth?'Выйти'.tr():
+          // 'Войти'.tr(),
+          //   textColor: colorRed, onPressed: ()  {
+          //     if(user.userStatus == UserStatus.notAuth){
+          //       GoRouter.of(context).push(pathLogIn);
+          //     }else{
+          //       Dialoger.showLogOut(context: context,user: user);
+          //     }
+          //
+          //   },),
+
+        ]
+    );
+
+  }
 }
 
 
