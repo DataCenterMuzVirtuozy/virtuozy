@@ -6,6 +6,7 @@ import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/bonuses_l
 import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/details_lesson_content.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 
+import '../../domain/entities/lesson_entity.dart';
 import 'contents/bottom_sheet_menu/seach_location_cmplete_content.dart';
 import 'contents/bottom_sheet_menu/select_branch_content.dart';
 import 'contents/bottom_sheet_menu/steps_confirm_lesson_content.dart';

@@ -3,6 +3,8 @@
 
  import 'package:virtuozy/domain/entities/user_entity.dart';
 
+import 'lesson_entity.dart';
+
 class ScheduleLessons{
   final String month;
   final List<Lesson> lessons;

@@ -4,6 +4,8 @@
 import 'package:virtuozy/domain/entities/price_subscription_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 
+import '../../../../domain/entities/lesson_entity.dart';
+
 class EventFinance extends Equatable{
   @override
   List<Object?> get props => [];

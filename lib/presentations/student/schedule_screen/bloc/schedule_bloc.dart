@@ -12,6 +12,8 @@ import 'package:virtuozy/presentations/student/schedule_screen/bloc/schedule_eve
 import 'package:virtuozy/presentations/student/schedule_screen/bloc/schedule_state.dart';
 import 'package:virtuozy/utils/failure.dart';
 
+import '../../../../domain/entities/lesson_entity.dart';
+
 ValueNotifier<List<ScheduleLessons>> listScheduleNotifier = ValueNotifier<List<ScheduleLessons>>([]);
 
 class ScheduleBloc extends Bloc<ScheduleEvent,ScheduleState>{

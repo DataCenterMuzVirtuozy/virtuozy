@@ -14,6 +14,7 @@ import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/utils/auth_mixin.dart';
 
 import '../../../../di/locator.dart';
+import '../../../../domain/entities/lesson_entity.dart';
 import '../../../../presentations/student/subscription_screen/bloc/sub_bloc.dart';
 import '../../../../presentations/student/subscription_screen/bloc/sub_event.dart';
 import '../../../../presentations/student/subscription_screen/bloc/sub_state.dart';

@@ -4,6 +4,7 @@
  import 'package:equatable/equatable.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 
+import '../../../../domain/entities/lesson_entity.dart';
 import '../../../../domain/entities/schedule_lessons.dart';
 
 

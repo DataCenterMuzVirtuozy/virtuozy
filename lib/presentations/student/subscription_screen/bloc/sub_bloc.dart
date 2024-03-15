@@ -13,6 +13,8 @@ import 'package:virtuozy/presentations/student/subscription_screen/bloc/sub_stat
 import 'package:virtuozy/utils/failure.dart';
 import 'package:virtuozy/utils/update_list_ext.dart';
 
+import '../../../../domain/entities/lesson_entity.dart';
+
 
 class SubBloc extends Bloc<SubEvent,SubState>{
   SubBloc():super(SubState.unknown()){

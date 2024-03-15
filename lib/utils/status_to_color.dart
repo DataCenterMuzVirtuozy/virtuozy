@@ -6,6 +6,8 @@
 import 'package:flutter/material.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 
+import '../domain/entities/lesson_entity.dart';
+
 class StatusToColor{
 
   static final List<Color> _colors = [

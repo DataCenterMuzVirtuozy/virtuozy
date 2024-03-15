@@ -14,6 +14,7 @@ import 'package:virtuozy/di/locator.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/utils/status_to_color.dart';
 
+import '../../domain/entities/lesson_entity.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../utils/text_style.dart';
 import '../dialogs/dialoger.dart';

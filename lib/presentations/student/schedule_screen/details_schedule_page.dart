@@ -10,6 +10,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import '../../../components/app_bar.dart';
 import '../../../components/drawing_menu_selected.dart';
+import '../../../domain/entities/lesson_entity.dart';
 import '../../../domain/entities/schedule_lessons.dart';
 import '../../../domain/entities/user_entity.dart';
 import '../../../resourses/colors.dart';

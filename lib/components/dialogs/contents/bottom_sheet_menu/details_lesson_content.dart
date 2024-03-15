@@ -13,6 +13,7 @@ import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/steps_con
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/utils/date_time_parser.dart';
 
+import '../../../../domain/entities/lesson_entity.dart';
 import '../../../../resourses/colors.dart';
 import '../../../../utils/status_to_color.dart';
 import '../../../../utils/text_style.dart';
