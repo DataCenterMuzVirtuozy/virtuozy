@@ -22,6 +22,7 @@ class Lesson{
   final String timeAccept;
   final String idAuditory;
   final String nameTeacher;
+  final String nameStudent;
   final LessonStatus status;
   final String nameDirection;
   final int idSub;
@@ -36,6 +37,7 @@ class Lesson{
     required this.timePeriod,
     required this.idAuditory,
     required this.nameTeacher,
+    required this.nameStudent,
     required this.status,
     required this.nameDirection
   });
@@ -52,7 +54,8 @@ class Lesson{
         idAuditory: '',
         nameTeacher: '',
         status: LessonStatus.unknown,
-        id: 0);
+        id: 0,
+        nameStudent: '');
   }
 
   Lesson copyWith({
@@ -65,6 +68,7 @@ class Lesson{
     String? nameDirection,
     int? idSub,
     bool? bonus,
+    String? nameStudent
   }) {
     return Lesson(
       idSub: idSub??this.idSub,
@@ -77,6 +81,7 @@ class Lesson{
       nameTeacher: nameTeacher ?? this.nameTeacher,
       status: status ?? this.status,
       id: id,
+      nameStudent: nameStudent??this.nameStudent,
     );
   }
 }

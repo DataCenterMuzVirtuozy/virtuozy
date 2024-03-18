@@ -134,12 +134,14 @@ class UserModel{
    final String timePeriod;
    final String idAuditory;
    final String nameTeacher;
+  final String nameStudent;
    final int status;
    final String timeAccept;
    final String nameDirection;
    final bool bonus;
 
    const LessonModel( {
+     required this.nameStudent,
      required this.nameDirection,
      required this.id,
      required this.idSub,
@@ -157,16 +159,17 @@ class UserModel{
   factory LessonModel.fromMap(Map<String, dynamic> map,String nameDirection) {
 
     return LessonModel(
-      idSub: map['idSub'] as int,
-      id: map['id'] as int,
-      timeAccept: map['timeAccept'] as String,
-      date: map['date'] as String,
-      timePeriod: map['timePeriod'] as String,
-      idAuditory: map['idAuditory'] as String,
-      nameTeacher: map['nameTeacher'] as String,
-      status: map['status'] as int,
+      idSub: map['idSub']??0,
+      id: map['id']??0,
+      timeAccept: map['timeAccept']??'',
+      date: map['date']??'',
+      timePeriod: map['timePeriod']??'',
+      idAuditory: map['idAuditory']??'',
+      nameTeacher: map['nameTeacher']??'',
+      status: map['status']??0,
       nameDirection: nameDirection,
-      bonus: map['bonus'] as bool
+      bonus: map['bonus']??false,
+        nameStudent: map['nameStudent']??''
     );
   }
 }

@@ -12,6 +12,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtuozy/components/dialogs/dialoger.dart';
 import 'package:virtuozy/di/locator.dart';
+import 'package:virtuozy/domain/entities/teacher_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/domain/user_cubit.dart';
 import 'package:virtuozy/presentations/auth_screen/bloc/auth_bloc.dart';
@@ -92,18 +93,20 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('${user.firstName} ${user.lastName}',
+                              Text('${userType.isStudent?user.firstName:teacher.firstName} ${userType.isStudent?user.lastName:teacher.lastName}',
                                   maxLines: 2,
                                   style: TStyle.textStyleGaretHeavy(colorWhite,size: 20.0)),
                               const Gap(8.0),
                               Visibility(
-                                visible: user.phoneNumber.isNotEmpty,
+                                visible: true,
                                 child: Row(
                                   children: [
                                     Icon(Icons.phone_enabled_rounded,color: colorWhite,
                                     size: 12.0),
                                     const Gap(5.0),
-                                    Text(user.phoneNumber,style: TStyle.textStyleVelaSansBold(colorWhite,size: 12.0)),
+                                    Text(userType.isStudent?user.phoneNumber:
+                                        teacher.phoneNum,
+                                        style: TStyle.textStyleVelaSansBold(colorWhite,size: 12.0)),
                                   ],
                                 ),
                               ),
@@ -128,7 +131,7 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                       user: user,
                       onSelectedPage:(item){
                         widget.onSelectedPage.call(item);
-                      })
+                      }, teacher: teacher)
 
                 ],
               ),
@@ -146,6 +149,7 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
 }
 
 Widget _getItemsMenu({required UserType userType,
+  required TeacherEntity teacher,
 required Function onSelectedPage,
 required BuildContext context,
 required UserEntity user}){
@@ -224,18 +228,11 @@ required UserEntity user}){
           DrawerItem(title: 'Тема'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
             GoRouter.of(context).push(pathTheme);
           },),
-          //todo
-          // DrawerItem(title:
-          // user.userStatus.isModeration || user.userStatus.isAuth?'Выйти'.tr():
-          // 'Войти'.tr(),
-          //   textColor: colorRed, onPressed: ()  {
-          //     if(user.userStatus == UserStatus.notAuth){
-          //       GoRouter.of(context).push(pathLogIn);
-          //     }else{
-          //       Dialoger.showLogOut(context: context,user: user);
-          //     }
-          //
-          //   },),
+
+          DrawerItem(title: 'Выйти'.tr(),
+            textColor: colorRed, onPressed: ()  {
+            Dialoger.showLogOutTeacher(context: context,teacher: teacher);
+            },),
 
         ]
     );

@@ -10,7 +10,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:virtuozy/components/calendar/calendar.dart';
+import 'package:virtuozy/components/dialogs/contents/alert_dialog/log_out_teacher_content.dart';
 import 'package:virtuozy/components/dialogs/sealeds.dart';
+import 'package:virtuozy/domain/entities/teacher_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/resourses/colors.dart';
 
@@ -227,6 +229,15 @@ class Dialoger{
 
    }
 
+   static void showLogOutTeacher({required BuildContext context,required TeacherEntity teacher}){
+     showCustomDialog(
+         contextUp: context,
+         args: teacher,
+         content: LogOutTeacher()
+
+     );
+   }
+
 
 
 
@@ -237,7 +248,7 @@ class Dialoger{
    }) async {
      final Widget body = switch(content){
        LogOut()=>LogOut().build(context: contextUp,args: args),
-
+       LogOutTeacher() => LogOutTeacher().build(context: contextUp,args: args),
      };
      return showDialog<T>(
        context: contextUp,

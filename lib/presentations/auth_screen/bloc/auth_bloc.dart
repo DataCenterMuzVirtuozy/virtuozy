@@ -6,7 +6,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:virtuozy/di/locator.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
+import 'package:virtuozy/domain/repository/teacher_repository.dart';
 import 'package:virtuozy/domain/repository/user_repository.dart';
+import 'package:virtuozy/domain/teacher_cubit.dart';
 import 'package:virtuozy/domain/user_cubit.dart';
 import 'package:virtuozy/presentations/auth_screen/bloc/auth_event.dart';
 import 'package:virtuozy/presentations/auth_screen/bloc/auth_state.dart';
@@ -21,11 +23,14 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
     on<SingInEvent>(_singIn);
     on<CompleteSinIgEvent>(_completeSingIn);
     on<LogOutEvent>(_logOut);
+    on<LogOutTeacherEvent>(_logOutTeacher);
   }
 
 
     final _userCubit = locator.get<UserCubit>();
     final _userRepository = locator.get<UserRepository>();
+    final _teacherRepository = locator.get<TeacherRepository>();
+    final _teacherCubit = locator.get<TeacherCubit>();
     late UserEntity user;
 
 
@@ -44,11 +49,12 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
       final phone = PreferencesUtil.phoneUser;
 
       if(event.phone == "+3 (333) 333-33-33"){
+        final teacher = await _teacherRepository.getTeacher(uid: event.phone);
+        _teacherCubit.setTeacher(teacher: teacher);
         await PreferencesUtil.setTypeUser(userType: UserType.teacher);
         await PreferencesUtil.setUID(uid: event.phone);
         emit(state.copyWith(authStatus: AuthStatus.authenticated));
-        //todo teacher user
-        //_userCubit.setUser(user: user);
+         return;
       }
 
       if(phone == event.phone){
@@ -156,6 +162,11 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
     }
 
    emit(state.copyWith(authStatus: AuthStatus.logOut));
+  }
+
+  void _logOutTeacher(LogOutTeacherEvent event,emit) async{
+    await PreferencesUtil.clear();
+    emit(state.copyWith(authStatus: AuthStatus.logOut));
   }
 
 }

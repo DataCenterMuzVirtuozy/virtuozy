@@ -2,8 +2,10 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:virtuozy/components/dialogs/contents/alert_dialog/log_out_content.dart';
+import 'package:virtuozy/components/dialogs/contents/alert_dialog/log_out_teacher_content.dart';
 import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/bonuses_list_content.dart';
 import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/details_lesson_content.dart';
+import 'package:virtuozy/domain/entities/teacher_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 
 import '../../domain/entities/lesson_entity.dart';
@@ -26,6 +28,14 @@ class LogOut extends AlertDialogContent{
   @override
   build({required BuildContext context, Object? args}) {
     return  LogOutContent(user: (args as UserEntity),);
+  }
+
+}
+
+class LogOutTeacher extends AlertDialogContent{
+  @override
+  build({required BuildContext context, Object? args}) {
+    return LogOutTeacherContent(teacher: (args as TeacherEntity));
   }
 
 }

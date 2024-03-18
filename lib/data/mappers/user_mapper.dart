@@ -129,7 +129,8 @@ class UserMapper{
         idAuditory: lessonModel.idAuditory,
         nameTeacher: lessonModel.nameTeacher,
         timeAccept: lessonModel.timeAccept,
-        status: _lessonStatus(lessonModel.status));
+        status: _lessonStatus(lessonModel.status),
+        nameStudent: lessonModel.nameStudent);
   }
 
  }
