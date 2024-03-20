@@ -11,12 +11,14 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:virtuozy/components/calendar/calendar.dart';
 import 'package:virtuozy/components/dialogs/contents/alert_dialog/log_out_teacher_content.dart';
+import 'package:virtuozy/components/dialogs/contents/alert_dialog/select_date_content.dart';
 import 'package:virtuozy/components/dialogs/sealeds.dart';
 import 'package:virtuozy/domain/entities/teacher_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/resourses/colors.dart';
 
 import '../../di/locator.dart';
+import '../../domain/entities/lesson_entity.dart';
 import '../../presentations/main_screen/main_page.dart';
 import '../../utils/text_style.dart';
 import 'contents/bottom_sheet_menu/steps_confirm_lesson_content.dart';
@@ -238,6 +240,15 @@ class Dialoger{
      );
    }
 
+   static void showSelectDate({required BuildContext context,required List<Lesson> lessons}){
+     showCustomDialog(
+         contextUp: context,
+         args: lessons,
+         content: SelectDate()
+
+     );
+   }
+
 
 
 
@@ -249,6 +260,7 @@ class Dialoger{
      final Widget body = switch(content){
        LogOut()=>LogOut().build(context: contextUp,args: args),
        LogOutTeacher() => LogOutTeacher().build(context: contextUp,args: args),
+       SelectDate() => SelectDate().build(context: contextUp,args: args),
      };
      return showDialog<T>(
        context: contextUp,

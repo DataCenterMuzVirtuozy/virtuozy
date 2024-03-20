@@ -135,6 +135,7 @@ class _SchedulePageState extends State<SchedulePage> {
                 ),
                 const Gap(10.0),
                  Calendar(
+                   colorFill: Theme.of(context).colorScheme.surfaceVariant,
                    clickableDay: true,
                      lessons: state.lessons,
                      onMonth: (month){

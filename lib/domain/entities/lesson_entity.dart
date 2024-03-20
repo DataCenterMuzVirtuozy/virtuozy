@@ -17,6 +17,7 @@ enum LessonStatus{
 
 class Lesson{
   final int id;
+  final String idSchool;
   final String date; //2024-12-22
   final String timePeriod;
   final String timeAccept;
@@ -31,6 +32,7 @@ class Lesson{
   const Lesson({
     required this.id,
     required this.idSub,
+    required this.idSchool,
     required this.bonus,
     required this.timeAccept,
     required this.date,
@@ -55,7 +57,8 @@ class Lesson{
         nameTeacher: '',
         status: LessonStatus.unknown,
         id: 0,
-        nameStudent: '');
+        nameStudent: '',
+        idSchool: '');
   }
 
   Lesson copyWith({
@@ -68,9 +71,11 @@ class Lesson{
     String? nameDirection,
     int? idSub,
     bool? bonus,
-    String? nameStudent
+    String? nameStudent,
+    String? idSchool
   }) {
     return Lesson(
+      idSchool: idSchool??this.idSchool,
       idSub: idSub??this.idSub,
       bonus: bonus??this.bonus,
       nameDirection: nameDirection??this.nameDirection,

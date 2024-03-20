@@ -3,6 +3,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:virtuozy/components/dialogs/contents/alert_dialog/log_out_content.dart';
 import 'package:virtuozy/components/dialogs/contents/alert_dialog/log_out_teacher_content.dart';
+import 'package:virtuozy/components/dialogs/contents/alert_dialog/select_date_content.dart';
 import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/bonuses_list_content.dart';
 import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/details_lesson_content.dart';
 import 'package:virtuozy/domain/entities/teacher_entity.dart';
@@ -22,6 +23,13 @@ sealed class DialogsContent{
 
 sealed class AlertDialogContent{
   build({required BuildContext context,Object? args});
+}
+
+class SelectDate extends AlertDialogContent {
+  @override
+  build({required BuildContext context, Object? args}) {
+    return SelectDateContent(lessons: (args as List<Lesson>));
+  }
 }
 
 class LogOut extends AlertDialogContent{
@@ -81,3 +89,6 @@ class ListBonuses extends DialogsContent{
   }
 
 }
+
+
+

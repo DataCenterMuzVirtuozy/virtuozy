@@ -130,6 +130,7 @@ class UserModel{
  class LessonModel{
   final int id;
   final int idSub;
+  final String idSchool;
    final String date; //2024-12-22
    final String timePeriod;
    final String idAuditory;
@@ -141,6 +142,7 @@ class UserModel{
    final bool bonus;
 
    const LessonModel( {
+     required this.idSchool,
      required this.nameStudent,
      required this.nameDirection,
      required this.id,
@@ -159,6 +161,7 @@ class UserModel{
   factory LessonModel.fromMap(Map<String, dynamic> map,String nameDirection) {
 
     return LessonModel(
+      idSchool: map['idSchool']??'',
       idSub: map['idSub']??0,
       id: map['id']??0,
       timeAccept: map['timeAccept']??'',

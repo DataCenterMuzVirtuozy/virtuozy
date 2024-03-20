@@ -23,16 +23,26 @@ import 'custom_table_calendar.dart';
 
 //ValueNotifier<int> currentDayNotifi = ValueNotifier<int>(0);
 
-
+  /// [resetFocusDay] true - при вызове метода build, возвращает календарь на текущую дату
+  ///
 class Calendar extends StatefulWidget{
-  const Calendar({super.key, required this.lessons, required this.onLesson, required this.onMonth,this.clickableDay = true,
-     this.resetFocusDay = true});
+  const Calendar(
+      {super.key,
+      required this.lessons,
+      required this.onLesson,
+      required this.onMonth,
+      this.clickableDay = true,
+      this.resetFocusDay = true,
+        this.visibleInfoColors = true,
+      this.colorFill = Colors.transparent});
 
   final List<Lesson> lessons;
   final Function onLesson;
   final Function onMonth;
   final bool clickableDay;
   final bool resetFocusDay;
+  final Color colorFill;
+  final bool visibleInfoColors;
 
 
 
@@ -73,6 +83,7 @@ class _CalendarState extends State<Calendar> {
   Widget build(BuildContext context) {
 
 
+
     if(widget.resetFocusDay){
        _focusedDay = DateTime.now();
     }
@@ -83,7 +94,7 @@ class _CalendarState extends State<Calendar> {
 
    return Container(
      decoration: BoxDecoration(
-       color: Theme.of(context).colorScheme.surfaceVariant,
+       color: widget.colorFill,
        borderRadius: BorderRadius.circular(20.0)
      ),
      child: Column(
@@ -183,7 +194,9 @@ class _CalendarState extends State<Calendar> {
            },
 
          ),
-         const InfoColor()
+         Visibility(
+           visible: widget.visibleInfoColors,
+             child: const InfoColor())
        ],
      ),
    );
