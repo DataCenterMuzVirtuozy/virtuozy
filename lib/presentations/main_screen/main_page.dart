@@ -26,6 +26,7 @@ import '../student/promotion_screen/promotion_page.dart';
 import '../student/schedule_screen/schedule_page.dart';
 import '../student/subscription_screen/subscription_page.dart';
 import '../student/web_screen/web_page.dart';
+import '../teacher/schedule_table_screen/schedule_table_page.dart';
 import '../teacher/today_schedule_screen/today_schedule_page.dart';
 
 
@@ -158,7 +159,8 @@ class _MainPageState extends State<MainPage> with AuthMixin{
       ];
     }else if(userType.isTeacher){
       return [
-        TodaySchedulePage()
+        const TodaySchedulePage(),
+        const ScheduleTablePage()
       ];
     }else{
       return [
