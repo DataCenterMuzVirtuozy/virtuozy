@@ -10,6 +10,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:virtuozy/components/app_bar.dart';
+import 'package:virtuozy/utils/date_time_parser.dart';
 
 import '../../../components/box_info.dart';
 import '../../../domain/entities/subscription_entity.dart';
@@ -131,7 +132,7 @@ class ItemSubHistory extends StatelessWidget{
                       Row(
                         children: [
                           Text('Дата покупки'.tr(),style: TStyle.textStyleVelaSansRegular(colorBeruza,size: 10.0)),
-                          Text(' ${subscriptionEntity.dateBay}',style: TStyle.textStyleVelaSansBold(colorBeruza,size: 10.0))
+                          Text(' ${DateTimeParser.getDateFromApi(date: subscriptionEntity.dateBay)}',style: TStyle.textStyleVelaSansBold(colorBeruza,size: 10.0))
                         ],
                       ),
                     ],
@@ -148,7 +149,7 @@ class ItemSubHistory extends StatelessWidget{
                           Row(
                             children: [
                               Text('Дата начала'.tr(),style: TStyle.textStyleVelaSansRegular(colorBeruza,size: 10.0)),
-                              Text(' ${subscriptionEntity.dateStart}',style: TStyle.textStyleVelaSansBold(colorBeruza,size: 10.0))
+                              Text(' ${DateTimeParser.getDateFromApi(date: subscriptionEntity.dateStart)}',style: TStyle.textStyleVelaSansBold(colorBeruza,size: 10.0))
                             ],
                           ),
                         ],
@@ -167,7 +168,7 @@ class ItemSubHistory extends StatelessWidget{
                           Row(
                             children: [
                               Text('Дата окончания'.tr(),style: TStyle.textStyleVelaSansRegular(colorBeruza,size: 10.0)),
-                              Text(' ${subscriptionEntity.dateEnd}',style: TStyle.textStyleVelaSansBold(colorBeruza,size: 10.0))
+                              Text(' ${DateTimeParser.getDateFromApi(date: subscriptionEntity.dateEnd)}',style: TStyle.textStyleVelaSansBold(colorBeruza,size: 10.0))
                             ],
                           ),
                         ],

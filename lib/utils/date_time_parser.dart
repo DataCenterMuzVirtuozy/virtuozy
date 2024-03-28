@@ -16,6 +16,9 @@ class DateTimeParser{
 
 
     static getDateFromApi({required String date}){
+      if(date.isEmpty){
+        return '';
+      }
       final dt =  DateFormat('yyyy-MM-dd').parse(date);
       return DateFormat.yMd().format(dt);
     }
@@ -28,10 +31,23 @@ class DateTimeParser{
     }
 
     static getTimeMillisecondEpoch({required String time,required String date}){
+      if(time.isEmpty||date.isEmpty){
+        return '';
+      }
       final dateTime = '$date $time';
       final dt =  DateFormat('yyyy-MM-dd HH:mm').parse(dateTime);
       return dt.millisecondsSinceEpoch;
     }
+
+    static getDateAndTime({required String dateTime}){
+      if(dateTime.isEmpty){
+        return '';
+      }
+      final dt =  DateFormat('yyyy-MM-dd HH:mm').parse(dateTime);
+      return '${DateFormat.yMd().format(dt)}/${DateFormat.Hm().format(dt)}';
+    }
+
+
 
 
 

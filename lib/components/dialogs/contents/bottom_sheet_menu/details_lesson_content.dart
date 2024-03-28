@@ -191,7 +191,7 @@ class ItemDetailsLesson extends StatelessWidget{
                visible: lesson.status == LessonStatus.complete,
                child: Row(
                  children: [
-                   Text(lesson.timeAccept,
+                   Text(DateTimeParser.getDateAndTime(dateTime: lesson.timeAccept),
                        style: TStyle.textStyleVelaSansRegular(
                            colorGrey, size: 13.0)),
                    const Gap(5.0),

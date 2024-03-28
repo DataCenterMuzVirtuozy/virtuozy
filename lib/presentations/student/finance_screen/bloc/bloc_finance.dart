@@ -73,11 +73,16 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
 
 
   void _getBalanceSubscription(GetBalanceSubscriptionEvent event,emit) async {
+    final user  = _userCubit.userEntity;
+    if(user.userStatus.isNotAuth){
+      emit(state.copyWith(status: FinanceStatus.loaded,user: user));
+      return;
+    }
     if(event.refreshDirection){
       emit(state.copyWith(status: FinanceStatus.loading));
       await Future.delayed(const Duration(seconds: 1));
     }
-    final user  = _userCubit.userEntity;
+
     if(user.userStatus == UserStatus.moderation || user.userStatus == UserStatus.notAuth){
       emit(state.copyWith(
           status: FinanceStatus.loaded));

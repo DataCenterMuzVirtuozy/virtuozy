@@ -32,18 +32,18 @@ import '../teacher/today_schedule_screen/today_schedule_page.dart';
 
 
 
- final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  GlobalKey<ScaffoldState> scaffoldKeyGlobal = GlobalKey<ScaffoldState>();
 
 class MainPage extends StatefulWidget{
-  const MainPage({super.key});
+   const MainPage({super.key});
 
   @override
   State<MainPage> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> with AuthMixin{
-
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
 
 
@@ -53,7 +53,7 @@ class _MainPageState extends State<MainPage> with AuthMixin{
   @override
   void initState() {
     super.initState();
-
+    scaffoldKeyGlobal = scaffoldKey;
   }
 
 
@@ -71,7 +71,7 @@ class _MainPageState extends State<MainPage> with AuthMixin{
     return BlocConsumer<AuthBloc,AuthState>(
       listener: (c, s) {
         if(s.authStatus == AuthStatus.logOut){
-          GoRouter.of(context).pushReplacement(pathLogIn);
+          GoRouter.of(context).push(pathLogIn);
         }
       },
       builder: (context,state) {

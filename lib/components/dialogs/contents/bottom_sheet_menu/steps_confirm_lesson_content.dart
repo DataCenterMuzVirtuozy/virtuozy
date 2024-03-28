@@ -19,6 +19,7 @@ import '../../../../presentations/student/subscription_screen/bloc/sub_bloc.dart
 import '../../../../presentations/student/subscription_screen/bloc/sub_event.dart';
 import '../../../../presentations/student/subscription_screen/bloc/sub_state.dart';
 import '../../../../resourses/colors.dart';
+import '../../../../utils/date_time_parser.dart';
 import '../../../../utils/text_style.dart';
 import '../../../buttons.dart';
 
@@ -538,7 +539,7 @@ class _ItemNotAcceptLessonState extends State<ItemNotAcceptLesson> with AuthMixi
                  children: [
                    Row(
                      children: [
-                       Text(widget.lesson.date,
+                       Text(DateTimeParser.getDateFromApi(date: widget.lesson.date),
                            style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 16.0)),
                        Visibility(
                            visible: widget.allViewDirection,

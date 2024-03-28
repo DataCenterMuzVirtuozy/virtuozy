@@ -316,6 +316,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
               style:TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,
               size: 18.0)),
           const Gap(10.0),
+          Divider(color: colorGrey),
            BoxSubscription(directions: directions,allViewDirection: allViewDirection,
            namesDir: namesDir),
           const Gap(5.0),
@@ -393,7 +394,10 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                  if(allViewDirection){
                    final selIndexDir = namesDir.indexWhere((element) => element == directions[index].name);
                    GoRouter.of(context).push(pathFinance,extra: selIndexDir);
+                 }else{
+                   GoRouter.of(context).push(pathPay,extra: directions);
                  }
+
                },
                child: Column(
                  children: [
@@ -502,17 +506,20 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                                children: [
                                  Text('${ParserPrice.getBalance(directions[index].lastSubscriptions[1].balanceSub)} руб.',
                                      style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
-                                 Row(
-                                   children: [
-                                     Icon(Icons.timelapse,color: colorRed,size: 10.0),
-                                     const Gap(5.0),
-                                     Text('Дата окончания'.tr(),
-                                         style:TStyle.textStyleVelaSansMedium(colorGrey,size: 13.0)),
-                                     const Gap(5.0),
-                                     Text(DateTimeParser.getDateFromApi(date:
-                                     directions[index].lastSubscriptions[1].dateEnd),
-                                         style:TStyle.textStyleVelaSansMedium(colorGrey,size: 13.0)),
-                                   ],
+                                 Visibility(
+                                    visible: directions[index].lastSubscriptions[1].dateEnd.isNotEmpty,
+                                   child: Row(
+                                     children: [
+                                       Icon(Icons.timelapse,color: colorRed,size: 10.0),
+                                       const Gap(5.0),
+                                       Text('Дата окончания'.tr(),
+                                           style:TStyle.textStyleVelaSansMedium(colorGrey,size: 13.0)),
+                                       const Gap(5.0),
+                                       Text(DateTimeParser.getDateFromApi(date:
+                                       directions[index].lastSubscriptions[1].dateEnd),
+                                           style:TStyle.textStyleVelaSansMedium(colorGrey,size: 13.0)),
+                                     ],
+                                   ),
                                  ),
                                ],
                              ),
@@ -533,7 +540,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                    },
                    Visibility(
                        visible: directions.length>1,
-                       child: const Divider()),
+                       child:  Divider(color: colorGrey)),
 
                  ],
                ),

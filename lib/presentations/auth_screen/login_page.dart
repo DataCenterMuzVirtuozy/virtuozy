@@ -1,6 +1,8 @@
 
 
-  import 'package:easy_localization/easy_localization.dart';
+  import 'dart:io';
+
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -69,6 +71,15 @@ class _LogInPageState extends State<LogInPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+            color: Theme.of(context).iconTheme.color
+        ),
+        backgroundColor: Theme.of(context).colorScheme.background,
+        centerTitle: true,
+        title:   _darkTheme?Image.asset(logoDark,width: 100.0):
+        SvgPicture.asset(logo, width: 100.0),
+      ),
       body: Padding(
         padding: const EdgeInsets.only(left: 20.0,right: 20.0,top: 50.0),
         child: SingleChildScrollView(
@@ -82,7 +93,7 @@ class _LogInPageState extends State<LogInPage> {
 
                 if(s.authStatus == AuthStatus.authenticated||
                     s.authStatus == AuthStatus.moderation){
-                  GoRouter.of(context).pushReplacement(pathMain);
+                  GoRouter.of(context).pop(pathMain);
                 }
 
 
@@ -106,9 +117,6 @@ class _LogInPageState extends State<LogInPage> {
                 children: [
                   Column(
                     children: [
-                      _darkTheme?Image.asset(logoDark,width: 100.0):
-                      SvgPicture.asset(logo, width: 100.0),
-                      const Gap(30.0),
                       Image.asset(illustration_5),
                       const Gap(30.0),
                       Text('Добро пожаловать!'.tr(),style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,

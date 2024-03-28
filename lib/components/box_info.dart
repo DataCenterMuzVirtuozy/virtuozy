@@ -46,7 +46,7 @@ class BoxInfo extends StatelessWidget{
               visible: buttonVisible,
                 child:  OutLineButton(
                   onTap: (){
-                    GoRouter.of(context).pushReplacement(pathLogIn);
+                    GoRouter.of(context).push(pathLogIn);
                   },
                   width: 100.0,
                   textButton: 'Войти'.tr(),

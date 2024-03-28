@@ -22,6 +22,7 @@ import '../../../components/box_info.dart';
 import '../../../components/dialogs/dialoger.dart';
 import '../../../components/drawing_menu_selected.dart';
 import '../../../domain/entities/subscription_entity.dart';
+import '../../../utils/date_time_parser.dart';
 import '../../../utils/text_style.dart';
 import 'bloc/bloc_finance.dart';
 import 'bloc/event_finance.dart';
@@ -243,8 +244,10 @@ class _FinancePageState extends State<FinancePage> {
                              ],
                            ),
                          ),
+
+                   //todo test date end
                    Visibility(
-                           visible:state.expiredSubscriptions[index].status!=StatusSub.active,
+                           visible: false,
                            child: Padding(
                              padding: const EdgeInsets.only(left: 20.0,bottom: 5.0),
                              child: Row(
@@ -257,7 +260,7 @@ class _FinancePageState extends State<FinancePage> {
                                          .displayMedium!
                                          .color!,size: 10.0)),
                                      const Gap(5.0),
-                                     Text(state.expiredSubscriptions[index].dateEnd,
+                                     Text(DateTimeParser.getDateFromApi(date: state.expiredSubscriptions[index].dateEnd),
                                          style: TStyle.textStyleVelaSansBold( Theme.of(context)
                                          .textTheme
                                          .displayMedium!
@@ -312,7 +315,8 @@ class _FinancePageState extends State<FinancePage> {
                                                  .displayMedium!
                                                  .color!,size: 10.0)),
                                              const Gap(5.0),
-                                             Text(' ${state.expiredSubscriptions[index].dateEnd}',style: TStyle.textStyleVelaSansBold( Theme.of(context)
+                                             Text(' ${DateTimeParser.getDateFromApi(date: state.expiredSubscriptions[index].dateEnd)}',
+                                                 style: TStyle.textStyleVelaSansBold( Theme.of(context)
                                                  .textTheme
                                                  .displayMedium!
                                                  .color!,size: 10.0))

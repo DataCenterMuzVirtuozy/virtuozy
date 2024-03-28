@@ -14,6 +14,7 @@ import '../../../domain/entities/lesson_entity.dart';
 import '../../../domain/entities/schedule_lessons.dart';
 import '../../../domain/entities/user_entity.dart';
 import '../../../resourses/colors.dart';
+import '../../../utils/date_time_parser.dart';
 import '../../../utils/status_to_color.dart';
 import '../../../utils/text_style.dart';
 import 'bloc/schedule_bloc.dart';
@@ -65,8 +66,6 @@ class _DetailsSchedulePageState extends State<DetailsSchedulePage> {
            );
          }
 
-
-         print('Satete ${_titlesDirections.toString()}');
          return Padding(
            padding: const EdgeInsets.symmetric(horizontal: 10.0),
            child: SingleChildScrollView(
@@ -170,7 +169,7 @@ class _DetailsSchedulePageState extends State<DetailsSchedulePage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(lesson.date,
+                    Text(DateTimeParser.getDateFromApi(date: lesson.date),
                         style:TStyle.textStyleVelaSansMedium(colorOrange,size: 14.0)),
                     const Gap(5.0),
                     Text(lesson.timePeriod,

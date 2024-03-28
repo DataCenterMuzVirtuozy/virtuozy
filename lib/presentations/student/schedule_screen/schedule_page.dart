@@ -12,6 +12,7 @@ import 'package:virtuozy/domain/entities/schedule_lessons.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/router/paths.dart';
 import 'package:virtuozy/utils/auth_mixin.dart';
+import 'package:virtuozy/utils/date_time_parser.dart';
 import 'package:virtuozy/utils/status_to_color.dart';
 import '../../../components/box_info.dart';
 import '../../../components/calendar/calendar.dart';
@@ -273,7 +274,7 @@ class _SchedulePageState extends State<SchedulePage> {
                mainAxisAlignment: MainAxisAlignment.start,
                crossAxisAlignment: CrossAxisAlignment.start,
                children: [
-                 Text(lesson.date,
+                 Text(DateTimeParser.getDateFromApi(date: lesson.date),
                      style:TStyle.textStyleVelaSansMedium(colorOrange,size: 14.0)),
                  const Gap(5.0),
                  Text(lesson.timePeriod,

@@ -51,11 +51,15 @@ class ScheduleBloc extends Bloc<ScheduleEvent,ScheduleState>{
 
   void _getSchedule(GetScheduleEvent event,emit) async {
      try{
+       final user = _userCubit.userEntity;
+       if(user.userStatus.isNotAuth){
+         emit(state.copyWith(status: ScheduleStatus.loaded,user: user));
+         return;
+       }
        if(event.refreshDirection){
          emit(state.copyWith(status: ScheduleStatus.loading));
          await Future.delayed(const Duration(milliseconds: 1000));
        }
-      final user = _userCubit.userEntity;
       final  schedulesList = _getListSchedules(
         currentMonth: event.month,
           userEntity: user, indexSelDirection: event.currentDirIndex,

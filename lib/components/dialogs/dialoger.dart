@@ -83,7 +83,7 @@ class Dialoger{
          enableDrag: true,
          isScrollControlled: true,
          backgroundColor: Colors.transparent,
-         context: scaffoldKey.currentContext!, builder: (_){
+         context: scaffoldKeyGlobal.currentContext!, builder: (_){
        final body = switch(content){
          ConfirmLesson()=>ConfirmLesson().build(context: _,args: args),
          SelectBranch() => SelectBranch().build(context: _),

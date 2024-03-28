@@ -69,6 +69,15 @@ class _SingInPageState extends State<SingInPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+            color: Theme.of(context).iconTheme.color
+        ),
+        backgroundColor: Theme.of(context).colorScheme.background,
+        centerTitle: true,
+        title:   _darkTheme?Image.asset(logoDark,width: 100.0):
+        SvgPicture.asset(logo, width: 100.0),
+      ),
       body: Padding(
         padding: const EdgeInsets.only(left: 20.0,right: 20.0,top: 50.0),
         child: SingleChildScrollView(
@@ -88,9 +97,6 @@ class _SingInPageState extends State<SingInPage> {
                 children: [
                   Column(
                     children: [
-              _darkTheme?Image.asset(logoDark,width: 100.0):
-              SvgPicture.asset(logo, width: 100.0),
-                      const Gap(30.0),
                       Image.asset(illustration_5),
                       const Gap(20.0),
                       Text('Добро пожаловать!'.tr(),style: TStyle.textStyleVelaSansBold(

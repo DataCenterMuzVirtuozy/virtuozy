@@ -20,6 +20,7 @@ import 'package:virtuozy/presentations/auth_screen/bloc/auth_event.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/resourses/images.dart';
 import 'package:virtuozy/router/paths.dart';
+import 'package:virtuozy/utils/app_theme.dart';
 import 'package:virtuozy/utils/auth_mixin.dart';
 import 'package:virtuozy/utils/theme_provider.dart';
 
@@ -86,43 +87,47 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                         ),
                         //child: Image.asset(illustration_2,fit: BoxFit.cover),
                       ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 10.0),
-                        width: width,
-                          color: colorOrange,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('${userType.isStudent?user.firstName:teacher.firstName} ${userType.isStudent?user.lastName:teacher.lastName}',
-                                  maxLines: 2,
-                                  style: TStyle.textStyleGaretHeavy(colorWhite,size: 20.0)),
-                              const Gap(8.0),
-                              Visibility(
-                                visible: true,
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.phone_enabled_rounded,color: colorWhite,
-                                    size: 12.0),
-                                    const Gap(5.0),
-                                    Text(userType.isStudent?user.phoneNumber:
-                                        teacher.phoneNum,
-                                        style: TStyle.textStyleVelaSansBold(colorWhite,size: 12.0)),
-                                  ],
+                      Visibility(
+                        visible: user.userStatus.isAuth||user.userStatus.isModeration,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 10.0),
+                          width: width,
+                            color: colorOrange,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('${userType.isStudent?user.firstName:teacher.firstName} ${userType.isStudent?user.lastName:teacher.lastName}',
+                                    maxLines: 2,
+                                    style: TStyle.textStyleGaretHeavy(colorWhite,size: 20.0)),
+                                const Gap(8.0),
+                                Visibility(
+                                  visible: user.phoneNumber.isNotEmpty||
+                                  teacher.phoneNum.isNotEmpty,
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.phone_enabled_rounded,color: colorWhite,
+                                      size: 12.0),
+                                      const Gap(5.0),
+                                      Text(userType.isStudent?user.phoneNumber:
+                                          teacher.phoneNum,
+                                          style: TStyle.textStyleVelaSansBold(colorWhite,size: 12.0)),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Visibility(
-                                visible: user.branchName.isNotEmpty,
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.location_on_outlined,color: colorWhite,size: 12.0),
-                                    const Gap(5.0),
-                                    Text(user.branchName,style: TStyle.textStyleVelaSansMedium(colorWhite,size: 12.0)),
-                                  ],
+                                Visibility(
+                                  visible: user.branchName.isNotEmpty,
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.location_on_outlined,color: colorWhite,size: 12.0),
+                                      const Gap(5.0),
+                                      Text(user.branchName,style: TStyle.textStyleVelaSansMedium(colorWhite,size: 12.0)),
+                                    ],
+                                  ),
                                 ),
-                              ),
 
-                            ],
-                          )),
+                              ],
+                            )),
+                      ),
                     ],
                   ),
                   const Gap(20.0),
@@ -153,48 +158,58 @@ Widget _getItemsMenu({required UserType userType,
 required Function onSelectedPage,
 required BuildContext context,
 required UserEntity user}){
-  if(userType.isStudent){
+
+  if(userType.isStudent||userType.isUnknown){
     return Column(
         children: [
-    DrawerItem(title: 'Мои абонементы'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
-  onSelectedPage.call(0);
-  },),
-
+    DrawerItem(
+      title: 'Главная'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+      onSelectedPage.call(0);
+      },),
   DrawerItem(title: 'Расписание'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
   onSelectedPage.call(1);
   },),
 
-  DrawerItem(title: 'Финансы'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+  DrawerItem(title: 'Финансы'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!,
+    onPressed: () {
   onSelectedPage.call(2);
   },),
 
   DrawerItem(title: 'Предложения'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
   onSelectedPage.call(3);
   },),
-  DrawerItem(title: 'Тема'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
-  GoRouter.of(context).push(pathTheme);
-  },),
+
 
   // DrawerItem(title: 'Уведомления'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
   //   GoRouter.of(context).push(pathNotification);
   // },),
 
-
-  DrawerItem(title: 'Сайт'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
-  onSelectedPage.call(4);
-  },),
-
-  DrawerItem(title:
-  user.userStatus.isModeration || user.userStatus.isAuth?'Выйти'.tr():
-  'Войти'.tr(),
-  textColor: colorRed, onPressed: ()  {
-  if(user.userStatus == UserStatus.notAuth){
-  GoRouter.of(context).push(pathLogIn);
-  }else{
-  Dialoger.showLogOut(context: context,user: user);
-  }
-
-  },),
+      DrawerItem(
+        title: 'Сайт'.tr(),
+        textColor: Theme.of(context).textTheme.displayMedium!.color!,
+        onPressed: () {
+          onSelectedPage.call(4);
+        },
+      ),
+      DrawerItem(
+        title: 'Тема'.tr(),
+        textColor: Theme.of(context).textTheme.displayMedium!.color!,
+        onPressed: () {
+          GoRouter.of(context).push(pathTheme);
+        },
+      ),
+      DrawerItem(
+        title: user.userStatus.isModeration || user.userStatus.isAuth
+            ? 'Выйти'.tr()
+            : 'Войти'.tr(),
+        textColor: colorRed,
+        onPressed: () {
+          if (user.userStatus.isNotAuth) {
+            GoRouter.of(context).push(pathLogIn);
+          } else {
+            Dialoger.showLogOut(context: context, user: user);
+          }
+        },),
   // Column(
   //   children: [
   //     TextButton(onPressed: (){},
@@ -264,7 +279,7 @@ class DrawerItem extends StatelessWidget{
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10.0),
-      child: GestureDetector(
+      child: InkWell(
         onTap: (){
           GoRouter.of(context).pop();
           onPressed();
@@ -273,7 +288,7 @@ class DrawerItem extends StatelessWidget{
           mainAxisAlignment: MainAxisAlignment.
           spaceBetween,
           children: [
-            Text(title,style: TStyle.textStyleVelaSansBold(textColor,size: 18.0))
+            Expanded(child: Text(title,style: TStyle.textStyleVelaSansBold(textColor,size: 18.0)))
 
           ],
         ),

@@ -158,6 +158,8 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
 
   void _logOut(LogOutEvent event,emit) async {
     if(event.user.userStatus.isModeration || event.user.userStatus.isAuth){
+      user = event.user.copyWith(userStatus: UserStatus.notAuth);
+      _userCubit.updateUser(newUser: user);
       await PreferencesUtil.clear();
     }
 
