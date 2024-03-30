@@ -3,6 +3,7 @@
 
 import 'dart:ui';
 
+import 'package:badges/badges.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ import 'package:virtuozy/utils/theme_provider.dart';
 
 import '../utils/preferences_util.dart';
 import '../utils/text_style.dart';
+import 'package:badges/src/badge.dart' as badge;
 
 class HomeDrawerMenu extends StatefulWidget{
   const HomeDrawerMenu({super.key,required this.onCallLogOut,required this.onSelectedPage});
@@ -199,6 +201,17 @@ required UserEntity user}){
     onPressed: () {
   onSelectedPage.call(2);
   },),
+
+          badge.Badge(
+            showBadge: user.documents[1]=='false',
+            badgeContent: Text('!',style: TStyle.textStyleGaretHeavy(colorWhite,size: 16),),
+            position: BadgePosition.topEnd(end: 20,top: 8),
+            child: DrawerItem(
+              title: 'Мои документы'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!,
+              onPressed: () {
+                GoRouter.of(context).push(pathDocuments);
+              },),
+          ),
 
   DrawerItem(title: 'Предложения'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
   onSelectedPage.call(3);

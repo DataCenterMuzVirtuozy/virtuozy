@@ -16,6 +16,7 @@ class UserModel{
    final String phoneNumber;
    final int userStatus;
    final int userType;
+   final List<dynamic> documents;
    final List<DirectionModel> directions;
 
    const UserModel({
@@ -26,6 +27,7 @@ class UserModel{
     required this.phoneNumber,
     required this.userStatus,
     required this.userType,
+     required this.documents,
     required this.directions,
   });
 
@@ -35,6 +37,7 @@ class UserModel{
 
     final directions = mapUser['directions'] as List<dynamic>;
     return UserModel(
+      documents: mapUser['documents'] as List<dynamic>,
       id: mapUser['id'] as int,
       lastName: mapUser['lastName'] as String,
       firstName: mapUser['firstName'] as String,

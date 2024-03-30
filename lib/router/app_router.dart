@@ -6,6 +6,7 @@ import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/presentations/auth_screen/login_page.dart';
 import 'package:virtuozy/presentations/auth_screen/singin_page.dart';
 import 'package:virtuozy/presentations/auth_screen/success_send_sms_page.dart';
+import 'package:virtuozy/presentations/student/document_screen/documents_page.dart';
 
 import 'package:virtuozy/router/paths.dart';
 
@@ -32,11 +33,19 @@ class AppRouter{
     initialLocation: pathApp,
     routes: [
       GoRoute(
+        path: pathDocuments,
+        pageBuilder: (context, state) {
+          return CupertinoPage(
+              key: state.pageKey,
+              child:  const DocumentsPage());
+        },
+      ),
+      GoRoute(
         path: pathProfile,
         pageBuilder: (context, state) {
           return CupertinoPage(
               key: state.pageKey,
-              child:  UserProfilePage());
+              child:  const UserProfilePage());
         },
       ),
       GoRoute(

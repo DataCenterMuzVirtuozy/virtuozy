@@ -10,9 +10,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
-import 'package:go_router/go_router.dart';
-import 'package:table_calendar/table_calendar.dart';
-import 'package:virtuozy/components/app_bar.dart';
 import 'package:virtuozy/resourses/colors.dart';
 
 import '../../../components/buttons.dart';

@@ -64,6 +64,7 @@ dependencies:
   page_view_dot_indicator: ^2.3.0
   dropdown_button2: ^2.3.9
   time_planner: ^0.1.2+1
+  flutter_cached_pdfview: ^0.4.2
 
 
 

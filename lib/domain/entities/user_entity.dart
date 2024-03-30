@@ -37,10 +37,12 @@ enum UserStatus{
    final String phoneNumber;
    final UserStatus userStatus;
    final UserType userType;
+   final List<dynamic> documents;
    final List<DirectionLesson> directions;
 
    const UserEntity({
      required this.id,
+     required this.documents,
      required this.userType,
      required this.userStatus,
      required this.lastName,
@@ -53,6 +55,7 @@ enum UserStatus{
 
    factory UserEntity.unknown() {
     return const UserEntity(
+      documents: [],
         directions: [],
         id: 0,
         userType: UserType.unknown,
@@ -68,10 +71,12 @@ enum UserStatus{
     UserStatus? userStatus,
     UserType? userType,
     List<DirectionLesson>? directions,
-    int? id
+    int? id,
+    List<dynamic>? documents
   }) {
     return UserEntity(
       id:id??this.id,
+      documents: documents??this.documents,
       userType: userType??this.userType,
       lastName: lastName ?? this.lastName,
       firstName: firstName ?? this.firstName,

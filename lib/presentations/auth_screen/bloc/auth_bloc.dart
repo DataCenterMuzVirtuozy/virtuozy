@@ -61,6 +61,7 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
         await Future.delayed(const Duration(seconds: 1));
         //todo id
         _userCubit.setUser(user:  UserEntity(
+            documents: [],
             userStatus: UserStatus.moderation,
             lastName: PreferencesUtil.lastNameUser,
             firstName: PreferencesUtil.firstNameUser,
@@ -103,6 +104,7 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
 
 
       user =  UserEntity(
+          documents: [],
           userStatus: UserStatus.moderation,
           lastName: event.lastName,
           firstName: event.firstName,

@@ -15,6 +15,7 @@ class UserMapper{
 
   static UserEntity fromApi({required UserModel userModel}){
     return UserEntity(
+      documents: userModel.documents,
       id: userModel.id,
         lastName: userModel.lastName,
         firstName: userModel.firstName,
