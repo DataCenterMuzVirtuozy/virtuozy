@@ -72,77 +72,102 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
         child: Drawer(
           backgroundColor: Colors.transparent,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
+              Stack(
                 children: [
-                  Stack(
-                    alignment: Alignment.bottomCenter,
+                  Column(
                     children: [
                       Container(
+                        padding: const EdgeInsets.only(left: 100,top: 50),
                         width: width,
-                        height: 150.0,
+                        height: 100.0,
                         decoration: BoxDecoration(
                             color: colorYellow
                         ),
-                        //child: Image.asset(illustration_2,fit: BoxFit.cover),
+                        child:  Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Gap(8.0),
+                            Visibility(
+                              visible: user.phoneNumber.isNotEmpty||
+                                  teacher.phoneNum.isNotEmpty,
+                              child: Row(
+                                children: [
+                                  Icon(Icons.phone_enabled_rounded,color: colorWhite,
+                                      size: 12.0),
+                                  const Gap(5.0),
+                                  Text(userType.isStudent?user.phoneNumber:
+                                  teacher.phoneNum,
+                                      style: TStyle.textStyleVelaSansBold(colorWhite,size: 12.0)),
+                                ],
+                              ),
+                            ),
+                            Visibility(
+                              visible: user.branchName.isNotEmpty,
+                              child: Row(
+                                children: [
+                                  Icon(Icons.location_on_outlined,color: colorWhite,size: 12.0),
+                                  const Gap(5.0),
+                                  Text(user.branchName,style: TStyle.textStyleVelaSansMedium(colorWhite,size: 12.0)),
+                                ],
+                              ),
+                            ),
+
+                          ],
+                        ),
                       ),
                       Visibility(
                         visible: user.userStatus.isAuth||user.userStatus.isModeration,
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 10.0),
-                          width: width,
+                          alignment: Alignment.bottomLeft,
+                            padding: const EdgeInsets.only(left: 10,top: 20),
+                            width: width,
+                            //height: 70,
                             color: colorOrange,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('${userType.isStudent?user.firstName:teacher.firstName} ${userType.isStudent?user.lastName:teacher.lastName}',
-                                    maxLines: 2,
-                                    style: TStyle.textStyleGaretHeavy(colorWhite,size: 20.0)),
-                                const Gap(8.0),
-                                Visibility(
-                                  visible: user.phoneNumber.isNotEmpty||
-                                  teacher.phoneNum.isNotEmpty,
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.phone_enabled_rounded,color: colorWhite,
-                                      size: 12.0),
-                                      const Gap(5.0),
-                                      Text(userType.isStudent?user.phoneNumber:
-                                          teacher.phoneNum,
-                                          style: TStyle.textStyleVelaSansBold(colorWhite,size: 12.0)),
-                                    ],
-                                  ),
-                                ),
-                                Visibility(
-                                  visible: user.branchName.isNotEmpty,
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.location_on_outlined,color: colorWhite,size: 12.0),
-                                      const Gap(5.0),
-                                      Text(user.branchName,style: TStyle.textStyleVelaSansMedium(colorWhite,size: 12.0)),
-                                    ],
-                                  ),
-                                ),
-
-                              ],
-                            )),
+                            child: TextButton(
+                              onPressed: () {
+                                GoRouter.of(context).push(pathProfile);
+                              },
+                              child: Text('${userType.isStudent?user.firstName:teacher.firstName} ${userType.isStudent?user.lastName:teacher.lastName}',
+                                  maxLines: 2,
+                                  style: TStyle.textStyleGaretHeavy(colorWhite,size: 16.0)),
+                            ),),
                       ),
                     ],
                   ),
-                  const Gap(20.0),
-                  _getItemsMenu(userType: userType,
-                      context: context,
-                      user: user,
-                      onSelectedPage:(item){
-                        widget.onSelectedPage.call(item);
-                      }, teacher: teacher)
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: InkWell(
+                      onTap: (){
+                        GoRouter.of(context).push(pathProfile);
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(top: 40,left: 10),
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: colorOrange
+                        ),
+                        padding: const EdgeInsets.all(2),
+                        child: const CircleAvatar(
+                          radius: 40.0,
+                          backgroundImage: NetworkImage(
+                            // Replace with your image URL or path
+                            "https://www.kino-teatr.ru/acter/photo/0/8/57680/931617.jpg",
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
 
                 ],
               ),
-
-
-
+              const Gap(20.0),
+              _getItemsMenu(userType: userType,
+                  context: context,
+                  user: user,
+                  onSelectedPage:(item){
+                    widget.onSelectedPage.call(item);
+                  }, teacher: teacher),
 
             ],
           ),

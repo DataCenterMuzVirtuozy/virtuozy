@@ -11,7 +11,9 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget{
 
   final String title;
 
-  const AppBarCustom({super.key, required this.title}): preferredSize = const Size.fromHeight(60.0);
+
+    const AppBarCustom({
+    super.key, required this.title,}): preferredSize = const Size.fromHeight(60.0);
 
   @override
   Widget build(BuildContext context) {

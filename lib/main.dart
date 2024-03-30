@@ -9,6 +9,7 @@ import 'package:virtuozy/presentations/auth_screen/login_page.dart';
 import 'package:virtuozy/presentations/auth_screen/singin_page.dart';
 import 'package:virtuozy/presentations/main_screen/main_page.dart';
 import 'package:virtuozy/presentations/student/finance_screen/bloc/bloc_finance.dart';
+import 'package:virtuozy/presentations/student/profile_screen/profile_page.dart';
 import 'package:virtuozy/presentations/student/schedule_screen/bloc/schedule_bloc.dart';
 import 'package:virtuozy/presentations/student/splash_screen/splash_page.dart';
 import 'package:virtuozy/presentations/student/subscription_screen/bloc/sub_bloc.dart';
@@ -123,15 +124,12 @@ class _InitPageState extends State<InitPage> {
         }
       },
         builder: (context,state){
-        // if(state.authStatusCheck == AuthStatusCheck.unknown){
-        //   return const SplashPage();
-        // }else if(state.authStatusCheck == AuthStatusCheck.unauthenticated||
-        // state.authStatusCheck == AuthStatusCheck.moderation){
-        //    return const MainPage();
-        // }
-        //return const LogInPage();
-          //return BranchSearchPage();
-          //return SingInPage();
+        if(state.authStatusCheck == AuthStatusCheck.unknown){
+          return const SplashPage();
+        }else if(state.authStatusCheck == AuthStatusCheck.unauthenticated||
+        state.authStatusCheck == AuthStatusCheck.moderation){
+           return const MainPage();
+        }
 
         return const MainPage();
     });

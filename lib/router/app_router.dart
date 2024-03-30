@@ -18,6 +18,7 @@ import '../presentations/student/finance_screen/list_transactios_page.dart';
 import '../presentations/student/finance_screen/pay_page.dart';
 import '../presentations/student/notification_screen/notification_page.dart';
 import '../presentations/student/onboarding_screen/onboarding_page.dart';
+import '../presentations/student/profile_screen/profile_page.dart';
 import '../presentations/student/promotion_screen/details_promo_page.dart';
 import '../presentations/student/schedule_screen/details_schedule_page.dart';
 import '../presentations/student/subscription_screen/details_bonus_page.dart';
@@ -30,6 +31,14 @@ class AppRouter{
   static GoRouter get router=>GoRouter(
     initialLocation: pathApp,
     routes: [
+      GoRoute(
+        path: pathProfile,
+        pageBuilder: (context, state) {
+          return CupertinoPage(
+              key: state.pageKey,
+              child:  UserProfilePage());
+        },
+      ),
       GoRoute(
         path: pathFinance,
         pageBuilder: (context, state) {
