@@ -18,3 +18,5 @@ const String pathDetailBonus = '/details_bonus';
 const String pathFinance = '/pathFinance';
 const String pathProfile = '/pathProfile';
 const String pathDocuments = '/pathDoc';
+const String pathPreviewDoc = '/pathPredoc';
+const String pathSettingNotifi = '/pathSettingsNotifi';

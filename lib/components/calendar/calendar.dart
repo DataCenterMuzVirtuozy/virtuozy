@@ -129,7 +129,7 @@ class _CalendarState extends State<Calendar> {
              final selDay  =  d2.day;
              final nowDay = DateTime.now().day;
              if(selDay == nowDay){
-               Dialoger.showMessage('Нет записей на текукщий день'.tr());
+               Dialoger.showMessage('Нет записей на текущий день'.tr());
              }
 
            },

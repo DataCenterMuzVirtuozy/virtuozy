@@ -7,6 +7,10 @@ class AppTheme{
 
   static  ThemeData get first=> ThemeData(
     useMaterial3: true,
+    switchTheme: SwitchThemeData(
+       trackColor: MaterialStatePropertyAll(colorBeruzaLight),
+       thumbColor: MaterialStatePropertyAll(colorBeruza)
+    ),
     iconTheme: IconThemeData(color:colorBlack),
     textTheme: TextTheme(
         displayMedium: TextStyle(color: colorBlack,
@@ -43,6 +47,10 @@ class AppTheme{
 
   static  ThemeData get dark=> ThemeData(
     useMaterial3: true,
+    switchTheme: SwitchThemeData(
+        trackColor: MaterialStatePropertyAll(colorGrey),
+        thumbColor: MaterialStatePropertyAll(colorWhite)
+    ),
     textTheme: TextTheme(displayMedium: TextStyle(color: colorWhite)),
     iconTheme: IconThemeData(color:colorWhite),
     colorScheme: ColorScheme(

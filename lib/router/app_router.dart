@@ -7,12 +7,14 @@ import 'package:virtuozy/presentations/auth_screen/login_page.dart';
 import 'package:virtuozy/presentations/auth_screen/singin_page.dart';
 import 'package:virtuozy/presentations/auth_screen/success_send_sms_page.dart';
 import 'package:virtuozy/presentations/student/document_screen/documents_page.dart';
+import 'package:virtuozy/presentations/student/notification_screen/setting_notifications_page.dart';
 
 import 'package:virtuozy/router/paths.dart';
 
 import '../main.dart';
 import '../presentations/main_screen/main_page.dart';
 import '../presentations/student/branch_search_screen/branch_search_page.dart';
+import '../presentations/student/document_screen/preview_doc_page.dart';
 import '../presentations/student/finance_screen/finance_page.dart';
 import '../presentations/student/finance_screen/list_subscriptions_hystory.dart';
 import '../presentations/student/finance_screen/list_transactios_page.dart';
@@ -32,6 +34,24 @@ class AppRouter{
   static GoRouter get router=>GoRouter(
     initialLocation: pathApp,
     routes: [
+      GoRoute(
+        path: pathSettingNotifi,
+        pageBuilder: (context, state) {
+
+          return CupertinoPage(
+              key: state.pageKey,
+              child:   const SettingNotificationsPage());
+        },
+      ),
+      GoRoute(
+        path: pathPreviewDoc,
+        pageBuilder: (context, state) {
+          final data = (state.extra as List<dynamic>);
+          return CupertinoPage(
+              key: state.pageKey,
+              child:   PreviewDocPage(urlDoc: data[0] as String,nameDoc: data[1] as String,));
+        },
+      ),
       GoRoute(
         path: pathDocuments,
         pageBuilder: (context, state) {

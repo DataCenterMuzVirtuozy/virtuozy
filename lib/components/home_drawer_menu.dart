@@ -203,7 +203,7 @@ required UserEntity user}){
   },),
 
           badge.Badge(
-            showBadge: user.documents[1]=='false',
+            showBadge: user.documents[0]=='false',
             badgeContent: Text('!',style: TStyle.textStyleGaretHeavy(colorWhite,size: 16),),
             position: BadgePosition.topEnd(end: 20,top: 8),
             child: DrawerItem(
@@ -218,9 +218,9 @@ required UserEntity user}){
   },),
 
 
-  // DrawerItem(title: 'Уведомления'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
-  //   GoRouter.of(context).push(pathNotification);
-  // },),
+  DrawerItem(title: 'Настройка уведомлений'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+    GoRouter.of(context).push(pathSettingNotifi);
+  },),
 
       DrawerItem(
         title: 'Сайт'.tr(),

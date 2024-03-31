@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/widgets.dart';
+import 'package:virtuozy/components/dialogs/contents/alert_dialog/accept_docunents_content.dart';
 import 'package:virtuozy/components/dialogs/contents/alert_dialog/log_out_content.dart';
 import 'package:virtuozy/components/dialogs/contents/alert_dialog/log_out_teacher_content.dart';
 import 'package:virtuozy/components/dialogs/contents/alert_dialog/select_date_content.dart';
@@ -23,6 +24,14 @@ sealed class DialogsContent{
 
 sealed class AlertDialogContent{
   build({required BuildContext context,Object? args});
+}
+
+class AcceptDocuments extends AlertDialogContent{
+  @override
+  build({required BuildContext context, Object? args}) {
+   return  AcceptDocumentsContent(namesDoc: (args as List<String>),);
+  }
+
 }
 
 class SelectDate extends AlertDialogContent {
