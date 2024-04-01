@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:grouped_list/grouped_list.dart';
 import 'package:virtuozy/components/box_info.dart';
 import 'package:virtuozy/domain/entities/transaction_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
@@ -73,11 +74,41 @@ class _ListTransactionsPageState extends State<ListTransactionsPage> {
                 iconData: Icons.list_alt_sharp);
           }
 
+         return GroupedListView<TransactionEntity,String>(
+            elements: state.transactions,
+            groupBy: (element) => element.date,
+            groupSeparatorBuilder: (String value)
+            => Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Center(child: Text(DateTimeParser.getStringDateFromApi(date: value),
+                style: TStyle.textStyleVelaSansBold(
+                  Theme.of(context)
+                      .textTheme.displayMedium!.color!,
+                size: 14
+              ),)),
+            ),
+            itemBuilder: (context, TransactionEntity element) {
+              return ItemTransaction(
+                  allView: widget.directions.length>1,
+                  nameDir: _getNameDir(element.idDir, widget.directions),
+                  date: DateTimeParser.getDateFromApi(date: element.date),
+                  type: element.typeTransaction,
+                  time: element.time,
+                  quantity: '${element.typeTransaction == TypeTransaction.minusLesson?'-':'+'}'
+                      '${ParserPrice.getBalance(element.quantity)} руб.');
+            },
+            itemComparator: (item1, item2) => DateTimeParser.getTimeMillisecondEpochByDate(date: item1.date)
+                .compareTo(DateTimeParser.getTimeMillisecondEpochByDate(date: item2.date)), // optional
+            useStickyGroupSeparators: true, // optional
+            floatingHeader: true, // optional
+            order: GroupedListOrder.ASC, // optional
+          );
+
           return ListView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
             itemCount: state.transactions.length,
               itemBuilder: (c,i){
-           return ItemTransaction(
+              return ItemTransaction(
              allView: widget.directions.length>1,
              nameDir: _getNameDir(state.transactions[i].idDir, widget.directions),
              date: DateTimeParser.getDateFromApi(date: state.transactions[i].date),

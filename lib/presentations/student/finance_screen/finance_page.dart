@@ -139,7 +139,7 @@ class _FinancePageState extends State<FinancePage> {
 
 
          return Padding(
-           padding: const EdgeInsets.symmetric(horizontal: 20.0),
+           padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 20.0),
            child: SingleChildScrollView(
              child: Column(
                children: [
@@ -426,39 +426,32 @@ class _FinancePageState extends State<FinancePage> {
                    ),
                  ),
                  const Gap(20.0),
+                 GestureDetector(
+                   onTap: (){
+                     GoRouter.of(context).push(pathBonusLessons);
+                   },
+                   child: Container(
+                     padding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 20.0),
+                     decoration: BoxDecoration(
+                         color: Theme.of(context).colorScheme.surfaceVariant,
+                         borderRadius: BorderRadius.circular(20.0)
+                     ),
+                     child: Row(
+                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                       children: [
+                         Expanded(child: Text('Бонусные уроки'.tr(),
+                             style: TStyle.textStyleVelaSansMedium(Theme.of(context).textTheme.displayMedium!.color!,size: 22.0))),
+                         Icon(Icons.arrow_forward_ios_rounded,color: Theme.of(context).textTheme.displayMedium!.color!)
+                       ],
+                     ),
+                   ),
+                 ),
 
                  if(state.applyBonusStatus == ApplyBonusStatus.loading)...{
                    const CircularProgressIndicator()
                  },
 
 
-                 Visibility(
-                   visible: _hasBonus,
-                   child: Container(
-                     padding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 20.0),
-                     decoration: BoxDecoration(
-                         color: colorBeruzaLight,
-                         borderRadius: BorderRadius.circular(20.0)
-                     ),
-                     child: Column(
-                       children: [
-                         Text('1 бонусный урок',
-                             style: TStyle.textStyleGaretHeavy(colorBlack,size: 22.0)),
-                         const Gap(20.0),
-                        SubmitButton(
-                          onTap: (){
-                            Dialoger.showMessage('В разработке');
-                            // context.read<BlocFinance>().add(ApplyBonusEvent(
-                            //     idBonus: state.directions[_selIndexDirection].bonus[0].id,
-                            //     currentDirection: state.directions[_selIndexDirection]));
-                          },
-                          borderRadius: 10.0,
-                          textButton: 'Потратить'.tr(),
-                        )
-                       ],
-                     ),
-                   ),
-                 )
 
 
                ],

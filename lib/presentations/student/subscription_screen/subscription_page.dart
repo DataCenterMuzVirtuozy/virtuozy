@@ -23,6 +23,7 @@ import '../../../components/buttons.dart';
 import '../../../components/dialogs/sealeds.dart';
 import '../../../components/drawing_menu_selected.dart';
 import '../../../di/locator.dart';
+import '../../../domain/entities/lesson_entity.dart';
 import '../../../utils/parser_price.dart';
 import '../../../utils/text_style.dart';
 import '../finance_screen/bloc/bloc_finance.dart';
@@ -178,10 +179,10 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                     _resetFocus = false;
                      globalCurrentMonthCalendar = month;
                   },
-                  onLesson: (lessons){
+                  onLesson: (List<Lesson> lessons){
                     Dialoger.showModalBottomMenu(
                       blurred: false,
-                        title: 'Урок'.tr(),
+                        title: 'Урок #${lessons[0].id}'.tr(),
                         args: [lessons,state.userEntity.directions],
                         content: DetailsLesson());
                   },),

@@ -65,6 +65,7 @@ dependencies:
   dropdown_button2: ^2.3.9
   time_planner: ^0.1.2+1
   flutter_cached_pdfview: ^0.4.2
+  grouped_list: ^5.1.2
 
 
 

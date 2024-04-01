@@ -38,7 +38,7 @@ class SchedulePage extends StatefulWidget{
   State<SchedulePage> createState() => _SchedulePageState();
 }
 
-class _SchedulePageState extends State<SchedulePage> {
+class _SchedulePageState extends State<SchedulePage> with AuthMixin{
 
 
   int _selIndexDirection = 0;
@@ -181,7 +181,8 @@ class _SchedulePageState extends State<SchedulePage> {
                               }
 
                               return  ItemSchedule(lengthSchedule: state.schedulesLength,
-                                  scheduleLessons: schedules[index]);
+                                  scheduleLessons: schedules[index],
+                                user: user);
                             }),
                           );
                         }
@@ -206,10 +207,11 @@ class _SchedulePageState extends State<SchedulePage> {
 }
 
  class ItemSchedule extends StatelessWidget{
-   const ItemSchedule({super.key, required this.scheduleLessons,required this.lengthSchedule});
+   const ItemSchedule({super.key, required this.scheduleLessons,required this.lengthSchedule, required this.user});
 
    final ScheduleLessons scheduleLessons;
    final int lengthSchedule;
+   final UserEntity user;
 
 
 
@@ -236,6 +238,7 @@ class _SchedulePageState extends State<SchedulePage> {
           const Gap(10.0),
           ...List.generate(scheduleLessons.lessons.length, (index) {
             return ItemLessons(
+              user: user,
             lesson: scheduleLessons.lessons[index]);
           }),
           Visibility(
@@ -257,82 +260,95 @@ class _SchedulePageState extends State<SchedulePage> {
 
 
  class ItemLessons extends StatelessWidget{
-  const ItemLessons({super.key,required this.lesson});
+  const ItemLessons({super.key,required this.lesson, required this.user});
 
 
   final Lesson lesson;
+  final UserEntity user;
 
   @override
   Widget build(BuildContext context) {
-   return Column(
-     children: [
-       Row(
-         children: [
-           SizedBox(
-             width: 120.0,
-             child: Column(
-               mainAxisAlignment: MainAxisAlignment.start,
-               crossAxisAlignment: CrossAxisAlignment.start,
-               children: [
-                 Text(DateTimeParser.getDateFromApi(date: lesson.date),
-                     style:TStyle.textStyleVelaSansMedium(colorOrange,size: 14.0)),
-                 const Gap(5.0),
-                 Text(lesson.timePeriod,
-                     style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 12.0)),
-                 const Gap(5.0),
-                 Row(
-                   children: [
-                     Container(
-                       decoration: BoxDecoration(
-                         shape: BoxShape.circle,
-                         color: StatusToColor.getColor(lessonStatus: lesson.status)
-                       ),
-                       width: 5.0,
-                       height: 5.0,
-                     ),
-                     const Gap(5.0),
-                     Expanded(
-                       child: Text(StatusToColor.getNameStatus(lesson.status),
-                           maxLines: 2,
-                           style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 10.0)),
-                     ),
-                   ],
-                 )
-               ],
-             ),
-           ),
-           Container(
-             margin: const EdgeInsets.symmetric(horizontal: 10.0),
-             height: 50.0,
-             width: 1.0,
-             color: colorGrey,
-           ),
-           Column(
-             crossAxisAlignment: CrossAxisAlignment.start,
-             children: [
-               Text(lesson.nameDirection,
-                   style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
+   return GestureDetector(
+     onTap: (){
+       if(lesson.status == LessonStatus.awaitAccept){
+         Dialoger.showModalBottomMenu(
+             blurred: false,
+             title: 'Урок #${lesson.id}'.tr(),
+             args: [[lesson],user.directions],
+             content: DetailsLesson());
+       }
 
-               Row(
+     },
+     child: Column(
+       children: [
+         Row(
+           children: [
+             SizedBox(
+               width: 120.0,
+               child: Column(
+                 mainAxisAlignment: MainAxisAlignment.start,
+                 crossAxisAlignment: CrossAxisAlignment.start,
                  children: [
-                   Text('Аудитория '.tr(),
-                       style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
-                   Text('${lesson.idAuditory}',
-                       style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
+                   Text(DateTimeParser.getDateFromApi(date: lesson.date),
+                       style:TStyle.textStyleVelaSansMedium(colorOrange,size: 14.0)),
+                   const Gap(5.0),
+                   Text(lesson.timePeriod,
+                       style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 12.0)),
+                   const Gap(5.0),
+                   Row(
+                     children: [
+                       Container(
+                         decoration: BoxDecoration(
+                           shape: BoxShape.circle,
+                           color: StatusToColor.getColor(lessonStatus: lesson.status)
+                         ),
+                         width: 5.0,
+                         height: 5.0,
+                       ),
+                       const Gap(5.0),
+                       Expanded(
+                         child: Text(StatusToColor.getNameStatus(lesson.status),
+                             maxLines: 2,
+                             style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 10.0)),
+                       ),
+                     ],
+                   )
                  ],
                ),
-               Text(lesson.nameTeacher,
-                   style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
-             ],
-           ),
-         ],
-       ),
-       Container(
-         margin: const EdgeInsets.symmetric(vertical: 5.0),
-         height: 1.0,
-         color: colorGrey,
-       )
-     ],
+             ),
+             Container(
+               margin: const EdgeInsets.symmetric(horizontal: 10.0),
+               height: 50.0,
+               width: 1.0,
+               color: colorGrey,
+             ),
+             Column(
+               crossAxisAlignment: CrossAxisAlignment.start,
+               children: [
+                 Text(lesson.nameDirection,
+                     style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
+
+                 Row(
+                   children: [
+                     Text('Аудитория '.tr(),
+                         style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
+                     Text('${lesson.idAuditory}',
+                         style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
+                   ],
+                 ),
+                 Text(lesson.nameTeacher,
+                     style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
+               ],
+             ),
+           ],
+         ),
+         Container(
+           margin: const EdgeInsets.symmetric(vertical: 5.0),
+           height: 1.0,
+           color: colorGrey,
+         )
+       ],
+     ),
    );
   }
 
