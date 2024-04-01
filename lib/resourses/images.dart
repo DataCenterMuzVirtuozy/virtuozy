@@ -14,5 +14,7 @@
    String get animationLocation => 'lib/assets/animations/search_location.json';
    String get logoDark =>'lib/assets/img/logo_dark.png';
    String get successAnim => 'lib/assets/animations/success.json';
+   String get telegram => 'lib/assets/img/ic_telegram.png';
+   String get whatsapp => 'lib/assets/img/ic_whatsapp.png';
 
 

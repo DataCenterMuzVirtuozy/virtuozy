@@ -22,6 +22,7 @@ enum StatusSub{
    final String dateEnd;
    final String commentary;
    final StatusSub status;
+   final Option option;
 
    const SubscriptionEntity( {
      required this.idDir,
@@ -37,7 +38,8 @@ enum StatusSub{
      required this.dateEnd,
      required this.dateBay,
      required this.commentary,
-     required this.status
+     required this.status,
+     required this.option
   });
 
    SubscriptionEntity copyWith({
@@ -54,10 +56,12 @@ enum StatusSub{
      String? nameDir,
       int? idUser,
       int? idDir,
-     int? id
+     int? id,
+     Option? option
   }) {
     return SubscriptionEntity(
       id:id??this.id,
+      option: option??this.option,
       idDir: idDir??this.idDir,
       idUser: idUser??this.idUser,
       nameDir: nameDir??this.nameDir,
@@ -73,4 +77,24 @@ enum StatusSub{
       dateBay: dateBay??this.dateBay,
     );
   }
+}
+
+ class Option{
+  final OptionStatus status;
+  final String dateEnd;
+
+  const Option({
+    required this.status,
+    required this.dateEnd,
+  });
+
+ factory Option.unknown(){
+   return const Option(status: OptionStatus.unknown, dateEnd: '');
+ }
+}
+
+enum OptionStatus{
+  freezing,
+  holiday,
+  unknown
 }

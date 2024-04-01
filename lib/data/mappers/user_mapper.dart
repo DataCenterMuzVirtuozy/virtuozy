@@ -26,6 +26,13 @@ class UserMapper{
         directions: userModel.directions.map((e) => _fromDirectionModel(e)).toList());
   }
 
+  static Option fromOptionApi({required OptionModel optionModel}){
+    return Option(status: optionModel.status.isEmpty?OptionStatus.unknown:
+    optionModel.status == 'freezing'?
+    OptionStatus.freezing:OptionStatus.holiday,
+        dateEnd: optionModel.dateEnd);
+  }
+
 
   static UserStatus _userStatus(int status){
     return status == 0?UserStatus.notAuth:
@@ -65,6 +72,7 @@ class UserMapper{
   static List<SubscriptionEntity> fromApiPriceSub(List<SubscriptionModel> subscriptionModels){
 
     return subscriptionModels.map((e) => SubscriptionEntity(
+      option: fromOptionApi(optionModel: e.optionModel),
         idUser: e.idUser,
         idDir: e.idDir,
         nameDir: e.nameDir,
@@ -88,6 +96,7 @@ class UserMapper{
 
   static List<SubscriptionEntity> fromApiPriceSubAll(List<SubscriptionModel> subscriptionModelAll){
      return subscriptionModelAll.map((e) =>  SubscriptionEntity(
+       option: fromOptionApi(optionModel: e.optionModel),
        idDir: e.idDir,
        idUser: e.idUser,
        nameDir: e.nameDir,

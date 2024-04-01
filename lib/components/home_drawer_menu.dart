@@ -11,6 +11,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:virtuozy/components/dialogs/dialoger.dart';
 import 'package:virtuozy/di/locator.dart';
 import 'package:virtuozy/domain/entities/teacher_entity.dart';
@@ -48,6 +49,7 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
    super.didChangeDependencies();
 
   }
+
 
 
   @override
@@ -170,7 +172,22 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                   onSelectedPage:(item){
                     widget.onSelectedPage.call(item);
                   }, teacher: teacher),
+             const Gap(100),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  //todo url enter
+                  IconButton(onPressed: ()async{
+                    await _launchUrl('');
+                  }, icon:  Image.asset(telegram,width: 30,height: 30,)),
+                  IconButton(onPressed: () async {
+                    await _launchUrl('');
+                  }, icon:  Image.asset(whatsapp,width: 35,height: 35,))
 
+
+                ],
+              )
             ],
           ),
         ),
@@ -178,6 +195,13 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
   }
 
 
+}
+
+
+Future<void> _launchUrl(String url) async {
+  if (!await launchUrl(Uri.parse(url))) {
+    throw Exception('Could not launch $url');
+  }
 }
 
 Widget _getItemsMenu({required UserType userType,
@@ -248,16 +272,7 @@ required UserEntity user}){
             Dialoger.showLogOut(context: context, user: user);
           }
         },),
-  // Column(
-  //   children: [
-  //     TextButton(onPressed: (){},
-  //         child:  Text('Политика конфиденциальности'.tr(),style: TStyle.textStyleVelaSansRegularUnderline(colorGrey))),
-  //     TextButton(onPressed: (){},
-  //         child:  Text('Пользовательское соглашение'.tr(),style: TStyle.textStyleVelaSansRegularUnderline(colorGrey)))
-  //
-  //
-  //   ],
-  // )
+
    ]
   );
   }else{

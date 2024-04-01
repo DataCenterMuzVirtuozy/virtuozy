@@ -308,24 +308,40 @@ class _FinancePageState extends State<FinancePage> {
                                      const Gap(3.0),
                                      Row(
                                        children: [
-                                         Row(
-                                           children: [
-                                             Text('Дата окончания'.tr(),style: TStyle.textStyleVelaSansRegular( Theme.of(context)
-                                                 .textTheme
-                                                 .displayMedium!
-                                                 .color!,size: 10.0)),
-                                             const Gap(5.0),
-                                             Text(' ${DateTimeParser.getDateFromApi(date: state.expiredSubscriptions[index].dateEnd)}',
-                                                 style: TStyle.textStyleVelaSansBold( Theme.of(context)
-                                                 .textTheme
-                                                 .displayMedium!
-                                                 .color!,size: 10.0))
-                                           ],
-                                         ),
+                                         Text('Дата окончания'.tr(),style: TStyle.textStyleVelaSansRegular( Theme.of(context)
+                                             .textTheme
+                                             .displayMedium!
+                                             .color!,size: 10.0)),
+                                         const Gap(5.0),
+                                         Text(' ${DateTimeParser.getDateFromApi(date: state.expiredSubscriptions[index].dateEnd)}',
+                                             style: TStyle.textStyleVelaSansBold( Theme.of(context)
+                                             .textTheme
+                                             .displayMedium!
+                                             .color!,size: 10.0))
                                        ],
-
-
+                                     ),
+                                     Visibility(
+                                       visible: state.expiredSubscriptions[index].option.status!=OptionStatus.unknown,
+                                       child: Row(
+                                         children: [
+                                           Text(state.expiredSubscriptions[index].option.status == OptionStatus.freezing?
+                                           'Заморозка до '.tr()
+                                               :'Каникулы до '.tr(),
+                                               style: TStyle.textStyleVelaSansRegular(Theme.of(context)
+                                                   .textTheme
+                                                   .displayMedium!
+                                                   .color!,
+                                                   size: 10.0)),
+                                           Text(DateTimeParser.getDateFromApi(date: state.expiredSubscriptions[index].option.dateEnd),
+                                               style: TStyle.textStyleVelaSansBold(Theme.of(context)
+                                                   .textTheme
+                                                   .displayMedium!
+                                                   .color!,
+                                                   size: 10.0)),
+                                         ],
+                                       ),
                                      )
+
 
                                    ],
                                  )

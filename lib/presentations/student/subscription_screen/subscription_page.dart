@@ -454,6 +454,27 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                             directions[index].lastSubscriptions[0].dateEnd),
                                 style: TStyle.textStyleVelaSansMedium(colorGrey,
                                     size: 13.0)),
+                            Visibility(
+                              visible: directions[index].lastSubscriptions[0].option.status!=OptionStatus.unknown,
+                              child: Column(
+                                children: [
+                                  const Gap(8.0),
+                                  Icon(directions[index].lastSubscriptions[0].option.status == OptionStatus.freezing?Icons.icecream:
+                                  Icons.free_breakfast_outlined,color: Theme.of(context).colorScheme.secondary,size: 15),
+                                  const Gap(2),
+                                  Text(directions[index].lastSubscriptions[0].option.status == OptionStatus.freezing?
+                                  'Заморозка до '.tr()
+                                      :'Каникулы до '.tr(),
+                                      style: TStyle.textStyleVelaSansMedium(colorGrey,
+                                          size: 13.0)),
+                                  const Gap(5.0),
+                                  Text(DateTimeParser.getDateFromApi(date: directions[index].lastSubscriptions[0].option.dateEnd),
+                                      style: TStyle.textStyleVelaSansMedium(colorGrey,
+                                          size: 13.0)),
+                                ],
+                              ),
+                            )
+,
                           ],
                                                ),
                        )),
@@ -480,6 +501,25 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                                      style:TStyle.textStyleVelaSansMedium(colorGrey,size: 13.0)),
                                ],
                              ),
+
+                             Visibility(
+                               visible: directions[index].lastSubscriptions[0].option.status!=OptionStatus.unknown,
+                               child: Row(
+                                 children: [
+                                   Icon(directions[index].lastSubscriptions[0].option.status == OptionStatus.freezing?Icons.icecream:
+                                       Icons.free_breakfast_outlined,color: colorGreen,size: 10),
+                                   const Gap(5),
+                                   Text(directions[index].lastSubscriptions[0].option.status == OptionStatus.freezing?
+                                   'Заморозка до '.tr()
+                                       :'Каникулы до '.tr(),
+                                       style: TStyle.textStyleVelaSansMedium(colorGrey,
+                                           size: 13.0)),
+                                   Text(DateTimeParser.getDateFromApi(date: directions[index].lastSubscriptions[0].option.dateEnd),
+                                       style: TStyle.textStyleVelaSansMedium(colorGrey,
+                                           size: 13.0)),
+                                 ],
+                               ),
+                             )
                            ],
                          ),
                          Container(
@@ -495,6 +535,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                      ),
                    ),
                    const Gap(5.0),
+                   //отображение запланированных абиков
                    if(directions[index].lastSubscriptions.length>1)...{
                      Column(
                        children: [
@@ -521,6 +562,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                                      ],
                                    ),
                                  ),
+
                                ],
                              ),
                              Container(
