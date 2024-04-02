@@ -76,11 +76,11 @@ class _ListTransactionsPageState extends State<ListTransactionsPage> {
 
          return GroupedListView<TransactionEntity,String>(
             elements: state.transactions,
-            groupBy: (element) => element.date,
+            groupBy: (element) => DateTimeParser.getDateForCompare(date: element.date),
             groupSeparatorBuilder: (String value)
             => Padding(
               padding: const EdgeInsets.only(top: 10),
-              child: Center(child: Text(DateTimeParser.getStringDateFromApi(date: value),
+              child: Center(child: Text(value,
                 style: TStyle.textStyleVelaSansBold(
                   Theme.of(context)
                       .textTheme.displayMedium!.color!,
@@ -97,9 +97,12 @@ class _ListTransactionsPageState extends State<ListTransactionsPage> {
                   quantity: '${element.typeTransaction == TypeTransaction.minusLesson?'-':'+'}'
                       '${ParserPrice.getBalance(element.quantity)} руб.');
             },
-            itemComparator: (item1, item2) => DateTimeParser.getTimeMillisecondEpochByDate(date: item1.date)
-                .compareTo(DateTimeParser.getTimeMillisecondEpochByDate(date: item2.date)), // optional
-            useStickyGroupSeparators: true, // optional
+            itemComparator: (item1, item2) {
+              print('Item ${item1.date} ${item2.date}');
+              return DateTimeParser.getDateForCompare(date: item1.date)
+                  .compareTo(DateTimeParser.getDateForCompare(date: item2.date));
+            }, // optional
+            useStickyGroupSeparators: false, // optional
             floatingHeader: true, // optional
             order: GroupedListOrder.ASC, // optional
           );

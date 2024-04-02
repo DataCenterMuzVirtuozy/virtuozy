@@ -40,7 +40,8 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
         final idUser = _userCubit.userEntity.id;
         final idDir = event.directions.length>1?-1:event.directions[0].id;
        final listApi = await _financeRepository.getTransactions(idUser: idUser, idDirections: idDir);
-       _listTransaction = _listOrganized(list: listApi);
+       //_listTransaction = _listOrganized(list: listApi);
+       _listTransaction = listApi;
        emit(state.copyWith(listTransactionStatus: ListTransactionStatus.loaded,transactions: _listTransaction));
      }on Failure catch(e){
        emit(state.copyWith(listTransactionStatus: ListTransactionStatus.error,error: e.message));

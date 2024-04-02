@@ -9,6 +9,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:grouped_list/grouped_list.dart';
 import 'package:virtuozy/components/app_bar.dart';
 import 'package:virtuozy/utils/date_time_parser.dart';
 
@@ -61,14 +62,46 @@ class _ListSubscriptionHistoryState extends State<ListSubscriptionHistory> {
 
           }else...{
             Expanded(
-              child:  ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  itemCount: widget.listExpiredSubscriptions.length,
-                  itemBuilder: (c,i){
-                    return ItemSubHistory(
-                       subscriptionEntity: widget.listExpiredSubscriptions[i]);
-                  }),
+              child: GroupedListView<SubscriptionEntity, String>(
+                elements: widget.listExpiredSubscriptions,
+                groupBy: (element) =>
+                    DateTimeParser.getDateForCompare(date: element.dateBay),
+                groupSeparatorBuilder: (String value) => Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Center(
+                      child: Text(
+                    value,
+                    style: TStyle.textStyleVelaSansBold(
+                        Theme.of(context).textTheme.displayMedium!.color!,
+                        size: 14),
+                  )),
+                ),
+                itemBuilder: (context, SubscriptionEntity element) {
+                  return ItemSubHistory(subscriptionEntity: element);
+                },
+                itemComparator: (item1, item2) {
+                  return DateTimeParser.getDateForCompare(date: item1.dateBay)
+                      .compareTo(DateTimeParser.getDateForCompare(
+                          date: item2.dateBay));
+                },
+                // optional
+                useStickyGroupSeparators: false,
+                // optional
+                floatingHeader: true,
+                // optional
+                order: GroupedListOrder.ASC, // optional
+              ),
             )
+
+            // Expanded(
+    //           child:  ListView.builder(
+    //               padding: const EdgeInsets.symmetric(horizontal: 15.0),
+    //               itemCount: widget.listExpiredSubscriptions.length,
+    //               itemBuilder: (c,i){
+    //                 return ItemSubHistory(
+    //                    subscriptionEntity: widget.listExpiredSubscriptions[i]);
+    //               }),
+    //         )
 
           }
 

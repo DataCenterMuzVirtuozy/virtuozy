@@ -4,11 +4,13 @@
  import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:virtuozy/components/calendar/calendar.dart';
+import 'package:virtuozy/components/dialogs/dialoger.dart';
 import 'package:virtuozy/components/home_drawer_menu.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/presentations/auth_screen/bloc/auth_state.dart';
@@ -48,11 +50,13 @@ class _MainPageState extends State<MainPage> with AuthMixin{
 
 
   int _indexPage = 0;
+  List<int> _stackPopPage = [];
   bool _darkTheme = false;
 
   @override
   void initState() {
     super.initState();
+    _stackPopPage.add(0);
     scaffoldKeyGlobal = scaffoldKey;
   }
 
@@ -68,6 +72,9 @@ class _MainPageState extends State<MainPage> with AuthMixin{
 
   @override
   Widget build(BuildContext context) {
+
+    bool _popUnderway = false;
+
     return BlocConsumer<AuthBloc,AuthState>(
       listener: (c, s) {
         if(s.authStatus == AuthStatus.logOut){
@@ -75,73 +82,104 @@ class _MainPageState extends State<MainPage> with AuthMixin{
         }
       },
       builder: (context,state) {
-        return Scaffold(
-          key: scaffoldKey,
-          appBar: AppBar(
-            backgroundColor: Theme.of(context).colorScheme.background,
-            automaticallyImplyLeading: false,
-            actions: [
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(onPressed: (){
-                      _openMenu();
-                    }, icon:  Icon(Icons.menu_open_rounded,color: Theme.of(context).iconTheme.color)),
-                    _darkTheme?Image.asset(logoDark,width: 100.0):
-                    SvgPicture.asset(logo, width: 100.0),
-                    badges.Badge(
-                        position: badges.BadgePosition.topStart(start: 5.0,top: 3.0),
-                      showBadge: false,
-                    badgeContent: Text('3',style: TStyle.textStyleVelaSansBold(colorWhite)),
-                        child: IconButton(
-                            onPressed: () {
-                              GoRouter.of(context).push(pathNotification);
-                            },
-                            icon: Icon(Icons.notifications_none_rounded,color:Theme.of(context).iconTheme.color))),
+        return BackButtonListener(
+          onBackButtonPressed: () async {
+            if(context.canPop()){
+              return false;
+            }
 
-                  ],
-                ),
-              )
-            ],
-          ),
-          drawer: HomeDrawerMenu(
-            onCallLogOut: () {  },
-          onSelectedPage: (index){
+           if(_stackPopPage.isEmpty||_indexPage == 0){
+             if (_popUnderway) {
+               return false;
+             }
+             _popUnderway = true;
+             Dialoger.showMessage('Нажмите быстро два раза, чтобы закрыть приложение'.tr());
+             await Future.delayed(const Duration(milliseconds: 700));
+             _popUnderway = false;
+             return true;
+           }
+           setState(() {
+              int lastIndex = _stackPopPage.length -1;
+             _stackPopPage.removeAt(lastIndex);
+             _indexPage = _stackPopPage[_stackPopPage.length-1];
+           });
 
+           return true;
+          },
+          child: Scaffold(
+            key: scaffoldKey,
+            appBar: AppBar(
+              backgroundColor: Theme.of(context).colorScheme.background,
+              automaticallyImplyLeading: false,
+              actions: [
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(onPressed: (){
+                        _openMenu();
+                      }, icon:  Icon(Icons.menu_open_rounded,color: Theme.of(context).iconTheme.color)),
+                      _darkTheme?Image.asset(logoDark,width: 100.0):
+                      SvgPicture.asset(logo, width: 100.0),
+                      badges.Badge(
+                          position: badges.BadgePosition.topStart(start: 5.0,top: 3.0),
+                        showBadge: false,
+                      badgeContent: Text('3',style: TStyle.textStyleVelaSansBold(colorWhite)),
+                          child: IconButton(
+                              onPressed: () {
+                                GoRouter.of(context).push(pathNotification);
+                              },
+                              icon: Icon(Icons.notifications_none_rounded,color:Theme.of(context).iconTheme.color))),
+
+                    ],
+                  ),
+                )
+              ],
+            ),
+            drawer: HomeDrawerMenu(
+              onCallLogOut: () {  },
+            onSelectedPage: (index){
               setState(() {
+                if(index == 0){
+                  _stackPopPage.clear();
+                }else{
+                  _stackPopPage.add(index);
+                }
                 _indexPage = index;
               });
-          },),
-        body: _buildScreens(userType: userType)[_indexPage],
-        //   body:  PersistentTabView(
-        //   context,
-        //   controller: _controller,
-        //   screens: _buildScreens(),
-        //   items: _navBarsItems(),
-        //   confineInSafeArea: true,
-        //   backgroundColor: Colors.white, // Default is Colors.white.
-        //   handleAndroidBackButtonPress: true, // Default is true.
-        //   resizeToAvoidBottomInset: true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
-        //   stateManagement: true, // Default is true.
-        //   hideNavigationBarWhenKeyboardShows: true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
-        //   decoration: NavBarDecoration(
-        //     borderRadius: BorderRadius.circular(10.0),
-        //     colorBehindNavBar: Colors.white,
-        //   ),
-        //   popAllScreensOnTapOfSelectedTab: true,
-        //   popActionScreens: PopActionScreensType.all,
-        //   itemAnimationProperties: ItemAnimationProperties( // Navigation Bar's items animation properties.
-        //     duration: Duration(milliseconds: 200),
-        //     curve: Curves.ease,
-        //   ),
-        //   screenTransitionAnimation: ScreenTransitionAnimation( // Screen transition animation on change of selected tab.
-        //     animateTabTransition: true,
-        //     curve: Curves.ease,
-        //     duration: Duration(milliseconds: 200),
-        //   ),
-        //   navBarStyle: NavBarStyle.style1, // Choose the nav bar style with this property.
-        // ),
+
+
+            },),
+          body: _buildScreens(userType: userType)[_indexPage],
+          //   body:  PersistentTabView(
+          //   context,
+          //   controller: _controller,
+          //   screens: _buildScreens(),
+          //   items: _navBarsItems(),
+          //   confineInSafeArea: true,
+          //   backgroundColor: Colors.white, // Default is Colors.white.
+          //   handleAndroidBackButtonPress: true, // Default is true.
+          //   resizeToAvoidBottomInset: true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
+          //   stateManagement: true, // Default is true.
+          //   hideNavigationBarWhenKeyboardShows: true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
+          //   decoration: NavBarDecoration(
+          //     borderRadius: BorderRadius.circular(10.0),
+          //     colorBehindNavBar: Colors.white,
+          //   ),
+          //   popAllScreensOnTapOfSelectedTab: true,
+          //   popActionScreens: PopActionScreensType.all,
+          //   itemAnimationProperties: ItemAnimationProperties( // Navigation Bar's items animation properties.
+          //     duration: Duration(milliseconds: 200),
+          //     curve: Curves.ease,
+          //   ),
+          //   screenTransitionAnimation: ScreenTransitionAnimation( // Screen transition animation on change of selected tab.
+          //     animateTabTransition: true,
+          //     curve: Curves.ease,
+          //     duration: Duration(milliseconds: 200),
+          //   ),
+          //   navBarStyle: NavBarStyle.style1, // Choose the nav bar style with this property.
+          // ),
+          ),
         );
       },
     );
