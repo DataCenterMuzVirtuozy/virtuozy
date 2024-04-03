@@ -52,7 +52,7 @@ class Dialoger{
              textColor: colorOrange,
              label: textAction,
              onPressed: () {
-               onAction!.call();
+               //onAction!.call();
              },
            ),
          ));

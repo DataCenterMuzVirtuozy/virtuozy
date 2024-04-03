@@ -406,7 +406,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                      children: [
                        Text(directions[index].name,
-                           style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
+                           style:TStyle.textStyleVelaSansBold(colorGrey,size: 16.0)),
                        if(directions[index].lastSubscriptions[0].status==StatusSub.active)...{
                          Row(
                            children: [
@@ -540,6 +540,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                    if(directions[index].lastSubscriptions.length>1)...{
                      Column(
                        children: [
+                         Divider(color: colorGrey),
                          Row(
                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                            children: [

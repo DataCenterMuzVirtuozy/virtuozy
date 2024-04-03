@@ -5,6 +5,7 @@
 import 'package:virtuozy/data/services/user_service.dart';
 import 'package:virtuozy/di/locator.dart';
 
+import '../../domain/entities/notifi_setting_entity.dart';
 import '../../domain/entities/user_entity.dart';
 
 class UserUtil{
@@ -15,6 +16,10 @@ class UserUtil{
     Future<UserEntity> getUser({required String uid}) async {
        final model = await _service.getUser(uid: uid);
        return UserMapper.fromApi(userModel: model);
+    }
+
+    Future<void> saveSettingNotifi({required int uid,required List<NotifiSettingsEntity> settingEntity}) async {
+      await _service.saveSettingNotifi(uid: uid,settingEntity: settingEntity);
     }
 
  }

@@ -5,6 +5,7 @@
  import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:virtuozy/di/locator.dart';
+import 'package:virtuozy/domain/entities/notifi_setting_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/domain/repository/teacher_repository.dart';
 import 'package:virtuozy/domain/repository/user_repository.dart';
@@ -61,6 +62,20 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
         await Future.delayed(const Duration(seconds: 1));
         //todo id
         _userCubit.setUser(user:  UserEntity(
+            notifiSttings: [
+              const NotifiSettingsEntity(name:"Уведомление об оплате",
+                config:1),
+              const NotifiSettingsEntity(name:"Подтверждение уроков",
+                config:1),
+              const NotifiSettingsEntity(name:"Напоминание об уроке",
+                config:1),
+              const NotifiSettingsEntity(name:"Пропуск урока",
+                config:1),
+              const NotifiSettingsEntity(name:"Уведомление о бонусах",
+                config:1),
+              const NotifiSettingsEntity(name:"Новые предложения",
+                config:1),
+            ],
             documents: [],
             userStatus: UserStatus.moderation,
             lastName: PreferencesUtil.lastNameUser,
@@ -104,6 +119,20 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
 
 
       user =  UserEntity(
+          notifiSttings: [
+            const NotifiSettingsEntity(name:"Уведомление об оплате",
+                config:1),
+            const NotifiSettingsEntity(name:"Подтверждение уроков",
+                config:1),
+            const NotifiSettingsEntity(name:"Напоминание об уроке",
+                config:1),
+            const NotifiSettingsEntity(name:"Пропуск урока",
+                config:1),
+            const NotifiSettingsEntity(name:"Уведомление о бонусах",
+                config:1),
+            const NotifiSettingsEntity(name:"Новые предложения",
+                config:1),
+          ],
           documents: [],
           userStatus: UserStatus.moderation,
           lastName: event.lastName,

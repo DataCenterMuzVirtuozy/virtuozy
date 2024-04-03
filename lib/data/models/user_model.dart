@@ -4,9 +4,13 @@
  import 'dart:math';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:virtuozy/data/mappers/notifi_setting_mapper.dart';
+import 'package:virtuozy/data/models/notifi_setting_model.dart';
 import 'package:virtuozy/data/models/price_subscription_model.dart';
 import 'package:virtuozy/data/models/subscription_model.dart';
 import 'package:virtuozy/domain/entities/subscription_entity.dart';
+
+import '../../domain/entities/notifi_setting_entity.dart';
 
 class UserModel{
    final int id;
@@ -18,8 +22,10 @@ class UserModel{
    final int userType;
    final List<dynamic> documents;
    final List<DirectionModel> directions;
+   final List<NotifiSettingModel> notifiSttings;
 
    const UserModel({
+     required this.notifiSttings,
      required this.id,
     required this.lastName,
     required this.firstName,
@@ -36,7 +42,9 @@ class UserModel{
   factory UserModel.fromMap({required Map<String, dynamic> mapUser,required List<dynamic> mapSubsAll}) {
 
     final directions = mapUser['directions'] as List<dynamic>;
+    final settingsMap = mapUser['settingNotifi'] as List<dynamic>;
     return UserModel(
+      notifiSttings: settingsMap.map((e) =>  NotifiSettingModel.fromMap(e)).toList(),
       documents: mapUser['documents'] as List<dynamic>,
       id: mapUser['id'] as int,
       lastName: mapUser['lastName'] as String,
@@ -49,6 +57,8 @@ class UserModel{
     );
   }
 }
+
+
 
 
 

@@ -3,6 +3,7 @@
 import 'package:virtuozy/domain/entities/subscription_entity.dart';
 
 import 'lesson_entity.dart';
+import 'notifi_setting_entity.dart';
 
 enum UserStatus{
   notAuth,
@@ -39,8 +40,10 @@ enum UserStatus{
    final UserType userType;
    final List<dynamic> documents;
    final List<DirectionLesson> directions;
+   final List<NotifiSettingsEntity> notifiSttings;
 
    const UserEntity({
+     required this.notifiSttings,
      required this.id,
      required this.documents,
      required this.userType,
@@ -55,6 +58,7 @@ enum UserStatus{
 
    factory UserEntity.unknown() {
     return const UserEntity(
+      notifiSttings: [],
       documents: [],
         directions: [],
         id: 0,
@@ -72,10 +76,12 @@ enum UserStatus{
     UserType? userType,
     List<DirectionLesson>? directions,
     int? id,
-    List<dynamic>? documents
+    List<dynamic>? documents,
+    List<NotifiSettingsEntity>? notifiSttings
   }) {
     return UserEntity(
       id:id??this.id,
+      notifiSttings: notifiSttings??this.notifiSttings,
       documents: documents??this.documents,
       userType: userType??this.userType,
       lastName: lastName ?? this.lastName,

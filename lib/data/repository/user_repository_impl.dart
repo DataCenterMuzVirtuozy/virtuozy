@@ -5,6 +5,7 @@
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/domain/repository/user_repository.dart';
 
+import '../../domain/entities/notifi_setting_entity.dart';
 import '../utils/user_util.dart';
 
 class UserRepositoryImpl extends UserRepository{
@@ -14,6 +15,11 @@ class UserRepositoryImpl extends UserRepository{
   @override
   Future<UserEntity> getUser({required String uid}) async {
     return await _util.getUser(uid: uid);
+  }
+
+  @override
+  Future<void> saveSettingNotifi({required int uid,required List<NotifiSettingsEntity> settingEntity}) async {
+    await _util.saveSettingNotifi(uid: uid,settingEntity: settingEntity);
   }
 
 }

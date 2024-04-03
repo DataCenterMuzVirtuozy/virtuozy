@@ -1,6 +1,7 @@
 
 
- import 'package:virtuozy/data/models/price_subscription_model.dart';
+ import 'package:virtuozy/data/mappers/notifi_setting_mapper.dart';
+import 'package:virtuozy/data/models/price_subscription_model.dart';
 import 'package:virtuozy/data/models/user_model.dart';
 import 'package:virtuozy/domain/entities/price_subscription_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
@@ -23,7 +24,9 @@ class UserMapper{
         phoneNumber: userModel.phoneNumber,
         userStatus: _userStatus(userModel.userStatus),
         userType: _userType( userModel.userType),
-        directions: userModel.directions.map((e) => _fromDirectionModel(e)).toList());
+        directions: userModel.directions.map((e) => _fromDirectionModel(e)).toList(),
+        notifiSttings: userModel.notifiSttings.map((e) =>
+            NotifiSettingMapper.fromApi(notifiSettingModel: e)).toList());
   }
 
   static Option fromOptionApi({required OptionModel optionModel}){
