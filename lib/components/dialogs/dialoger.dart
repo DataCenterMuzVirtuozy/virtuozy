@@ -262,6 +262,7 @@ class Dialoger{
        LogOutTeacher() => LogOutTeacher().build(context: contextUp,args: args),
        SelectDate() => SelectDate().build(context: contextUp,args: args),
        AcceptDocuments() => AcceptDocuments().build(context: contextUp,args: args),
+       DownloadDocument() => DownloadDocument().build(context: contextUp,args: args),
      };
      return showDialog<T>(
        context: contextUp,

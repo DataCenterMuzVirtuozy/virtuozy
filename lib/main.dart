@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:provider/provider.dart';
 import 'package:virtuozy/bloc/app_bloc.dart';
 import 'package:virtuozy/domain/user_cubit.dart';
@@ -8,6 +9,7 @@ import 'package:virtuozy/presentations/auth_screen/bloc/auth_bloc.dart';
 import 'package:virtuozy/presentations/auth_screen/login_page.dart';
 import 'package:virtuozy/presentations/auth_screen/singin_page.dart';
 import 'package:virtuozy/presentations/main_screen/main_page.dart';
+import 'package:virtuozy/presentations/student/document_screen/bloc/docs_bloc.dart';
 import 'package:virtuozy/presentations/student/finance_screen/bloc/bloc_finance.dart';
 import 'package:virtuozy/presentations/student/notification_screen/bloc/notifi_bloc.dart';
 import 'package:virtuozy/presentations/student/profile_screen/profile_page.dart';
@@ -30,6 +32,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await PreferencesUtil.init();
+  await FlutterDownloader.initialize(
+      debug: true, // optional: set to false to disable printing logs to console (default: true)
+      ignoreSsl: true // option: set to false to disable working with http links (default: false)
+  );
   di.setup();
   runApp(EasyLocalization(
       supportedLocales: const [Locale('ru', 'RU')],
@@ -76,7 +82,8 @@ class _MyAppState extends State<MyApp> {
               BlocProvider<ScheduleBloc>(create: (_)=>ScheduleBloc()),
               BlocProvider<BlocFinance>(create: (_)=>BlocFinance()),
               BlocProvider<UserCubit>(create: (_)=>UserCubit()),
-              BlocProvider<NotifiBloc>(create: (_)=>NotifiBloc())
+              BlocProvider<NotifiBloc>(create: (_)=>NotifiBloc()),
+              BlocProvider<DocsBloc>(create: (_)=>DocsBloc())
             ],
             child: MaterialApp.router(
               title: 'Flutter Demo',

@@ -169,6 +169,7 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
               _getItemsMenu(userType: userType,
                   context: context,
                   user: user,
+                  docsAccept: docsAccept,
                   onSelectedPage:(item){
                     widget.onSelectedPage.call(item);
                   }, teacher: teacher),
@@ -208,7 +209,8 @@ Widget _getItemsMenu({required UserType userType,
   required TeacherEntity teacher,
 required Function onSelectedPage,
 required BuildContext context,
-required UserEntity user}){
+required UserEntity user,
+required bool docsAccept}){
 
   if(userType.isStudent||userType.isUnknown){
     return Column(
@@ -227,7 +229,7 @@ required UserEntity user}){
   },),
 
           badge.Badge(
-            showBadge: user.documents[0]=='false',
+            showBadge: !docsAccept,
             badgeContent: Text('!',style: TStyle.textStyleGaretHeavy(colorWhite,size: 16),),
             position: BadgePosition.topEnd(end: 20,top: 8),
             child: DrawerItem(

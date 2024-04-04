@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		040D9CC62BBE96D7009F0B52 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 040D9CC52BBE9675009F0B52 /* libsqlite3.tbd */; };
 		090AACF72E559C1924992936 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEEB208E56EF5AE2FE419B0 /* Pods_RunnerTests.framework */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		2FFE1CC23D1D03E017787762 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 232CAE2B9FA5F516CA2C580F /* Pods_Runner.framework */; };
@@ -42,6 +43,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		040D9CC52BBE9675009F0B52 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
 		232CAE2B9FA5F516CA2C580F /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -80,6 +82,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				040D9CC62BBE96D7009F0B52 /* libsqlite3.tbd in Frameworks */,
 				2FFE1CC23D1D03E017787762 /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -111,6 +114,7 @@
 		58C99A0891FD66EF8C0ED6F3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				040D9CC52BBE9675009F0B52 /* libsqlite3.tbd */,
 				232CAE2B9FA5F516CA2C580F /* Pods_Runner.framework */,
 				2AEEB208E56EF5AE2FE419B0 /* Pods_RunnerTests.framework */,
 			);

@@ -5,6 +5,7 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:virtuozy/data/mappers/notifi_setting_mapper.dart';
+import 'package:virtuozy/data/models/document_model.dart';
 import 'package:virtuozy/data/models/notifi_setting_model.dart';
 import 'package:virtuozy/data/models/price_subscription_model.dart';
 import 'package:virtuozy/data/models/subscription_model.dart';
@@ -20,7 +21,7 @@ class UserModel{
    final String phoneNumber;
    final int userStatus;
    final int userType;
-   final List<dynamic> documents;
+   final List<DocumentModel> documents;
    final List<DirectionModel> directions;
    final List<NotifiSettingModel> notifiSttings;
 
@@ -43,9 +44,10 @@ class UserModel{
 
     final directions = mapUser['directions'] as List<dynamic>;
     final settingsMap = mapUser['settingNotifi'] as List<dynamic>;
+    final docs =  mapUser['documents'] as List<dynamic>;
     return UserModel(
       notifiSttings: settingsMap.map((e) =>  NotifiSettingModel.fromMap(e)).toList(),
-      documents: mapUser['documents'] as List<dynamic>,
+      documents:docs.map((e) => DocumentModel.fromMap(e)).toList(),
       id: mapUser['id'] as int,
       lastName: mapUser['lastName'] as String,
       firstName: mapUser['firstName'] as String,

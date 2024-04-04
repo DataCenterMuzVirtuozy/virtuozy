@@ -1,5 +1,6 @@
 
- import 'package:virtuozy/domain/entities/price_subscription_entity.dart';
+ import 'package:virtuozy/domain/entities/document_entity.dart';
+import 'package:virtuozy/domain/entities/price_subscription_entity.dart';
 import 'package:virtuozy/domain/entities/subscription_entity.dart';
 
 import 'lesson_entity.dart';
@@ -38,7 +39,7 @@ enum UserStatus{
    final String phoneNumber;
    final UserStatus userStatus;
    final UserType userType;
-   final List<dynamic> documents;
+   final List<DocumentEntity> documents;
    final List<DirectionLesson> directions;
    final List<NotifiSettingsEntity> notifiSttings;
 
@@ -76,7 +77,7 @@ enum UserStatus{
     UserType? userType,
     List<DirectionLesson>? directions,
     int? id,
-    List<dynamic>? documents,
+    List<DocumentEntity>? documents,
     List<NotifiSettingsEntity>? notifiSttings
   }) {
     return UserEntity(

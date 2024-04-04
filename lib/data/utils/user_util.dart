@@ -1,9 +1,11 @@
 
 
 
- import 'package:virtuozy/data/mappers/user_mapper.dart';
+ import 'package:virtuozy/data/mappers/document_mapper.dart';
+import 'package:virtuozy/data/mappers/user_mapper.dart';
 import 'package:virtuozy/data/services/user_service.dart';
 import 'package:virtuozy/di/locator.dart';
+import 'package:virtuozy/domain/entities/document_entity.dart';
 
 import '../../domain/entities/notifi_setting_entity.dart';
 import '../../domain/entities/user_entity.dart';
@@ -20,6 +22,11 @@ class UserUtil{
 
     Future<void> saveSettingNotifi({required int uid,required List<NotifiSettingsEntity> settingEntity}) async {
       await _service.saveSettingNotifi(uid: uid,settingEntity: settingEntity);
+    }
+
+    Future<void> acceptDocuments({required int uid,required List<DocumentEntity> docs}) async {
+      final docsModel = docs.map((e) => DocumentMapper.toApi(documentEntity: e)).toList();
+      await _service.acceptDocuments(uid: uid, docs: docsModel);
     }
 
  }

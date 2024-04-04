@@ -3,8 +3,10 @@
 
  import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:virtuozy/data/models/document_model.dart';
 import 'package:virtuozy/data/rest/dio_client.dart';
 import 'package:virtuozy/data/rest/endpoints.dart';
+import 'package:virtuozy/domain/entities/document_entity.dart';
 import 'package:virtuozy/domain/entities/notifi_setting_entity.dart';
 import 'package:virtuozy/utils/failure.dart';
 
@@ -66,6 +68,23 @@ class UserService{
      print('Error 2 ${e.toString()}');
      throw  Failure(e.toString());
     }
+   }
+
+   Future<void> acceptDocuments({required int uid,required List<DocumentModel> docs}) async {
+     try{
+       List<Map<String,dynamic>> data = [];
+       for (var element in docs) {
+         data.add(element.toMap());
+       }
+
+
+       await _dio.patch('${Endpoints.user}/$uid',
+           data: {
+             'documents': data
+           });
+     }on Failure catch(e){
+
+     }
    }
 
  }

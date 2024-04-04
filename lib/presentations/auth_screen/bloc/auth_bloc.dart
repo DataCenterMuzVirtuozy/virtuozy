@@ -89,8 +89,9 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
         emit(state.copyWith(authStatus: AuthStatus.moderation));
         return;
       }else{
-        final user = await _userRepository.getUser(uid: event.phone);
+        UserEntity user = await _userRepository.getUser(uid: event.phone);
         await PreferencesUtil.setUID(uid: event.phone);
+        user = user.copyWith(userStatus: UserStatus.auth);
         _userCubit.setUser(user: user);
         await _createLocalUser(user);
         await Future.delayed(const Duration(seconds: 1));

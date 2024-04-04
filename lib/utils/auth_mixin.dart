@@ -16,5 +16,14 @@ mixin AuthMixin<T extends StatefulWidget> on State<T> {
   UserEntity get user =>_userCubit.userEntity;
   TeacherEntity get teacher => _teacherCubit.teacherEntity;
   UserType get userType => PreferencesUtil.userType;
+  bool get docsAccept {
+    for (var element in user.documents) {
+      if(element.accept){
+        return true;
+
+      }
+    }
+    return false;
+  }
 
 }

@@ -35,6 +35,7 @@ class SubBloc extends Bloc<SubEvent,SubState>{
          emit(state.copyWith(subStatus: SubStatus.loading));
          await Future.delayed(const Duration(milliseconds: 1500));
        }
+
        final user = _userCubit.userEntity;
        if(user.userStatus.isAuth){
          final firstNotAcceptLesson = _firstNotAcceptLesson(user: user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
@@ -54,6 +55,7 @@ class SubBloc extends Bloc<SubEvent,SubState>{
              listNotAcceptLesson: listNotAcceptLesson));
          _listenUser(event);
        }else{
+
          emit(state.copyWith( subStatus: SubStatus.loaded));
        }
 

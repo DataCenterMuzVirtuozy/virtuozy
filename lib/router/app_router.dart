@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:virtuozy/domain/entities/document_entity.dart';
 import 'package:virtuozy/domain/entities/subscription_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/presentations/auth_screen/login_page.dart';
@@ -56,10 +57,10 @@ class AppRouter{
       GoRoute(
         path: pathPreviewDoc,
         pageBuilder: (context, state) {
-          final data = (state.extra as List<dynamic>);
+          final data = (state.extra as DocumentEntity);
           return CupertinoPage(
               key: state.pageKey,
-              child:   PreviewDocPage(urlDoc: data[0] as String,nameDoc: data[1] as String,));
+              child:   PreviewDocPage(documentEntity: data,));
         },
       ),
       GoRoute(

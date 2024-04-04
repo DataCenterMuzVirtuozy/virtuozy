@@ -2,6 +2,7 @@
 
 
  import 'package:virtuozy/di/locator.dart';
+import 'package:virtuozy/domain/entities/document_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/domain/repository/user_repository.dart';
 
@@ -20,6 +21,11 @@ class UserRepositoryImpl extends UserRepository{
   @override
   Future<void> saveSettingNotifi({required int uid,required List<NotifiSettingsEntity> settingEntity}) async {
     await _util.saveSettingNotifi(uid: uid,settingEntity: settingEntity);
+  }
+
+  @override
+  Future<void> acceptDocuments({required int uid, required List<DocumentEntity> docs}) async {
+    await _util.acceptDocuments(uid: uid, docs: docs);
   }
 
 }

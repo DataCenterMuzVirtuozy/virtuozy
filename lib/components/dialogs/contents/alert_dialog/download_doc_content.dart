@@ -1,38 +1,21 @@
 
 
 
-  import 'package:easy_localization/easy_localization.dart';
+ import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:virtuozy/domain/entities/document_entity.dart';
-import 'package:virtuozy/presentations/student/document_screen/bloc/docs_bloc.dart';
-import 'package:virtuozy/presentations/student/document_screen/bloc/docs_event.dart';
 
+import '../../../../presentations/student/document_screen/bloc/docs_bloc.dart';
 import '../../../../resourses/colors.dart';
 import '../../../../utils/text_style.dart';
 
-class AcceptDocumentsContent extends StatefulWidget{
-  const AcceptDocumentsContent({super.key, required this.docs});
+class DownloadDocContent extends StatelessWidget{
+  const DownloadDocContent({super.key, required this.documentEntity});
 
-  final List<DocumentEntity> docs;
-
-  @override
-  State<AcceptDocumentsContent> createState() => _AcceptDocumentsContentState();
-}
-
-class _AcceptDocumentsContentState extends State<AcceptDocumentsContent> {
-
-
-  List<String> _names = [];
-  @override
-  void initState() {
-    super.initState();
-
-    _names = widget.docs.map((e) => e.name).toList();
-  }
-
-
+  final DocumentEntity documentEntity;
 
   @override
   Widget build(BuildContext context) {
@@ -41,18 +24,18 @@ class _AcceptDocumentsContentState extends State<AcceptDocumentsContent> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(Icons.check_box_outlined,color: Theme.of(context).textTheme.displayMedium!.color!,size: 40.0),
+          Icon(Icons.save_alt_rounded,color: Theme.of(context).textTheme.displayMedium!.color!,size: 40.0),
           const SizedBox(height: 15.0),
-          Text('Подтвердить документ?'.tr(),
+          Text(documentEntity.name,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
               textAlign:TextAlign.center,
               style:TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18.0)),
           const SizedBox(height: 5.0),
-          Text('Данное подтверждение означает ваше ознакомление и согласие с данными документами:'.tr(),
+          Text('Сохранить документ в памяти устройства?'.tr(),
               textAlign:TextAlign.center,
               style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 16.0)),
-          Text(_names.toString().replaceFirst('[', '').replaceFirst(']', ''),
-              textAlign:TextAlign.center,
-              style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 16.0)),
+
           const SizedBox(height: 10.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -69,10 +52,10 @@ class _AcceptDocumentsContentState extends State<AcceptDocumentsContent> {
               const Gap(5.0),
               TextButton(
                 onPressed: () {
-                  context.read<DocsBloc>().add(const AcceptDocumentsEvent());
+                  //context.read<DocsBloc>().add(const AcceptDocumentsEvent());
                   Navigator.pop(context);
                 },
-                child: Text('Подтвердить'.tr(),
+                child: Text('Загрузить'.tr(),
                     textAlign: TextAlign.center,
                     style:
                     TStyle.textStyleVelaSansBold(colorRed,size: 16.0)),)
@@ -85,4 +68,4 @@ class _AcceptDocumentsContentState extends State<AcceptDocumentsContent> {
   }
 
 
-}
+ }

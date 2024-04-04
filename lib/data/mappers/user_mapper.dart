@@ -1,6 +1,7 @@
 
 
- import 'package:virtuozy/data/mappers/notifi_setting_mapper.dart';
+ import 'package:virtuozy/data/mappers/document_mapper.dart';
+import 'package:virtuozy/data/mappers/notifi_setting_mapper.dart';
 import 'package:virtuozy/data/models/price_subscription_model.dart';
 import 'package:virtuozy/data/models/user_model.dart';
 import 'package:virtuozy/domain/entities/price_subscription_entity.dart';
@@ -16,7 +17,7 @@ class UserMapper{
 
   static UserEntity fromApi({required UserModel userModel}){
     return UserEntity(
-      documents: userModel.documents,
+      documents: userModel.documents.map((e) => DocumentMapper.fromApi(documentModel: e)).toList(),
       id: userModel.id,
         lastName: userModel.lastName,
         firstName: userModel.firstName,

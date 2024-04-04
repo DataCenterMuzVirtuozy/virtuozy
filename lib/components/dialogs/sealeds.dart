@@ -2,11 +2,13 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:virtuozy/components/dialogs/contents/alert_dialog/accept_docunents_content.dart';
+import 'package:virtuozy/components/dialogs/contents/alert_dialog/download_doc_content.dart';
 import 'package:virtuozy/components/dialogs/contents/alert_dialog/log_out_content.dart';
 import 'package:virtuozy/components/dialogs/contents/alert_dialog/log_out_teacher_content.dart';
 import 'package:virtuozy/components/dialogs/contents/alert_dialog/select_date_content.dart';
 import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/bonuses_list_content.dart';
 import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/details_lesson_content.dart';
+import 'package:virtuozy/domain/entities/document_entity.dart';
 import 'package:virtuozy/domain/entities/teacher_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 
@@ -26,10 +28,18 @@ sealed class AlertDialogContent{
   build({required BuildContext context,Object? args});
 }
 
+class DownloadDocument extends AlertDialogContent{
+  @override
+  build({required BuildContext context, Object? args}) {
+    return DownloadDocContent(documentEntity: (args as DocumentEntity));
+  }
+
+}
+
 class AcceptDocuments extends AlertDialogContent{
   @override
   build({required BuildContext context, Object? args}) {
-   return  AcceptDocumentsContent(namesDoc: (args as List<String>),);
+   return  AcceptDocumentsContent(docs: (args as List<DocumentEntity>),);
   }
 
 }
