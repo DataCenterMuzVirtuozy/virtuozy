@@ -18,3 +18,9 @@ class DocsEvent extends Equatable{
  class AcceptDocumentsEvent extends DocsEvent{
    const AcceptDocumentsEvent();
 }
+
+
+class DownloadDocumentEvent extends DocsEvent{
+  final String urlDoc;
+  const DownloadDocumentEvent(this.urlDoc);
+}

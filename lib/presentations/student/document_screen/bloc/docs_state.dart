@@ -10,6 +10,8 @@ enum DocsStatus{
   loading,
   loaded,
   unknown,
+  download,
+  downloaded,
   error
 }
 

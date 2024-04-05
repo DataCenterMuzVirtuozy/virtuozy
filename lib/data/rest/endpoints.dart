@@ -7,6 +7,7 @@ class Endpoints{
   static const String subsUser = '/subsUser';
   static const String subscriptions = '/subscriptions';
   static const String transactions = '/transactions';
-
+  static const String urlNSK = 'https://virtuozy-nsk.ru';
+  static const String urlMSK = 'https://virtuozy-msk.ru';
 }
 

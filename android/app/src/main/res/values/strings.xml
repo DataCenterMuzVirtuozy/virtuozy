@@ -1,0 +1,10 @@
+
+
+<resources>
+    <string name="flutter_downloader_notification_started">Загрузка началась</string>
+    <string name="flutter_downloader_notification_in_progress">Идет загрузка</string>
+    <string name="flutter_downloader_notification_canceled">Загрузка отменена</string>
+    <string name="flutter_downloader_notification_failed">Загрузка не удалась</string>
+    <string name="flutter_downloader_notification_complete">Загрузка завершена</string>
+    <string name="flutter_downloader_notification_paused">Загрузка приостановлена</string>
+</resources>

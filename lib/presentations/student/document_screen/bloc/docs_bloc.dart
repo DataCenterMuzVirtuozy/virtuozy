@@ -1,11 +1,15 @@
 
 
- import 'package:flutter_bloc/flutter_bloc.dart';
+ import 'dart:isolate';
+import 'dart:ui';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:virtuozy/domain/entities/document_entity.dart';
 import 'package:virtuozy/domain/user_cubit.dart';
 import 'package:virtuozy/utils/date_time_parser.dart';
 import 'package:virtuozy/utils/failure.dart';
-
+ import 'package:path_provider/path_provider.dart' as pathProvider;
 import '../../../../di/locator.dart';
 import '../../../../domain/entities/user_entity.dart';
 import '../../../../domain/repository/user_repository.dart';
@@ -16,11 +20,13 @@ class DocsBloc extends Bloc<DocsEvent,DocsState>{
   DocsBloc():super(DocsState.unknown()){
    on<GetDocumentsEvent>(_getDocs);
    on<AcceptDocumentsEvent>(_acceptDocs);
+   on<DownloadDocumentEvent>(_downLoadDoc);
   }
 
 
   final _userCubit = locator.get<UserCubit>();
   final _userRepo =  locator.get<UserRepository>();
+  ReceivePort _port = ReceivePort();
 
   void _getDocs(GetDocumentsEvent event,emit) async {
    try{
@@ -56,6 +62,33 @@ class DocsBloc extends Bloc<DocsEvent,DocsState>{
     emit(state.copyWith(error: e.message,docsStatus: DocsStatus.error));
    }
   }
+
+
+  void _downLoadDoc(DownloadDocumentEvent event,emit) async {
+    try{
+      emit(state.copyWith(docsStatus: DocsStatus.download,error: ''));
+      final path = await _localPath;
+       await FlutterDownloader.enqueue(
+        url: event.urlDoc,
+        headers: {}, // optional: header send with url (auth token etc)
+        savedDir: path,
+        saveInPublicStorage: true,
+        showNotification: true, // show download progress in status bar (for Android)
+        openFileFromNotification: true, // click on notification to open downloaded file (for Android)
+      );
+      emit(state.copyWith(docsStatus: DocsStatus.downloaded,error: ''));
+    }on Failure catch(e){
+      emit(state.copyWith(docsStatus: DocsStatus.error,error: e.message));
+    }
+  }
+
+
+  Future<String> get _localPath async {
+    final directory = await pathProvider.getDownloadsDirectory();
+    return directory!.path;
+  }
+
+
 
 
 

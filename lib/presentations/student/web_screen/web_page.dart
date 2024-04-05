@@ -3,6 +3,8 @@
 
  import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:virtuozy/data/rest/endpoints.dart';
+import 'package:virtuozy/utils/auth_mixin.dart';
 import 'package:webview_flutter/webview_flutter.dart';
  // Import for Android features.
  import 'package:webview_flutter_android/webview_flutter_android.dart';
@@ -19,15 +21,20 @@ class WebPage extends StatefulWidget{
   State<WebPage> createState() => _WebPageState();
 }
 
-class _WebPageState extends State<WebPage> {
+class _WebPageState extends State<WebPage> with AuthMixin{
 
   late final WebViewController _controller;
   bool _loadingPage = true;
+  String _urlWeb = '';
 
   @override
   void initState() {
     super.initState();
-
+    if(user.branchName == 'Москва'){
+       _urlWeb = Endpoints.urlMSK;
+    }else{
+      _urlWeb = Endpoints.urlNSK;
+    }
     // #docregion platform_features
     late final PlatformWebViewControllerCreationParams params;
     if (WebViewPlatform.instance is WebKitWebViewPlatform) {
@@ -91,7 +98,7 @@ Page resource error:
           );
         },
       )
-      ..loadRequest(Uri.parse('https://virtuozy-msk.ru'));
+      ..loadRequest(Uri.parse(_urlWeb));
 
     // #docregion platform_features
     if (controller.platform is AndroidWebViewController) {
