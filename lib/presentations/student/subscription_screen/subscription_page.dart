@@ -12,6 +12,7 @@ import 'package:go_router/go_router.dart';
 import 'package:virtuozy/components/box_info.dart';
 import 'package:virtuozy/components/calendar/calendar.dart';
 import 'package:virtuozy/components/dialogs/dialoger.dart';
+import 'package:virtuozy/components/title_page.dart';
 import 'package:virtuozy/domain/entities/subscription_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/resourses/colors.dart';
@@ -151,7 +152,6 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
          child: SingleChildScrollView(
            child: Column(
              children: [
-
                Padding(
                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
                  child: DrawingMenuSelected(items: _titlesDirections,

@@ -181,7 +181,7 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
                               child: Text(value,
                                   key: _textKey,
                                   maxLines: 2,
-                                  style:  TStyle.textStyleGaretHeavy(Theme.of(context).textTheme.displayMedium!.color!,
+                                  style:  TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,
                                       size: 18.0))
                             );
                           },

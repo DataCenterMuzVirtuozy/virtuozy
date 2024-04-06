@@ -16,6 +16,7 @@ import '../../domain/entities/lesson_entity.dart';
 import 'contents/bottom_sheet_menu/seach_location_cmplete_content.dart';
 import 'contents/bottom_sheet_menu/select_branch_content.dart';
 import 'contents/bottom_sheet_menu/steps_confirm_lesson_content.dart';
+import 'contents/bottom_sheet_menu/support_list_content.dart';
 
 
 
@@ -105,6 +106,14 @@ class ListBonuses extends DialogsContent{
   @override
   build({required BuildContext context, Object? args}) {
     return BonusesListContent(bonuses: (args as List<BonusEntity>));
+  }
+
+}
+
+class ListSupport extends DialogsContent{
+  @override
+  build({required BuildContext context, Object? args}) {
+    return SupportListContent(typeMessager: (args as TypeMessager));
   }
 
 }

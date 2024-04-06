@@ -37,6 +37,7 @@ class _WebPageState extends State<WebPage> with AuthMixin{
     }
     // #docregion platform_features
     late final PlatformWebViewControllerCreationParams params;
+
     if (WebViewPlatform.instance is WebKitWebViewPlatform) {
       params = WebKitWebViewControllerCreationParams(
         allowsInlineMediaPlayback: true,

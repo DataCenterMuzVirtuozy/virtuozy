@@ -18,5 +18,7 @@ import 'package:flutter/material.dart';
    Color get colorGreen => const Color.fromRGBO(0, 148, 77, 1.0);
    Color get colorGreenLight => const Color.fromRGBO(94, 174, 82, 1.0);
    Color get secondaryContainer =>  const Color(0xFF161516);
+   Color textColorBlack(BuildContext context) => Theme.of(context).textTheme.displayMedium!.color!;
+   Color backgroundCard(BuildContext context) => Theme.of(context).colorScheme.surfaceVariant;
 
 

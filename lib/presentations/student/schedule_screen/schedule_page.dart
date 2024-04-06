@@ -19,6 +19,7 @@ import '../../../components/calendar/calendar.dart';
 import '../../../components/dialogs/dialoger.dart';
 import '../../../components/dialogs/sealeds.dart';
 import '../../../components/drawing_menu_selected.dart';
+import '../../../components/title_page.dart';
 import '../../../domain/entities/lesson_entity.dart';
 import '../../../resourses/colors.dart';
 import '../../../utils/text_style.dart';

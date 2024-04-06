@@ -8,27 +8,24 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/support_list_content.dart';
 import 'package:virtuozy/components/dialogs/dialoger.dart';
-import 'package:virtuozy/di/locator.dart';
+import 'package:virtuozy/components/dialogs/sealeds.dart';
 import 'package:virtuozy/domain/entities/teacher_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
-import 'package:virtuozy/domain/user_cubit.dart';
-import 'package:virtuozy/presentations/auth_screen/bloc/auth_bloc.dart';
-import 'package:virtuozy/presentations/auth_screen/bloc/auth_event.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/resourses/images.dart';
+import 'package:virtuozy/resourses/strings.dart';
 import 'package:virtuozy/router/paths.dart';
-import 'package:virtuozy/utils/app_theme.dart';
 import 'package:virtuozy/utils/auth_mixin.dart';
-import 'package:virtuozy/utils/theme_provider.dart';
 
-import '../utils/preferences_util.dart';
 import '../utils/text_style.dart';
 import 'package:badges/src/badge.dart' as badge;
+
+int _currentIndexItemMenu = 0;
+ValueNotifier<int> currentItemNotifier = ValueNotifier(0);
 
 class HomeDrawerMenu extends StatefulWidget{
   const HomeDrawerMenu({super.key,required this.onCallLogOut,required this.onSelectedPage});
@@ -169,9 +166,15 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
               _getItemsMenu(userType: userType,
                   context: context,
                   user: user,
+                  //currentIndexItemMenu: _currentIndexItemMenu,
                   docsAccept: docsAccept,
                   onSelectedPage:(item){
-                    widget.onSelectedPage.call(item);
+                    setState(() {
+                      //_currentIndexItemMenu = item;
+                      currentItemNotifier.value = item;
+                      widget.onSelectedPage.call(item);
+                    });
+
                   }, teacher: teacher),
              const Gap(100),
               Row(
@@ -180,10 +183,18 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                 children: [
                   //todo url enter
                   IconButton(onPressed: ()async{
-                    await _launchUrl('');
+                    Dialoger.showBottomMenu(
+                        title: 'Telegram',
+                        args: TypeMessager.telegram,
+                        context: context,
+                        content: ListSupport());
                   }, icon:  Image.asset(telegram,width: 30,height: 30,)),
                   IconButton(onPressed: () async {
-                    await _launchUrl('');
+                    Dialoger.showBottomMenu(
+                        title: 'WhatsApp',
+                        args: TypeMessager.whatsapp,
+                        context: context,
+                        content: ListSupport());
                   }, icon:  Image.asset(whatsapp,width: 35,height: 35,))
 
 
@@ -199,107 +210,135 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
 }
 
 
-Future<void> _launchUrl(String url) async {
-  if (!await launchUrl(Uri.parse(url))) {
-    throw Exception('Could not launch $url');
-  }
-}
+
 
 Widget _getItemsMenu({required UserType userType,
   required TeacherEntity teacher,
 required Function onSelectedPage,
 required BuildContext context,
 required UserEntity user,
+  //required int currentIndexItemMenu,
 required bool docsAccept}){
 
   if(userType.isStudent||userType.isUnknown){
-    return Column(
-        children: [
-    DrawerItem(
-      title: 'Главная'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
-      onSelectedPage.call(0);
-      },),
-  DrawerItem(title: 'Расписание'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
-  onSelectedPage.call(1);
-  },),
+    return ValueListenableBuilder<int>(
+      valueListenable: currentItemNotifier,
+      builder: (context,currentIndexItemMenu,child) {
+        return Column(
+            children: [
+        DrawerItem(
+          currentIndexItemMenu: currentIndexItemMenu,
+          index: 0,
+          title: titlesDrawMenuStudent[0],textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+          onSelectedPage.call(0);
+          },),
+          DrawerItem(
+        currentIndexItemMenu:currentIndexItemMenu,
+        index: 1,
+        title: titlesDrawMenuStudent[1],textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+        onSelectedPage.call(1);
+          },),
 
-  DrawerItem(title: 'Финансы'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!,
-    onPressed: () {
-  onSelectedPage.call(2);
-  },),
+          DrawerItem(
+        currentIndexItemMenu:currentIndexItemMenu,
+        index: 2,
+        title: titlesDrawMenuStudent[2],textColor: Theme.of(context).textTheme.displayMedium!.color!,
+        onPressed: () {
+         onSelectedPage.call(2);
+          },),
 
-          badge.Badge(
-            showBadge: !docsAccept,
-            badgeContent: Text('!',style: TStyle.textStyleGaretHeavy(colorWhite,size: 16),),
-            position: BadgePosition.topEnd(end: 20,top: 8),
-            child: DrawerItem(
-              title: 'Мои документы'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!,
-              onPressed: () {
-                GoRouter.of(context).push(pathDocuments);
-              },),
+              badge.Badge(
+                showBadge: !docsAccept,
+                badgeContent: Text('!',style: TStyle.textStyleGaretHeavy(colorWhite,size: 16),),
+                position: BadgePosition.topEnd(end: 20,top: 8),
+                child: DrawerItem(
+                  title: titlesDrawMenuStudent[3],textColor: Theme.of(context).textTheme.displayMedium!.color!,
+                  onPressed: () {
+                    GoRouter.of(context).push(pathDocuments);
+                  },),
+              ),
+
+          DrawerItem(
+        currentIndexItemMenu:currentIndexItemMenu,
+        index: 3,
+        title: titlesDrawMenuStudent[4],textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+          onSelectedPage.call(3);
+          },),
+
+
+          DrawerItem(
+        title: titlesDrawMenuStudent[5],textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+        GoRouter.of(context).push(pathSettingNotifi);
+          },),
+
+          DrawerItem(
+            title:titlesDrawMenuStudent[6],
+            textColor: Theme.of(context).textTheme.displayMedium!.color!,
+            onPressed: () {
+              onSelectedPage.call(4);
+            },
           ),
+          DrawerItem(
+            title: titlesDrawMenuStudent[7],
+            textColor: Theme.of(context).textTheme.displayMedium!.color!,
+            onPressed: () {
+              GoRouter.of(context).push(pathTheme);
+            },
+          ),
+          DrawerItem(
+            title: user.userStatus.isModeration || user.userStatus.isAuth
+                ? titlesDrawMenuStudent[8]
+                : titlesDrawMenuStudent[9],
+            textColor: colorRed,
+            onPressed: () {
+              if (user.userStatus.isNotAuth) {
+                GoRouter.of(context).push(pathLogIn);
+              } else {
+                Dialoger.showLogOut(context: context, user: user);
+              }
+            },),
 
-  DrawerItem(title: 'Предложения'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
-  onSelectedPage.call(3);
-  },),
-
-
-  DrawerItem(title: 'Настройка уведомлений'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
-    GoRouter.of(context).push(pathSettingNotifi);
-  },),
-
-      DrawerItem(
-        title: 'Сайт'.tr(),
-        textColor: Theme.of(context).textTheme.displayMedium!.color!,
-        onPressed: () {
-          onSelectedPage.call(4);
-        },
-      ),
-      DrawerItem(
-        title: 'Тема'.tr(),
-        textColor: Theme.of(context).textTheme.displayMedium!.color!,
-        onPressed: () {
-          GoRouter.of(context).push(pathTheme);
-        },
-      ),
-      DrawerItem(
-        title: user.userStatus.isModeration || user.userStatus.isAuth
-            ? 'Выйти'.tr()
-            : 'Войти'.tr(),
-        textColor: colorRed,
-        onPressed: () {
-          if (user.userStatus.isNotAuth) {
-            GoRouter.of(context).push(pathLogIn);
-          } else {
-            Dialoger.showLogOut(context: context, user: user);
-          }
-        },),
-
-   ]
-  );
+           ]
+          );
+      }
+    );
   }else{
     return Column(
         children: [
-          DrawerItem(title: 'Главная'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+          DrawerItem(
+            //currentIndexItemMenu:currentIndexItemMenu,
+            index: 0,
+            title: 'Главная'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
             onSelectedPage.call(0);
           },),
 
-          DrawerItem(title: 'Расписание'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+          DrawerItem(
+            //currentIndexItemMenu: currentIndexItemMenu,
+            index: 1,
+            title: 'Расписание'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
             onSelectedPage.call(1);
           },),
 
-          DrawerItem(title: 'Лиды'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+          DrawerItem(
+            //currentIndexItemMenu:currentIndexItemMenu,
+            index: 2,
+            title: 'Лиды'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
             onSelectedPage.call(2);
           },),
 
-          DrawerItem(title: 'Клиенты'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+          DrawerItem(
+            //currentIndexItemMenu:currentIndexItemMenu,
+            index: 3,
+            title: 'Клиенты'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
             onSelectedPage.call(3);
           },),
-          DrawerItem(title: 'Тема'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+          DrawerItem(
+            title: 'Тема'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
             GoRouter.of(context).push(pathTheme);
           },),
 
-          DrawerItem(title: 'Выйти'.tr(),
+          DrawerItem(
+            title: 'Выйти'.tr(),
             textColor: colorRed, onPressed: ()  {
             Dialoger.showLogOutTeacher(context: context,teacher: teacher);
             },),
@@ -320,7 +359,8 @@ class DrawerItem extends StatelessWidget{
   final String title;
   final Color textColor;
   final VoidCallback onPressed;
-
+  final int index;
+  final int currentIndexItemMenu;
   final int countBadge;
 
   const DrawerItem(
@@ -328,22 +368,55 @@ class DrawerItem extends StatelessWidget{
         this.countBadge=0,
         required this.title,
         this.textColor = const Color.fromRGBO(158, 168, 178, 1),
-        required this.onPressed});
+        required this.onPressed,
+         this.index = -2,
+         this.currentIndexItemMenu = -1});
 
   @override
   Widget build(BuildContext context) {
+
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.only(right: 10,top: 10,bottom: 10),
       child: InkWell(
         onTap: (){
           GoRouter.of(context).pop();
           onPressed();
         },
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.
-          spaceBetween,
+          //crossAxisAlignment: CrossAxisAlignment.center,
+          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(child: Text(title,style: TStyle.textStyleVelaSansBold(textColor,size: 18.0)))
+            // Visibility(
+            //   visible: index==currentIndexItemMenu,
+            //   child: Container(
+            //     margin: const EdgeInsets.only(left: 20),
+            //     width: 8,
+            //     height: 8,
+            //     decoration: BoxDecoration(
+            //         color: colorOrange,
+            //         shape: BoxShape.circle
+            //     ),
+            //   ),
+            // ),
+            // Padding(
+            //   padding:  EdgeInsets.only(left: index==currentIndexItemMenu?10:20),
+            //   child: Text(title,style: TStyle.textStyleVelaSansBold(textColor,size: 18.0)),
+            // ),
+
+
+
+            Expanded(
+              child: Container(
+                padding: index==currentIndexItemMenu?
+                const EdgeInsets.symmetric(vertical: 5,horizontal: 20):
+                const EdgeInsets.only(left: 20),
+                decoration: BoxDecoration(
+                  color: index==currentIndexItemMenu?colorGrey.withOpacity(0.4)
+                      :Colors.transparent,
+                  borderRadius: const BorderRadius.only(topRight: Radius.circular(10),bottomRight: Radius.circular(10))
+                ),
+                 child: Text(title,style: TStyle.textStyleVelaSansBold(textColor,size: 18.0))),
+            )
 
           ],
         ),

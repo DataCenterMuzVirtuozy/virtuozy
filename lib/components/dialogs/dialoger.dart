@@ -90,6 +90,7 @@ class Dialoger{
          SearchLocationComplete() => SearchLocationComplete().build(context: _,args: args),
          DetailsLesson() => DetailsLesson().build(context: _,args: args),
          ListBonuses() => ListBonuses().build(context: _,args: args),
+         ListSupport() => ListSupport().build(context: _,args: args),
        };
        return  BackdropFilter(
          filter:  blurred?ImageFilter.blur(sigmaX: 10, sigmaY: 5):
@@ -159,6 +160,7 @@ class Dialoger{
        SearchLocationComplete() => SearchLocationComplete().build(context: context),
        DetailsLesson() => DetailsLesson().build(context: context,args: args),
        ListBonuses() => ListBonuses().build(context: context,args: args),
+       ListSupport() => ListSupport().build(context: context,args: args),
      };
 
      showModalBottomSheet(

@@ -18,10 +18,12 @@ import 'package:virtuozy/presentations/auth_screen/bloc/auth_state.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/resourses/images.dart';
  import 'package:badges/badges.dart' as badges;
+import 'package:virtuozy/resourses/strings.dart';
 import 'package:virtuozy/router/paths.dart';
 import 'package:virtuozy/utils/auth_mixin.dart';
 import '../../../utils/text_style.dart';
 import '../../../utils/theme_provider.dart';
+import '../../components/title_page.dart';
 import '../auth_screen/bloc/auth_bloc.dart';
 import '../student/finance_screen/finance_page.dart';
 import '../student/promotion_screen/promotion_page.dart';
@@ -51,12 +53,14 @@ class _MainPageState extends State<MainPage> with AuthMixin{
 
   int _indexPage = 0;
   List<int> _stackPopPage = [];
-  bool _darkTheme = false;
+   var _titlePage = '';
+
 
   @override
   void initState() {
     super.initState();
     _stackPopPage.add(0);
+    _titlePage = titlesDrawMenuStudent[0];
     scaffoldKeyGlobal = scaffoldKey;
   }
 
@@ -64,7 +68,7 @@ class _MainPageState extends State<MainPage> with AuthMixin{
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _darkTheme = context.watch<ThemeProvider>().themeStatus == ThemeStatus.dark;
+
 
   }
 
@@ -85,10 +89,12 @@ class _MainPageState extends State<MainPage> with AuthMixin{
         return BackButtonListener(
           onBackButtonPressed: () async {
             if(context.canPop()){
+              print('canPop');
               return false;
             }
 
-           if(_stackPopPage.isEmpty||_indexPage == 0){
+           if(_stackPopPage.isEmpty){
+             print('A1 $_indexPage ${_stackPopPage.length}');
              if (_popUnderway) {
                return false;
              }
@@ -98,10 +104,14 @@ class _MainPageState extends State<MainPage> with AuthMixin{
              _popUnderway = false;
              return true;
            }
+
            setState(() {
               int lastIndex = _stackPopPage.length -1;
              _stackPopPage.removeAt(lastIndex);
              _indexPage = _stackPopPage[_stackPopPage.length-1];
+              _titlePage = titlesDrawMenuStudent[_indexPage];
+              currentItemNotifier.value = _indexPage;
+              print('Rempve');
            });
 
            return true;
@@ -119,8 +129,7 @@ class _MainPageState extends State<MainPage> with AuthMixin{
                       IconButton(onPressed: (){
                         _openMenu();
                       }, icon:  Icon(Icons.menu_open_rounded,color: Theme.of(context).iconTheme.color)),
-                      _darkTheme?Image.asset(logoDark,width: 100.0):
-                      SvgPicture.asset(logo, width: 100.0),
+                      TitlePage(title: _titlePage),
                       badges.Badge(
                           position: badges.BadgePosition.topStart(start: 5.0,top: 3.0),
                         showBadge: false,
@@ -141,11 +150,15 @@ class _MainPageState extends State<MainPage> with AuthMixin{
             onSelectedPage: (index){
               setState(() {
                 if(index == 0){
+                  print('Clear');
                   _stackPopPage.clear();
                 }else{
+                  print('Add');
                   _stackPopPage.add(index);
                 }
                 _indexPage = index;
+                _titlePage = titlesDrawMenuStudent[_indexPage];
+
               });
 
 
