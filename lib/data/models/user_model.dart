@@ -24,8 +24,26 @@ class UserModel{
    final List<DocumentModel> documents;
    final List<DirectionModel> directions;
    final List<NotifiSettingModel> notifiSttings;
+   final String sex;
+   final String about_me;
+   final String date_birth;
+   final String registration_date;
+   final bool has_kids;
+   final String near_subway_work;
+   final String near_subway_home;
+   final String who_find;
+   final String avaUrl;
 
    const UserModel({
+     required this.avaUrl,
+     required this.sex,
+     required this.about_me,
+     required this.date_birth,
+     required this.registration_date,
+     required this.has_kids,
+     required this.near_subway_work,
+     required this.near_subway_home,
+     required this.who_find,
      required this.notifiSttings,
      required this.id,
     required this.lastName,
@@ -46,8 +64,9 @@ class UserModel{
     final settingsMap = mapUser['settingNotifi'] as List<dynamic>;
     final docs =  mapUser['documents'] as List<dynamic>;
     return UserModel(
-      notifiSttings: settingsMap.map((e) =>  NotifiSettingModel.fromMap(e)).toList(),
-      documents:docs.map((e) => DocumentModel.fromMap(e)).toList(),
+      notifiSttings:
+          settingsMap.map((e) => NotifiSettingModel.fromMap(e)).toList(),
+      documents: docs.map((e) => DocumentModel.fromMap(e)).toList(),
       id: mapUser['id'] as int,
       lastName: mapUser['lastName'] as String,
       firstName: mapUser['firstName'] as String,
@@ -55,7 +74,19 @@ class UserModel{
       phoneNumber: mapUser['phoneNumber'] as String,
       userStatus: mapUser['userStatus'] as int,
       userType: mapUser['userType'] as int,
-      directions: directions.map((e) => DirectionModel.fromMap(mapDirection: e,mapSubs: mapSubsAll)).toList(),
+      directions: directions
+          .map((e) =>
+              DirectionModel.fromMap(mapDirection: e, mapSubs: mapSubsAll))
+          .toList(),
+      sex: mapUser['sex'] as String,
+      about_me: mapUser['about_me'] as String,
+      date_birth: mapUser['date_birth'] as String,
+      registration_date: mapUser['registration_date'] as String,
+      has_kids: mapUser['has_kids'] as bool,
+      near_subway_work: mapUser['near_subway_work'] as String,
+      near_subway_home: mapUser['near_subway_home'] as String,
+      who_find: mapUser['who_find'] as String,
+      avaUrl: mapUser['avaUrl'] as String,
     );
   }
 }

@@ -149,11 +149,12 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                             color: colorOrange
                         ),
                         padding: const EdgeInsets.all(2),
-                        child: const CircleAvatar(
+                        child:  CircleAvatar(
+                          key: ValueKey(user.avaUrl),
                           radius: 40.0,
-                          backgroundImage: NetworkImage(
+                          backgroundImage:  NetworkImage(
                             // Replace with your image URL or path
-                            "https://www.kino-teatr.ru/acter/photo/0/8/57680/931617.jpg",
+                            user.avaUrl,
                           ),
                         ),
                       ),

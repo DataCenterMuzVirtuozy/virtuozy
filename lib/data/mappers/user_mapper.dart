@@ -17,17 +17,30 @@ class UserMapper{
 
   static UserEntity fromApi({required UserModel userModel}){
     return UserEntity(
-      documents: userModel.documents.map((e) => DocumentMapper.fromApi(documentModel: e)).toList(),
-      id: userModel.id,
+        documents: userModel.documents
+            .map((e) => DocumentMapper.fromApi(documentModel: e))
+            .toList(),
+        id: userModel.id,
         lastName: userModel.lastName,
         firstName: userModel.firstName,
         branchName: userModel.branchName,
         phoneNumber: userModel.phoneNumber,
         userStatus: _userStatus(userModel.userStatus),
-        userType: _userType( userModel.userType),
-        directions: userModel.directions.map((e) => _fromDirectionModel(e)).toList(),
-        notifiSttings: userModel.notifiSttings.map((e) =>
-            NotifiSettingMapper.fromApi(notifiSettingModel: e)).toList());
+        userType: _userType(userModel.userType),
+        directions:
+            userModel.directions.map((e) => _fromDirectionModel(e)).toList(),
+        notifiSttings: userModel.notifiSttings
+            .map((e) => NotifiSettingMapper.fromApi(notifiSettingModel: e))
+            .toList(),
+        sex: userModel.sex,
+        about_me: userModel.about_me,
+        date_birth: userModel.date_birth,
+        registration_date: userModel.registration_date,
+        has_kids: userModel.has_kids,
+        near_subway_work: userModel.near_subway_work,
+        near_subway_home: userModel.near_subway_home,
+        who_find: userModel.who_find,
+        avaUrl: userModel.avaUrl);
   }
 
   static Option fromOptionApi({required OptionModel optionModel}){

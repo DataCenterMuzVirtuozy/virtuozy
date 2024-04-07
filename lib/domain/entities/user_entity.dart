@@ -42,8 +42,26 @@ enum UserStatus{
    final List<DocumentEntity> documents;
    final List<DirectionLesson> directions;
    final List<NotifiSettingsEntity> notifiSttings;
+   final String sex;
+   final String about_me;
+   final String date_birth;
+   final String registration_date;
+   final bool has_kids;
+   final String near_subway_work;
+   final String near_subway_home;
+   final String who_find;
+   final String avaUrl;
 
-   const UserEntity({
+   const UserEntity( {
+     required this.avaUrl,
+     required this.sex,
+     required this.about_me,
+     required this.date_birth,
+     required this.registration_date,
+     required this.has_kids,
+     required this.near_subway_work,
+     required this.near_subway_home,
+     required this.who_find,
      required this.notifiSttings,
      required this.id,
      required this.documents,
@@ -59,13 +77,25 @@ enum UserStatus{
 
    factory UserEntity.unknown() {
     return const UserEntity(
-      notifiSttings: [],
-      documents: [],
+        notifiSttings: [],
+        documents: [],
         directions: [],
         id: 0,
         userType: UserType.unknown,
         userStatus: UserStatus.notAuth,
-        lastName: '', firstName: '', branchName: '', phoneNumber: '');
+        lastName: '',
+        firstName: '',
+        branchName: '',
+        phoneNumber: '',
+        sex: '',
+        about_me: '',
+        date_birth: '',
+        registration_date: '',
+        has_kids: false,
+        near_subway_work: '',
+        near_subway_home: '',
+        who_find: '',
+       avaUrl: '');
   }
 
   UserEntity copyWith({
@@ -78,7 +108,16 @@ enum UserStatus{
     List<DirectionLesson>? directions,
     int? id,
     List<DocumentEntity>? documents,
-    List<NotifiSettingsEntity>? notifiSttings
+    List<NotifiSettingsEntity>? notifiSttings,
+    String? sex,
+    String? about_me,
+    String? date_birth,
+    String? registration_date,
+    bool? has_kids,
+    String? near_subway_work,
+    String? near_subway_home,
+    String? who_find,
+    String? avaUrl
   }) {
     return UserEntity(
       id:id??this.id,
@@ -90,7 +129,16 @@ enum UserStatus{
       branchName: branchName ?? this.branchName,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       userStatus: userStatus??this.userStatus,
-      directions: directions??this.directions
+      directions: directions??this.directions,
+        about_me: about_me??this.about_me,
+      sex: sex??this.sex,
+      date_birth: date_birth??this.date_birth,
+      registration_date: registration_date??this.registration_date,
+      has_kids: has_kids??this.has_kids,
+      near_subway_home: near_subway_home??this.near_subway_home,
+      near_subway_work: near_subway_work??this.near_subway_work,
+        who_find: who_find??this.who_find,
+        avaUrl: avaUrl??this.avaUrl
     );
   }
 }

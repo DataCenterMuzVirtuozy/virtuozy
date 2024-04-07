@@ -9,11 +9,17 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:virtuozy/domain/entities/user_entity.dart';
+import 'package:virtuozy/presentations/student/profile_screen/bloc/profile_bloc.dart';
+import 'package:virtuozy/presentations/student/profile_screen/bloc/profile_event.dart';
 import 'package:virtuozy/resourses/colors.dart';
 
 import '../../../components/buttons.dart';
+import '../../../components/dialogs/dialoger.dart';
 import '../../../utils/text_style.dart';
+import 'bloc/profile_state.dart';
 
  class UserProfilePage extends StatefulWidget {
   const UserProfilePage({super.key});
@@ -27,6 +33,7 @@ import '../../../utils/text_style.dart';
    String name = "";
    String gender = "";
    bool hasChildren = false;
+   bool _edit = false;
 
    // Image picker for avatar
    //final ImagePicker _picker = ImagePicker();
@@ -42,60 +49,86 @@ import '../../../utils/text_style.dart';
      //}
    }
 
+
    @override
+  void initState() {
+  super.initState();
+  context.read<ProfileBloc>().add(const GetDataUserEvent());
+  }
+
+  @override
    Widget build(BuildContext context) {
      return Scaffold(
-       //appBar: AppBarCustom(title: 'Профиль'.tr(),),
-       body: SingleChildScrollView(
-         padding: const EdgeInsets.only(top: 40,right: 20,left: 20),
-         child: Stack(
-           alignment: Alignment.topCenter,
-           children: [
-             Align(
-               alignment: Alignment.centerLeft,
-               child: IconButton(onPressed: (){
-                 Navigator.pop(context);
-               },
-                 icon: Icon(Platform.isAndroid?Icons.arrow_back_rounded:
-                 Icons.arrow_back_ios_new_rounded),),
-             ),
-             const BodyInfoUser(),
-             GestureDetector(
-               onTap: _pickImage,
-               child: Stack(
-                 children: [
-                   Container(
-                     decoration: BoxDecoration(
-                         shape: BoxShape.circle,
-                         color: colorOrange
-                     ),
-                     padding: const EdgeInsets.all(2),
-                     child: const CircleAvatar(
-                       radius: 50.0,
-                       backgroundImage: NetworkImage(
-                         // Replace with your image URL or path
-                         "https://www.kino-teatr.ru/acter/photo/0/8/57680/931617.jpg",
-                       ),
-                     ),
-                   ),
-                   Positioned(
-                     bottom: 0,
-                     right: 0,
-                     child: Container(
-                       padding: const EdgeInsets.all(5),
-                       decoration: BoxDecoration(
-                         shape: BoxShape.circle,
-                         color: colorOrange
-                       ),
-                       child: Icon(Icons.edit,color: Theme.of(context).iconTheme.color,),
-                     ),
-                   ),
-                 ],
-               ),
-             ),
+       body: BlocConsumer<ProfileBloc,ProfileState>(
+         listener: (c,s){
+           if(s.error.isNotEmpty){
+             Dialoger.showMessage(s.error);
+           }
+           if(s.profileStatus == ProfileStatus.saved){
+             _edit = false;
+             Dialoger.showActionMaterialSnackBar(context: context, title: 'Изменения сохранены'.tr());
+           }
+         },
+         builder: (context,state) {
 
-           ],
-         ),
+           if(state.profileStatus == ProfileStatus.loading){
+             return Center(child: CircularProgressIndicator(color: colorOrange));
+           }
+
+
+           return SingleChildScrollView(
+             padding: const EdgeInsets.only(top: 40,right: 20,left: 20),
+             child: Stack(
+               alignment: Alignment.topCenter,
+               children: [
+                 Align(
+                   alignment: Alignment.centerLeft,
+                   child: IconButton(onPressed: (){
+                     Navigator.pop(context);
+                   },
+                     icon: Icon(Platform.isAndroid?Icons.arrow_back_rounded:
+                     Icons.arrow_back_ios_new_rounded),),
+                 ),
+                  BodyInfoUser(user: state.userEntity),
+                 GestureDetector(
+                   onTap: _pickImage,
+                   child: Stack(
+                     children: [
+                       Container(
+                         decoration: BoxDecoration(
+                             shape: BoxShape.circle,
+                             color: colorOrange
+                         ),
+                         padding: const EdgeInsets.all(2),
+                         child:  CircleAvatar(
+                           key: ValueKey(state.userEntity.avaUrl),
+                           radius: 50.0,
+                           backgroundImage: NetworkImage(
+                             // Replace with your image URL or path
+                             state.userEntity.avaUrl,
+                           ),
+                         ),
+                       ),
+                       Positioned(
+                         bottom: 0,
+                         right: 0,
+                         child: Container(
+                           padding: const EdgeInsets.all(5),
+                           decoration: BoxDecoration(
+                             shape: BoxShape.circle,
+                             color: colorOrange
+                           ),
+                           child: Icon(Icons.edit,color: Theme.of(context).iconTheme.color,),
+                         ),
+                       ),
+                     ],
+                   ),
+                 ),
+
+               ],
+             ),
+           );
+         }
        ),
      );
    }
@@ -103,7 +136,9 @@ import '../../../utils/text_style.dart';
 
 
    class BodyInfoUser extends StatefulWidget{
-  const BodyInfoUser({super.key});
+  const BodyInfoUser({super.key, required this.user});
+
+  final UserEntity user;
 
   @override
   State<BodyInfoUser> createState() => _BodyInfoUserState();
@@ -137,7 +172,7 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
             children: [
               // Profile picture with edit button
              Center(
-               child: Text('Иванов Иван Иванович',
+               child: Text('${widget.user.firstName} ${widget.user.lastName}',
                textAlign: TextAlign.center,
                style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
              ),
@@ -151,7 +186,7 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
                 children: [
                   Text('Пол:',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
                   //todo если не указан то выбор через меню
-                  Text('Мужской',
+                  Text(widget.user.sex == 'man'?'Мужской':'Женский',
                     style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
                 ],
               ),
@@ -161,7 +196,7 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
                 children: [
                   Text('Дата рождения:',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
                   //todo если не указан то выбор через меню
-                  Text('12.03.1989',
+                  Text(widget.user.date_birth,
                     style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
                 ],
               ),
@@ -170,7 +205,7 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Дата регистрации:',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
-                  Text('12.03.1989',
+                  Text(widget.user.registration_date,
                     style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
                 ],
               ),
@@ -180,7 +215,7 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
                 children: [
                   Text('Наличие детей:',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
                   const Gap(10.0),
-                  const SelectKidsMenu()
+                   SelectKidsMenu(hasKind: widget.user.has_kids)
                 ],
               ),
               const Gap(20.0),
@@ -188,7 +223,7 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Ближайшая Станция метро - Работа',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
-                  Text('ст. Пушкинская',
+                  Text(widget.user.near_subway_work,
                     style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
                 ],
               ),
@@ -197,7 +232,7 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Ближайшая Станция метро - Проживание',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
-                  Text('ст. Пушкинская',
+                  Text(widget.user.near_subway_home,
                     style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
                 ],
               ),
@@ -212,7 +247,7 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Ищу вокалиста',
+                      Text(widget.user.who_find,
                         style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
                       Icon(Icons.edit,color: colorGrey,size: 16,)
                     ],
@@ -275,7 +310,9 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
 
 
  class SelectKidsMenu extends StatefulWidget{
-   const SelectKidsMenu({super.key});
+   const SelectKidsMenu({super.key, required this.hasKind});
+
+   final bool hasKind;
 
    @override
    State<SelectKidsMenu> createState() => _SelectKidsMenuState();
@@ -293,7 +330,7 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
    @override
    void initState() {
      super.initState();
-     selectedValueKids = itemsKids[0];
+     selectedValueKids = widget.hasKind?itemsKids[0]:itemsKids[1];
    }
 
    @override

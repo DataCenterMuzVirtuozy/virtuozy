@@ -84,7 +84,16 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
             phoneNumber: PreferencesUtil.phoneUser,
             userType: UserType.student,
             directions: [],
-            id: 0));
+            id: 0,
+            sex: '',
+            about_me: '',
+            date_birth: '',
+            registration_date: '',
+            has_kids: false,
+            near_subway_work: '',
+            near_subway_home: '',
+            avaUrl: '',
+            who_find: ''));
         await PreferencesUtil.setTypeUser(userType: UserType.student);
         emit(state.copyWith(authStatus: AuthStatus.moderation));
         return;
@@ -142,7 +151,16 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
           phoneNumber: event.phone,
           userType: UserType.student,
           directions: [],
-          id: 0);
+          id: 0,
+          sex: '',
+          about_me: '',
+          date_birth: '',
+          registration_date: '',
+          has_kids: false,
+          near_subway_work: '',
+          near_subway_home: '',
+          avaUrl: '',
+          who_find: '');
       await _createLocalUser(user);
       emit(state.copyWith(authStatus: AuthStatus.onSearchLocation));
     }on Failure catch(e){

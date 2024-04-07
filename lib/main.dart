@@ -12,6 +12,7 @@ import 'package:virtuozy/presentations/main_screen/main_page.dart';
 import 'package:virtuozy/presentations/student/document_screen/bloc/docs_bloc.dart';
 import 'package:virtuozy/presentations/student/finance_screen/bloc/bloc_finance.dart';
 import 'package:virtuozy/presentations/student/notification_screen/bloc/notifi_bloc.dart';
+import 'package:virtuozy/presentations/student/profile_screen/bloc/profile_bloc.dart';
 import 'package:virtuozy/presentations/student/profile_screen/profile_page.dart';
 import 'package:virtuozy/presentations/student/schedule_screen/bloc/schedule_bloc.dart';
 import 'package:virtuozy/presentations/student/splash_screen/splash_page.dart';
@@ -83,7 +84,8 @@ class _MyAppState extends State<MyApp> {
               BlocProvider<BlocFinance>(create: (_)=>BlocFinance()),
               BlocProvider<UserCubit>(create: (_)=>UserCubit()),
               BlocProvider<NotifiBloc>(create: (_)=>NotifiBloc()),
-              BlocProvider<DocsBloc>(create: (_)=>DocsBloc())
+              BlocProvider<DocsBloc>(create: (_)=>DocsBloc()),
+              BlocProvider<ProfileBloc>(create: (_)=> ProfileBloc())
             ],
             child: MaterialApp.router(
               title: 'Flutter Demo',
