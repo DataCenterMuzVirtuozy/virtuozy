@@ -147,6 +147,7 @@ import 'bloc/profile_state.dart';
 class _BodyInfoUserState extends State<BodyInfoUser> {
 
 
+  bool _edit = false;
 
 
   @override
@@ -184,21 +185,71 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Пол:',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
-                  //todo если не указан то выбор через меню
-                  Text(widget.user.sex == 'man'?'Мужской':'Женский',
+                  Text('О себе:',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
+                  Text(widget.user.about_me,
                     style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
                 ],
               ),
-              const Gap(10.0),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              const Gap(10),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text('Дата рождения:',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
-                  //todo если не указан то выбор через меню
-                  Text(widget.user.date_birth,
-                    style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
+                  Text('Пол:',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
+                  const Gap(10),
+                  if(widget.user.sex.isNotEmpty)...{
+                    Text(widget.user.sex == 'man'?'Муж.':'Жен.',
+                      style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),)
+                  }else...{
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 5),
+                      child: SelectSexMenu(),
+                    )
+
+                  }
                 ],
+              ),
+              const Gap(10.0),
+              GestureDetector(
+                onTap: () async {
+                  if(widget.user.date_birth.isEmpty){
+                    DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        useRootNavigator: false,
+                        initialDate: DateTime.now(), //get today's date
+                        firstDate:DateTime(1945), //DateTime.now() - not to allow to choose before today.
+                        lastDate: DateTime(2101)
+                    );
+                  }
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 20,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Дата рождения:',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
+                          Visibility(
+                            visible: widget.user.date_birth.isEmpty,
+                            child:Icon(Icons.calendar_month,color: colorGrey,size: 18)),
+
+                        ],
+                      ),
+                    ),
+                    //todo если не указан то выбор через меню
+                    Text(
+                      !widget.user.date_birth.isEmpty
+                          ? 'Не указана'
+                          : widget.user.date_birth,
+                      style: TStyle.textStyleVelaSansBold(
+                          Theme.of(context).textTheme.displayMedium!.color!,
+                          size: 18),
+                    )
+                  ],
+                ),
               ),
               const Gap(10.0),
               Column(
@@ -249,23 +300,29 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
                     children: [
                       Text(widget.user.who_find,
                         style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
-                      Icon(Icons.edit,color: colorGrey,size: 16,)
+                      //Icon(Icons.edit,color: colorGrey,size: 16,)
                     ],
                   ),
                 ],
               ),
 
+
               const Gap(30.0),
               SizedBox(
                 height: 40.0,
-                child: SubmitButton(
-                    textButton: 'Сохранить изменения'.tr(),
-                    onTap: () {
-
-                    }
+                child: Opacity(
+                  opacity: !_edit?0.3:1.0,
+                  child: SubmitButton(
+                      borderRadius: 8,
+                      textButton: 'Сохранить изменения'.tr(),
+                      onTap: () {
+                        if(_edit){
+                          //context.read<NotifiBloc>().add(SaveSettingNotifiEvent(settings: _settings));
+                        }
+                      }
+                  ),
                 ),
               )
-
             ],
           ),
         ),
@@ -400,3 +457,96 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
      );
    }
  }
+
+ class SelectSexMenu extends StatefulWidget{
+   const SelectSexMenu({super.key});
+
+
+   @override
+   State<SelectSexMenu> createState() => _SelectSexMenuState();
+ }
+
+ class _SelectSexMenuState extends State<SelectSexMenu> {
+
+   final List<String> itemsSex = [
+     'Не выбран',
+     'Муж.',
+     'Жен.',
+   ];
+   String? selectedValue;
+
+
+   @override
+   void initState() {
+     super.initState();
+     selectedValue = itemsSex[0];
+   }
+
+   @override
+   Widget build(BuildContext context) {
+     return DropdownButtonHideUnderline(
+       child: DropdownButton2<String>(
+         isExpanded: true,
+         hint:  Text(selectedValue!,
+             textAlign: TextAlign.center,
+             style:TStyle.textStyleVelaSansExtraBolt(Theme.of(context)
+                 .textTheme.displayMedium!.color!,size: 13.0)),
+         items: itemsSex
+             .map((String item) => DropdownMenuItem<String>(
+           value: item,
+           child: Text(
+             item,
+             style: TStyle.textStyleVelaSansExtraBolt(Theme.of(context)
+                 .textTheme.displayMedium!.color!,size: 13.0),
+             overflow: TextOverflow.ellipsis,
+           ),
+         ))
+             .toList(),
+         value: selectedValue,
+         onChanged: (value) {
+           setState(() {
+             selectedValue = value;
+           });
+         },
+         buttonStyleData: ButtonStyleData(
+           width: 120,
+           padding:const EdgeInsets.symmetric(horizontal: 13.0),
+           decoration: BoxDecoration(
+             borderRadius: BorderRadius.circular(20.0),
+             color:Theme.of(context).colorScheme.surfaceVariant,
+           ),
+           //elevation: 2,
+         ),
+         iconStyleData:  IconStyleData(
+           icon: const Icon(
+             Icons.arrow_drop_down_rounded,
+           ),
+           iconSize: 18,
+           iconEnabledColor: colorGrey,
+           iconDisabledColor: Theme.of(context)
+               .textTheme.displayMedium!.color!,
+         ),
+         dropdownStyleData: DropdownStyleData(
+           maxHeight: 400,
+           width: 120,
+           elevation: 0,
+           decoration: BoxDecoration(
+             borderRadius: BorderRadius.circular(20.0),
+             color: colorGrey,
+           ),
+           offset: const Offset(0,-10),
+           scrollbarTheme: ScrollbarThemeData(
+             radius: const Radius.circular(40),
+             thickness: MaterialStateProperty.all(6),
+             thumbVisibility: MaterialStateProperty.all(true),
+           ),
+         ),
+         menuItemStyleData: const MenuItemStyleData(
+           height: 30,
+           padding: EdgeInsets.only(left: 14, right: 14),
+         ),
+       ),
+     );
+   }
+ }
+

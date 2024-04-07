@@ -1,12 +1,27 @@
 
 import 'package:flutter/material.dart';
 import 'package:virtuozy/resourses/colors.dart';
+import 'package:virtuozy/utils/text_style.dart';
 
 class AppTheme{
 
 
   static  ThemeData get first=> ThemeData(
     useMaterial3: true,
+    datePickerTheme: DatePickerThemeData(
+      backgroundColor: colorWhite,
+      shadowColor: colorBlack,
+      surfaceTintColor: colorBlack,
+      headerForegroundColor: colorBlack,
+      dayForegroundColor: MaterialStatePropertyAll(colorBlack),
+      weekdayStyle: TStyle.textStyleVelaSansExtraBolt(colorBlack),
+      dayStyle: TStyle.textStyleVelaSansBold(colorBlack),
+      yearForegroundColor: MaterialStatePropertyAll(colorBlack),
+      yearStyle: TStyle.textStyleVelaSansExtraBolt(colorBlack),
+      todayForegroundColor: MaterialStatePropertyAll(colorBlack),
+
+
+    ),
     switchTheme: SwitchThemeData(
        trackColor: MaterialStatePropertyAll(colorBeruzaLight),
        thumbColor: MaterialStatePropertyAll(colorBeruza)
@@ -39,7 +54,8 @@ class AppTheme{
       background: colorWhite, // фон экранов
       onBackground: colorWhite,
       surface: colorBlack,
-      onSurface: colorBeruzaLight,
+      onSurface: colorBlack,
+
 
     ),
   );
@@ -47,6 +63,19 @@ class AppTheme{
 
   static  ThemeData get dark=> ThemeData(
     useMaterial3: true,
+    datePickerTheme: DatePickerThemeData(
+      backgroundColor: colorBlack,
+      shadowColor: colorWhite,
+      surfaceTintColor: colorWhite,
+      headerForegroundColor: colorWhite,
+      dayForegroundColor: MaterialStatePropertyAll(colorWhite),
+      weekdayStyle: TStyle.textStyleVelaSansExtraBolt(colorWhite),
+      dayStyle: TStyle.textStyleVelaSansBold(colorWhite),
+      yearForegroundColor: MaterialStatePropertyAll(colorWhite),
+      yearStyle: TStyle.textStyleVelaSansExtraBolt(colorWhite),
+      todayForegroundColor: MaterialStatePropertyAll(colorWhite),
+
+    ),
     switchTheme: SwitchThemeData(
         trackColor: MaterialStatePropertyAll(colorGrey),
         thumbColor: MaterialStatePropertyAll(colorWhite)
@@ -66,7 +95,7 @@ class AppTheme{
       background: const Color(0xFF181819),
       onBackground: colorBlack,
       surface: colorWhite,
-      onSurface: colorBeruzaLight,
+      onSurface: colorWhite,
 
     ),
   );

@@ -128,6 +128,7 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                             child: TextButton(
                               onPressed: () {
                                 GoRouter.of(context).push(pathProfile);
+                                Navigator.pop(context);
                               },
                               child: Text('${userType.isStudent?user.firstName:teacher.firstName} ${userType.isStudent?user.lastName:teacher.lastName}',
                                   maxLines: 2,
@@ -141,6 +142,7 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                     child: InkWell(
                       onTap: (){
                         GoRouter.of(context).push(pathProfile);
+                        Navigator.pop(context);
                       },
                       child: Container(
                         margin: const EdgeInsets.only(top: 40,left: 10),
@@ -253,7 +255,7 @@ required bool docsAccept}){
                 badgeContent: Text('!',style: TStyle.textStyleGaretHeavy(colorWhite,size: 16),),
                 position: BadgePosition.topEnd(end: 20,top: 8),
                 child: DrawerItem(
-                  title: titlesDrawMenuStudent[3],textColor: Theme.of(context).textTheme.displayMedium!.color!,
+                  title: titlesDrawMenuStudent[6],textColor: Theme.of(context).textTheme.displayMedium!.color!,
                   onPressed: () {
                     GoRouter.of(context).push(pathDocuments);
                   },),
@@ -262,7 +264,8 @@ required bool docsAccept}){
           DrawerItem(
         currentIndexItemMenu:currentIndexItemMenu,
         index: 3,
-        title: titlesDrawMenuStudent[4],textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+        title: titlesDrawMenuStudent[3],
+            textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
           onSelectedPage.call(3);
           },),
 
@@ -273,7 +276,9 @@ required bool docsAccept}){
           },),
 
           DrawerItem(
-            title:titlesDrawMenuStudent[6],
+            index: 4,
+            currentIndexItemMenu: currentIndexItemMenu,
+            title:titlesDrawMenuStudent[4],
             textColor: Theme.of(context).textTheme.displayMedium!.color!,
             onPressed: () {
               onSelectedPage.call(4);
@@ -290,7 +295,7 @@ required bool docsAccept}){
             title: user.userStatus.isModeration || user.userStatus.isAuth
                 ? titlesDrawMenuStudent[8]
                 : titlesDrawMenuStudent[9],
-            textColor: colorRed,
+            textColor: Theme.of(context).textTheme.displayMedium!.color!,
             onPressed: () {
               if (user.userStatus.isNotAuth) {
                 GoRouter.of(context).push(pathLogIn);
@@ -384,40 +389,40 @@ class DrawerItem extends StatelessWidget{
           onPressed();
         },
         child: Row(
-          //crossAxisAlignment: CrossAxisAlignment.center,
+           crossAxisAlignment: CrossAxisAlignment.center,
           //mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // Visibility(
-            //   visible: index==currentIndexItemMenu,
-            //   child: Container(
-            //     margin: const EdgeInsets.only(left: 20),
-            //     width: 8,
-            //     height: 8,
-            //     decoration: BoxDecoration(
-            //         color: colorOrange,
-            //         shape: BoxShape.circle
-            //     ),
-            //   ),
-            // ),
-            // Padding(
-            //   padding:  EdgeInsets.only(left: index==currentIndexItemMenu?10:20),
-            //   child: Text(title,style: TStyle.textStyleVelaSansBold(textColor,size: 18.0)),
-            // ),
-
-
-
-            Expanded(
+            Visibility(
+              visible: index==currentIndexItemMenu,
               child: Container(
-                padding: index==currentIndexItemMenu?
-                const EdgeInsets.symmetric(vertical: 5,horizontal: 20):
-                const EdgeInsets.only(left: 20),
+                margin: const EdgeInsets.only(left: 20),
+                width: 8,
+                height: 8,
                 decoration: BoxDecoration(
-                  color: index==currentIndexItemMenu?colorGrey.withOpacity(0.4)
-                      :Colors.transparent,
-                  borderRadius: const BorderRadius.only(topRight: Radius.circular(10),bottomRight: Radius.circular(10))
+                    color: colorOrange,
+                    shape: BoxShape.circle
                 ),
-                 child: Text(title,style: TStyle.textStyleVelaSansBold(textColor,size: 18.0))),
-            )
+              ),
+            ),
+            Padding(
+              padding:  EdgeInsets.only(left: index==currentIndexItemMenu?10:20),
+              child: Text(title,style: TStyle.textStyleVelaSansBold(textColor,size: 18.0)),
+            ),
+
+
+
+            // Expanded(
+            //   child: Container(
+            //     padding: index==currentIndexItemMenu?
+            //     const EdgeInsets.symmetric(vertical: 5,horizontal: 20):
+            //     const EdgeInsets.only(left: 20),
+            //     decoration: BoxDecoration(
+            //       color: index==currentIndexItemMenu?colorGrey.withOpacity(0.4)
+            //           :Colors.transparent,
+            //       borderRadius: const BorderRadius.only(topRight: Radius.circular(10),bottomRight: Radius.circular(10))
+            //     ),
+            //      child: Text(title,style: TStyle.textStyleVelaSansBold(textColor,size: 18.0))),
+            // )
 
           ],
         ),
