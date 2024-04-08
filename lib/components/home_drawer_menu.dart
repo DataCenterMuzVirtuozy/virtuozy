@@ -47,6 +47,33 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
 
   }
 
+  Widget _getAvatar(String urlAva){
+    ImageProvider image = NetworkImage(urlAva);
+
+    if(urlAva.isEmpty){
+        return Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: colorWhite,width: 1.5)
+            ),
+            child: Icon(Icons.image_search_rounded,color: colorWhite,size: 30,));
+      }else{
+        image = NetworkImage(urlAva);
+        return CircleAvatar(
+          key: ValueKey(user.avaUrl),
+          radius: 40.0,
+          foregroundImage:  NetworkImage(
+            user.avaUrl,
+          ),
+          child: Icon(Icons.hourglass_empty,color: colorWhite.withOpacity(0.5)),
+        );
+      }
+
+  }
+
+
 
 
   @override
@@ -73,136 +100,140 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
         child: Drawer(
           backgroundColor: Colors.transparent,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Stack(
+              Column(
                 children: [
-                  Column(
+                  Stack(
                     children: [
-                      Container(
-                        padding: const EdgeInsets.only(left: 100,top: 50),
-                        width: width,
-                        height: 100.0,
-                        decoration: BoxDecoration(
-                            color: colorYellow
-                        ),
-                        child:  Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Gap(8.0),
-                            Visibility(
-                              visible: user.phoneNumber.isNotEmpty||
-                                  teacher.phoneNum.isNotEmpty,
-                              child: Row(
-                                children: [
-                                  Icon(Icons.phone_enabled_rounded,color: colorWhite,
-                                      size: 12.0),
-                                  const Gap(5.0),
-                                  Text(userType.isStudent?user.phoneNumber:
-                                  teacher.phoneNum,
-                                      style: TStyle.textStyleVelaSansBold(colorWhite,size: 12.0)),
-                                ],
-                              ),
+                      Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.only(left: 100,top: 50),
+                            width: width,
+                            height: 100.0,
+                            decoration: BoxDecoration(
+                                color: colorYellow
                             ),
-                            Visibility(
-                              visible: user.branchName.isNotEmpty,
-                              child: Row(
-                                children: [
-                                  Icon(Icons.location_on_outlined,color: colorWhite,size: 12.0),
-                                  const Gap(5.0),
-                                  Text(user.branchName,style: TStyle.textStyleVelaSansMedium(colorWhite,size: 12.0)),
-                                ],
-                              ),
-                            ),
+                            child:  Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Gap(8.0),
+                                Visibility(
+                                  visible: user.userStatus.isAuth||user.userStatus.isModeration,
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.phone_enabled_rounded,color: colorWhite,
+                                          size: 12.0),
+                                      const Gap(5.0),
+                                      Text(userType.isStudent?user.phoneNumber:
+                                      teacher.phoneNum,
+                                          style: TStyle.textStyleVelaSansBold(colorWhite,size: 12.0)),
+                                    ],
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: user.userStatus.isAuth||user.userStatus.isModeration,
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.location_on_outlined,color: colorWhite,size: 12.0),
+                                      const Gap(5.0),
+                                      Text(user.branchName,style: TStyle.textStyleVelaSansMedium(colorWhite,size: 12.0)),
+                                    ],
+                                  ),
+                                ),
 
-                          ],
-                        ),
+                              ],
+                            ),
+                          ),
+                          Visibility(
+                            visible: user.userStatus.isAuth||user.userStatus.isModeration,
+                            child: Container(
+                              alignment: Alignment.bottomLeft,
+                                padding: const EdgeInsets.only(left: 10,top: 20),
+                                width: width,
+                                //height: 70,
+                                color: colorOrange,
+                                child: TextButton(
+                                  onPressed: () {
+                                    GoRouter.of(context).push(pathProfile);
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text('${userType.isStudent?user.firstName:teacher.firstName} ${userType.isStudent?user.lastName:teacher.lastName}',
+                                      maxLines: 2,
+                                      style: TStyle.textStyleGaretHeavy(colorWhite,size: 16.0)),
+                                ),),
+                          ),
+                        ],
                       ),
                       Visibility(
                         visible: user.userStatus.isAuth||user.userStatus.isModeration,
-                        child: Container(
-                          alignment: Alignment.bottomLeft,
-                            padding: const EdgeInsets.only(left: 10,top: 20),
-                            width: width,
-                            //height: 70,
-                            color: colorOrange,
-                            child: TextButton(
-                              onPressed: () {
-                                GoRouter.of(context).push(pathProfile);
-                                Navigator.pop(context);
-                              },
-                              child: Text('${userType.isStudent?user.firstName:teacher.firstName} ${userType.isStudent?user.lastName:teacher.lastName}',
-                                  maxLines: 2,
-                                  style: TStyle.textStyleGaretHeavy(colorWhite,size: 16.0)),
-                            ),),
-                      ),
-                    ],
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: InkWell(
-                      onTap: (){
-                        GoRouter.of(context).push(pathProfile);
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.only(top: 40,left: 10),
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: colorOrange
-                        ),
-                        padding: const EdgeInsets.all(2),
-                        child:  CircleAvatar(
-                          key: ValueKey(user.avaUrl),
-                          radius: 40.0,
-                          backgroundImage:  NetworkImage(
-                            // Replace with your image URL or path
-                            user.avaUrl,
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: InkWell(
+                            onTap: (){
+                              GoRouter.of(context).push(pathProfile);
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.only(top: 40,left: 10),
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: colorOrange
+                              ),
+                              padding: const EdgeInsets.all(2),
+                              child:  _getAvatar(user.avaUrl),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
 
+                    ],
+                  ),
+                  const Gap(20.0),
+                  _getItemsMenu(userType: userType,
+                      context: context,
+                      user: user,
+                      //currentIndexItemMenu: _currentIndexItemMenu,
+                      docsAccept: docsAccept,
+                      onSelectedPage:(item){
+                        setState(() {
+                          //_currentIndexItemMenu = item;
+                          currentItemNotifier.value = item;
+                          widget.onSelectedPage.call(item);
+                        });
+
+                      }, teacher: teacher),
                 ],
               ),
-              const Gap(20.0),
-              _getItemsMenu(userType: userType,
-                  context: context,
-                  user: user,
-                  //currentIndexItemMenu: _currentIndexItemMenu,
-                  docsAccept: docsAccept,
-                  onSelectedPage:(item){
-                    setState(() {
-                      //_currentIndexItemMenu = item;
-                      currentItemNotifier.value = item;
-                      widget.onSelectedPage.call(item);
-                    });
 
-                  }, teacher: teacher),
-             const Gap(100),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  //todo url enter
-                  IconButton(onPressed: ()async{
-                    Dialoger.showBottomMenu(
-                        title: 'Telegram',
-                        args: TypeMessager.telegram,
-                        context: context,
-                        content: ListSupport());
-                  }, icon:  Image.asset(telegram,width: 30,height: 30,)),
-                  IconButton(onPressed: () async {
-                    Dialoger.showBottomMenu(
-                        title: 'WhatsApp',
-                        args: TypeMessager.whatsapp,
-                        context: context,
-                        content: ListSupport());
-                  }, icon:  Image.asset(whatsapp,width: 35,height: 35,))
+              Padding(
+                padding: const EdgeInsets.only(bottom: 30),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    //todo url enter
+                    IconButton(onPressed: ()async{
+                      Dialoger.showBottomMenu(
+                          title: 'Telegram',
+                          args: TypeMessager.telegram,
+                          context: context,
+                          content: ListSupport());
+                    }, icon:  Image.asset(telegram,width: 30,height: 30,)),
+                    IconButton(onPressed: () async {
+                      Dialoger.showBottomMenu(
+                          title: 'WhatsApp',
+                          args: TypeMessager.whatsapp,
+                          context: context,
+                          content: ListSupport());
+                    }, icon:  Image.asset(whatsapp,width: 35,height: 35,))
 
 
-                ],
-              )
+                  ],
+                ),
+              ),
+
             ],
           ),
         ),
@@ -250,15 +281,18 @@ required bool docsAccept}){
          onSelectedPage.call(2);
           },),
 
-              badge.Badge(
-                showBadge: !docsAccept,
-                badgeContent: Text('!',style: TStyle.textStyleGaretHeavy(colorWhite,size: 16),),
-                position: BadgePosition.topEnd(end: 20,top: 8),
-                child: DrawerItem(
-                  title: titlesDrawMenuStudent[6],textColor: Theme.of(context).textTheme.displayMedium!.color!,
-                  onPressed: () {
-                    GoRouter.of(context).push(pathDocuments);
-                  },),
+              Visibility(
+                visible: user.userStatus.isAuth||user.userStatus.isModeration,
+                child: badge.Badge(
+                  showBadge: !docsAccept,
+                  badgeContent: Text('!',style: TStyle.textStyleGaretHeavy(colorWhite,size: 16),),
+                  position: BadgePosition.topEnd(end: 20,top: 8),
+                  child: DrawerItem(
+                    title: titlesDrawMenuStudent[6],textColor: Theme.of(context).textTheme.displayMedium!.color!,
+                    onPressed: () {
+                      GoRouter.of(context).push(pathDocuments);
+                    },),
+                ),
               ),
 
           DrawerItem(
@@ -270,10 +304,13 @@ required bool docsAccept}){
           },),
 
 
-          DrawerItem(
-        title: titlesDrawMenuStudent[5],textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
-        GoRouter.of(context).push(pathSettingNotifi);
-          },),
+          Visibility(
+            visible: user.userStatus.isAuth||user.userStatus.isModeration,
+            child: DrawerItem(
+                    title: titlesDrawMenuStudent[5],textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+                    GoRouter.of(context).push(pathSettingNotifi);
+            },),
+          ),
 
           DrawerItem(
             index: 4,

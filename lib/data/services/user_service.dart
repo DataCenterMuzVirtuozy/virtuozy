@@ -10,7 +10,9 @@ import 'package:virtuozy/domain/entities/document_entity.dart';
 import 'package:virtuozy/domain/entities/edit_profile_entity.dart';
 import 'package:virtuozy/domain/entities/notifi_setting_entity.dart';
 import 'package:virtuozy/utils/failure.dart';
-
+ import 'package:http/http.dart' as http;
+ import 'dart:convert' as convert;
+ import 'dart:io';
 import '../../di/locator.dart';
 import '../models/notifi_setting_model.dart';
 import '../models/user_model.dart';
@@ -111,20 +113,27 @@ class UserService{
 
    Future<String> loadAvaProfile({required int uid,required EditProfileEntity profileEntity}) async{
      try{
-       var formData = FormData.fromMap({
-         'image': await MultipartFile.fromFile(profileEntity.fileImageUrl!.path, filename: 'ava_$uid.jpg'),
-       });
+       String fileName = profileEntity.fileImageUrl!.path.split('/').last;
+       var request = http.MultipartRequest('POST', Uri.parse('https://cce5275ac71003a6.mokky.dev/uploads'));
+       request.files.add(await http.MultipartFile.fromPath('file', profileEntity.fileImageUrl!.path,filename: fileName));
+       var streamedResponse = await request.send();
+       var response = await http.Response.fromStream(streamedResponse);
+       if(streamedResponse.statusCode == 201){
+         final url = convert.jsonDecode(response.body)['url'];
+         return url;
+       }else{
+         throw const Failure('Ошибка загрузки фото');
+       }
 
-      final res =  await _dio.post(Endpoints.uploads,
-           data: formData);
-       print('Url ${res.data['url']}');
-      return '';
      } on Failure catch(e){
        print('Error 1 ${e.message}');
        throw  Failure(e.message);
      } on DioException catch(e){
        print('Error 2 ${e.toString()}');
        throw  Failure(e.toString());
+     } catch(e){
+       print('Error 3 ${e.toString()}');
+       throw const Failure('Ошибка загрузки фото');
      }
    }
 

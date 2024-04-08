@@ -38,6 +38,7 @@ class SubBloc extends Bloc<SubEvent,SubState>{
 
        final user = _userCubit.userEntity;
        if(user.userStatus.isAuth){
+         print('U1');
          final firstNotAcceptLesson = _firstNotAcceptLesson(user: user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
          final listNotAcceptLesson = _getListNotAcceptLesson(user: user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
          final lessons = _getAllLessons(user, event.allViewDir, event.currentDirIndex);
@@ -55,7 +56,7 @@ class SubBloc extends Bloc<SubEvent,SubState>{
              listNotAcceptLesson: listNotAcceptLesson));
          _listenUser(event);
        }else{
-
+         print('U2');
          emit(state.copyWith( subStatus: SubStatus.loaded));
        }
 

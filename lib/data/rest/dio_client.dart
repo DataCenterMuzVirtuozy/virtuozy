@@ -15,11 +15,11 @@ class DioClient {
     final dio = Dio(
       BaseOptions(
         baseUrl: Endpoints.baseUrl,
-        //connectTimeout: const Duration(milliseconds: 15000),
-        //receiveTimeout: const Duration(milliseconds: 100000),
+        connectTimeout: const Duration(milliseconds: 15000),
+        receiveTimeout: const Duration(milliseconds: 100000),
         contentType: Headers.jsonContentType,
         responseType: ResponseType.json,
-        headers: {'X-Requested-With': 'XMLHttpRequest'},
+       headers: {'X-Requested-With': 'XMLHttpRequest'},
       ),
     );
 
