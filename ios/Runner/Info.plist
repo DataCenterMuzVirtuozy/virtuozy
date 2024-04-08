@@ -57,5 +57,9 @@
 	<true/>
 	<key>FDAllFilesDownloadedMessage</key>
     <string>All files have been downloaded</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+        <string>Photo to add to profile</string>
+         <key>NSCameraUsageDescription</key>
+                <string>Photo to add to profile</string>
 </dict>
 </plist>

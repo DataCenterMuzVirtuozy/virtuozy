@@ -2,6 +2,7 @@
 
 
  import 'package:equatable/equatable.dart';
+import 'package:virtuozy/domain/entities/edit_profile_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 
 class ProfileEvent extends Equatable{
@@ -19,6 +20,6 @@ class ProfileEvent extends Equatable{
 }
 
 class SaveNewDataUserEvent extends ProfileEvent{
-  final UserEntity newUserData;
-  const SaveNewDataUserEvent({required this.newUserData});
+  final EditProfileEntity editProfileEntity;
+  const SaveNewDataUserEvent({required this.editProfileEntity});
 }

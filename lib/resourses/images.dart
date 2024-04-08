@@ -16,5 +16,6 @@
    String get successAnim => 'lib/assets/animations/success.json';
    String get telegram => 'lib/assets/img/ic_telegram.png';
    String get whatsapp => 'lib/assets/img/ic_whatsapp.png';
+   String get dots => 'lib/assets/img/dots.png';
 
 

@@ -7,6 +7,7 @@ import 'package:virtuozy/data/models/document_model.dart';
 import 'package:virtuozy/data/rest/dio_client.dart';
 import 'package:virtuozy/data/rest/endpoints.dart';
 import 'package:virtuozy/domain/entities/document_entity.dart';
+import 'package:virtuozy/domain/entities/edit_profile_entity.dart';
 import 'package:virtuozy/domain/entities/notifi_setting_entity.dart';
 import 'package:virtuozy/utils/failure.dart';
 
@@ -84,6 +85,46 @@ class UserService{
            });
      }on Failure catch(e){
 
+     }
+   }
+
+   Future<void> saveSettingDataProfile({required int uid,required EditProfileEntity profileEntity}) async{
+     try{
+       await _dio.patch('${Endpoints.user}/$uid',
+           data: {
+             'sex': profileEntity.sex,
+             'date_birth':profileEntity.dateBirth,
+             'has_kids': profileEntity.hasKind,
+             'avaUrl':profileEntity.urlAva
+
+           });
+
+     } on Failure catch(e){
+       print('Error 1 ${e.message}');
+       throw  Failure(e.message);
+     } on DioException catch(e){
+       print('Error 2 ${e.toString()}');
+       throw  Failure(e.toString());
+     }
+   }
+
+
+   Future<String> loadAvaProfile({required int uid,required EditProfileEntity profileEntity}) async{
+     try{
+       var formData = FormData.fromMap({
+         'image': await MultipartFile.fromFile(profileEntity.fileImageUrl!.path, filename: 'ava_$uid.jpg'),
+       });
+
+      final res =  await _dio.post(Endpoints.uploads,
+           data: formData);
+       print('Url ${res.data['url']}');
+      return '';
+     } on Failure catch(e){
+       print('Error 1 ${e.message}');
+       throw  Failure(e.message);
+     } on DioException catch(e){
+       print('Error 2 ${e.toString()}');
+       throw  Failure(e.toString());
      }
    }
 

@@ -27,7 +27,6 @@ class NotifiBloc extends Bloc<NotifiEvent,NotifiState>{
        UserEntity user = _userCubit.userEntity;
 
        List<NotifiSettingsEntity> settingsNew = [];
-       print('Conf ${event.settings.toString()}');
        for(int i = 0; i< user.notifiSttings.length;i++){
           settingsNew.add(
               NotifiSettingsEntity(

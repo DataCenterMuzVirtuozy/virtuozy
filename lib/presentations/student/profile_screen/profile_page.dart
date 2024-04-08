@@ -9,12 +9,17 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:virtuozy/domain/entities/edit_profile_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/presentations/student/profile_screen/bloc/profile_bloc.dart';
 import 'package:virtuozy/presentations/student/profile_screen/bloc/profile_event.dart';
 import 'package:virtuozy/resourses/colors.dart';
+import 'package:virtuozy/resourses/images.dart';
+import 'package:virtuozy/utils/date_time_parser.dart';
 
 import '../../../components/buttons.dart';
 import '../../../components/dialogs/dialoger.dart';
@@ -29,24 +34,28 @@ import 'bloc/profile_state.dart';
  }
 
  class _UserProfilePageState extends State<UserProfilePage> {
-   // User data variables
+
    String name = "";
    String gender = "";
    bool hasChildren = false;
    bool _edit = false;
+   File? _imageFile;
+   bool _editPhotoMode = false;
+   EditProfileEntity profileEntity = EditProfileEntity.unknown();
 
-   // Image picker for avatar
-   //final ImagePicker _picker = ImagePicker();
 
-   // Functions to pick and update avatar
-   Future<void> _pickImage() async {
-     // final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-     // if (pickedFile != null) {
-     //   setState(() {
-     //     // Update image path (replace with your image loading logic)
-     //     // ...
-     //   });
-     //}
+
+   Future<void> _pickImage(bool galery) async {
+     final pickedFile = await ImagePicker().pickImage(source:
+      galery?ImageSource.gallery:ImageSource.camera);
+     if (pickedFile != null) {
+       setState(() {
+        _imageFile = File(pickedFile.path);
+        profileEntity = profileEntity!.copyWith(fileImageUrl: _imageFile);
+        _edit = true;
+        _editPhotoMode = false;
+       });
+     }
    }
 
 
@@ -61,12 +70,22 @@ import 'bloc/profile_state.dart';
      return Scaffold(
        body: BlocConsumer<ProfileBloc,ProfileState>(
          listener: (c,s){
-           if(s.error.isNotEmpty){
+           if(s.profileStatus == ProfileStatus.error){
              Dialoger.showMessage(s.error);
            }
            if(s.profileStatus == ProfileStatus.saved){
              _edit = false;
              Dialoger.showActionMaterialSnackBar(context: context, title: 'Изменения сохранены'.tr());
+           }
+
+           if(s.profileStatus == ProfileStatus.loaded ||
+               s.profileStatus == ProfileStatus.saved){
+             profileEntity = EditProfileEntity(
+                 fileImageUrl: _imageFile,
+                 sex: s.userEntity.sex,
+                 dateBirth: s.userEntity.date_birth,
+                 hasKind: s.userEntity.has_kids,
+                 urlAva: s.userEntity.avaUrl);
            }
          },
          builder: (context,state) {
@@ -76,69 +95,139 @@ import 'bloc/profile_state.dart';
            }
 
 
-           return SingleChildScrollView(
-             padding: const EdgeInsets.only(top: 40,right: 20,left: 20),
-             child: Stack(
-               alignment: Alignment.topCenter,
-               children: [
-                 Align(
-                   alignment: Alignment.centerLeft,
-                   child: IconButton(onPressed: (){
-                     Navigator.pop(context);
-                   },
-                     icon: Icon(Platform.isAndroid?Icons.arrow_back_rounded:
-                     Icons.arrow_back_ios_new_rounded),),
-                 ),
-                  BodyInfoUser(user: state.userEntity),
-                 GestureDetector(
-                   onTap: _pickImage,
-                   child: Stack(
-                     children: [
-                       Container(
-                         decoration: BoxDecoration(
-                             shape: BoxShape.circle,
-                             color: colorOrange
-                         ),
-                         padding: const EdgeInsets.all(2),
-                         child:  CircleAvatar(
-                           key: ValueKey(state.userEntity.avaUrl),
-                           radius: 50.0,
-                           backgroundImage: NetworkImage(
-                             // Replace with your image URL or path
-                             state.userEntity.avaUrl,
-                           ),
-                         ),
-                       ),
-                       Positioned(
-                         bottom: 0,
-                         right: 0,
-                         child: Container(
-                           padding: const EdgeInsets.all(5),
-                           decoration: BoxDecoration(
-                             shape: BoxShape.circle,
-                             color: colorOrange
-                           ),
-                           child: Icon(Icons.edit,color: Theme.of(context).iconTheme.color,),
-                         ),
-                       ),
-                     ],
+           return IgnorePointer(
+             ignoring: state.profileStatus == ProfileStatus.saving,
+             child: SingleChildScrollView(
+               padding: const EdgeInsets.only(top: 40,right: 20,left: 20),
+               child: Stack(
+                 alignment: Alignment.topCenter,
+                 children: [
+                   Align(
+                     alignment: Alignment.centerLeft,
+                     child: IconButton(onPressed: (){
+                       Navigator.pop(context);
+                     },
+                       icon: Icon(Platform.isAndroid?Icons.arrow_back_rounded:
+                       Icons.arrow_back_ios_new_rounded),),
                    ),
-                 ),
+                    BodyInfoUser(user: state.userEntity,edit: _edit,profileEdit: profileEntity,
+                    state: state),
+                   GestureDetector(
+                     onTap: (){
+                       setState(() {
+                         if(_editPhotoMode){
+                           _editPhotoMode = false;
+                         }else{
+                           _editPhotoMode = true;
+                         }
 
-               ],
+                       });
+                     },
+                     child: SizedBox(
+                       width: 240,
+                       child: Stack(
+                         alignment: Alignment.center,
+                         children: [
+                           Visibility(
+                             visible: _editPhotoMode,
+                             child: Container(
+                               padding: const EdgeInsets.symmetric(horizontal: 10),
+                               decoration: BoxDecoration(
+                                 color: colorOrange,
+                                 borderRadius: BorderRadius.circular(20)
+                               ),
+                               height: 50,
+                               child: Row(
+                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                 children: [
+                                   IconButton(onPressed: (){
+                                     _pickImage(true);
+                                   },
+                                       icon: Icon(Icons.image_rounded,color: colorWhite)),
+                                   IconButton(onPressed: (){
+                                     _pickImage(false);
+                                   },
+                                       icon: Icon(Icons.camera_alt_outlined,color: colorWhite))
+                                 ],
+                               ),
+                             ).animate().fadeIn(duration: const Duration(milliseconds: 700)),
+                           ),
+                           Container(
+                             decoration: BoxDecoration(
+                                 shape: BoxShape.circle,
+                                 color: colorOrange,
+                             ),
+                             padding: const EdgeInsets.all(2),
+                             child: _getAvatar(_imageFile,state.userEntity.avaUrl),
+                           ),
+                           Positioned(
+                             bottom: 0,
+                             right: 65,
+                             child: Container(
+                               padding: const EdgeInsets.all(5),
+                               decoration: BoxDecoration(
+                                 shape: BoxShape.circle,
+                                 color: colorOrange,
+                                 border: Border.all(color: colorWhite,width: 1.5)
+                               ),
+                               child: Icon(_editPhotoMode?Icons.close:
+                               Icons.edit,color: colorWhite,size: 20),
+                             ),
+                           ),
+                         ],
+                       ),
+                     ),
+                   ),
+
+                 ],
+               ),
              ),
            );
          }
        ),
      );
    }
+
+
+   Widget _getAvatar(File? imageFile,String urlAva){
+     ImageProvider image = NetworkImage(urlAva);
+     if(imageFile==null){
+       if(urlAva.isEmpty){
+
+         return SizedBox(
+           width: 100,
+             height: 100,
+             child: Icon(Icons.image_search_rounded,color: colorWhite,size: 40,));
+       }else{
+         image = NetworkImage(urlAva);
+         return CircleAvatar(
+           radius: 50,
+           foregroundImage: image,
+           child: Icon(Icons.hourglass_empty,color: colorWhite.withOpacity(0.5)),
+         );
+       }
+     }else{
+       image = FileImage(imageFile);
+       return CircleAvatar(
+         radius: 50,
+         foregroundImage: image,
+         child: Icon(Icons.hourglass_empty,color: colorWhite.withOpacity(0.5)),
+       );
+     }
+
+
+   }
  }
 
 
    class BodyInfoUser extends StatefulWidget{
-  const BodyInfoUser({super.key, required this.user});
+   BodyInfoUser({super.key, required this.user,  required this.edit, required this.profileEdit, required this.state});
 
   final UserEntity user;
+  final ProfileState state;
+   bool edit;
+   EditProfileEntity profileEdit;
+
 
   @override
   State<BodyInfoUser> createState() => _BodyInfoUserState();
@@ -147,18 +236,29 @@ import 'bloc/profile_state.dart';
 class _BodyInfoUserState extends State<BodyInfoUser> {
 
 
-  bool _edit = false;
+  String _dateBirth = '';
+
 
 
   @override
   void initState() {
     super.initState();
+   _dateBirth = widget.profileEdit.dateBirth;
+  }
 
+
+  bool _fullDataProfile(EditProfileEntity profileEntity){
+    bool fullData = false;
+    if(profileEntity.sex.isNotEmpty&&profileEntity.dateBirth.isNotEmpty&&profileEntity.urlAva.isNotEmpty){
+      fullData = true;
+    }
+    return fullData;
   }
 
   @override
   Widget build(BuildContext context) {
     return              Column(
+
       children: [
         Container(
           margin: const EdgeInsets.only(top: 50),
@@ -200,9 +300,17 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
                     Text(widget.user.sex == 'man'?'Муж.':'Жен.',
                       style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),)
                   }else...{
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 5),
-                      child: SelectSexMenu(),
+                     Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5),
+                      child: SelectSexMenu(
+                        onChangeSex: (sex){
+                          setState(() {
+                            widget.profileEdit = widget.profileEdit.copyWith(
+                                sex: sex == 'Муж.'?'man':sex == 'Не выбран'?'':'woman');
+                            widget.edit = true;
+                          });
+                        },
+                      ),
                     )
 
                   }
@@ -211,15 +319,22 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
               const Gap(10.0),
               GestureDetector(
                 onTap: () async {
-                  if(widget.user.date_birth.isEmpty){
-                    DateTime? pickedDate = await showDatePicker(
+
+                  DateTime? pickedDate = await showDatePicker(
                         context: context,
                         useRootNavigator: false,
                         initialDate: DateTime.now(), //get today's date
                         firstDate:DateTime(1945), //DateTime.now() - not to allow to choose before today.
                         lastDate: DateTime(2101)
                     );
-                  }
+                    if(pickedDate==null) return;
+                    setState(() {
+                      widget.edit = true;
+                      _dateBirth = DateTimeParser.getDateToApi(dateNow: pickedDate);
+                      widget.profileEdit = widget.profileEdit
+                          .copyWith(dateBirth: _dateBirth);
+                    });
+
                 },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -233,7 +348,7 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
                         children: [
                           Text('Дата рождения:',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
                           Visibility(
-                            visible: widget.user.date_birth.isEmpty,
+                            visible: true,
                             child:Icon(Icons.calendar_month,color: colorGrey,size: 18)),
 
                         ],
@@ -241,9 +356,9 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
                     ),
                     //todo если не указан то выбор через меню
                     Text(
-                      !widget.user.date_birth.isEmpty
+                      _dateBirth.isEmpty
                           ? 'Не указана'
-                          : widget.user.date_birth,
+                          : DateTimeParser.getDateFromApi(date: _dateBirth),
                       style: TStyle.textStyleVelaSansBold(
                           Theme.of(context).textTheme.displayMedium!.color!,
                           size: 18),
@@ -256,7 +371,7 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Дата регистрации:',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
-                  Text(widget.user.registration_date,
+                  Text(DateTimeParser.getDateFromApi(date: widget.user.registration_date),
                     style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
                 ],
               ),
@@ -266,7 +381,14 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
                 children: [
                   Text('Наличие детей:',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
                   const Gap(10.0),
-                   SelectKidsMenu(hasKind: widget.user.has_kids)
+                   SelectKidsMenu(
+                     hasKind: widget.user.has_kids,
+                     onKind: (hasKind){
+                       setState(() {
+                         widget.edit = true;
+                         widget.profileEdit = widget.profileEdit.copyWith(hasKind: hasKind as bool);
+                       });
+                   },)
                 ],
               ),
               const Gap(20.0),
@@ -298,7 +420,7 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(widget.user.who_find,
+                      Text(widget.user.who_find.isEmpty?'Нет данных':widget.user.who_find,
                         style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
                       //Icon(Icons.edit,color: colorGrey,size: 16,)
                     ],
@@ -308,68 +430,78 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
 
 
               const Gap(30.0),
-              SizedBox(
-                height: 40.0,
-                child: Opacity(
-                  opacity: !_edit?0.3:1.0,
-                  child: SubmitButton(
-                      borderRadius: 8,
-                      textButton: 'Сохранить изменения'.tr(),
-                      onTap: () {
-                        if(_edit){
-                          //context.read<NotifiBloc>().add(SaveSettingNotifiEvent(settings: _settings));
+              if( widget.state.profileStatus == ProfileStatus.saving)...{
+                Center(child: CircularProgressIndicator(color: colorOrange))
+              }else ...{
+                SizedBox(
+                  height: 40.0,
+                  child: Opacity(
+                    opacity: !widget.edit?0.3:1.0,
+                    child: SubmitButton(
+                        borderRadius: 8,
+                        textButton: 'Сохранить изменения'.tr(),
+                        onTap: () {
+                          if(widget.edit){
+                            context.read<ProfileBloc>().add(SaveNewDataUserEvent(editProfileEntity: widget.profileEdit));
+                          }
                         }
-                      }
+                    ),
                   ),
-                ),
-              )
+                )
+
+              }
             ],
           ),
         ),
-        Container(
-          margin: const EdgeInsets.symmetric(vertical: 10.0),
-          padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 15.0),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15.0),
-              color: Theme.of(context).colorScheme.surfaceVariant
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 47.0),
-                child: Text('Внимание!',style: TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,size: 18.0)),
-              ),
-              const Gap(5.0),
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(5.0),
-                    decoration: BoxDecoration(
-                        color: colorOrange.withOpacity(0.2),
-                        shape: BoxShape.circle
+        Visibility(
+          visible: !_fullDataProfile(widget.profileEdit),
+          child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 10.0),
+            padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 15.0),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15.0),
+                color: Theme.of(context).colorScheme.surfaceVariant
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 47.0),
+                  child: Text('Внимание!',style: TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,size: 18.0)),
+                ),
+                const Gap(5.0),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(5.0),
+                      decoration: BoxDecoration(
+                          color: colorOrange.withOpacity(0.2),
+                          shape: BoxShape.circle
+                      ),
+                      child: Icon(Icons.electric_bolt,color: colorOrange),
                     ),
-                    child: Icon(Icons.electric_bolt,color: colorOrange),
-                  ),
-                  const Gap(15.0),
-                  Expanded(child: Text('Заполни карточку целиком - получи БОНУСНЫЙ УРОК!',
-                      style: TStyle.textStyleVelaSansRegular(colorGrey,size: 14.0))),
-                ],
-              ),
+                    const Gap(15.0),
+                    Expanded(child: Text('Заполни карточку целиком - получи БОНУСНЫЙ УРОК!',
+                        style: TStyle.textStyleVelaSansRegular(colorGrey,size: 14.0))),
+                  ],
+                ),
 
-            ],
+              ],
+            ),
           ),
         )
       ],
     );
   }
+
 }
 
 
  class SelectKidsMenu extends StatefulWidget{
-   const SelectKidsMenu({super.key, required this.hasKind});
+   const SelectKidsMenu({super.key, required this.hasKind, required this.onKind});
 
    final bool hasKind;
+   final Function onKind;
 
    @override
    State<SelectKidsMenu> createState() => _SelectKidsMenuState();
@@ -414,6 +546,7 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
          onChanged: (value) {
            setState(() {
              selectedValueKids = value;
+             widget.onKind.call(selectedValueKids=='Да'?true:false);
            });
          },
          buttonStyleData: ButtonStyleData(
@@ -459,8 +592,9 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
  }
 
  class SelectSexMenu extends StatefulWidget{
-   const SelectSexMenu({super.key});
+   const SelectSexMenu({super.key, required this.onChangeSex});
 
+   final Function onChangeSex;
 
    @override
    State<SelectSexMenu> createState() => _SelectSexMenuState();
@@ -506,6 +640,7 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
          onChanged: (value) {
            setState(() {
              selectedValue = value;
+             widget.onChangeSex.call(selectedValue);
            });
          },
          buttonStyleData: ButtonStyleData(
