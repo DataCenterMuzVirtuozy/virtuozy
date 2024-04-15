@@ -63,6 +63,14 @@ class DateTimeParser{
       return dt.millisecondsSinceEpoch;
     }
 
+    static getTimeMillisecondEpochByDate({required String date}){
+      if(date.isEmpty||date.isEmpty){
+        return 0;
+      }
+      final dt =  DateFormat('yyyy-MM-dd').parse(date);
+      return dt.millisecondsSinceEpoch;
+    }
+
     static getDateAndTime({required String dateTime}){
       try{
         if(dateTime.isEmpty){

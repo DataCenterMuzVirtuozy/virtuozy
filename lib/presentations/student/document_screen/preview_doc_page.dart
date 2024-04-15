@@ -97,7 +97,6 @@ class _PreviewDocPageState extends State<PreviewDocPage> {
     _port.listen((dynamic data) {
       String id = data[0];
       int progress = data[2];
-      print('Dat ${data[1]}');
       if(data[1]=='RUNNING'){
         //Dialoger.showMessage('Загрузка началась'.tr());
       }

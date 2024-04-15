@@ -64,6 +64,7 @@ class _ListSubscriptionHistoryState extends State<ListSubscriptionHistory> {
             Expanded(
               child: GroupedListView<SubscriptionEntity, String>(
                 elements: widget.listExpiredSubscriptions,
+                sort: false,
                 groupBy: (element) =>
                     DateTimeParser.getDateForCompare(date: element.dateBay),
                 groupSeparatorBuilder: (String value) => Padding(

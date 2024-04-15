@@ -18,6 +18,7 @@ import 'package:virtuozy/components/dialogs/dialoger.dart';
 import 'package:virtuozy/presentations/auth_screen/bloc/auth_bloc.dart';
 import 'package:virtuozy/presentations/auth_screen/bloc/auth_event.dart';
 import 'package:virtuozy/presentations/auth_screen/bloc/auth_state.dart';
+import 'package:virtuozy/presentations/student/subscription_screen/bloc/sub_bloc.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/resourses/images.dart';
 import 'package:virtuozy/router/paths.dart';
@@ -25,6 +26,7 @@ import 'package:virtuozy/router/paths.dart';
 import '../../components/text_fields.dart';
 import '../../utils/text_style.dart';
 import '../../utils/theme_provider.dart';
+import '../student/subscription_screen/bloc/sub_event.dart';
 
 class LogInPage extends StatefulWidget{
   const LogInPage({super.key});
@@ -93,6 +95,10 @@ class _LogInPageState extends State<LogInPage> {
 
                 if(s.authStatus == AuthStatus.authenticated||
                     s.authStatus == AuthStatus.moderation){
+                  context.read<SubBloc>().add(const GetUserEvent(
+                      allViewDir: true,
+                      currentDirIndex: 0,
+                      refreshDirection: true));
                   GoRouter.of(context).pop(pathMain);
                 }
 

@@ -59,7 +59,6 @@ class _MainPageState extends State<MainPage> with AuthMixin{
   @override
   void initState() {
     super.initState();
-    _stackPopPage.add(0);
     _titlePage = titlesDrawMenuStudent[0];
     scaffoldKeyGlobal = scaffoldKey;
   }
@@ -89,12 +88,10 @@ class _MainPageState extends State<MainPage> with AuthMixin{
         return BackButtonListener(
           onBackButtonPressed: () async {
             if(context.canPop()){
-              print('canPop');
               return false;
             }
-
            if(_stackPopPage.isEmpty){
-             print('A1 $_indexPage ${_stackPopPage.length}');
+
              if (_popUnderway) {
                return false;
              }
@@ -103,18 +100,27 @@ class _MainPageState extends State<MainPage> with AuthMixin{
              await Future.delayed(const Duration(milliseconds: 700));
              _popUnderway = false;
              return true;
+           }else{
+             setState(() {
+               int lastIndex = _stackPopPage.length -1;
+               _stackPopPage.removeAt(lastIndex);
+               if(_stackPopPage.isEmpty){
+                   _indexPage = 0;
+                   _titlePage = titlesDrawMenuStudent[_indexPage];
+               }else{
+                 _indexPage = _stackPopPage[_stackPopPage.length-1];
+                 _titlePage = titlesDrawMenuStudent[_indexPage];
+               }
+
+               currentItemNotifier.value = _indexPage;
+
+             });
+             return true;
            }
 
-           setState(() {
-              int lastIndex = _stackPopPage.length -1;
-             _stackPopPage.removeAt(lastIndex);
-             _indexPage = _stackPopPage[_stackPopPage.length-1];
-              _titlePage = titlesDrawMenuStudent[_indexPage];
-              currentItemNotifier.value = _indexPage;
-              print('Rempve');
-           });
 
-           return true;
+
+
           },
           child: Scaffold(
             key: scaffoldKey,
@@ -150,11 +156,11 @@ class _MainPageState extends State<MainPage> with AuthMixin{
             onSelectedPage: (index){
               setState(() {
                 if(index == 0){
-                  print('Clear');
                   _stackPopPage.clear();
                 }else{
-                  print('Add');
+                  if(_stackPopPage.contains(index))return;
                   _stackPopPage.add(index);
+
                 }
                 _indexPage = index;
                 _titlePage = titlesDrawMenuStudent[_indexPage];

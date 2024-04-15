@@ -285,6 +285,42 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text('Ближайшая Станция метро - Работа',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
+                  Text(widget.user.near_subway_work,
+                    style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
+                ],
+              ),
+              const Gap(10.0),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Ближайшая Станция метро - Проживание',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
+                  Text(widget.user.near_subway_home,
+                    style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
+                ],
+              ),
+              const Gap(10.0),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 20),
+                    child: Text('Кого ищу себе в группу (в напарники, в бенд)?',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(widget.user.who_find.isEmpty?'Нет данных':widget.user.who_find,
+                        style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
+                      //Icon(Icons.edit,color: colorGrey,size: 16,)
+                    ],
+                  ),
+                ],
+              ),
+              const Gap(10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text('О себе:',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
                   Text(widget.user.about_me,
                     style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
@@ -391,42 +427,8 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
                    },)
                 ],
               ),
-              const Gap(20.0),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Ближайшая Станция метро - Работа',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
-                  Text(widget.user.near_subway_work,
-                    style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
-                ],
-              ),
-              const Gap(10.0),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Ближайшая Станция метро - Проживание',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
-                  Text(widget.user.near_subway_home,
-                    style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
-                ],
-              ),
-              const Gap(10.0),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 20),
-                    child: Text('Кого ищу себе в группу (в напарники, в бенд)?',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(widget.user.who_find.isEmpty?'Нет данных':widget.user.who_find,
-                        style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
-                      //Icon(Icons.edit,color: colorGrey,size: 16,)
-                    ],
-                  ),
-                ],
-              ),
+
+
 
 
               const Gap(30.0),

@@ -22,6 +22,7 @@ import 'package:virtuozy/utils/auth_mixin.dart';
 import '../../../components/buttons.dart';
 import '../../../components/dialogs/dialoger.dart';
 import '../../../resourses/colors.dart';
+import '../../../utils/date_time_parser.dart';
 import '../../../utils/text_style.dart';
 import 'bloc/docs_bloc.dart';
 
@@ -58,7 +59,7 @@ class _DocumentsPageState extends State<DocumentsPage> with AuthMixin, TickerPro
             Dialoger.showMessage(s.error);
           }
 
-          if(s.docsStatus == DocsStatus.loading){
+          if(s.docsStatus == DocsStatus.loaded){
             for (var element in s.docs) {
                if(element.accept){
                  _acceptDoc = true;
@@ -129,7 +130,7 @@ class _DocumentsPageState extends State<DocumentsPage> with AuthMixin, TickerPro
                                         overflow: TextOverflow.ellipsis,
                                         style: TStyle.textStyleVelaSansMedium(colorBeruza,size: 12)),
                                     const Gap(5),
-                                    Text(state.docs[index].dateSend,
+                                    Text(DateTimeParser.getDateFromApi(date: state.docs[index].dateSend),
                                         textAlign: TextAlign.center,
                                         maxLines: 3,
                                         overflow: TextOverflow.ellipsis,
@@ -147,7 +148,7 @@ class _DocumentsPageState extends State<DocumentsPage> with AuthMixin, TickerPro
                                           overflow: TextOverflow.ellipsis,
                                           style: TStyle.textStyleVelaSansMedium(colorBeruza,size: 12)),
                                       const Gap(5),
-                                      Text(state.docs[index].dateAccept,
+                                      Text(DateTimeParser.getDateFromApi(date: state.docs[index].dateAccept),
                                           textAlign: TextAlign.center,
                                           maxLines: 3,
                                           overflow: TextOverflow.ellipsis,
@@ -188,7 +189,6 @@ class _DocumentsPageState extends State<DocumentsPage> with AuthMixin, TickerPro
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                //todo test
                                 Text('Подписать и утвердить документы',
                                   style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,
                                       size: 16.0),),

@@ -40,19 +40,26 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
         final idUser = _userCubit.userEntity.id;
         final idDir = event.directions.length>1?-1:event.directions[0].id;
        final listApi = await _financeRepository.getTransactions(idUser: idUser, idDirections: idDir);
-       //_listTransaction = _listOrganized(list: listApi);
-       _listTransaction = listApi;
+       _listTransaction = _listSortTransHistory(list: listApi);
        emit(state.copyWith(listTransactionStatus: ListTransactionStatus.loaded,transactions: _listTransaction));
      }on Failure catch(e){
        emit(state.copyWith(listTransactionStatus: ListTransactionStatus.error,error: e.message));
      }
   }
 
-  List<TransactionEntity> _listOrganized({required List<TransactionEntity> list}){
+  List<TransactionEntity> _listSortTransHistory({required List<TransactionEntity> list}){
     list.sort((a,b)=>DateTimeParser.getTimeMillisecondEpoch(time: a.time, date: a.date)
         .compareTo(DateTimeParser.getTimeMillisecondEpoch(time: b.time, date: b.date)));
     list = list.reversed.toList();
      return list;
+  }
+
+
+  List<SubscriptionEntity> _listSortSubHistory({required List<SubscriptionEntity> list}){
+    list.sort((a,b)=>DateTimeParser.getTimeMillisecondEpochByDate(date: a.dateBay)
+        .compareTo(DateTimeParser.getTimeMillisecondEpochByDate( date: b.dateBay)));
+    list = list.reversed.toList();
+    return list;
   }
 
 
@@ -93,7 +100,8 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
     final titlesDrawingMenu = _getTitlesDrawingMenu(directions: user.directions);
     final directions = _getDirections(user: user,indexDir: event.indexDirection,allViewDir: event.allViewDir);
     final expiredSubscriptions = _getExpiredSubscriptions(directions,event.allViewDir,event.indexDirection);
-    final listSubHistory = _getHistorySubscriptions(directions,event.allViewDir,event.indexDirection);
+    List<SubscriptionEntity> listSubHistory = _getHistorySubscriptions(directions,event.allViewDir,event.indexDirection);
+    listSubHistory = _listSortSubHistory(list: listSubHistory);
     emit(state.copyWith(
         status: FinanceStatus.loaded,
         user: user,

@@ -76,6 +76,7 @@ class _ListTransactionsPageState extends State<ListTransactionsPage> {
 
          return GroupedListView<TransactionEntity,String>(
             elements: state.transactions,
+            sort: false,
             groupBy: (element) => DateTimeParser.getDateForCompare(date: element.date),
             groupSeparatorBuilder: (String value)
             => Padding(
@@ -98,7 +99,6 @@ class _ListTransactionsPageState extends State<ListTransactionsPage> {
                       '${ParserPrice.getBalance(element.quantity)} руб.');
             },
             itemComparator: (item1, item2) {
-              print('Item ${item1.date} ${item2.date}');
               return DateTimeParser.getDateForCompare(date: item1.date)
                   .compareTo(DateTimeParser.getDateForCompare(date: item2.date));
             }, // optional

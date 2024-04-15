@@ -151,7 +151,10 @@ class _ItemSettingState extends State<ItemSetting> {
         children: [
           Text(widget.item.name,style:
           TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 16),),
-          Switch(value: _change,
+          Switch(
+              activeColor: colorOrange,
+              activeTrackColor: colorOrange.withOpacity(0.5),
+              value: _change,
               onChanged: (value){
                setState(() {
                   _change = value;
@@ -166,6 +169,7 @@ class _ItemSettingState extends State<ItemSetting> {
   @override
   void initState() {
     super.initState();
+    print('Active ${widget.item.config}');
     _change = widget.item.config == 1;
   }
 }
