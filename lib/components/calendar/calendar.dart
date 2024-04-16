@@ -296,9 +296,11 @@ class _CalendarState extends State<Calendar> {
   DateTime _getFirstDate({required List<Lesson> lessons}){
     final List<int> millisecondsSinceEpochList = [];
     for(var element in lessons){
+
       millisecondsSinceEpochList.add(DateFormat('yyyy-MM-dd').parse(element.date).millisecondsSinceEpoch);
 
     }
+
     final indexFirst = millisecondsSinceEpochList.indexOf(millisecondsSinceEpochList.reduce(min));
     final monthFirst = DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpochList[indexFirst]).month;
     final yearFirst = DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpochList[indexFirst]).year;

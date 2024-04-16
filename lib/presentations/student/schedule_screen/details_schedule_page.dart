@@ -215,12 +215,27 @@ class _DetailsSchedulePageState extends State<DetailsSchedulePage> {
                     children: [
                       Text('Аудитория '.tr(),
                           style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
-                      Text('${lesson.idAuditory}',
+                      Text(lesson.idAuditory,
                           style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
                     ],
                   ),
                   Text(lesson.nameTeacher,
                       style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 3),
+                        child: Icon(Icons.school_outlined,
+                            color: colorOrange,size: 12.0),
+                      ),
+                      const Gap(5),
+                      Text(lesson.idSchool,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TStyle.textStyleVelaSansRegular( Theme.of(context).textTheme.displayMedium!.color!, size: 12.0)),
+                    ],
+                  ),
                 ],
               ),
             ],

@@ -17,6 +17,7 @@ class SubscriptionModel{
   final int status;
   final String nameDir;
   final String dateBay;
+  final String nameTeacher;
   final OptionModel optionModel;
 
   const SubscriptionModel( {
@@ -34,6 +35,7 @@ class SubscriptionModel{
     required this.balanceLesson,
     required this.status,
     required this.dateBay,
+    required this.nameTeacher,
     required this.optionModel
   });
 
@@ -53,6 +55,7 @@ class SubscriptionModel{
       subscriptionEntity.status == StatusSub.planned?2:0,
       'nameDir': subscriptionEntity.nameDir,
       'dateBay':subscriptionEntity.dateBay,
+      'nameTeacher':subscriptionEntity.nameTeacher,
       'options':{}
     };
 
@@ -76,6 +79,7 @@ class SubscriptionModel{
       status: map['status'] as int,
       dateBay: map['dateBay'] as String,
       nameDir: nameDirection,
+      nameTeacher: map['nameTeacher'] as String,
       optionModel: option
     );
   }

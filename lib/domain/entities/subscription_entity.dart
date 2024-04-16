@@ -20,11 +20,13 @@ enum StatusSub{
    final String dateBay;
    final String dateStart;
    final String dateEnd;
+   final String nameTeacher;
    final String commentary;
    final StatusSub status;
    final Option option;
 
    const SubscriptionEntity( {
+     required this.nameTeacher,
      required this.idDir,
      required this.idUser,
      required this.id,
@@ -57,10 +59,12 @@ enum StatusSub{
       int? idUser,
       int? idDir,
      int? id,
-     Option? option
+     Option? option,
+     String? nameTeacher
   }) {
     return SubscriptionEntity(
       id:id??this.id,
+      nameTeacher: nameTeacher??this.nameTeacher,
       option: option??this.option,
       idDir: idDir??this.idDir,
       idUser: idUser??this.idUser,

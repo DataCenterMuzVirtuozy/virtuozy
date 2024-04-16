@@ -38,12 +38,14 @@ class UserService{
            queryParameters: {
             'idUser': idUser
            });
-       return UserModel.fromMap(mapUser: res.data[0],mapSubsAll: resSubs.data );
+       final resLessons = await _dio.get(Endpoints.lessons,
+           queryParameters: {
+             'idStudent': idUser
+           });
+       return UserModel.fromMap(mapUser: res.data[0],mapSubsAll: resSubs.data,lessons: resLessons.data);
     } on Failure catch(e){
-     print('Error 1 ${e.message}');
        throw  Failure(e.message);
     } on DioException catch(e){
-     print('Error 2 ${e.message}');
      throw  Failure(e.message!);
     }
    }

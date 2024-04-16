@@ -122,7 +122,7 @@ class SubBloc extends Bloc<SubEvent,SubState>{
       resLes = user.directions[indexDir].lessons;
     }
 
-
+    print('Lessons ${resLes.length}');
     return resLes;
   }
 

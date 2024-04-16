@@ -244,6 +244,21 @@ class _FinancePageState extends State<FinancePage> {
                              ],
                            ),
                          ),
+                         Visibility(
+                           visible: state.expiredSubscriptions[index].nameTeacher.isNotEmpty&&
+                               state.expiredSubscriptions[index].status==StatusSub.active,
+                           child: Padding(
+                             padding: const EdgeInsets.only(left: 20.0,right: 15.0,bottom: 8),
+                             child: Row(
+                               children: [
+                                 // Icon(Icons.person,color: colorGreen,size: 15.0),
+                                 // const Gap(5.0),
+                                 Text(state.expiredSubscriptions[index].nameTeacher,
+                                     style:TStyle.textStyleVelaSansMedium(colorGrey,size: 14.0)),
+                               ],
+                             ),
+                           ),
+                         ),
 
                    //todo test date end
                    Visibility(
@@ -286,7 +301,7 @@ class _FinancePageState extends State<FinancePage> {
                                    children: [
                                      Row(
                                        children: [
-                                         Text('Осталось уроков '.tr(),
+                                         Text('Осталось уроков: '.tr(),
                                              style: TStyle
                                                  .textStyleVelaSansMedium(
                                                  Theme.of(context)

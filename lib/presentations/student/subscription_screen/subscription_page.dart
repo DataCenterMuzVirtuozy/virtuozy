@@ -407,6 +407,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                      children: [
                        Text(directions[index].name,
                            style:TStyle.textStyleVelaSansBold(colorGrey,size: 16.0)),
+
                        if(directions[index].lastSubscriptions[0].status==StatusSub.active)...{
                          Row(
                            children: [
@@ -490,6 +491,17 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                            children: [
                              Text('${ParserPrice.getBalance(directions[index].lastSubscriptions[0].balanceSub)} руб.',
                                  style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
+                             Visibility(
+                               visible: directions[index].lastSubscriptions[0].nameTeacher.isNotEmpty,
+                               child: Row(
+                                 children: [
+                                   Icon(Icons.person,color: colorGreen,size: 10.0),
+                                   const Gap(5.0),
+                                   Text(directions[index].lastSubscriptions[0].nameTeacher,
+                                       style:TStyle.textStyleVelaSansMedium(colorGrey,size: 13.0)),
+                                 ],
+                               ),
+                             ),
                              Row(
                                children: [
                                  Icon(Icons.timelapse,color: colorGreen,size: 10.0),

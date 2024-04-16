@@ -203,7 +203,8 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
                 dateBay: DateTimeParser.getDateToApi(dateNow: dateNow),
                 dateEnd: '',
                 commentary: '',
-                status: statusNewSub);
+                status: statusNewSub,
+          nameTeacher: '');
       final idSub = await _financeRepository.baySubscription(subscriptionEntity: newSub);
        newSub = newSub.copyWith(id: idSub);
       _updateDirectionUser(subscriptionEntity: newSub,currentDirection: event.currentDirection);

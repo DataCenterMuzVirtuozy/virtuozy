@@ -295,7 +295,7 @@ class _SchedulePageState extends State<SchedulePage> with AuthMixin{
                    const Gap(5.0),
                    Text(lesson.timePeriod,
                        style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 12.0)),
-                   const Gap(5.0),
+                   const Gap(5),
                    Row(
                      children: [
                        Container(
@@ -319,7 +319,7 @@ class _SchedulePageState extends State<SchedulePage> with AuthMixin{
              ),
              Container(
                margin: const EdgeInsets.symmetric(horizontal: 10.0),
-               height: 50.0,
+               height: 70.0,
                width: 1.0,
                color: colorGrey,
              ),
@@ -328,17 +328,31 @@ class _SchedulePageState extends State<SchedulePage> with AuthMixin{
                children: [
                  Text(lesson.nameDirection,
                      style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
-
                  Row(
                    children: [
                      Text('Аудитория '.tr(),
                          style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
-                     Text('${lesson.idAuditory}',
+                     Text(lesson.idAuditory,
                          style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
                    ],
                  ),
                  Text(lesson.nameTeacher,
                      style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
+                 Row(
+                   crossAxisAlignment: CrossAxisAlignment.start,
+                   children: [
+                     Padding(
+                       padding: const EdgeInsets.only(top: 3),
+                       child: Icon(Icons.school_outlined,
+                           color: colorOrange,size: 12.0),
+                     ),
+                     const Gap(5),
+                     Text(lesson.idSchool,
+                         maxLines: 2,
+                         overflow: TextOverflow.ellipsis,
+                         style: TStyle.textStyleVelaSansRegular( Theme.of(context).textTheme.displayMedium!.color!, size: 12.0)),
+                   ],
+                 ),
                ],
              ),
            ],

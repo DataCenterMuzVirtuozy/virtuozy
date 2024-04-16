@@ -125,6 +125,7 @@ class ItemDetailsLesson extends StatelessWidget{
          borderRadius: BorderRadius.circular(10.0)
      ),
      child: Column(
+       mainAxisAlignment: MainAxisAlignment.spaceBetween,
        crossAxisAlignment: CrossAxisAlignment.center,
        children: [
          Row(
@@ -152,20 +153,48 @@ class ItemDetailsLesson extends StatelessWidget{
          ),
          const Gap(10.0),
          Row(
-           mainAxisAlignment: MainAxisAlignment.center,
+           //mainAxisAlignment: MainAxisAlignment.spaceBetween,
            children: [
-             Text('Кабинет '.tr(),
-                 style: TStyle.textStyleVelaSansMedium(colorGrey, size: 16.0)),
-             Text('${lesson.idAuditory}',
-                 style: TStyle.textStyleVelaSansMedium(colorGrey, size: 16.0)),
+             Row(
+               crossAxisAlignment: CrossAxisAlignment.center,
+               children: [
+                 Icon(Icons.door_back_door_outlined,
+                 color: colorGrey,size: 16.0),
+                 const Gap(5),
+                 Text('Кабинет: '.tr(),
+                     style: TStyle.textStyleVelaSansMedium(colorGrey, size: 15.0)),
+               ],
+             ),
+             Text(lesson.idAuditory,
+                 style: TStyle.textStyleVelaSansBold( Theme.of(context).textTheme.displayMedium!.color!, size: 16.0)),
+           ],
+         ),
+         Row(
+           children: [
+             Row(
+               crossAxisAlignment: CrossAxisAlignment.center,
+               children: [
+                 Icon(Icons.school_outlined,
+                     color: colorGrey,size: 16.0),
+                 const Gap(5),
+                 Text('Школа: '.tr(),
+                     style: TStyle.textStyleVelaSansMedium(colorGrey, size: 15.0)),
+               ],
+             ),
+             Text(lesson.idSchool,
+                 style: TStyle.textStyleVelaSansBold( Theme.of(context).textTheme.displayMedium!.color!, size: 16.0)),
            ],
          ),
          const Gap(10.0),
-         Text(lesson.nameTeacher,
-             style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!, size: 18.0)),
-         const Gap(10.0),
-         Text(lesson.nameDirection,
-             style: TStyle.textStyleVelaSansMedium(colorGrey, size: 16.0)),
+         Row(
+           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+           children: [
+             Text(lesson.nameTeacher,
+                 style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!, size: 18.0)),
+             Text(lesson.nameDirection,
+                 style: TStyle.textStyleVelaSansMedium(colorGrey, size: 16.0)),
+           ],
+         ),
          const Gap(20.0),
          Row(
            mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -173,7 +202,7 @@ class ItemDetailsLesson extends StatelessWidget{
              Row(
                children: [
                  Container(
-                   margin: const EdgeInsets.only(left: 10.0),
+                   //margin: const EdgeInsets.only(left: 10.0),
                    width: 10.0,
                    height: 10.0,
                    decoration: BoxDecoration(
@@ -191,7 +220,7 @@ class ItemDetailsLesson extends StatelessWidget{
                visible: lesson.status == LessonStatus.complete,
                child: Row(
                  children: [
-                   Text(DateTimeParser.getDateAndTime(dateTime: lesson.timeAccept),
+                   Text(DateTimeParser.getDateFromApi(date: lesson.timeAccept),
                        style: TStyle.textStyleVelaSansRegular(
                            colorGrey, size: 13.0)),
                    const Gap(5.0),

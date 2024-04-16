@@ -58,7 +58,7 @@ class UserModel{
 
 
 
-  factory UserModel.fromMap({required Map<String, dynamic> mapUser,required List<dynamic> mapSubsAll}) {
+  factory UserModel.fromMap({required Map<String, dynamic> mapUser,required List<dynamic> mapSubsAll,required List<dynamic> lessons}) {
 
     final directions = mapUser['directions'] as List<dynamic>;
     final settingsMap = mapUser['settingNotifi'] as List<dynamic>;
@@ -76,7 +76,7 @@ class UserModel{
       userType: mapUser['userType'] as int,
       directions: directions
           .map((e) =>
-              DirectionModel.fromMap(mapDirection: e, mapSubs: mapSubsAll))
+              DirectionModel.fromMap(mapDirection: e, mapSubs: mapSubsAll,lessons:lessons))
           .toList(),
       sex: mapUser['sex'] as String,
       about_me: mapUser['about_me'] as String,
@@ -114,9 +114,9 @@ class UserModel{
 
 
 
-  factory DirectionModel.fromMap({required Map<String, dynamic> mapDirection,required List<dynamic> mapSubs}) {
+  factory DirectionModel.fromMap({required Map<String, dynamic> mapDirection,required List<dynamic> mapSubs,required List<dynamic> lessons}) {
 
-    final lessons =  mapDirection['lessons'] as List<dynamic>;
+    //final lessons =  mapDirection['lessons'] as List<dynamic>;
     final nameDirection = mapDirection['name'] as String;
     final subs = mapSubs.map((e) => SubscriptionModel.fromMap(e,nameDirection)).toList();
     final subsDir = subs.where((element) => element.idDir == (mapDirection['id'] as int)).toList();
@@ -127,11 +127,25 @@ class UserModel{
       bonus: bonus.map((e) => BonusModel.fromMap(e,nameDirection)).toList(),
       subscriptionsAll: subsDir,
       name: nameDirection,
-      lessons: lessons.map((e) => LessonModel.fromMap(e,nameDirection)).toList(),
+      lessons: _getLessons(lessons: lessons.map((e) => LessonModel.fromMap(e,nameDirection)).toList(),subsDir: subsDir),
       lastSubscriptions: lastSub,
 
     );
   }
+
+
+    static List<LessonModel> _getLessons({required List<LessonModel> lessons,required List<SubscriptionModel> subsDir}){
+    List<LessonModel> lessonsResult = [];
+    List<int> ids = subsDir.map((e) => e.id).toList();
+    //TODO распределить уроки по направлению
+    for(var l in lessons){
+      if(ids.contains(l.idSub)){
+        lessonsResult.add(l);
+      }
+    }
+
+    return lessons;
+    }
 
 
 

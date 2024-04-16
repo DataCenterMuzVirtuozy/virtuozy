@@ -89,7 +89,8 @@ class UserMapper{
   static List<SubscriptionEntity> fromApiPriceSub(List<SubscriptionModel> subscriptionModels){
 
     return subscriptionModels.map((e) => SubscriptionEntity(
-      option: fromOptionApi(optionModel: e.optionModel),
+      option: fromOptionApi(
+          optionModel: e.optionModel),
         idUser: e.idUser,
         idDir: e.idDir,
         nameDir: e.nameDir,
@@ -104,7 +105,8 @@ class UserMapper{
         dateStart: e.dateStart,
         dateEnd: e.dateEnd,
         commentary: e.commentary,
-        dateBay: e.dateBay
+        dateBay: e.dateBay,
+        nameTeacher: e.nameTeacher
     )).toList();
 
 
@@ -128,7 +130,8 @@ class UserMapper{
          commentary: e.commentary,
          status: e.status == 1?StatusSub.active:
          e.status == 0?StatusSub.inactive:StatusSub.planned,
-         dateBay: e.dateBay
+         dateBay: e.dateBay,
+       nameTeacher: e.nameTeacher
      )).toList();
   }
 
