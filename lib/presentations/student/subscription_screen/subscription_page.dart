@@ -313,7 +313,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
 
-          Text(directions.length>1?'Баланс абонементов'.tr():'Баланс абонемента'.tr(),
+          Text('Действующие абонементы'.tr(),
               style:TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,
               size: 18.0)),
           const Gap(10.0),
@@ -414,12 +414,12 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                              Text('Осталось уроков '.tr(),style:TStyle.textStyleVelaSansMedium(colorGrey,size: 14.0)),
                              const Gap(5.0),
                              Container(
-                               padding: const EdgeInsets.all(3.0),
+                               padding: const EdgeInsets.all(6.0),
                                decoration: BoxDecoration(
                                    color: Theme.of(context).colorScheme.secondary,
                                    shape: BoxShape.circle),
                                child: Text('${directions[index].lastSubscriptions[0].balanceLesson}',
-                                   style:TStyle.textStyleVelaSansBold(colorWhite,size: 10.0)),
+                                   style:TStyle.textStyleVelaSansExtraBolt(colorWhite,size: 13.0)),
                              ),
                            ],
                          )
@@ -548,11 +548,36 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                      ),
                    ),
                    const Gap(5.0),
-                   //отображение запланированных абиков
+
+                   ///отображение запланированных абиков
                    if(directions[index].lastSubscriptions.length>1)...{
                      Column(
+                       crossAxisAlignment: CrossAxisAlignment.start,
                        children: [
                          Divider(color: colorGrey),
+                         Row(
+                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                           children: [
+                             Text(directions[index].name,
+                                 style:TStyle.textStyleVelaSansBold(colorGrey,size: 16.0)),
+                             Row(
+                               children: [
+                                 Text('Осталось уроков '.tr(),style:TStyle.textStyleVelaSansMedium(colorGrey,size: 14.0)),
+                                 const Gap(5.0),
+                                 Container(
+                                   padding: const EdgeInsets.all(6.0),
+                                   decoration: BoxDecoration(
+                                       color: Theme.of(context).colorScheme.secondary,
+                                       shape: BoxShape.circle),
+                                   child: Text('${directions[index].lastSubscriptions[1].balanceLesson}',
+                                       style:TStyle.textStyleVelaSansExtraBolt(colorWhite,size: 13.0)),
+                                 ),
+                               ],
+                             )
+
+                           ],
+                         ),
+                         const Gap(8.0),
                          Row(
                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                            children: [

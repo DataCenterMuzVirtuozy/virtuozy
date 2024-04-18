@@ -17,5 +17,6 @@
    String get telegram => 'lib/assets/img/ic_telegram.png';
    String get whatsapp => 'lib/assets/img/ic_whatsapp.png';
    String get dots => 'lib/assets/img/dots.png';
+   String get icMenu => 'lib/assets/img/treble_clef.png';
 
 

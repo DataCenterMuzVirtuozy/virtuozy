@@ -47,8 +47,7 @@ enum UserStatus{
    final String date_birth;
    final String registration_date;
    final bool has_kids;
-   final String near_subway_work;
-   final String near_subway_home;
+   final List<dynamic> subways;
    final String who_find;
    final String avaUrl;
 
@@ -59,8 +58,7 @@ enum UserStatus{
      required this.date_birth,
      required this.registration_date,
      required this.has_kids,
-     required this.near_subway_work,
-     required this.near_subway_home,
+     required this.subways,
      required this.who_find,
      required this.notifiSttings,
      required this.id,
@@ -92,8 +90,7 @@ enum UserStatus{
         date_birth: '',
         registration_date: '',
         has_kids: false,
-        near_subway_work: '',
-        near_subway_home: '',
+        subways: [],
         who_find: '',
        avaUrl: '');
   }
@@ -114,8 +111,7 @@ enum UserStatus{
     String? date_birth,
     String? registration_date,
     bool? has_kids,
-    String? near_subway_work,
-    String? near_subway_home,
+    List<String>? subways,
     String? who_find,
     String? avaUrl
   }) {
@@ -135,8 +131,7 @@ enum UserStatus{
       date_birth: date_birth??this.date_birth,
       registration_date: registration_date??this.registration_date,
       has_kids: has_kids??this.has_kids,
-      near_subway_home: near_subway_home??this.near_subway_home,
-      near_subway_work: near_subway_work??this.near_subway_work,
+        subways: subways??this.subways,
         who_find: who_find??this.who_find,
         avaUrl: avaUrl??this.avaUrl
     );

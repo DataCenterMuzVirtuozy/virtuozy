@@ -29,6 +29,7 @@ import 'package:virtuozy/utils/theme_provider.dart';
 import 'components/dialogs/dialoger.dart';
 import 'di/locator.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
@@ -38,6 +39,7 @@ void main() async {
       ignoreSsl: true // option: set to false to disable working with http links (default: false)
   );
   di.setup();
+
   runApp(EasyLocalization(
       supportedLocales: const [Locale('ru', 'RU')],
   path: 'lib/assets/translations',
@@ -152,4 +154,6 @@ class _InitPageState extends State<InitPage> {
     context.read<AppBloc>().add(InitAppEvent());
   }
 }
+
+
 

@@ -285,18 +285,34 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Ближайшая Станция метро - Работа',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
-                  Text(widget.user.near_subway_work,
-                    style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
-                ],
-              ),
-              const Gap(10.0),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Ближайшая Станция метро - Проживание',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
-                  Text(widget.user.near_subway_home,
-                    style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
+                  Text('Часто посещаемые станции метро:'.tr(),style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
+                  Column(
+                    children: [
+                      ...List.generate(widget.user.subways.length, (index) {
+                        return                       Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.directions_subway,size: 16),
+                            const Gap(5),
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(widget.user.subways[index],
+                                    style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
+                                  Visibility(
+                                      visible: index == widget.user.subways.length-1,
+                                      child: InkWell(child: Icon(Icons.add_box_outlined,color: colorGrey,)),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        );
+                      })
+
+                    ],
+                  ),
                 ],
               ),
               const Gap(10.0),
@@ -516,6 +532,7 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
      'Нет',
    ];
    String? selectedValueKids;
+   bool _openMenu = false;
 
 
    @override
@@ -551,6 +568,11 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
              widget.onKind.call(selectedValueKids=='Да'?true:false);
            });
          },
+         onMenuStateChange: (open){
+           setState(() {
+             _openMenu = open;
+           });
+         },
          buttonStyleData: ButtonStyleData(
            width: 75,
            padding:const EdgeInsets.symmetric(horizontal: 13.0),
@@ -561,8 +583,11 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
            //elevation: 2,
          ),
          iconStyleData:  IconStyleData(
-           icon: const Icon(
-             Icons.arrow_drop_down_rounded,
+           icon: RotatedBox(
+             quarterTurns: _openMenu?4:2,
+             child: const Icon(
+               Icons.arrow_drop_down_rounded,
+             ),
            ),
            iconSize: 18,
            iconEnabledColor: colorGrey,

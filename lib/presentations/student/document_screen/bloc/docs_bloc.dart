@@ -26,7 +26,7 @@ class DocsBloc extends Bloc<DocsEvent,DocsState>{
 
   final _userCubit = locator.get<UserCubit>();
   final _userRepo =  locator.get<UserRepository>();
-  ReceivePort _port = ReceivePort();
+
 
   void _getDocs(GetDocumentsEvent event,emit) async {
    try{

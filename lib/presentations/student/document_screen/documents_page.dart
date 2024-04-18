@@ -124,7 +124,7 @@ class _DocumentsPageState extends State<DocumentsPage> with AuthMixin, TickerPro
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Text('Дата отправки: ',
+                                    Text('Дата получения: '.tr(),
                                         textAlign: TextAlign.center,
                                         maxLines: 3,
                                         overflow: TextOverflow.ellipsis,
@@ -142,7 +142,7 @@ class _DocumentsPageState extends State<DocumentsPage> with AuthMixin, TickerPro
                                   child: Row(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
-                                      Text('Дата подтверждения: ',
+                                      Text('Дата подписания: '.tr(),
                                           textAlign: TextAlign.center,
                                           maxLines: 3,
                                           overflow: TextOverflow.ellipsis,
@@ -177,7 +177,7 @@ class _DocumentsPageState extends State<DocumentsPage> with AuthMixin, TickerPro
                       visible: !_acceptDoc,
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 25),
-                        height: 100,
+                        height: 130,
                         decoration: BoxDecoration(
                             color: Theme.of(context).colorScheme.surfaceVariant,
                             borderRadius: const BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10))
@@ -189,7 +189,7 @@ class _DocumentsPageState extends State<DocumentsPage> with AuthMixin, TickerPro
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text('Подписать и утвердить документы',
+                                Text('Подтвердить'.tr(),
                                   style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,
                                       size: 16.0),),
                                 Checkbox(
@@ -207,10 +207,11 @@ class _DocumentsPageState extends State<DocumentsPage> with AuthMixin, TickerPro
                             Opacity(
                               opacity: _accept?1.0:0.3,
                               child: SizedBox(
-                                height: 30.0,
+                                height: 40.0,
+                                width: 160,
                                 child: SubmitButton(
-                                    borderRadius: 8,
-                                    textButton: 'Отправить ответ'.tr(),
+                                    borderRadius: 20,
+                                    textButton: 'Подписать'.tr(),
                                     onTap: () {
                                       if(!_accept){
                                         return;

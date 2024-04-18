@@ -26,6 +26,7 @@ class _SelectAuditoryMenuState extends State<SelectAuditoryMenu> {
   ];
 
   String? selectedValue;
+  bool _openMenu = false;
 
   @override
   void initState() {
@@ -60,6 +61,11 @@ class _SelectAuditoryMenuState extends State<SelectAuditoryMenu> {
             selectedValue = value;
           });
         },
+        onMenuStateChange: (open){
+          setState(() {
+            _openMenu = open;
+          });
+        },
         buttonStyleData: ButtonStyleData(
           width: 100,
           padding:const EdgeInsets.symmetric(horizontal: 13.0),
@@ -70,8 +76,11 @@ class _SelectAuditoryMenuState extends State<SelectAuditoryMenu> {
           //elevation: 2,
         ),
         iconStyleData:  IconStyleData(
-          icon: const Icon(
-            Icons.arrow_drop_down_rounded,
+          icon: RotatedBox(
+            quarterTurns: _openMenu?4:2,
+            child: const Icon(
+              Icons.arrow_drop_down_rounded,
+            ),
           ),
           iconSize: 18,
           iconEnabledColor: colorGrey,

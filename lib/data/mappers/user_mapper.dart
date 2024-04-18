@@ -37,8 +37,7 @@ class UserMapper{
         date_birth: userModel.date_birth,
         registration_date: userModel.registration_date,
         has_kids: userModel.has_kids,
-        near_subway_work: userModel.near_subway_work,
-        near_subway_home: userModel.near_subway_home,
+        subways: userModel.subways,
         who_find: userModel.who_find,
         avaUrl: userModel.avaUrl);
   }

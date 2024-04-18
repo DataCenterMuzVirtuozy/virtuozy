@@ -90,8 +90,7 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
             date_birth: '',
             registration_date: '',
             has_kids: false,
-            near_subway_work: '',
-            near_subway_home: '',
+            subways:[],
             avaUrl: '',
             who_find: ''));
         await PreferencesUtil.setTypeUser(userType: UserType.student);
@@ -157,8 +156,7 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
           date_birth: '',
           registration_date: '',
           has_kids: false,
-          near_subway_work: '',
-          near_subway_home: '',
+          subways:[],
           avaUrl: '',
           who_find: '');
       await _createLocalUser(user);

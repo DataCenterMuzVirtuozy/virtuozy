@@ -134,7 +134,11 @@ class _MainPageState extends State<MainPage> with AuthMixin{
                     children: [
                       IconButton(onPressed: (){
                         _openMenu();
-                      }, icon:  Icon(Icons.menu_open_rounded,color: Theme.of(context).iconTheme.color)),
+                      }, icon:  Image.asset(icMenu,width: 20,height: 20,)),
+                      // Icon(
+                      //     Icons.library_music_outlined,
+                      //     //Icons.music_note_outlined,
+                      //     color: Theme.of(context).iconTheme.color)),
                       TitlePage(title: _titlePage),
                       badges.Badge(
                           position: badges.BadgePosition.topStart(start: 5.0,top: 3.0),

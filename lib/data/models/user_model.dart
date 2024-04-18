@@ -29,8 +29,7 @@ class UserModel{
    final String date_birth;
    final String registration_date;
    final bool has_kids;
-   final String near_subway_work;
-   final String near_subway_home;
+   final List<dynamic> subways;
    final String who_find;
    final String avaUrl;
 
@@ -41,8 +40,7 @@ class UserModel{
      required this.date_birth,
      required this.registration_date,
      required this.has_kids,
-     required this.near_subway_work,
-     required this.near_subway_home,
+     required this.subways,
      required this.who_find,
      required this.notifiSttings,
      required this.id,
@@ -83,8 +81,7 @@ class UserModel{
       date_birth: mapUser['date_birth'] as String,
       registration_date: mapUser['registration_date'] as String,
       has_kids: mapUser['has_kids'] as bool,
-      near_subway_work: mapUser['near_subway_work'] as String,
-      near_subway_home: mapUser['near_subway_home'] as String,
+      subways: mapUser['subways'] as List<dynamic>,
       who_find: mapUser['who_find'] as String,
       avaUrl: mapUser['avaUrl'] as String,
     );

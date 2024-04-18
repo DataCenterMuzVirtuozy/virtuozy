@@ -190,7 +190,7 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
                         Visibility(
                           visible: _items.length>1,
                           child: RotatedBox(
-                              quarterTurns: 1,
+                              quarterTurns: isDraw?1:3,
                               child: Icon(
                                 Icons.arrow_forward_ios_rounded,
                                 color: colorGrey,

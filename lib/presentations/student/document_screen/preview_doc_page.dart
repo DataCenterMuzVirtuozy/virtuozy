@@ -98,7 +98,7 @@ class _PreviewDocPageState extends State<PreviewDocPage> {
       String id = data[0];
       int progress = data[2];
       if(data[1]=='RUNNING'){
-        //Dialoger.showMessage('Загрузка началась'.tr());
+        Dialoger.showMessage('Загрузка началась'.tr());
       }
 
       if(progress==100){
