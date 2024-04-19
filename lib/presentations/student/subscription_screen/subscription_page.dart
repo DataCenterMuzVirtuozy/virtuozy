@@ -187,7 +187,8 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                         content: DetailsLesson());
                   },),
                const Gap(10.0),
-               ItemSubscription(
+               BoxSubscription(
+                 key: ValueKey(state.directions),
                  namesDir: _titlesDirections,
                    directions: state.directions,
                    allViewDirection: _allViewDirection),
@@ -278,15 +279,26 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
 }
 
 
- class ItemSubscription extends StatelessWidget{
-  const ItemSubscription({super.key,
+ class BoxSubscription extends StatefulWidget{
+  const BoxSubscription({super.key,
   required this.directions,
     required this.allViewDirection,
-    required this.namesDir});
+   required this.namesDir
+  });
 
   final List<DirectionLesson> directions;
   final bool allViewDirection;
   final List<String> namesDir;
+
+  @override
+  State<BoxSubscription> createState() => _BoxSubscriptionState();
+}
+
+class _BoxSubscriptionState extends State<BoxSubscription> {
+
+
+
+   List<SubscriptionEntity> subs = [];
 
   double _summaBalance({required List<DirectionLesson> directions}){
      double sum = 0.0;
@@ -298,6 +310,22 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
      return sum;
   }
 
+  List<SubscriptionEntity> _getSubs({required List<DirectionLesson> directions, required bool allViewDirection}){
+    List<SubscriptionEntity> list = [];
+    for(var dir in directions){
+      for(var s in dir.lastSubscriptions){
+        list.add(s);
+      }
+    }
+    return list;
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    subs = _getSubs(directions: widget.directions, allViewDirection: widget.allViewDirection);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -313,13 +341,38 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
 
-          Text('Действующие абонементы'.tr(),
+          Text('Активные абонементы'.tr(),
               style:TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,
               size: 18.0)),
           const Gap(10.0),
           Divider(color: colorGrey),
-           BoxSubscription(directions: directions,allViewDirection: allViewDirection,
-           namesDir: namesDir),
+           Column(
+             children: [
+               ...List.generate(subs.length, (index) {
+
+                 // if(widget.directions[index].lastSubscriptions.isEmpty){
+                 //   return Container();
+                 // }
+
+                 return ItemSub(
+                   onTap: (String nameDir){
+                     if(widget.allViewDirection){
+                       final selIndexDir = widget.namesDir.indexWhere((element) => element == nameDir);
+                       GoRouter.of(context).push(pathFinance,extra: selIndexDir);
+                     }else{
+                       final direction = widget.directions.firstWhere((element) => element.name == nameDir);
+                       GoRouter.of(context).push(pathPay,extra: direction);
+                     }
+                   },
+                     subscription: subs[index]);
+
+                 // return ItemSubscription(direction: directions[index],
+                 //     allViewDirection: allViewDirection, namesDir: namesDir);
+               })
+             ],
+           ),
+           // BoxSubscription(directions: directions,allViewDirection: allViewDirection,
+           // namesDir: namesDir),
           const Gap(5.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -335,7 +388,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(ParserPrice.getBalance(_summaBalance(directions: directions)),
+                  Text(ParserPrice.getBalance(_summaBalance(directions: widget.directions)),
                       style:TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 25.0)),
                   Padding(
                     padding: const EdgeInsets.only(top: 4.0),
@@ -351,7 +404,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
             child: SubmitButton(
               textButton: 'Пополнить'.tr(),
               onTap: () {
-                GoRouter.of(context).push(pathPay,extra: directions);
+                GoRouter.of(context).push(pathPay,extra: widget.directions);
               }
             ),
           )
@@ -360,277 +413,468 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
     );
 
   }
+}
+
+
+ class ItemSub extends StatefulWidget{
+  const ItemSub({super.key, required this.subscription, required this.onTap});
+
+  final SubscriptionEntity subscription;
+  final Function onTap;
+
+  @override
+  State<ItemSub> createState() => _ItemSubState();
+}
+
+class _ItemSubState extends State<ItemSub> {
+
+
+  bool _open = false;
+
+
+  int _countAllLesson(SubscriptionEntity subscription){
+    final i1 = subscription.price;
+    final i2 = subscription.priceOneLesson;
+    return i1~/i2;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: const EdgeInsets.only(bottom: 5.0),
+    child: InkWell(
+      splashColor: Colors.transparent,
+      focusColor: Colors.transparent,
+      hoverColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      onTap: (){
+        setState(() {
+          if(!_open){
+            _open = true;
+          }else{
+            _open = false;
+          }
+        });
+      },
+      child: Column(
+        children: [
+          AnimatedContainer(
+            height: !_open?50:125,
+            curve: Curves.easeIn,
+            duration: const Duration(milliseconds: 500),
+            child: SingleChildScrollView(
+              physics: const NeverScrollableScrollPhysics(),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(widget.subscription.nameDir,
+                          style:TStyle.textStyleVelaSansBold(colorGrey,size: 16.0)),
+                      if(widget.subscription.status==StatusSub.active||widget.subscription.status == StatusSub.planned)...{
+                        Row(
+                          children: [
+                            Text('Осталось уроков:'.tr(),style:TStyle.textStyleVelaSansMedium(colorGrey,size: 14.0)),
+                            const Gap(3.0),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 6.0,vertical: 2),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                //color: Theme.of(context).colorScheme.secondary,
+                                //shape: BoxShape.circle
+                              ),
+                              child: Text('${widget.subscription.balanceLesson} из ${_countAllLesson(widget.subscription)}',
+                                  style:TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,
+                                      size: 14.0)),
+                            ),
+                          ],
+                        )
+                      }else...{
+                        Visibility(
+                          visible: widget.subscription.status == StatusSub.inactive,
+                          child:                     Container(
+                            padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
+                            decoration: BoxDecoration(
+                                color: colorRed,
+                                borderRadius: BorderRadius.circular(10.0)),
+                            alignment: Alignment.center,
+                            child: Text('неактивный'.tr(),
+                                style: TStyle.textStyleVelaSansBold(colorWhite,
+                                    size: 10.0)),
+                          ),
+                        ),
+                      },
+
+
+                    ],
+                  ),
+                  const Gap(5),
+                  Visibility(
+                    visible: widget.subscription.status == StatusSub.active||
+                        widget.subscription.status == StatusSub.planned,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('${ParserPrice.getBalance(widget.subscription.balanceSub)} руб.',
+                            style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
+                        Container(
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
+                          decoration: BoxDecoration(
+                              color: widget.subscription.status == StatusSub.active?colorGreen:
+                              colorRed,
+                              borderRadius: BorderRadius.circular(10.0)),
+                          child: Text(widget.subscription.status == StatusSub.active?'активный'.tr():
+                          'запланирован'.tr(),
+                              style: TStyle.textStyleVelaSansBold(colorWhite,
+                                  size: 10.0))
+                        )
+                      ],
+                    ),
+                  ),
+
+
+                    Visibility(
+                      visible: widget.subscription.nameTeacher.isNotEmpty,
+                      child: Row(
+                        children: [
+                          Icon(Icons.person,color: colorGreen,size: 10.0),
+                          const Gap(5.0),
+                          Text(widget.subscription.nameTeacher,
+                              style:TStyle.textStyleVelaSansMedium(colorGrey,size: 13.0)),
+                        ],
+                      ),
+                    ),
+                    Visibility(
+                      visible: widget.subscription.dateEnd.isNotEmpty,
+                      child: Row(
+                        children: [
+                          Icon(Icons.timelapse,color: colorGreen,size: 10.0),
+                          const Gap(5.0),
+                          Text('Дата окончания'.tr(),
+                              style:TStyle.textStyleVelaSansMedium(colorGrey,size: 13.0)),
+                          const Gap(5.0),
+                          Text(DateTimeParser.getDateFromApi(date:
+                          widget.subscription.dateEnd),
+                              style:TStyle.textStyleVelaSansMedium(colorGrey,size: 13.0)),
+                        ],
+                      ),
+                    ),
+
+                    Visibility(
+                      visible: widget.subscription.option.status!=OptionStatus.unknown,
+                      child: Row(
+                        children: [
+                          Icon(widget.subscription.option.status == OptionStatus.freezing?Icons.icecream:
+                          Icons.free_breakfast_outlined,color: colorGreen,size: 10),
+                          const Gap(5),
+                          Text(widget.subscription.option.status == OptionStatus.freezing?
+                          'Заморозка до '.tr()
+                              :'Каникулы до '.tr(),
+                              style: TStyle.textStyleVelaSansMedium(colorGrey,
+                                  size: 13.0)),
+                          Text(DateTimeParser.getDateFromApi(date: widget.subscription.option.dateEnd),
+                              style: TStyle.textStyleVelaSansMedium(colorGrey,
+                                  size: 13.0)),
+                        ],
+                      ),
+                    ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: InkWell(
+                      onTap: (){
+                        widget.onTap.call(widget.subscription.nameDir);
+                      },
+                        child: Text('Подробнее',style: TStyle.textStyleVelaSansRegularUnderline(colorGrey,size: 12),)),
+                  )
+
+                ],
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.only(top: 5),
+            color: Theme.of(context).colorScheme.surfaceVariant,
+            child: Column(
+              children: [
+                RotatedBox(
+                    quarterTurns: !_open?1:3,
+                    child: Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      color: colorGrey,
+                      size: 16.0,
+                    )),
+                Divider(color: colorGrey),
+              ],
+            ),
+          )
+        ],
+      ),
+    ),
+    );
+  }
+}
 
 
 
 
 
- }
+ class ItemSubscription extends StatelessWidget{
+  const ItemSubscription({super.key, required this.direction, required this.allViewDirection, required this.namesDir});
 
-
- class BoxSubscription extends StatelessWidget{
-  const BoxSubscription({super.key, required this.directions, required this.allViewDirection, required this.namesDir});
-
-  final List<DirectionLesson> directions;
+  final DirectionLesson direction;
   final bool allViewDirection;
   final List<String> namesDir;
   @override
   Widget build(BuildContext context) {
-     return Column(
-       children: [
-         ...List.generate(directions.length, (index) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 5.0),
+      child: InkWell(
+        splashColor: Colors.transparent,
+        focusColor: Colors.transparent,
+        hoverColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        onTap: (){
+          if(allViewDirection){
+            final selIndexDir = namesDir.indexWhere((element) => element == direction.name);
+            GoRouter.of(context).push(pathFinance,extra: selIndexDir);
+          }else{
+            GoRouter.of(context).push(pathPay,extra: direction);
+          }
 
-           if(directions[index].lastSubscriptions.isEmpty){
-             return Container();
-           }
-
-           return Padding(
-             padding: const EdgeInsets.only(bottom: 5.0),
-             child: InkWell(
-               splashColor: Colors.transparent,
-               focusColor: Colors.transparent,
-               hoverColor: Colors.transparent,
-               highlightColor: Colors.transparent,
-               onTap: (){
-                 if(allViewDirection){
-                   final selIndexDir = namesDir.indexWhere((element) => element == directions[index].name);
-                   GoRouter.of(context).push(pathFinance,extra: selIndexDir);
-                 }else{
-                   GoRouter.of(context).push(pathPay,extra: directions);
-                 }
-
-               },
-               child: Column(
-                 children: [
-                   Row(
-                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                     children: [
-                       Text(directions[index].name,
-                           style:TStyle.textStyleVelaSansBold(colorGrey,size: 16.0)),
-
-                       if(directions[index].lastSubscriptions[0].status==StatusSub.active)...{
-                         Row(
-                           children: [
-                             Text('Осталось уроков '.tr(),style:TStyle.textStyleVelaSansMedium(colorGrey,size: 14.0)),
-                             const Gap(5.0),
-                             Container(
-                               padding: const EdgeInsets.all(6.0),
-                               decoration: BoxDecoration(
-                                   color: Theme.of(context).colorScheme.secondary,
-                                   shape: BoxShape.circle),
-                               child: Text('${directions[index].lastSubscriptions[0].balanceLesson}',
-                                   style:TStyle.textStyleVelaSansExtraBolt(colorWhite,size: 13.0)),
-                             ),
-                           ],
-                         )
-                       }else...{
-                         Container(
-                           padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
-                           decoration: BoxDecoration(
-                               color: colorRed,
-                               borderRadius: BorderRadius.circular(10.0)),
-                           alignment: Alignment.center,
-                           child: Text('неактивный'.tr(),
-                               style: TStyle.textStyleVelaSansBold(colorWhite,
-                                   size: 10.0)),
-                         ),
-                       },
+        },
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(direction.name,
+                    style:TStyle.textStyleVelaSansBold(colorGrey,size: 16.0)),
 
 
-                     ],
-                   ),
-                   const Gap(5.0),
-                   Visibility(
-                     visible: directions[index].lastSubscriptions.length==1&&!allViewDirection,
-                       child: Padding(
-                         padding: const EdgeInsets.only(top: 5.0),
-                         child: Column(
-                          children: [
-                            Icon(Icons.timelapse,color: Theme.of(context).colorScheme.secondary,size: 15.0),
-                            const Gap(2.0),
-                            Text('Дата окончания'.tr(),
-                                style: TStyle.textStyleVelaSansMedium(colorGrey,
-                                    size: 13.0)),
-                            const Gap(5.0),
-                            Text(DateTimeParser.getDateFromApi(date:
-                            directions[index].lastSubscriptions[0].dateEnd),
-                                style: TStyle.textStyleVelaSansMedium(colorGrey,
-                                    size: 13.0)),
-                            Visibility(
-                              visible: directions[index].lastSubscriptions[0].option.status!=OptionStatus.unknown,
-                              child: Column(
-                                children: [
-                                  const Gap(8.0),
-                                  Icon(directions[index].lastSubscriptions[0].option.status == OptionStatus.freezing?Icons.icecream:
-                                  Icons.free_breakfast_outlined,color: Theme.of(context).colorScheme.secondary,size: 15),
-                                  const Gap(2),
-                                  Text(directions[index].lastSubscriptions[0].option.status == OptionStatus.freezing?
-                                  'Заморозка до '.tr()
-                                      :'Каникулы до '.tr(),
-                                      style: TStyle.textStyleVelaSansMedium(colorGrey,
-                                          size: 13.0)),
-                                  const Gap(5.0),
-                                  Text(DateTimeParser.getDateFromApi(date: directions[index].lastSubscriptions[0].option.dateEnd),
-                                      style: TStyle.textStyleVelaSansMedium(colorGrey,
-                                          size: 13.0)),
-                                ],
-                              ),
-                            )
-,
-                          ],
-                                               ),
-                       )),
-                   Visibility(
-                     visible: directions[index].lastSubscriptions[0].status==StatusSub.active &&allViewDirection
-                         ||directions[index].lastSubscriptions.length>1,
-                     child: Row(
-                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                       children: [
-                         Column(
-                           crossAxisAlignment: CrossAxisAlignment.start,
-                           children: [
-                             Text('${ParserPrice.getBalance(directions[index].lastSubscriptions[0].balanceSub)} руб.',
-                                 style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
-                             Visibility(
-                               visible: directions[index].lastSubscriptions[0].nameTeacher.isNotEmpty,
-                               child: Row(
-                                 children: [
-                                   Icon(Icons.person,color: colorGreen,size: 10.0),
-                                   const Gap(5.0),
-                                   Text(directions[index].lastSubscriptions[0].nameTeacher,
-                                       style:TStyle.textStyleVelaSansMedium(colorGrey,size: 13.0)),
-                                 ],
-                               ),
-                             ),
-                             Row(
-                               children: [
-                                 Icon(Icons.timelapse,color: colorGreen,size: 10.0),
-                                 const Gap(5.0),
-                                 Text('Дата окончания'.tr(),
-                                     style:TStyle.textStyleVelaSansMedium(colorGrey,size: 13.0)),
-                                 const Gap(5.0),
-                                 Text(DateTimeParser.getDateFromApi(date:
-                                 directions[index].lastSubscriptions[0].dateEnd),
-                                     style:TStyle.textStyleVelaSansMedium(colorGrey,size: 13.0)),
-                               ],
-                             ),
 
-                             Visibility(
-                               visible: directions[index].lastSubscriptions[0].option.status!=OptionStatus.unknown,
-                               child: Row(
-                                 children: [
-                                   Icon(directions[index].lastSubscriptions[0].option.status == OptionStatus.freezing?Icons.icecream:
-                                       Icons.free_breakfast_outlined,color: colorGreen,size: 10),
-                                   const Gap(5),
-                                   Text(directions[index].lastSubscriptions[0].option.status == OptionStatus.freezing?
-                                   'Заморозка до '.tr()
-                                       :'Каникулы до '.tr(),
-                                       style: TStyle.textStyleVelaSansMedium(colorGrey,
-                                           size: 13.0)),
-                                   Text(DateTimeParser.getDateFromApi(date: directions[index].lastSubscriptions[0].option.dateEnd),
-                                       style: TStyle.textStyleVelaSansMedium(colorGrey,
-                                           size: 13.0)),
-                                 ],
-                               ),
-                             )
-                           ],
-                         ),
-                         Container(
-                           alignment: Alignment.center,
-                           padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
-                           decoration: BoxDecoration(
-                               color: colorGreen,
-                               borderRadius: BorderRadius.circular(10.0)),
-                           child: Text('активный'.tr(),
-                               style:TStyle.textStyleVelaSansBold(colorWhite,size: 10.0)),
-                         ),
-                       ],
-                     ),
-                   ),
-                   const Gap(5.0),
+                if(direction.lastSubscriptions[0].status==StatusSub.active)...{
+                  Row(
+                    children: [
+                      Text('Осталось уроков '.tr(),style:TStyle.textStyleVelaSansMedium(colorGrey,size: 14.0)),
+                      const Gap(5.0),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6.0,vertical: 2),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                            color: Theme.of(context).colorScheme.secondary,
+                            //shape: BoxShape.circle
+                        ),
+                        child: Text('${direction.lastSubscriptions[0].balanceLesson} из 10',
+                            style:TStyle.textStyleVelaSansExtraBolt(colorWhite,size: 10.0)),
+                      ),
+                    ],
+                  )
+                }else...{
+                  Container(
+                    padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
+                    decoration: BoxDecoration(
+                        color: colorRed,
+                        borderRadius: BorderRadius.circular(10.0)),
+                    alignment: Alignment.center,
+                    child: Text(
+                        'неактивный'.tr(),
+                        style: TStyle.textStyleVelaSansBold(colorWhite,
+                            size: 10.0)),
+                  ),
+                },
 
-                   ///отображение запланированных абиков
-                   if(directions[index].lastSubscriptions.length>1)...{
-                     Column(
-                       crossAxisAlignment: CrossAxisAlignment.start,
-                       children: [
-                         Divider(color: colorGrey),
-                         Row(
-                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                           children: [
-                             Text(directions[index].name,
-                                 style:TStyle.textStyleVelaSansBold(colorGrey,size: 16.0)),
-                             Row(
-                               children: [
-                                 Text('Осталось уроков '.tr(),style:TStyle.textStyleVelaSansMedium(colorGrey,size: 14.0)),
-                                 const Gap(5.0),
-                                 Container(
-                                   padding: const EdgeInsets.all(6.0),
-                                   decoration: BoxDecoration(
-                                       color: Theme.of(context).colorScheme.secondary,
-                                       shape: BoxShape.circle),
-                                   child: Text('${directions[index].lastSubscriptions[1].balanceLesson}',
-                                       style:TStyle.textStyleVelaSansExtraBolt(colorWhite,size: 13.0)),
-                                 ),
-                               ],
-                             )
 
-                           ],
-                         ),
-                         const Gap(8.0),
-                         Row(
-                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                           children: [
-                             Column(
-                               crossAxisAlignment: CrossAxisAlignment.start,
-                               children: [
-                                 Text('${ParserPrice.getBalance(directions[index].lastSubscriptions[1].balanceSub)} руб.',
-                                     style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
-                                 Visibility(
-                                    visible: directions[index].lastSubscriptions[1].dateEnd.isNotEmpty,
-                                   child: Row(
-                                     children: [
-                                       Icon(Icons.timelapse,color: colorRed,size: 10.0),
-                                       const Gap(5.0),
-                                       Text('Дата окончания'.tr(),
-                                           style:TStyle.textStyleVelaSansMedium(colorGrey,size: 13.0)),
-                                       const Gap(5.0),
-                                       Text(DateTimeParser.getDateFromApi(date:
-                                       directions[index].lastSubscriptions[1].dateEnd),
-                                           style:TStyle.textStyleVelaSansMedium(colorGrey,size: 13.0)),
-                                     ],
-                                   ),
-                                 ),
+              ],
+            ),
+            const Gap(5.0),
+            // Visibility(
+            //     visible: direction.lastSubscriptions.length==1&&!allViewDirection,
+            //     child: Padding(
+            //       padding: const EdgeInsets.only(top: 5.0),
+            //       child: Column(
+            //         children: [
+            //           Icon(Icons.timelapse,color: Theme.of(context).colorScheme.secondary,size: 15.0),
+            //           const Gap(2.0),
+            //           Text('Дата окончания'.tr(),
+            //               style: TStyle.textStyleVelaSansMedium(colorGrey,
+            //                   size: 13.0)),
+            //           const Gap(5.0),
+            //           Text(DateTimeParser.getDateFromApi(date:
+            //           direction.lastSubscriptions[0].dateEnd),
+            //               style: TStyle.textStyleVelaSansMedium(colorGrey,
+            //                   size: 13.0)),
+            //           Visibility(
+            //             visible: direction.lastSubscriptions[0].option.status!=OptionStatus.unknown,
+            //             child: Column(
+            //               children: [
+            //                 const Gap(8.0),
+            //                 Icon(direction.lastSubscriptions[0].option.status == OptionStatus.freezing?Icons.icecream:
+            //                 Icons.free_breakfast_outlined,color: Theme.of(context).colorScheme.secondary,size: 15),
+            //                 const Gap(2),
+            //                 Text(direction.lastSubscriptions[0].option.status == OptionStatus.freezing?
+            //                 'Заморозка до '.tr()
+            //                     :'Каникулы до '.tr(),
+            //                     style: TStyle.textStyleVelaSansMedium(colorGrey,
+            //                         size: 13.0)),
+            //                 const Gap(5.0),
+            //                 Text(DateTimeParser.getDateFromApi(date: direction.lastSubscriptions[0].option.dateEnd),
+            //                     style: TStyle.textStyleVelaSansMedium(colorGrey,
+            //                         size: 13.0)),
+            //               ],
+            //             ),
+            //           )
+            //           ,
+            //         ],
+            //       ),
+            //     )),
+            Visibility(
+              visible: direction.lastSubscriptions[0].status==StatusSub.active
+                  //&&allViewDirection
+                  ||direction.lastSubscriptions.length>1,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('${ParserPrice.getBalance(direction.lastSubscriptions[0].balanceSub)} руб.',
+                          style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
+                      Container(
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
+                        decoration: BoxDecoration(
+                            color: colorGreen,
+                            borderRadius: BorderRadius.circular(10.0)),
+                        child: Text('активный'.tr(),
+                            style:TStyle.textStyleVelaSansBold(colorWhite,size: 10.0)),
+                      )
+                    ],
+                  ),
+                  Visibility(
+                    visible: direction.lastSubscriptions[0].nameTeacher.isNotEmpty,
+                    child: Row(
+                      children: [
+                        Icon(Icons.person,color: colorGreen,size: 10.0),
+                        const Gap(5.0),
+                        Text(direction.lastSubscriptions[0].nameTeacher,
+                            style:TStyle.textStyleVelaSansMedium(colorGrey,size: 13.0)),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Icon(Icons.timelapse,color: colorGreen,size: 10.0),
+                      const Gap(5.0),
+                      Text('Дата окончания'.tr(),
+                          style:TStyle.textStyleVelaSansMedium(colorGrey,size: 13.0)),
+                      const Gap(5.0),
+                      Text(DateTimeParser.getDateFromApi(date:
+                      direction.lastSubscriptions[0].dateEnd),
+                          style:TStyle.textStyleVelaSansMedium(colorGrey,size: 13.0)),
+                    ],
+                  ),
 
-                               ],
-                             ),
-                             Container(
-                               alignment: Alignment.center,
-                               padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
-                               decoration: BoxDecoration(
-                                   color: colorRed,
-                                   borderRadius: BorderRadius.circular(10.0)),
-                               child: Text('запланирован'.tr(),
-                                   style:TStyle.textStyleVelaSansBold(colorWhite,size: 10.0)),
-                             ),
-                           ],
-                         ),
-                         const Gap(5.0),
-                       ],
-                     )
-                   },
-                   Visibility(
-                       visible: directions.length>1,
-                       child:  Divider(color: colorGrey)),
+                  Visibility(
+                    visible: direction.lastSubscriptions[0].option.status!=OptionStatus.unknown,
+                    child: Row(
+                      children: [
+                        Icon(direction.lastSubscriptions[0].option.status == OptionStatus.freezing?Icons.icecream:
+                        Icons.free_breakfast_outlined,color: colorGreen,size: 10),
+                        const Gap(5),
+                        Text(direction.lastSubscriptions[0].option.status == OptionStatus.freezing?
+                        'Заморозка до '.tr()
+                            :'Каникулы до '.tr(),
+                            style: TStyle.textStyleVelaSansMedium(colorGrey,
+                                size: 13.0)),
+                        Text(DateTimeParser.getDateFromApi(date: direction.lastSubscriptions[0].option.dateEnd),
+                            style: TStyle.textStyleVelaSansMedium(colorGrey,
+                                size: 13.0)),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+            const Gap(5.0),
 
-                 ],
-               ),
-             ),
-           );
+            ///отображение запланированных абиков
+            if(direction.lastSubscriptions.length>1)...{
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Divider(color: colorGrey),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(direction.name,
+                          style:TStyle.textStyleVelaSansBold(colorGrey,size: 16.0)),
+                      Row(
+                        children: [
+                          Text('Осталось уроков '.tr(),style:TStyle.textStyleVelaSansMedium(colorGrey,size: 14.0)),
+                          const Gap(5.0),
+                          Container(
+                            padding: const EdgeInsets.all(6.0),
+                            decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.secondary,
+                                shape: BoxShape.circle),
+                            child: Text('${direction.lastSubscriptions[1].balanceLesson}',
+                                style:TStyle.textStyleVelaSansExtraBolt(colorWhite,size: 13.0)),
+                          ),
+                        ],
+                      )
 
-         })
-       ],
-     );
+                    ],
+                  ),
+                  const Gap(8.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('${ParserPrice.getBalance(direction.lastSubscriptions[1].balanceSub)} руб.',
+                              style:TStyle.textStyleVelaSansMedium(colorGrey,size: 16.0)),
+                          Visibility(
+                            visible: direction.lastSubscriptions[1].dateEnd.isNotEmpty,
+                            child: Row(
+                              children: [
+                                Icon(Icons.timelapse,color: colorRed,size: 10.0),
+                                const Gap(5.0),
+                                Text('Дата окончания'.tr(),
+                                    style:TStyle.textStyleVelaSansMedium(colorGrey,size: 13.0)),
+                                const Gap(5.0),
+                                Text(DateTimeParser.getDateFromApi(date:
+                                direction.lastSubscriptions[1].dateEnd),
+                                    style:TStyle.textStyleVelaSansMedium(colorGrey,size: 13.0)),
+                              ],
+                            ),
+                          ),
+
+                        ],
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
+                        decoration: BoxDecoration(
+                            color: colorRed,
+                            borderRadius: BorderRadius.circular(10.0)),
+                        child: Text('запланирован'.tr(),
+                            style:TStyle.textStyleVelaSansBold(colorWhite,size: 10.0)),
+                      ),
+                    ],
+                  ),
+                  const Gap(5.0),
+                ],
+              )
+            },
+            Divider(color: colorGrey),
+
+          ],
+        ),
+      ),
+    );
+
   }
 
 
