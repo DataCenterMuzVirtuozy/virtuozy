@@ -91,6 +91,8 @@ class Dialoger{
          DetailsLesson() => DetailsLesson().build(context: _,args: args),
          ListBonuses() => ListBonuses().build(context: _,args: args),
          ListSupport() => ListSupport().build(context: _,args: args),
+
+         FindSubways() => FindSubways().build(context: _),
        };
        return  BackdropFilter(
          filter:  blurred?ImageFilter.blur(sigmaX: 10, sigmaY: 5):
@@ -161,11 +163,13 @@ class Dialoger{
        DetailsLesson() => DetailsLesson().build(context: context,args: args),
        ListBonuses() => ListBonuses().build(context: context,args: args),
        ListSupport() => ListSupport().build(context: context,args: args),
+       FindSubways() => FindSubways().build(context: context),
      };
 
      showModalBottomSheet(
          isDismissible:true,
          enableDrag: true,
+         isScrollControlled: true,
          backgroundColor: Colors.transparent,
          context: context, builder: (_){
        return  BackdropFilter(

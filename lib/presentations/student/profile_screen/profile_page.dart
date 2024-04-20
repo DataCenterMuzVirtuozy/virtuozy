@@ -13,6 +13,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:virtuozy/components/dialogs/sealeds.dart';
 import 'package:virtuozy/domain/entities/edit_profile_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/presentations/student/profile_screen/bloc/profile_bloc.dart';
@@ -302,7 +303,11 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
                                     style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
                                   Visibility(
                                       visible: index == widget.user.subways.length-1,
-                                      child: InkWell(child: Icon(Icons.add_box_outlined,color: colorGrey,)),
+                                      child: InkWell(
+                                          child: Icon(Icons.add_box_outlined,color: colorGrey,),
+                                      onTap: (){
+                                            Dialoger.showBottomMenu(title: 'Добавить станцию', context: context, content: FindSubways());
+                                      },),
                                   )
                                 ],
                               ),
