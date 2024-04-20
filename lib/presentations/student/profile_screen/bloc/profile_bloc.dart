@@ -15,10 +15,31 @@ class ProfileBloc extends Bloc<ProfileEvent,ProfileState>{
   ProfileBloc():super(ProfileState.unknown()){
     on<GetDataUserEvent>(_getDataUser);
     on<SaveNewDataUserEvent>(_saveNewUserData);
+    on<GetSubwaysEvent>(_getSubways);
+    on<AddSubwayEvent>(_addSubway);
   }
 
   final _userCubit = locator.get<UserCubit>();
   final _userRepository = locator.get<UserRepository>();
+
+
+  void _addSubway(AddSubwayEvent event,emit) async {
+    try{
+      emit(state.copyWith(addedSubway: event.subway));
+    }on Failure catch(e){
+
+    }
+  }
+
+  void _getSubways(GetSubwaysEvent event,emit) async {
+    try{
+      emit(state.copyWith(findSubwaysStatus: FindSubwaysStatus.loading));
+      final subways = await _userRepository.subways(query: event.query);
+      emit(state.copyWith(findSubwaysStatus: FindSubwaysStatus.loaded,subways: subways));
+    }on Failure catch(e){
+      emit(state.copyWith(findSubwaysStatus: FindSubwaysStatus.error,error: e.message));
+    }
+  }
 
   void _getDataUser(GetDataUserEvent event,emit) async {
     try{

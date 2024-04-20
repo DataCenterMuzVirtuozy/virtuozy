@@ -23,3 +23,19 @@ class SaveNewDataUserEvent extends ProfileEvent{
   final EditProfileEntity editProfileEntity;
   const SaveNewDataUserEvent({required this.editProfileEntity});
 }
+
+class GetSubwaysEvent extends ProfileEvent{
+  final String query;
+
+  const GetSubwaysEvent({
+    required this.query,
+  });
+}
+
+class AddSubwayEvent extends ProfileEvent{
+  final String subway;
+
+  const AddSubwayEvent({
+    required this.subway,
+  });
+}

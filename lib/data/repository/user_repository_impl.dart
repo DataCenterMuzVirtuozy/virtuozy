@@ -4,6 +4,7 @@
  import 'package:virtuozy/di/locator.dart';
 import 'package:virtuozy/domain/entities/document_entity.dart';
 import 'package:virtuozy/domain/entities/edit_profile_entity.dart';
+import 'package:virtuozy/domain/entities/subway_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/domain/repository/user_repository.dart';
 
@@ -37,6 +38,11 @@ class UserRepositoryImpl extends UserRepository{
   @override
   Future<String> loadAvaProfile({required int uid, required EditProfileEntity profileEntity}) async {
    return await _util.loadAvaProfile(uid: uid, profileEntity: profileEntity);
+  }
+
+  @override
+  Future<List<SubwayEntity>> subways({required String  query}) async {
+      return await _util.subways(query: query);
   }
 
 }

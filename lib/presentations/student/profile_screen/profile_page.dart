@@ -238,6 +238,7 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
 
 
   String _dateBirth = '';
+  List<dynamic> _subways = [];
 
 
 
@@ -245,6 +246,7 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
   void initState() {
     super.initState();
    _dateBirth = widget.profileEdit.dateBirth;
+   _subways = widget.user.subways;
   }
 
 
@@ -258,262 +260,304 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
 
   @override
   Widget build(BuildContext context) {
-    return              Column(
+    return              BlocBuilder<ProfileBloc,ProfileState>(
+      builder: (context,state) {
 
-      children: [
-        Container(
-          margin: const EdgeInsets.only(top: 50),
-          padding: const EdgeInsets.only(right: 20,left: 20,top: 70,bottom: 20),
-          width: MediaQuery.sizeOf(context).width,
-          decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceVariant,
-              borderRadius: BorderRadius.circular(20.0)
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Profile picture with edit button
-             Center(
-               child: Text('${widget.user.firstName} ${widget.user.lastName}',
-               textAlign: TextAlign.center,
-               style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
-             ),
-               Center(child: Padding(
-                 padding: const EdgeInsets.symmetric(horizontal: 100),
-                 child: Divider(color: colorGrey),
-               )),
-              const Gap(10.0),
-              Column(
+        if(state.addedSubway.isNotEmpty){
+          if(!_subways.contains(state.addedSubway)){
+            widget.edit = true;
+            _subways.add(state.addedSubway);
+          }
+        }
+
+
+        return Column(
+
+          children: [
+            Container(
+              margin: const EdgeInsets.only(top: 50),
+              padding: const EdgeInsets.only(right: 20,left: 20,top: 70,bottom: 20),
+              width: MediaQuery.sizeOf(context).width,
+              decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surfaceVariant,
+                  borderRadius: BorderRadius.circular(20.0)
+              ),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Часто посещаемые станции метро:'.tr(),style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
+                  // Profile picture with edit button
+                 Center(
+                   child: Text('${widget.user.firstName} ${widget.user.lastName}',
+                   textAlign: TextAlign.center,
+                   style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
+                 ),
+                   Center(child: Padding(
+                     padding: const EdgeInsets.symmetric(horizontal: 100),
+                     child: Divider(color: colorGrey),
+                   )),
+                  const Gap(10.0),
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ...List.generate(widget.user.subways.length, (index) {
-                        return                       Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Icon(Icons.directions_subway,size: 16),
-                            const Gap(5),
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(widget.user.subways[index],
-                                    style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
-                                  Visibility(
-                                      visible: index == widget.user.subways.length-1,
-                                      child: InkWell(
-                                          child: Icon(Icons.add_box_outlined,color: colorGrey,),
-                                      onTap: (){
-                                            Dialoger.showBottomMenu(title: 'Добавить станцию', context: context, content: FindSubways());
-                                      },),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        );
-                      })
+                      Text('Часто посещаемые станции метро:'.tr(),style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
+                      const Gap(8.0),
+        Column(
+                            children: [
+                              ...List.generate(_subways.length, (index) {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 5),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Padding(
+                                      padding: EdgeInsets.only(top: 8),
+                                      child: Icon(Icons.directions_subway, size: 16),
+                                    ),
+                                    const Gap(5),
+                                    Expanded(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              _subways[index],
+                                              style: TStyle.textStyleVelaSansBold(
+                                                  Theme.of(context)
+                                                      .textTheme
+                                                      .displayMedium!
+                                                      .color!,
+                                                  size: 18),
+                                            ),
+                                          ),
+                                          Visibility(
+                                            visible: index == _subways.length - 1,
+                                            child: InkWell(
+                                              child: Icon(
+                                                Icons.add_box_outlined,
+                                                color: colorGrey,
+                                              ),
+                                              onTap: () {
+                                                Dialoger.showBottomMenu(
+                                                    title: 'Добавить станцию',
+                                                    context: context,
+                                                    content: FindSubways());
+                                              },
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            })
+
+                            ],
+                          )
 
                     ],
                   ),
-                ],
-              ),
-              const Gap(10.0),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 20),
-                    child: Text('Кого ищу себе в группу (в напарники, в бенд)?',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  const Gap(10.0),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(widget.user.who_find.isEmpty?'Нет данных':widget.user.who_find,
-                        style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
-                      //Icon(Icons.edit,color: colorGrey,size: 16,)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 20),
+                        child: Text('Кого ищу себе в группу (в напарники, в бенд)?',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
+                      ),
+                      const Gap(8.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(widget.user.who_find.isEmpty?'Нет данных':widget.user.who_find,
+                            style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
+                          //Icon(Icons.edit,color: colorGrey,size: 16,)
+                        ],
+                      ),
                     ],
                   ),
-                ],
-              ),
-              const Gap(10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('О себе:',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
-                  Text(widget.user.about_me,
-                    style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
-                ],
-              ),
-              const Gap(10),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text('Пол:',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
                   const Gap(10),
-                  if(widget.user.sex.isNotEmpty)...{
-                    Text(widget.user.sex == 'man'?'Муж.':'Жен.',
-                      style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),)
-                  }else...{
-                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5),
-                      child: SelectSexMenu(
-                        onChangeSex: (sex){
-                          setState(() {
-                            widget.profileEdit = widget.profileEdit.copyWith(
-                                sex: sex == 'Муж.'?'man':sex == 'Не выбран'?'':'woman');
-                            widget.edit = true;
-                          });
-                        },
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('О себе:',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
+                      const Gap(8.0),
+                      Text(widget.user.about_me,
+                        style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
+                    ],
+                  ),
+                  const Gap(10),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text('Пол:',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
+                      const Gap(10),
+                      if(widget.user.sex.isNotEmpty)...{
+                        Text(widget.user.sex == 'man'?'Муж.':'Жен.',
+                          style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),)
+                      }else...{
+                         Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5),
+                          child: SelectSexMenu(
+                            onChangeSex: (sex){
+                              setState(() {
+                                widget.profileEdit = widget.profileEdit.copyWith(
+                                    sex: sex == 'Муж.'?'man':sex == 'Не выбран'?'':'woman');
+                                widget.edit = true;
+                              });
+                            },
+                          ),
+                        )
+
+                      }
+                    ],
+                  ),
+                  const Gap(10.0),
+                  GestureDetector(
+                    onTap: () async {
+
+                      DateTime? pickedDate = await showDatePicker(
+                            context: context,
+                            useRootNavigator: false,
+                            initialDate: DateTime.now(), //get today's date
+                            firstDate:DateTime(1945), //DateTime.now() - not to allow to choose before today.
+                            lastDate: DateTime(2101)
+                        );
+                        if(pickedDate==null) return;
+                        setState(() {
+                          widget.edit = true;
+                          _dateBirth = DateTimeParser.getDateToApi(dateNow: pickedDate);
+                          widget.profileEdit = widget.profileEdit
+                              .copyWith(dateBirth: _dateBirth);
+                        });
+
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 20,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Дата рождения:',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
+                              Visibility(
+                                visible: true,
+                                child:Icon(Icons.calendar_month,color: colorGrey,size: 18)),
+
+                            ],
+                          ),
+                        ),
+                        //todo если не указан то выбор через меню
+                        const Gap(8.0),
+                        Text(
+                          _dateBirth.isEmpty
+                              ? 'Не указана'
+                              : DateTimeParser.getDateFromApi(date: _dateBirth),
+                          style: TStyle.textStyleVelaSansBold(
+                              Theme.of(context).textTheme.displayMedium!.color!,
+                              size: 18),
+                        )
+                      ],
+                    ),
+                  ),
+                  const Gap(10.0),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Дата регистрации:',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
+                      const Gap(8.0),
+                      Text(DateTimeParser.getDateFromApi(date: widget.user.registration_date),
+                        style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
+                    ],
+                  ),
+                  const Gap(10.0),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text('Наличие детей:',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
+                      const Gap(10.0),
+                       SelectKidsMenu(
+                         hasKind: widget.user.has_kids,
+                         onKind: (hasKind){
+                           setState(() {
+                             widget.edit = true;
+                             widget.profileEdit = widget.profileEdit.copyWith(hasKind: hasKind as bool);
+                           });
+                       },)
+                    ],
+                  ),
+
+
+
+
+                  const Gap(30.0),
+                  if( widget.state.profileStatus == ProfileStatus.saving)...{
+                    Center(child: CircularProgressIndicator(color: colorOrange))
+                  }else ...{
+                    SizedBox(
+                      height: 40.0,
+                      child: Opacity(
+                        opacity: !widget.edit?0.3:1.0,
+                        child: SubmitButton(
+                            borderRadius: 8,
+                            textButton: 'Сохранить изменения'.tr(),
+                            onTap: () {
+                              if(widget.edit){
+                                context.read<ProfileBloc>().add(SaveNewDataUserEvent(editProfileEntity: widget.profileEdit));
+                              }
+                            }
+                        ),
                       ),
                     )
 
                   }
                 ],
               ),
-              const Gap(10.0),
-              GestureDetector(
-                onTap: () async {
-
-                  DateTime? pickedDate = await showDatePicker(
-                        context: context,
-                        useRootNavigator: false,
-                        initialDate: DateTime.now(), //get today's date
-                        firstDate:DateTime(1945), //DateTime.now() - not to allow to choose before today.
-                        lastDate: DateTime(2101)
-                    );
-                    if(pickedDate==null) return;
-                    setState(() {
-                      widget.edit = true;
-                      _dateBirth = DateTimeParser.getDateToApi(dateNow: pickedDate);
-                      widget.profileEdit = widget.profileEdit
-                          .copyWith(dateBirth: _dateBirth);
-                    });
-
-                },
+            ),
+            Visibility(
+              visible: !_fullDataProfile(widget.profileEdit),
+              child: Container(
+                margin: const EdgeInsets.symmetric(vertical: 10.0),
+                padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 15.0),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.0),
+                    color: Theme.of(context).colorScheme.surfaceVariant
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      height: 20,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Дата рождения:',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
-                          Visibility(
-                            visible: true,
-                            child:Icon(Icons.calendar_month,color: colorGrey,size: 18)),
-
-                        ],
-                      ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 47.0),
+                      child: Text('Внимание!',style: TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,size: 18.0)),
                     ),
-                    //todo если не указан то выбор через меню
-                    Text(
-                      _dateBirth.isEmpty
-                          ? 'Не указана'
-                          : DateTimeParser.getDateFromApi(date: _dateBirth),
-                      style: TStyle.textStyleVelaSansBold(
-                          Theme.of(context).textTheme.displayMedium!.color!,
-                          size: 18),
-                    )
+                    const Gap(5.0),
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(5.0),
+                          decoration: BoxDecoration(
+                              color: colorOrange.withOpacity(0.2),
+                              shape: BoxShape.circle
+                          ),
+                          child: Icon(Icons.electric_bolt,color: colorOrange),
+                        ),
+                        const Gap(15.0),
+                        Expanded(child: Text('Заполни карточку целиком - получи БОНУСНЫЙ УРОК!',
+                            style: TStyle.textStyleVelaSansRegular(colorGrey,size: 14.0))),
+                      ],
+                    ),
+
                   ],
                 ),
               ),
-              const Gap(10.0),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Дата регистрации:',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
-                  Text(DateTimeParser.getDateFromApi(date: widget.user.registration_date),
-                    style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
-                ],
-              ),
-              const Gap(10.0),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text('Наличие детей:',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
-                  const Gap(10.0),
-                   SelectKidsMenu(
-                     hasKind: widget.user.has_kids,
-                     onKind: (hasKind){
-                       setState(() {
-                         widget.edit = true;
-                         widget.profileEdit = widget.profileEdit.copyWith(hasKind: hasKind as bool);
-                       });
-                   },)
-                ],
-              ),
-
-
-
-
-              const Gap(30.0),
-              if( widget.state.profileStatus == ProfileStatus.saving)...{
-                Center(child: CircularProgressIndicator(color: colorOrange))
-              }else ...{
-                SizedBox(
-                  height: 40.0,
-                  child: Opacity(
-                    opacity: !widget.edit?0.3:1.0,
-                    child: SubmitButton(
-                        borderRadius: 8,
-                        textButton: 'Сохранить изменения'.tr(),
-                        onTap: () {
-                          if(widget.edit){
-                            context.read<ProfileBloc>().add(SaveNewDataUserEvent(editProfileEntity: widget.profileEdit));
-                          }
-                        }
-                    ),
-                  ),
-                )
-
-              }
-            ],
-          ),
-        ),
-        Visibility(
-          visible: !_fullDataProfile(widget.profileEdit),
-          child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 10.0),
-            padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 15.0),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15.0),
-                color: Theme.of(context).colorScheme.surfaceVariant
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 47.0),
-                  child: Text('Внимание!',style: TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,size: 18.0)),
-                ),
-                const Gap(5.0),
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(5.0),
-                      decoration: BoxDecoration(
-                          color: colorOrange.withOpacity(0.2),
-                          shape: BoxShape.circle
-                      ),
-                      child: Icon(Icons.electric_bolt,color: colorOrange),
-                    ),
-                    const Gap(15.0),
-                    Expanded(child: Text('Заполни карточку целиком - получи БОНУСНЫЙ УРОК!',
-                        style: TStyle.textStyleVelaSansRegular(colorGrey,size: 14.0))),
-                  ],
-                ),
-
-              ],
-            ),
-          ),
-        )
-      ],
+            )
+          ],
+        );
+      }
     );
   }
 

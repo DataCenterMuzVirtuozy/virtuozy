@@ -15,6 +15,7 @@ import 'package:virtuozy/utils/failure.dart';
  import 'dart:io';
 import '../../di/locator.dart';
 import '../models/notifi_setting_model.dart';
+import '../models/subway_model.dart';
 import '../models/user_model.dart';
 
 class UserService{
@@ -136,6 +137,32 @@ class UserService{
      } catch(e){
        print('Error 3 ${e.toString()}');
        throw const Failure('Ошибка загрузки фото');
+     }
+   }
+
+   Future<List<dynamic>> subways({required String  query}) async {
+     try{
+       print('Query ${query}');
+     final res =  await _dio.post(Endpoints.subways,
+           options: Options(
+             headers: {"Authorization": "Token c8b766b17530af15eff28fc87f5b75674c614f74"}
+           ),
+           data: {
+            'query':query,
+             'filters':[
+               {
+                 "city": "Москва",
+               }
+             ]
+           });
+       print('Response ${res.data}');
+      return res.data['suggestions'];
+     } on Failure catch(e){
+       print('Error 1 ${e.message}');
+       throw  Failure(e.message);
+     } on DioException catch(e){
+       print('Error 2 ${e.toString()}');
+       throw  Failure(e.toString());
      }
    }
 

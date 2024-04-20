@@ -1,7 +1,9 @@
 
 
 
- import '../entities/document_entity.dart';
+ import 'package:virtuozy/domain/entities/subway_entity.dart';
+
+import '../entities/document_entity.dart';
 import '../entities/edit_profile_entity.dart';
 import '../entities/notifi_setting_entity.dart';
 import '../entities/user_entity.dart';
@@ -12,4 +14,5 @@ abstract class UserRepository{
    Future<void> acceptDocuments({required int uid,required List<DocumentEntity> docs});
    Future<void> saveSettingDataProfile({required int uid,required EditProfileEntity profileEntity});
    Future<String> loadAvaProfile({required int uid,required EditProfileEntity profileEntity});
+   Future<List<SubwayEntity>> subways({required  String query});
  }

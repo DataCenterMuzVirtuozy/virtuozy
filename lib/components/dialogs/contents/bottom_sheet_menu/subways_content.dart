@@ -5,8 +5,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:virtuozy/components/dialogs/dialoger.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
+import 'package:virtuozy/presentations/student/profile_screen/bloc/profile_bloc.dart';
+import 'package:virtuozy/presentations/student/profile_screen/bloc/profile_event.dart';
+import 'package:virtuozy/presentations/student/profile_screen/bloc/profile_state.dart';
 import 'package:virtuozy/utils/auth_mixin.dart';
 
 import '../../../../resourses/colors.dart';
@@ -85,8 +90,9 @@ class _SubwaysContentState extends State<SubwaysContent> with AuthMixin{
           SizedBox(
             height: 50,
             child: TextField(
-              onChanged: (text){
+              onChanged: (text)  {
                 filterSubway(text);
+                context.read<ProfileBloc>().add(GetSubwaysEvent(query: text));
               },
               //inputFormatters: [textInputFormatter],
               //readOnly: readOnly,
@@ -121,22 +127,50 @@ class _SubwaysContentState extends State<SubwaysContent> with AuthMixin{
                   )),
             ),
           ),
-          Expanded(child: ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 20),
-            itemCount: _filteredSubway.length,
-              itemBuilder: (context,index){
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Row(
-                    children: [
-                      Icon(Icons.subway,color: textColorBlack(context),size: 17),
-                      const Gap(10),
-                      Text('ст. ${_filteredSubway[index]}',
-                      style:TStyle.textStyleVelaSansRegular(textColorBlack(context),size: 16)),
-                    ],
-                  ),
-                );
-              }))
+          Expanded
+            (child: BlocConsumer<ProfileBloc,ProfileState>(
+            listener: (c,s){
+              if(s.findSubwaysStatus == FindSubwaysStatus.error){
+                Dialoger.showMessage(s.error);
+              }
+            },
+              builder: (context,state) {
+
+               if(state.findSubwaysStatus == FindSubwaysStatus.loading){
+                return Center(child: CircularProgressIndicator(color: colorOrange,));
+               }
+
+               if(state.subways.isEmpty){
+                 return Container();
+               }
+
+
+                return ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 20),
+                itemCount: state.subways.length,
+                  itemBuilder: (context,index){
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: InkWell(
+                        onTap: (){
+                          Navigator.pop(context);
+                          context.read<ProfileBloc>().add(AddSubwayEvent(subway: 'ст. ${state.subways[index].name}'));
+                        },
+                        child: Row(
+                          children: [
+                            Icon(Icons.subway,color: textColorBlack(context),size: 17),
+                            const Gap(10),
+                            Expanded(
+                              child: Text('ст. ${state.subways[index].name}',
+                              style:TStyle.textStyleVelaSansRegular(textColorBlack(context),size: 16)),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  });
+              }
+            ))
         ],
       ),
     ),

@@ -3,8 +3,10 @@
  import 'package:virtuozy/data/mappers/document_mapper.dart';
 import 'package:virtuozy/data/mappers/notifi_setting_mapper.dart';
 import 'package:virtuozy/data/models/price_subscription_model.dart';
+import 'package:virtuozy/data/models/subway_model.dart';
 import 'package:virtuozy/data/models/user_model.dart';
 import 'package:virtuozy/domain/entities/price_subscription_entity.dart';
+import 'package:virtuozy/domain/entities/subway_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 
 import '../../domain/entities/lesson_entity.dart';
@@ -161,6 +163,10 @@ class UserMapper{
         status: _lessonStatus(lessonModel.status),
         nameStudent: lessonModel.nameStudent,
         idSchool: lessonModel.idSchool);
+  }
+
+  static SubwayEntity fromApiSubway({required SubwayModel model}){
+    return SubwayEntity(name: model.name);
   }
 
  }

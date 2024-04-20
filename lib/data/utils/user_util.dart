@@ -3,12 +3,14 @@
 
  import 'package:virtuozy/data/mappers/document_mapper.dart';
 import 'package:virtuozy/data/mappers/user_mapper.dart';
+import 'package:virtuozy/data/models/subway_model.dart';
 import 'package:virtuozy/data/services/user_service.dart';
 import 'package:virtuozy/di/locator.dart';
 import 'package:virtuozy/domain/entities/document_entity.dart';
 
 import '../../domain/entities/edit_profile_entity.dart';
 import '../../domain/entities/notifi_setting_entity.dart';
+import '../../domain/entities/subway_entity.dart';
 import '../../domain/entities/user_entity.dart';
 
 class UserUtil{
@@ -36,6 +38,11 @@ class UserUtil{
 
     Future<String> loadAvaProfile({required int uid,required EditProfileEntity profileEntity}) async {
       return await _service.loadAvaProfile(uid: uid, profileEntity: profileEntity);
+    }
+
+    Future<List<SubwayEntity>> subways({required String  query}) async {
+      final res = await _service.subways(query: query);
+      return res.map((e) => UserMapper.fromApiSubway(model: SubwayModel.fromMap(e))).toList();
     }
 
  }
