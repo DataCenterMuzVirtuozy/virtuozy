@@ -39,7 +39,7 @@ class UserMapper{
         date_birth: userModel.date_birth,
         registration_date: userModel.registration_date,
         has_kids: userModel.has_kids,
-        subways: userModel.subways,
+        subways: userModel.subways.map((e) => fromApiSubway(model: e)).toList(),
         who_find: userModel.who_find,
         avaUrl: userModel.avaUrl);
   }
@@ -166,7 +166,7 @@ class UserMapper{
   }
 
   static SubwayEntity fromApiSubway({required SubwayModel model}){
-    return SubwayEntity(name: model.name);
+    return SubwayEntity(name: model.name,color: model.color);
   }
 
  }

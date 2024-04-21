@@ -3,6 +3,7 @@
 
  import 'package:equatable/equatable.dart';
 import 'package:virtuozy/domain/entities/edit_profile_entity.dart';
+import 'package:virtuozy/domain/entities/subway_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 
 class ProfileEvent extends Equatable{
@@ -33,7 +34,7 @@ class GetSubwaysEvent extends ProfileEvent{
 }
 
 class AddSubwayEvent extends ProfileEvent{
-  final String subway;
+  final SubwayEntity subway;
 
   const AddSubwayEvent({
     required this.subway,

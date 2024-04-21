@@ -14,6 +14,8 @@ import 'package:virtuozy/utils/failure.dart';
  import 'dart:convert' as convert;
  import 'dart:io';
 import '../../di/locator.dart';
+import '../../domain/user_cubit.dart';
+import '../../resourses/strings.dart';
 import '../models/notifi_setting_model.dart';
 import '../models/subway_model.dart';
 import '../models/user_model.dart';
@@ -95,8 +97,18 @@ class UserService{
 
    Future<void> saveSettingDataProfile({required int uid,required EditProfileEntity profileEntity}) async{
      try{
+       final List<Map<String,dynamic>> subWay = [];
+
+
+       for(var s in profileEntity.subways){
+         subWay.add({
+           "value":s.name,
+           "color":s.color
+         });
+       }
        await _dio.patch('${Endpoints.user}/$uid',
            data: {
+             'subways':subWay,
              'sex': profileEntity.sex,
              'date_birth':profileEntity.dateBirth,
              'has_kids': profileEntity.hasKind,
@@ -142,20 +154,20 @@ class UserService{
 
    Future<List<dynamic>> subways({required String  query}) async {
      try{
-       print('Query ${query}');
+     final user = locator.get<UserCubit>();
      final res =  await _dio.post(Endpoints.subways,
            options: Options(
-             headers: {"Authorization": "Token c8b766b17530af15eff28fc87f5b75674c614f74"}
+             headers: {"Authorization": "Token $apiKeyDaData"}
            ),
            data: {
             'query':query,
              'filters':[
                {
-                 "city": "Москва",
+                 "city": user.userEntity.branchName,
                }
              ]
            });
-       print('Response ${res.data}');
+
       return res.data['suggestions'];
      } on Failure catch(e){
        print('Error 1 ${e.message}');

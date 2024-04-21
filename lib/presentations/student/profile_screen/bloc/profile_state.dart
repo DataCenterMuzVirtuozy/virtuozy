@@ -27,7 +27,7 @@ enum ProfileStatus{
   final FindSubwaysStatus findSubwaysStatus;
   final UserEntity userEntity;
   final List<SubwayEntity> subways;
-  final String addedSubway;
+  final SubwayEntity addedSubway;
   final String error;
 
 
@@ -50,7 +50,7 @@ enum ProfileStatus{
       profileStatus: ProfileStatus.unknown,
       userEntity: UserEntity.unknown(),
       error: '',findSubwaysStatus: FindSubwaysStatus.unknown,
-      subways:  const [], addedSubway: '');
+      subways:  const [], addedSubway: SubwayEntity.unknown());
  }
 
   ProfileState copyWith({
@@ -59,7 +59,7 @@ enum ProfileStatus{
     String? error,
     List<SubwayEntity>? subways,
     FindSubwaysStatus? findSubwaysStatus,
-    String? addedSubway,
+    SubwayEntity? addedSubway,
   }) {
     return ProfileState(
       addedSubway: addedSubway??this.addedSubway,

@@ -9,6 +9,7 @@ import 'package:virtuozy/data/models/document_model.dart';
 import 'package:virtuozy/data/models/notifi_setting_model.dart';
 import 'package:virtuozy/data/models/price_subscription_model.dart';
 import 'package:virtuozy/data/models/subscription_model.dart';
+import 'package:virtuozy/data/models/subway_model.dart';
 import 'package:virtuozy/domain/entities/subscription_entity.dart';
 
 import '../../domain/entities/notifi_setting_entity.dart';
@@ -29,7 +30,7 @@ class UserModel{
    final String date_birth;
    final String registration_date;
    final bool has_kids;
-   final List<dynamic> subways;
+   final List<SubwayModel> subways;
    final String who_find;
    final String avaUrl;
 
@@ -61,6 +62,7 @@ class UserModel{
     final directions = mapUser['directions'] as List<dynamic>;
     final settingsMap = mapUser['settingNotifi'] as List<dynamic>;
     final docs =  mapUser['documents'] as List<dynamic>;
+    final subways  = (mapUser['subways'] as List<dynamic>).map((e) =>SubwayModel.fromMap(e)).toList();
     return UserModel(
       notifiSttings:
           settingsMap.map((e) => NotifiSettingModel.fromMap(e)).toList(),
@@ -81,7 +83,7 @@ class UserModel{
       date_birth: mapUser['date_birth'] as String,
       registration_date: mapUser['registration_date'] as String,
       has_kids: mapUser['has_kids'] as bool,
-      subways: mapUser['subways'] as List<dynamic>,
+      subways: subways,
       who_find: mapUser['who_find'] as String,
       avaUrl: mapUser['avaUrl'] as String,
     );

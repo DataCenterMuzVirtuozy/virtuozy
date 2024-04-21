@@ -2,6 +2,7 @@
  import 'package:virtuozy/domain/entities/document_entity.dart';
 import 'package:virtuozy/domain/entities/price_subscription_entity.dart';
 import 'package:virtuozy/domain/entities/subscription_entity.dart';
+import 'package:virtuozy/domain/entities/subway_entity.dart';
 
 import 'lesson_entity.dart';
 import 'notifi_setting_entity.dart';
@@ -47,7 +48,7 @@ enum UserStatus{
    final String date_birth;
    final String registration_date;
    final bool has_kids;
-   final List<dynamic> subways;
+   final List<SubwayEntity> subways;
    final String who_find;
    final String avaUrl;
 
@@ -111,7 +112,7 @@ enum UserStatus{
     String? date_birth,
     String? registration_date,
     bool? has_kids,
-    List<String>? subways,
+    List<SubwayEntity>? subways,
     String? who_find,
     String? avaUrl
   }) {

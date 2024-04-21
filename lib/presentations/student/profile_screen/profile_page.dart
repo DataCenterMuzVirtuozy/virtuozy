@@ -2,24 +2,22 @@
 
 
 
- import 'dart:io';
+import 'dart:io';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:virtuozy/components/dialogs/sealeds.dart';
 import 'package:virtuozy/domain/entities/edit_profile_entity.dart';
+import 'package:virtuozy/domain/entities/subway_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/presentations/student/profile_screen/bloc/profile_bloc.dart';
 import 'package:virtuozy/presentations/student/profile_screen/bloc/profile_event.dart';
 import 'package:virtuozy/resourses/colors.dart';
-import 'package:virtuozy/resourses/images.dart';
 import 'package:virtuozy/utils/date_time_parser.dart';
 
 import '../../../components/buttons.dart';
@@ -52,7 +50,7 @@ import 'bloc/profile_state.dart';
      if (pickedFile != null) {
        setState(() {
         _imageFile = File(pickedFile.path);
-        profileEntity = profileEntity!.copyWith(fileImageUrl: _imageFile);
+        profileEntity = profileEntity.copyWith(fileImageUrl: _imageFile);
         _edit = true;
         _editPhotoMode = false;
        });
@@ -75,7 +73,8 @@ import 'bloc/profile_state.dart';
              Dialoger.showMessage(s.error);
            }
            if(s.profileStatus == ProfileStatus.saved){
-             _edit = false;
+             //_edit = false;
+             print('Edit false AAAAAA');
              Dialoger.showActionMaterialSnackBar(context: context, title: 'Изменения сохранены'.tr());
            }
 
@@ -86,7 +85,8 @@ import 'bloc/profile_state.dart';
                  sex: s.userEntity.sex,
                  dateBirth: s.userEntity.date_birth,
                  hasKind: s.userEntity.has_kids,
-                 urlAva: s.userEntity.avaUrl);
+                 urlAva: s.userEntity.avaUrl,
+                 subways: s.userEntity.subways);
            }
          },
          builder: (context,state) {
@@ -238,7 +238,8 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
 
 
   String _dateBirth = '';
-  List<dynamic> _subways = [];
+  List<SubwayEntity> _subways = [];
+  bool _edit = false;
 
 
 
@@ -247,6 +248,7 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
     super.initState();
    _dateBirth = widget.profileEdit.dateBirth;
    _subways = widget.user.subways;
+   _edit = widget.edit;
   }
 
 
@@ -258,19 +260,27 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
     return fullData;
   }
 
+  Color _getColorSubway(String color){
+    final code = '#$color';
+    return  Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return              BlocBuilder<ProfileBloc,ProfileState>(
-      builder: (context,state) {
-
-        if(state.addedSubway.isNotEmpty){
-          if(!_subways.contains(state.addedSubway)){
-            widget.edit = true;
-            _subways.add(state.addedSubway);
+    return              BlocConsumer<ProfileBloc,ProfileState>(
+      listener: (c,s){
+        if(s.addedSubway.name.isNotEmpty){
+          if(!_subways.contains(s.addedSubway)){
+            _edit = true;
+            _subways.add(s.addedSubway);
+            widget.profileEdit = widget.profileEdit.copyWith(subways: _subways);
           }
         }
 
+      },
+      builder: (context,state) {
 
+        print('Edit ${_edit}');
         return Column(
 
           children: [
@@ -298,67 +308,104 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
                   const Gap(10.0),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text('Часто посещаемые станции метро:'.tr(),style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
                       const Gap(8.0),
-        Column(
-                            children: [
-                              ...List.generate(_subways.length, (index) {
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 5),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                    Column(
+                      children: [
+                        ...List.generate(
+                            _subways.length, (index) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 3),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    const Padding(
-                                      padding: EdgeInsets.only(top: 8),
-                                      child: Icon(Icons.directions_subway, size: 16),
-                                    ),
+                                     Container(
+                                       decoration: BoxDecoration(
+                                         shape: BoxShape.circle,
+                                         border: Border.all(color:
+                                         _getColorSubway( _subways[index].color),
+                                             width: 1 )
+                                       ),
+                                       padding: const EdgeInsets.all(2),
+                                      margin: const EdgeInsets.only(top: 2),
+                                       child:  Icon(Icons.directions_subway,
+                                           color: _getColorSubway( _subways[index].color),
+                                           size: 12),
+                                     ),
                                     const Gap(5),
-                                    Expanded(
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Expanded(
-                                            child: Text(
-                                              _subways[index],
-                                              style: TStyle.textStyleVelaSansBold(
-                                                  Theme.of(context)
-                                                      .textTheme
-                                                      .displayMedium!
-                                                      .color!,
-                                                  size: 18),
-                                            ),
-                                          ),
-                                          Visibility(
-                                            visible: index == _subways.length - 1,
-                                            child: InkWell(
-                                              child: Icon(
-                                                Icons.add_box_outlined,
-                                                color: colorGrey,
-                                              ),
-                                              onTap: () {
-                                                Dialoger.showBottomMenu(
-                                                    title: 'Добавить станцию',
-                                                    context: context,
-                                                    content: FindSubways());
-                                              },
-                                            ),
-                                          )
-                                        ],
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width-130,
+                                      child: Text(
+                                        _subways[index].name,
+                                        style: TStyle.textStyleVelaSansBold(
+                                            Theme.of(context)
+                                                .textTheme
+                                                .displayMedium!
+                                                .color!,
+                                            size: 18),
                                       ),
                                     ),
                                   ],
                                 ),
-                              );
-                            })
+                                InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        _edit = true;
+                                        _subways.removeAt(index);
+                                        widget.profileEdit = widget.profileEdit.copyWith(subways: _subways);
+                                      });
+                                    },
+                                    child: Icon(Icons.remove_circle_outline,size: 16,color: colorRed))
+                              ],
+                            ),
+                          );
+                        })
+                      ],
+                    ),
+                      const Gap(10),
+                      Align(
+                        alignment: Alignment.center,
+                        child: InkWell(
+                          child: Container(
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.symmetric(vertical: 5,horizontal: 10),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: colorGrey,width: 1.5),
+                              borderRadius: BorderRadius.circular(8)
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text('Добавить станцию'.tr(),style: TStyle.textStyleVelaSansMedium(colorGrey)),
+                                const Gap(5),
+                                Icon(
+                                  Icons.add,
+                                  color: colorGrey,
+                                  size: 16,
+                                ),
+                              ],
+                            ),
+                          ),
+                          onTap: () {
+                            Dialoger.showBottomMenu(
+                                title: 'Добавить станцию'.tr(),
+                                context: context,
+                                content: FindSubways());
+                          },
+                        ),
+                      )
 
-                            ],
-                          )
 
                     ],
                   ),
-                  const Gap(10.0),
+                  const Gap(13.0),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -404,7 +451,7 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
                               setState(() {
                                 widget.profileEdit = widget.profileEdit.copyWith(
                                     sex: sex == 'Муж.'?'man':sex == 'Не выбран'?'':'woman');
-                                widget.edit = true;
+                                _edit= true;
                               });
                             },
                           ),
@@ -426,7 +473,7 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
                         );
                         if(pickedDate==null) return;
                         setState(() {
-                          widget.edit = true;
+                          _edit= true;
                           _dateBirth = DateTimeParser.getDateToApi(dateNow: pickedDate);
                           widget.profileEdit = widget.profileEdit
                               .copyWith(dateBirth: _dateBirth);
@@ -484,7 +531,7 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
                          hasKind: widget.user.has_kids,
                          onKind: (hasKind){
                            setState(() {
-                             widget.edit = true;
+                             _edit = true;
                              widget.profileEdit = widget.profileEdit.copyWith(hasKind: hasKind as bool);
                            });
                        },)
@@ -501,12 +548,12 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
                     SizedBox(
                       height: 40.0,
                       child: Opacity(
-                        opacity: !widget.edit?0.3:1.0,
+                        opacity: !_edit?0.3:1.0,
                         child: SubmitButton(
                             borderRadius: 8,
                             textButton: 'Сохранить изменения'.tr(),
                             onTap: () {
-                              if(widget.edit){
+                              if(_edit){
                                 context.read<ProfileBloc>().add(SaveNewDataUserEvent(editProfileEntity: widget.profileEdit));
                               }
                             }

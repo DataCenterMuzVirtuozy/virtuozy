@@ -25,31 +25,7 @@ class SubwaysContent extends StatefulWidget{
 }
 
 class _SubwaysContentState extends State<SubwaysContent> with AuthMixin{
-  final List<String> _subWays = [
-    "Авиамоторная",
-    "Автозаводская",
-    "Академическая",
-    "Александровский сад",
-    "Алексеевская",
-    "Алма-Атинская",
-    "Алтуфьево",
-    "Аннино",
-    "Электрозаводская",
-    "Электрозаводская",
-    "Юго-Западная",
-    "Ясенево",
-  ];
 
-
-  List<String> _filteredSubway = [];
-
-  void filterSubway(String query) {
-    setState(() {
-      _filteredSubway = _subWays
-          .where((city) => city.toLowerCase().contains(query.toLowerCase()))
-          .toList();
-    });
-  }
 
 
 
@@ -91,7 +67,6 @@ class _SubwaysContentState extends State<SubwaysContent> with AuthMixin{
             height: 50,
             child: TextField(
               onChanged: (text)  {
-                filterSubway(text);
                 context.read<ProfileBloc>().add(GetSubwaysEvent(query: text));
               },
               //inputFormatters: [textInputFormatter],
@@ -137,11 +112,26 @@ class _SubwaysContentState extends State<SubwaysContent> with AuthMixin{
               builder: (context,state) {
 
                if(state.findSubwaysStatus == FindSubwaysStatus.loading){
-                return Center(child: CircularProgressIndicator(color: colorOrange,));
+                return Padding(
+                  padding: const EdgeInsets.only(top: 50),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Center(child: CircularProgressIndicator(color: colorOrange)),
+                      ],
+                    ));
                }
 
                if(state.subways.isEmpty){
-                 return Container();
+                 return Padding(
+                     padding: const EdgeInsets.only(top: 50),
+                     child: Column(
+                       mainAxisAlignment: MainAxisAlignment.start,
+                       children: [
+                         Center(child: Text('Список станций пуст'.tr(),
+                             style:TStyle.textStyleVelaSansMedium(colorGrey))),
+                       ],
+                     ));
                }
 
 
@@ -154,7 +144,7 @@ class _SubwaysContentState extends State<SubwaysContent> with AuthMixin{
                       child: InkWell(
                         onTap: (){
                           Navigator.pop(context);
-                          context.read<ProfileBloc>().add(AddSubwayEvent(subway: 'ст. ${state.subways[index].name}'));
+                          context.read<ProfileBloc>().add(AddSubwayEvent(subway: state.subways[index]));
                         },
                         child: Row(
                           children: [

@@ -3,6 +3,7 @@
  import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:virtuozy/domain/entities/subway_entity.dart';
 
 class EditProfileEntity{
 
@@ -11,8 +12,10 @@ class EditProfileEntity{
    final String dateBirth;
    final bool hasKind;
    final String urlAva;
+   final List<SubwayEntity> subways;
 
    const EditProfileEntity({
+     required this.subways,
      required this.urlAva,
     required this.fileImageUrl,
     required this.sex,
@@ -22,7 +25,7 @@ class EditProfileEntity{
 
 
    factory EditProfileEntity.unknown(){
-     return const EditProfileEntity(fileImageUrl: null, sex: '', dateBirth: '', hasKind: false, urlAva: '');
+     return const EditProfileEntity(fileImageUrl: null, sex: '', dateBirth: '', hasKind: false, urlAva: '', subways: []);
    }
 
   EditProfileEntity copyWith({
@@ -30,9 +33,11 @@ class EditProfileEntity{
     String? sex,
     String? dateBirth,
     bool? hasKind,
-    String? urlAva
+    String? urlAva,
+    List<SubwayEntity>? subways
   }) {
     return EditProfileEntity(
+      subways: subways??this.subways,
       fileImageUrl: fileImageUrl ?? this.fileImageUrl,
       sex: sex ?? this.sex,
       dateBirth: dateBirth ?? this.dateBirth,

@@ -4,6 +4,7 @@
  import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:virtuozy/di/locator.dart';
 import 'package:virtuozy/domain/entities/edit_profile_entity.dart';
+import 'package:virtuozy/domain/entities/subway_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/domain/repository/user_repository.dart';
 import 'package:virtuozy/domain/user_cubit.dart';
@@ -25,7 +26,9 @@ class ProfileBloc extends Bloc<ProfileEvent,ProfileState>{
 
   void _addSubway(AddSubwayEvent event,emit) async {
     try{
-      emit(state.copyWith(addedSubway: event.subway));
+      emit(state.copyWith(addedSubway: event.subway,profileStatus: ProfileStatus.unknown));
+      //await Future.delayed(const Duration(milliseconds: 300));
+    // emit(state.copyWith(addedSubway: SubwayEntity.unknown()));
     }on Failure catch(e){
 
     }
@@ -55,7 +58,6 @@ class ProfileBloc extends Bloc<ProfileEvent,ProfileState>{
 
   void _saveNewUserData(SaveNewDataUserEvent event,emit) async {
    try{
-     print('dateBirth ${event.editProfileEntity.dateBirth}, hasKind ${event.editProfileEntity.hasKind}, sex ${event.editProfileEntity.sex}, ');
      EditProfileEntity profileEntity = event.editProfileEntity;
      UserEntity user = _userCubit.userEntity;
      emit(state.copyWith(profileStatus: ProfileStatus.saving));
@@ -64,6 +66,7 @@ class ProfileBloc extends Bloc<ProfileEvent,ProfileState>{
       profileEntity = profileEntity.copyWith(urlAva: url);
     }
      user = user.copyWith(
+         subways:profileEntity.subways,
        date_birth: profileEntity.dateBirth,
          avaUrl: profileEntity.urlAva,
          has_kids: profileEntity.hasKind,
