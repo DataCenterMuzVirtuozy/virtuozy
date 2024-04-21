@@ -56,10 +56,16 @@
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
 	<key>FDAllFilesDownloadedMessage</key>
-    <string>All files have been downloaded</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-        <string>Photo to add to profile</string>
-         <key>NSCameraUsageDescription</key>
-                <string>Photo to add to profile</string>
+	<string>All files have been downloaded</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Photo to add to profile</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Photo to add to profile</string>
+	<key>UISupportsDocumentBrowser</key>
+	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
+	<key>UIFileSharingEnabled</key>
+	<true/>
 </dict>
 </plist>

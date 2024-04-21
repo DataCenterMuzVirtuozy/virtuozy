@@ -1,8 +1,10 @@
 
 
- import 'dart:isolate';
+ import 'dart:io';
+import 'dart:isolate';
 import 'dart:ui';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:virtuozy/domain/entities/document_entity.dart';
@@ -79,13 +81,23 @@ class DocsBloc extends Bloc<DocsEvent,DocsState>{
       emit(state.copyWith(docsStatus: DocsStatus.downloaded,error: ''));
     }on Failure catch(e){
       emit(state.copyWith(docsStatus: DocsStatus.error,error: e.message));
+    } catch (e){
+      emit(state.copyWith(docsStatus: DocsStatus.error,error: 'Ошибка загрузки документа'.tr()));
     }
   }
 
 
   Future<String> get _localPath async {
-    final directory = await pathProvider.getDownloadsDirectory();
-    return directory!.path;
+    if(Platform.isIOS){
+      print("DIR IOS");
+      final dir = await pathProvider.getApplicationDocumentsDirectory();
+       return dir.path;
+
+    }else{
+      final directory = await pathProvider.getDownloadsDirectory();
+      return directory!.path;
+    }
+
   }
 
 

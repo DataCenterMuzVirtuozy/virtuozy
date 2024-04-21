@@ -120,30 +120,30 @@ class UserModel{
     final subs = mapSubs.map((e) => SubscriptionModel.fromMap(e,nameDirection)).toList();
     final subsDir = subs.where((element) => element.idDir == (mapDirection['id'] as int)).toList();
     final lastSub = _getLastSub(subsDir);
+    final int idDir = mapDirection['id'];
     final bonus = mapDirection['bonus'] as List<dynamic>;
     return DirectionModel(
-      id: mapDirection['id'],
+      id: idDir,
       bonus: bonus.map((e) => BonusModel.fromMap(e,nameDirection)).toList(),
       subscriptionsAll: subsDir,
       name: nameDirection,
-      lessons: _getLessons(lessons: lessons.map((e) => LessonModel.fromMap(e,nameDirection)).toList(),subsDir: subsDir),
+      lessons: _getLessons(lessons: lessons.map((e) => LessonModel.fromMap(e,nameDirection)).toList(),idDir: idDir),
       lastSubscriptions: lastSub,
 
     );
   }
 
 
-    static List<LessonModel> _getLessons({required List<LessonModel> lessons,required List<SubscriptionModel> subsDir}){
+    static List<LessonModel> _getLessons({required List<LessonModel> lessons,required int idDir}){
     List<LessonModel> lessonsResult = [];
-    List<int> ids = subsDir.map((e) => e.id).toList();
-    //TODO распределить уроки по направлению
+    //List<int> ids = subsDir.map((e) => e.id).toList();
     for(var l in lessons){
-      if(ids.contains(l.idSub)){
+      if(idDir == l.idDir){
         lessonsResult.add(l);
       }
     }
 
-    return lessons;
+    return lessonsResult;
     }
 
 
@@ -189,6 +189,7 @@ class UserModel{
  class LessonModel{
   final int id;
   final int idSub;
+  final int idDir;
   final String idSchool;
    final String date; //2024-12-22
    final String timePeriod;
@@ -201,6 +202,7 @@ class UserModel{
    final bool bonus;
 
    const LessonModel( {
+     required this.idDir,
      required this.idSchool,
      required this.nameStudent,
      required this.nameDirection,
@@ -220,6 +222,7 @@ class UserModel{
   factory LessonModel.fromMap(Map<String, dynamic> map,String nameDirection) {
 
     return LessonModel(
+      idDir: map['idDir']??0,
       idSchool: map['idSchool']??'',
       idSub: map['idSub']??0,
       id: map['id']??0,

@@ -54,6 +54,7 @@ class _PreviewDocPageState extends State<PreviewDocPage> {
       body:  BlocConsumer<DocsBloc,DocsState>(
         listener: (c,s){
           if(s.docsStatus ==  DocsStatus.error){
+            _downloading = false;
             Dialoger.showActionMaterialSnackBar(context: context, title: s.error);
           }
 

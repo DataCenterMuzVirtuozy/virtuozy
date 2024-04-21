@@ -360,7 +360,6 @@ class _BoxSubscriptionState extends State<BoxSubscription> {
                        final selIndexDir = widget.namesDir.indexWhere((element) => element == nameDir);
                        GoRouter.of(context).push(pathFinance,extra: selIndexDir);
                      }else{
-                       final direction = widget.directions.firstWhere((element) => element.name == nameDir);
                        GoRouter.of(context).push(pathPay,extra: widget.directions);
                      }
                    },
@@ -594,7 +593,7 @@ class _ItemSubState extends State<ItemSub> {
           ),
           Container(
             padding: const EdgeInsets.only(top: 5),
-            color: Theme.of(context).colorScheme.surfaceVariant,
+            color: Colors.transparent,
             child: Column(
               children: [
                 RotatedBox(

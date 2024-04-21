@@ -179,20 +179,20 @@ class _LogInPageState extends State<LogInPage> {
                           style: TStyle.textStyleVelaSansRegularUnderline(Theme.of(context).textTheme.displayMedium!.color!,
                               size: 18.0),)),
                       const Gap(5.0),
-                      InkWell(
-                        onTap: () async {
-                          await _launchUrl();
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.transit_enterexit,color: colorGrey),
-                             const Gap(5.0),
-                             Text('virtuozy-msk.ru',
-                                  style: TStyle.textStyleVelaSansRegularUnderline(colorGrey,size: 18.0),),
-                          ],
-                        ),
-                      ),
+                      // InkWell(
+                      //   onTap: () async {
+                      //     await _launchUrl();
+                      //   },
+                      //   child: Row(
+                      //     mainAxisAlignment: MainAxisAlignment.center,
+                      //     children: [
+                      //       Icon(Icons.transit_enterexit,color: colorGrey),
+                      //        const Gap(5.0),
+                      //        Text('virtuozy-msk.ru',
+                      //             style: TStyle.textStyleVelaSansRegularUnderline(colorGrey,size: 18.0),),
+                      //     ],
+                      //   ),
+                      // ),
                     ],
                   )
                 ],

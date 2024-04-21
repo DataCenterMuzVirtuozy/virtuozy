@@ -18,10 +18,13 @@ import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/presentations/student/profile_screen/bloc/profile_bloc.dart';
 import 'package:virtuozy/presentations/student/profile_screen/bloc/profile_event.dart';
 import 'package:virtuozy/resourses/colors.dart';
+import 'package:virtuozy/utils/auth_mixin.dart';
 import 'package:virtuozy/utils/date_time_parser.dart';
+import 'package:virtuozy/utils/theme_provider.dart';
 
 import '../../../components/buttons.dart';
 import '../../../components/dialogs/dialoger.dart';
+import '../../../utils/preferences_util.dart';
 import '../../../utils/text_style.dart';
 import 'bloc/profile_state.dart';
 
@@ -73,8 +76,7 @@ import 'bloc/profile_state.dart';
              Dialoger.showMessage(s.error);
            }
            if(s.profileStatus == ProfileStatus.saved){
-             //_edit = false;
-             print('Edit false AAAAAA');
+             _edit = false;
              Dialoger.showActionMaterialSnackBar(context: context, title: 'Изменения сохранены'.tr());
            }
 
@@ -111,7 +113,9 @@ import 'bloc/profile_state.dart';
                        icon: Icon(Platform.isAndroid?Icons.arrow_back_rounded:
                        Icons.arrow_back_ios_new_rounded),),
                    ),
-                    BodyInfoUser(user: state.userEntity,edit: _edit,profileEdit: profileEntity,
+                    BodyInfoUser(
+                      key: ValueKey(_edit),
+                        user: state.userEntity,edit: _edit,profileEdit: profileEntity,
                     state: state),
                    GestureDetector(
                      onTap: (){
@@ -234,7 +238,7 @@ import 'bloc/profile_state.dart';
   State<BodyInfoUser> createState() => _BodyInfoUserState();
 }
 
-class _BodyInfoUserState extends State<BodyInfoUser> {
+class _BodyInfoUserState extends State<BodyInfoUser>{
 
 
   String _dateBirth = '';
@@ -280,7 +284,8 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
       },
       builder: (context,state) {
 
-        print('Edit ${_edit}');
+        final theme=PreferencesUtil.getTheme;
+
         return Column(
 
           children: [
@@ -328,6 +333,7 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
                                      Container(
                                        decoration: BoxDecoration(
                                          shape: BoxShape.circle,
+                                         color: theme == ThemeStatus.dark?null:colorWhite,
                                          border: Border.all(color:
                                          _getColorSubway( _subways[index].color),
                                              width: 1 )
@@ -336,7 +342,7 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
                                       margin: const EdgeInsets.only(top: 2),
                                        child:  Icon(Icons.directions_subway,
                                            color: _getColorSubway( _subways[index].color),
-                                           size: 12),
+                                           size: 14),
                                      ),
                                     const Gap(5),
                                     SizedBox(

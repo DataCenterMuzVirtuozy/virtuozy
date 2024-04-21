@@ -175,54 +175,66 @@ class _DocumentsPageState extends State<DocumentsPage> with AuthMixin, TickerPro
                     alignment: Alignment.bottomCenter,
                     child: Visibility(
                       visible: !_acceptDoc,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 25),
-                        height: 130,
-                        decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.surfaceVariant,
-                            borderRadius: const BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10))
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text('Подтвердить'.tr(),
-                                  style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,
-                                      size: 16.0),),
-                                Checkbox(
-                                    side: BorderSide(color: Theme.of(context).textTheme.displayMedium!.color!),
-                                    checkColor: colorWhite,
-                                    value: _accept,
-                                    onChanged: (v){
-                                      setState(() {
-                                        _accept = v!;
-                                      });
-                                    }),
-                              ],
-                            ),
-                            const Gap(5.0),
-                            Opacity(
-                              opacity: _accept?1.0:0.3,
-                              child: SizedBox(
-                                height: 40.0,
-                                width: 160,
-                                child: SubmitButton(
-                                    borderRadius: 20,
-                                    textButton: 'Подписать'.tr(),
-                                    onTap: () {
-                                      if(!_accept){
-                                        return;
-                                      }
-                                      Dialoger.showCustomDialog(contextUp: context, content: AcceptDocuments(),
-                                          args: state.docs);
-                                    }
-                                ),
+                      child: IntrinsicHeight(
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 20),
+                          padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 20),
+                          decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.surfaceVariant,
+                              borderRadius:  BorderRadius.circular(20)
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.info_outline,color: colorOrange),
+                                      const Gap(10),
+                                      Text('Подтвердить'.tr(),
+                                        style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,
+                                            size: 22.0),),
+                                    ],
+                                  ),
+                                  Checkbox(
+                                      side: BorderSide(color: Theme.of(context).textTheme.displayMedium!.color!),
+                                      checkColor: colorWhite,
+                                      value: _accept,
+                                      onChanged: (v){
+                                        setState(() {
+                                          _accept = v!;
+                                        });
+                                      }),
+                                ],
                               ),
-                            )
-                          ],
+                              const Gap(10.0),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 10),
+                                child: Opacity(
+                                  opacity: _accept?1.0:0.3,
+                                  child: SizedBox(
+                                    height: 40.0,
+                                    width: 160,
+                                    child: SubmitButton(
+                                        borderRadius: 10,
+                                        textButton: 'Подписать'.tr(),
+                                        onTap: () {
+                                          if(!_accept){
+                                            return;
+                                          }
+                                          Dialoger.showCustomDialog(contextUp: context, content: AcceptDocuments(),
+                                              args: state.docs);
+                                        }
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),

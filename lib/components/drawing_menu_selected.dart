@@ -113,6 +113,7 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
                       ...List.generate(_items.length, (index){
                         return GestureDetector(
                           onTap: (){
+                            isDraw = false;
                             changeTextNotifier.value=_items[index];
                             widget.onSelected.call(index);
                             animationController.reverse();
@@ -154,7 +155,6 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
                 animationController.forward();
               }
             }
-
 
           },
           child: AnimatedBuilder(
