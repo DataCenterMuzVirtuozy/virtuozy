@@ -155,7 +155,7 @@ class _SchedulePageState extends State<SchedulePage> with AuthMixin{
                      onLesson: (lessons){
                        Dialoger.showModalBottomMenu(
                            blurred: false,
-                           title: 'Урок'.tr(),
+                           title: 'Урок №${lessons[0].id} из ${lessons[0].id+5}',
                            args: [lessons,state.user.directions],
                            content: DetailsLesson());
                       }),

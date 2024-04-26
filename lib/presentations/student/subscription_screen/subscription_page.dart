@@ -182,7 +182,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                   onLesson: (List<Lesson> lessons){
                     Dialoger.showModalBottomMenu(
                       blurred: false,
-                        title: 'Урок #${lessons[0].id}'.tr(),
+                        title: 'Урок №${lessons[0].id} из ${lessons[0].id+5}',
                         args: [lessons,state.userEntity.directions],
                         content: DetailsLesson());
                   },),
@@ -373,31 +373,36 @@ class _BoxSubscriptionState extends State<BoxSubscription> {
            // BoxSubscription(directions: directions,allViewDirection: allViewDirection,
            // namesDir: namesDir),
           const Gap(5.0),
-          Row(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                margin: const EdgeInsets.only(top: 2.0),
-                decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.secondary,
-                    shape: BoxShape.circle
-                ),
-                child: Icon(CupertinoIcons.money_rubl_circle,color: colorWhite,size: 20.0,),),
+              // Container(
+              //   margin: const EdgeInsets.only(top: 2.0),
+              //   decoration: BoxDecoration(
+              //       color: Theme.of(context).colorScheme.secondary,
+              //       shape: BoxShape.circle
+              //   ),
+              //   child:  Icon(CupertinoIcons.money_rubl_circle,color: colorWhite,size: 20.0,),),
+
+              Text('Общий баланс',style: TStyle.textStyleVelaSansBold(textColorBlack(context),size: 18),),
               const Gap(5.0),
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  const Gap(15),
                   Text(ParserPrice.getBalance(_summaBalance(directions: widget.directions)),
-                      style:TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 25.0)),
+                      style:TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 20.0)),
                   Padding(
                     padding: const EdgeInsets.only(top: 4.0),
-                    child: Icon(CupertinoIcons.money_rubl,color: Theme.of(context).iconTheme.color,size: 30.0,),
+                    child: Icon(CupertinoIcons.money_rubl,color: Theme.of(context).iconTheme.color,size: 25.0,),
                   )
                 ],
               ),
             ],
           ),
-          const Gap(10.0),
+          const Gap(20.0),
           SizedBox(
             height: 40.0,
             child: SubmitButton(
@@ -406,7 +411,8 @@ class _BoxSubscriptionState extends State<BoxSubscription> {
                 GoRouter.of(context).push(pathPay,extra: widget.directions);
               }
             ),
-          )
+          ),
+          const Gap(5.0),
         ],
       ),
     );

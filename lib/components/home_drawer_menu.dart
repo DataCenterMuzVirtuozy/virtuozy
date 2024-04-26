@@ -4,6 +4,7 @@
 import 'dart:ui';
 
 import 'package:badges/badges.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +49,7 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
   }
 
   Widget _getAvatar(String urlAva){
-    ImageProvider image = NetworkImage(urlAva);
+   // ImageProvider image = NetworkImage(urlAva);
 
     if(urlAva.isEmpty){
         return Container(
@@ -60,15 +61,24 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
             ),
             child: Icon(Icons.image_search_rounded,color: colorWhite,size: 30,));
       }else{
-        image = NetworkImage(urlAva);
-        return CircleAvatar(
-          key: ValueKey(user.avaUrl),
-          radius: 40.0,
-          foregroundImage:  NetworkImage(
-            user.avaUrl,
+
+      return Container(
+        width: 80,
+        height: 80,
+        decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+        ),
+        child: ClipOval(
+          child: CachedNetworkImage(
+            fit: BoxFit.cover,
+            imageUrl: user.avaUrl,
+            progressIndicatorBuilder: (context, url, downloadProgress) =>
+                CircularProgressIndicator(value: downloadProgress.progress,color: colorWhite),
+            errorWidget: (context, url, error) => const Icon(Icons.error),
           ),
-          child: Icon(Icons.hourglass_empty,color: colorWhite.withOpacity(0.5)),
-        );
+        ),
+      );
+
       }
 
   }
@@ -109,60 +119,44 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                       Column(
                         children: [
                           Container(
-                            padding: const EdgeInsets.only(left: 100,top: 50),
+                            constraints: const BoxConstraints(minHeight: 100),
+                            padding: const EdgeInsets.only(left: 105,top: 50,right: 20),
                             width: width,
-                            height: 100.0,
                             decoration: BoxDecoration(
                                 color: colorYellow
                             ),
-                            child:  Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Gap(8.0),
-                                Visibility(
-                                  visible: user.userStatus.isAuth||user.userStatus.isModeration,
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.phone_enabled_rounded,color: colorWhite,
-                                          size: 12.0),
-                                      const Gap(5.0),
-                                      Text(userType.isStudent?user.phoneNumber:
-                                      teacher.phoneNum,
-                                          style: TStyle.textStyleVelaSansBold(colorWhite,size: 12.0)),
-                                    ],
-                                  ),
-                                ),
-                                Visibility(
-                                  visible: user.userStatus.isAuth||user.userStatus.isModeration,
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.location_on_outlined,color: colorWhite,size: 12.0),
-                                      const Gap(5.0),
-                                      Text(user.branchName,style: TStyle.textStyleVelaSansMedium(colorWhite,size: 12.0)),
-                                    ],
-                                  ),
-                                ),
-
-                              ],
+                            child:  Visibility(
+                              visible: user.userStatus.isAuth||user.userStatus.isModeration,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text('${userType.isStudent?user.firstName:teacher.firstName} ${userType.isStudent?user.lastName:teacher.lastName}',
+                                        maxLines: 2,
+                                        style: TStyle.textStyleGaretHeavy(colorWhite,size: 14.0)),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                           Visibility(
                             visible: user.userStatus.isAuth||user.userStatus.isModeration,
                             child: Container(
-                              alignment: Alignment.bottomLeft,
-                                padding: const EdgeInsets.only(left: 10,top: 20),
+                              alignment: Alignment.topLeft,
+                                padding: const EdgeInsets.only(left: 105,top: 10),
                                 width: width,
-                                //height: 70,
+                                height: 40,
                                 color: colorOrange,
-                                child: TextButton(
-                                  onPressed: () {
-                                    GoRouter.of(context).push(pathProfile);
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text('${userType.isStudent?user.firstName:teacher.firstName} ${userType.isStudent?user.lastName:teacher.lastName}',
-                                      maxLines: 2,
-                                      style: TStyle.textStyleGaretHeavy(colorWhite,size: 16.0)),
-                                ),),
+                            child:
+                               Row(
+                                 children: [
+                                   Icon(Icons.phone_enabled_rounded,color: colorWhite,
+                                       size: 12.0),
+                                   const Gap(5.0),
+                                   Text(userType.isStudent?user.phoneNumber:
+                                   teacher.phoneNum,
+                                       style: TStyle.textStyleVelaSansBold(colorWhite,size: 12.0)),
+                                 ],
+                               )),
                           ),
                         ],
                       ),
@@ -176,7 +170,7 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                               Navigator.pop(context);
                             },
                             child: Container(
-                              margin: const EdgeInsets.only(top: 40,left: 10),
+                              margin: const EdgeInsets.only(top: 50,left: 10),
                               decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: colorOrange

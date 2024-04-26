@@ -62,9 +62,11 @@ class Dialoger{
    ///Return toast message
    static void showMessage(String message) {
      Fluttertoast.showToast(
+       timeInSecForIosWeb: 2,
+       toastLength: Toast.LENGTH_LONG,
        msg: message,
-       textColor: colorBlack,
-       backgroundColor: colorWhite,
+       textColor: colorWhite,
+       backgroundColor: colorOrange,
        fontSize: 14.0,
        gravity: ToastGravity.CENTER,
      );

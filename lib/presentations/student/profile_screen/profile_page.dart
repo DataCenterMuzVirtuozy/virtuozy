@@ -69,6 +69,9 @@ import 'bloc/profile_state.dart';
 
   @override
    Widget build(BuildContext context) {
+
+    final h = MediaQuery.of(context).size.height;
+
      return Scaffold(
        body: BlocConsumer<ProfileBloc,ProfileState>(
          listener: (c,s){
@@ -101,7 +104,7 @@ import 'bloc/profile_state.dart';
            return IgnorePointer(
              ignoring: state.profileStatus == ProfileStatus.saving,
              child: SingleChildScrollView(
-               padding: const EdgeInsets.only(top: 40,right: 20,left: 20),
+               padding:  EdgeInsets.only(top: h/12,right: 20,left: 20),
                child: Stack(
                  alignment: Alignment.topCenter,
                  children: [
@@ -198,7 +201,6 @@ import 'bloc/profile_state.dart';
      ImageProvider image = NetworkImage(urlAva);
      if(imageFile==null){
        if(urlAva.isEmpty){
-
          return SizedBox(
            width: 100,
              height: 100,
@@ -290,7 +292,7 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
 
           children: [
             Container(
-              margin: const EdgeInsets.only(top: 50),
+              margin:  const EdgeInsets.only(top: 50),
               padding: const EdgeInsets.only(right: 20,left: 20,top: 70,bottom: 20),
               width: MediaQuery.sizeOf(context).width,
               decoration: BoxDecoration(
