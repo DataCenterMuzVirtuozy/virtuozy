@@ -6,20 +6,13 @@ import 'package:provider/provider.dart';
 import 'package:virtuozy/bloc/app_bloc.dart';
 import 'package:virtuozy/domain/user_cubit.dart';
 import 'package:virtuozy/presentations/auth_screen/bloc/auth_bloc.dart';
-import 'package:virtuozy/presentations/auth_screen/login_page.dart';
-import 'package:virtuozy/presentations/auth_screen/singin_page.dart';
 import 'package:virtuozy/presentations/main_screen/main_page.dart';
 import 'package:virtuozy/presentations/student/document_screen/bloc/docs_bloc.dart';
 import 'package:virtuozy/presentations/student/finance_screen/bloc/bloc_finance.dart';
 import 'package:virtuozy/presentations/student/notification_screen/bloc/notifi_bloc.dart';
 import 'package:virtuozy/presentations/student/profile_screen/bloc/profile_bloc.dart';
-import 'package:virtuozy/presentations/student/profile_screen/profile_page.dart';
 import 'package:virtuozy/presentations/student/schedule_screen/bloc/schedule_bloc.dart';
-import 'package:virtuozy/presentations/student/splash_screen/splash_page.dart';
 import 'package:virtuozy/presentations/student/subscription_screen/bloc/sub_bloc.dart';
-import 'package:virtuozy/presentations/student/subscription_screen/subscription_page.dart';
-import 'package:virtuozy/presentations/teacher/today_schedule_screen/today_schedule_page.dart';
-import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/router/app_router.dart';
 import 'package:virtuozy/utils/app_theme.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -77,7 +70,7 @@ class _MyAppState extends State<MyApp> {
         return themeProvider;
       },
       child: Consumer<ThemeProvider>(
-        builder: (context,theme,widget) {
+        builder: (c,theme,widget) {
           return MultiBlocProvider(
             providers: [
               BlocProvider<AppBloc>(create: (_) => AppBloc()..add(ObserveNetworkEvent())),

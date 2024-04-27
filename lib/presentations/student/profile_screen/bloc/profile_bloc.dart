@@ -58,21 +58,25 @@ class ProfileBloc extends Bloc<ProfileEvent,ProfileState>{
 
   void _saveNewUserData(SaveNewDataUserEvent event,emit) async {
    try{
-     EditProfileEntity profileEntity = event.editProfileEntity;
+     EditProfileEntity profileEdited = event.editProfileEntity;
+     print('Edit 1 ${profileEdited.whoFindTeem}');
      UserEntity user = _userCubit.userEntity;
      emit(state.copyWith(profileStatus: ProfileStatus.saving));
-    if(profileEntity.fileImageUrl != null){
+    if(profileEdited.fileImageUrl != null){
       final url = await _userRepository.loadAvaProfile(uid: user.id, profileEntity: event.editProfileEntity);
-      profileEntity = profileEntity.copyWith(urlAva: url);
+      profileEdited = profileEdited.copyWith(urlAva: url);
     }
      user = user.copyWith(
-         subways:profileEntity.subways,
-       date_birth: profileEntity.dateBirth,
-         avaUrl: profileEntity.urlAva,
-         has_kids: profileEntity.hasKind,
-         sex: profileEntity.sex);
+       about_me: profileEdited.aboutMe,
+         subways:profileEdited.subways,
+       date_birth: profileEdited.dateBirth,
+         avaUrl: profileEdited.urlAva,
+         has_kids: profileEdited.hasKind,
+         who_find: profileEdited.whoFindTeem,
+         sex: profileEdited.sex);
      _userCubit.setUser(user: user);
-     await _userRepository.saveSettingDataProfile(uid: user.id, profileEntity: profileEntity);
+     print('Edit 2 ${user.who_find}');
+     await _userRepository.saveSettingDataProfile(uid: user.id, profileEntity: profileEdited);
      emit(state.copyWith(profileStatus: ProfileStatus.saved,userEntity: user));
    }on Failure catch(e){
     emit(state.copyWith(profileStatus: ProfileStatus.error,error: e.message));

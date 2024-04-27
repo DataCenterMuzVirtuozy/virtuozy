@@ -3,20 +3,14 @@
 
  import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
-import 'package:virtuozy/components/calendar/calendar.dart';
-import 'package:virtuozy/components/dialogs/contents/alert_dialog/log_out_teacher_content.dart';
-import 'package:virtuozy/components/dialogs/contents/alert_dialog/select_date_content.dart';
+import 'package:overlay_toast_message/overlay_toast_message.dart';
 import 'package:virtuozy/components/dialogs/sealeds.dart';
 import 'package:virtuozy/domain/entities/teacher_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/resourses/colors.dart';
-
 import '../../di/locator.dart';
 import '../../domain/entities/lesson_entity.dart';
 import '../../presentations/main_screen/main_page.dart';
@@ -60,16 +54,38 @@ class Dialoger{
 
 
    ///Return toast message
-   static void showMessage(String message) {
-     Fluttertoast.showToast(
-       timeInSecForIosWeb: 2,
-       toastLength: Toast.LENGTH_LONG,
-       msg: message,
-       textColor: colorWhite,
-       backgroundColor: colorOrange,
-       fontSize: 14.0,
-       gravity: ToastGravity.CENTER,
+   static void showMessage(String message,{BuildContext? context}) {
+
+     OverlayToastMessage.show(
+       context!,
+       animDuration: const Duration(milliseconds: 300),
+       //textMessage: 'Dismiss All And Show Toast',
+       widget: Padding(
+         padding: const EdgeInsets.only(top: 60),
+         child: Container(
+           constraints: const BoxConstraints(maxWidth: 400),
+           height: 50,
+           margin: const EdgeInsets.symmetric(horizontal: 20),
+           padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+           alignment: Alignment.center,
+           decoration: BoxDecoration(
+             color: colorOrange,
+             borderRadius: BorderRadius.circular(20)
+           ),
+           child: Text(message,
+           style: TStyle.textStyleVelaSansBold(colorWhite,size: 14),),
+         ),
+       ),
      );
+     // Fluttertoast.showToast(
+     //   timeInSecForIosWeb: 2,
+     //   toastLength: Toast.LENGTH_LONG,
+     //   msg: message,
+     //   textColor: colorWhite,
+     //   backgroundColor: colorOrange,
+     //   fontSize: 14.0,
+     //   gravity: ToastGravity.CENTER,
+     // );
    }
 
    static void showModalBottomMenu({

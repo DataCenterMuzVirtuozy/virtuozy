@@ -106,13 +106,16 @@ class UserService{
            "color":s.color
          });
        }
+
        await _dio.patch('${Endpoints.user}/$uid',
            data: {
              'subways':subWay,
              'sex': profileEntity.sex,
              'date_birth':profileEntity.dateBirth,
              'has_kids': profileEntity.hasKind,
-             'avaUrl':profileEntity.urlAva
+             'avaUrl':profileEntity.urlAva,
+             'about_me':profileEntity.aboutMe,
+             'who_find':profileEntity.whoFindTeem
 
            });
 

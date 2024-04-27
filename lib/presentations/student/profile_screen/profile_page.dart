@@ -12,13 +12,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:virtuozy/components/dialogs/sealeds.dart';
+import 'package:virtuozy/components/text_fields.dart';
 import 'package:virtuozy/domain/entities/edit_profile_entity.dart';
 import 'package:virtuozy/domain/entities/subway_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/presentations/student/profile_screen/bloc/profile_bloc.dart';
 import 'package:virtuozy/presentations/student/profile_screen/bloc/profile_event.dart';
 import 'package:virtuozy/resourses/colors.dart';
-import 'package:virtuozy/utils/auth_mixin.dart';
 import 'package:virtuozy/utils/date_time_parser.dart';
 import 'package:virtuozy/utils/theme_provider.dart';
 
@@ -86,12 +86,14 @@ import 'bloc/profile_state.dart';
            if(s.profileStatus == ProfileStatus.loaded ||
                s.profileStatus == ProfileStatus.saved){
              profileEntity = EditProfileEntity(
+               whoFindTeem: s.userEntity.who_find,
                  fileImageUrl: _imageFile,
                  sex: s.userEntity.sex,
                  dateBirth: s.userEntity.date_birth,
                  hasKind: s.userEntity.has_kids,
                  urlAva: s.userEntity.avaUrl,
-                 subways: s.userEntity.subways);
+                 subways: s.userEntity.subways,
+                 aboutMe: s.userEntity.about_me);
            }
          },
          builder: (context,state) {
@@ -246,7 +248,9 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
   String _dateBirth = '';
   List<SubwayEntity> _subways = [];
   bool _edit = false;
-
+  late TextEditingController _whoFindController;
+  late TextEditingController _aboutMiController;
+  EditProfileEntity _profileEdited = EditProfileEntity.unknown();
 
 
   @override
@@ -255,8 +259,19 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
    _dateBirth = widget.profileEdit.dateBirth;
    _subways = widget.user.subways;
    _edit = widget.edit;
+  _profileEdited = widget.profileEdit;
+   _aboutMiController = TextEditingController(text: widget.user.about_me.isEmpty?'Нет данных':widget.user.about_me);
+   _whoFindController = TextEditingController(text: widget.user.who_find.isEmpty?'Нет данных':widget.user.who_find);
+
   }
 
+
+  @override
+  void dispose() {
+    super.dispose();
+    _whoFindController.dispose();
+    _aboutMiController.dispose();
+  }
 
   bool _fullDataProfile(EditProfileEntity profileEntity){
     bool fullData = false;
@@ -279,9 +294,10 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
           if(!_subways.contains(s.addedSubway)){
             _edit = true;
             _subways.add(s.addedSubway);
-            widget.profileEdit = widget.profileEdit.copyWith(subways: _subways);
+            _profileEdited = _profileEdited.copyWith(subways: _subways);
           }
         }
+
 
       },
       builder: (context,state) {
@@ -366,7 +382,7 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
                                       setState(() {
                                         _edit = true;
                                         _subways.removeAt(index);
-                                        widget.profileEdit = widget.profileEdit.copyWith(subways: _subways);
+                                        _profileEdited = _profileEdited.copyWith(subways: _subways);
                                       });
                                     },
                                     child: Icon(Icons.remove_circle_outline,size: 16,color: colorRed))
@@ -421,12 +437,20 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
                         padding: const EdgeInsets.only(right: 20),
                         child: Text('Кого ищу себе в группу (в напарники, в бенд)?',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
                       ),
-                      const Gap(8.0),
+                      const Gap(5.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(widget.user.who_find.isEmpty?'Нет данных':widget.user.who_find,
-                            style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
+                          TextEdit(controller: _whoFindController,
+                          onChanged: (text){
+                            setState(() {
+                              _edit= true;
+                              _profileEdited = _profileEdited.copyWith(whoFindTeem: text);
+
+                            });
+                          },)
+                          // Text(widget.user.who_find.isEmpty?'Нет данных':widget.user.who_find,
+                          //   style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
                           //Icon(Icons.edit,color: colorGrey,size: 16,)
                         ],
                       ),
@@ -434,12 +458,27 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
                   ),
                   const Gap(10),
                   Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('О себе:',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
-                      const Gap(8.0),
-                      Text(widget.user.about_me,
-                        style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
+                     const Gap(5.0),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextEdit(controller: _aboutMiController,
+                          onChanged: (text){
+                            setState(() {
+                              _edit= true;
+                              _profileEdited= _profileEdited.copyWith(aboutMe: text);
+                            });
+                          },),
+                        ],
+                      )
+                      // const Gap(8.0),
+                      // Text(widget.user.about_me,
+                      //   style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
                     ],
                   ),
                   const Gap(10),
@@ -457,7 +496,7 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
                           child: SelectSexMenu(
                             onChangeSex: (sex){
                               setState(() {
-                                widget.profileEdit = widget.profileEdit.copyWith(
+                                _profileEdited = _profileEdited.copyWith(
                                     sex: sex == 'Муж.'?'man':sex == 'Не выбран'?'':'woman');
                                 _edit= true;
                               });
@@ -483,7 +522,7 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
                         setState(() {
                           _edit= true;
                           _dateBirth = DateTimeParser.getDateToApi(dateNow: pickedDate);
-                          widget.profileEdit = widget.profileEdit
+                          _profileEdited = _profileEdited
                               .copyWith(dateBirth: _dateBirth);
                         });
 
@@ -501,7 +540,10 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
                               Text('Дата рождения:',style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
                               Visibility(
                                 visible: true,
-                                child:Icon(Icons.calendar_month,color: colorGrey,size: 18)),
+                                child:Padding(
+                                  padding: const EdgeInsets.only(right: 14),
+                                  child: Icon(Icons.calendar_month,color: colorGrey,size: 18),
+                                )),
 
                             ],
                           ),
@@ -540,7 +582,7 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
                          onKind: (hasKind){
                            setState(() {
                              _edit = true;
-                             widget.profileEdit = widget.profileEdit.copyWith(hasKind: hasKind as bool);
+                             _profileEdited = _profileEdited.copyWith(hasKind: hasKind as bool);
                            });
                        },)
                     ],
@@ -562,7 +604,7 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
                             textButton: 'Сохранить изменения'.tr(),
                             onTap: () {
                               if(_edit){
-                                context.read<ProfileBloc>().add(SaveNewDataUserEvent(editProfileEntity: widget.profileEdit));
+                                context.read<ProfileBloc>().add(SaveNewDataUserEvent(editProfileEntity: _profileEdited));
                               }
                             }
                         ),
@@ -574,7 +616,7 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
               ),
             ),
             Visibility(
-              visible: !_fullDataProfile(widget.profileEdit),
+              visible: !_fullDataProfile(_profileEdited),
               child: Container(
                 margin: const EdgeInsets.symmetric(vertical: 10.0),
                 padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 15.0),

@@ -4,6 +4,7 @@
  import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
@@ -34,7 +35,7 @@ class DetailsLessonContent extends StatefulWidget {
 
 class _DetailsLessonContentState extends State<DetailsLessonContent> {
 
-  final double _heightBox = 310.0;
+  final double _heightBox = 340.0;
   late int selectedPage;
   late final PageController _pageController;
 
@@ -153,19 +154,18 @@ class ItemDetailsLesson extends StatelessWidget{
          ),
          const Gap(10.0),
          Row(
-           //mainAxisAlignment: MainAxisAlignment.spaceBetween,
            children: [
              Row(
                crossAxisAlignment: CrossAxisAlignment.center,
                children: [
-                 Icon(Icons.door_back_door_outlined,
-                 color: colorGrey,size: 16.0),
+                 Icon(Icons.directions,
+                     color: colorGrey,size: 16.0),
                  const Gap(5),
-                 Text('Кабинет: '.tr(),
+                 Text('Направление: '.tr(),
                      style: TStyle.textStyleVelaSansMedium(colorGrey, size: 15.0)),
                ],
              ),
-             Text(lesson.idAuditory,
+             Text(lesson.nameDirection,
                  style: TStyle.textStyleVelaSansBold( Theme.of(context).textTheme.displayMedium!.color!, size: 16.0)),
            ],
          ),
@@ -185,20 +185,34 @@ class ItemDetailsLesson extends StatelessWidget{
                  style: TStyle.textStyleVelaSansBold( Theme.of(context).textTheme.displayMedium!.color!, size: 16.0)),
            ],
          ),
-         const Gap(10.0),
          Row(
-           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+           //mainAxisAlignment: MainAxisAlignment.spaceBetween,
            children: [
-             Text(lesson.nameTeacher,
-                 style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!, size: 18.0)),
-             Text(lesson.nameDirection,
-                 style: TStyle.textStyleVelaSansMedium(colorGrey, size: 16.0)),
+             Row(
+               crossAxisAlignment: CrossAxisAlignment.center,
+               children: [
+                 Icon(Icons.door_back_door_outlined,
+                 color: colorGrey,size: 16.0),
+                 const Gap(5),
+                 Text('Кабинет: '.tr(),
+                     style: TStyle.textStyleVelaSansMedium(colorGrey, size: 15.0)),
+               ],
+             ),
+             Text(lesson.idAuditory,
+                 style: TStyle.textStyleVelaSansBold( Theme.of(context).textTheme.displayMedium!.color!, size: 16.0)),
            ],
          ),
-         const Gap(20.0),
-         Row(
-           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        const Gap(10),
+         Column(
            children: [
+             Row(
+               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+               children: [
+                 Text(lesson.nameTeacher,
+                     style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!, size: 18.0)),
+               ],
+             ),
+             const Gap(5),
              Row(
                children: [
                  Container(
@@ -216,25 +230,38 @@ class ItemDetailsLesson extends StatelessWidget{
                          colorGrey, size: 14.0)),
                ],
              ),
-             Visibility(
-               visible: lesson.status == LessonStatus.complete,
-               child: Row(
+           ],
+         ),
+
+         Visibility(
+           visible: lesson.status == LessonStatus.complete,
+           child: Column(
+             children: [
+               Divider(color: colorGrey),
+               const Gap(5.0),
+               Row(
+                 mainAxisAlignment: MainAxisAlignment.end,
                  children: [
-                   Text(DateTimeParser.getDateFromApi(date: lesson.timeAccept),
+                   // Icon(Icons.timelapse_rounded, color: colorGrey, size: 13.0),
+                   // const Gap(5.0),
+                   Text('Дата подтверждения:'.tr(),
                        style: TStyle.textStyleVelaSansRegular(
                            colorGrey, size: 13.0)),
                    const Gap(5.0),
-                   Icon(Icons.timelapse_rounded, color: colorGrey, size: 13.0),
+                   Text(DateTimeParser.getDateFromApi(date: lesson.timeAccept),
+                       style: TStyle.textStyleVelaSansBold(
+                           colorGrey, size: 13.0)),
+
 
                  ],
                ),
-             )
-           ],
+             ],
+           ),
          ),
          Visibility(
              visible: lesson.status == LessonStatus.awaitAccept,
              child: Padding(
-               padding: const EdgeInsets.only(top: 20.0,bottom: 10.0),
+               padding: const EdgeInsets.only(top: 10.0,bottom: 10.0),
                child: SizedBox(
                  height: 40.0,
                  child: SubmitButton(

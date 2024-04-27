@@ -175,7 +175,7 @@ class _CalendarState extends State<Calendar> {
 
                if (isClicked == false) {
                  _startTimer();
-                 Dialoger.showMessage('Нет записей на прошлый месяц'.tr());
+                 Dialoger.showMessage('Нет записей на прошлый месяц'.tr(),context: context);
                  isClicked = true;
                }
 
@@ -186,7 +186,7 @@ class _CalendarState extends State<Calendar> {
              if(_focusedDay.month == _lastDay.month){
                if (isClicked == false) {
                  _startTimer();
-                 Dialoger.showMessage('Нет записей на следующий месяц'.tr());
+                 Dialoger.showMessage('Нет записей на следующий месяц'.tr(),context: context);
                  isClicked = true;
                }
              }

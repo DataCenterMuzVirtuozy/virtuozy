@@ -12,9 +12,13 @@ class EditProfileEntity{
    final String dateBirth;
    final bool hasKind;
    final String urlAva;
+   final String aboutMe;
+   final String whoFindTeem;
    final List<SubwayEntity> subways;
 
    const EditProfileEntity({
+     required this.whoFindTeem,
+     required this.aboutMe,
      required this.subways,
      required this.urlAva,
     required this.fileImageUrl,
@@ -25,7 +29,7 @@ class EditProfileEntity{
 
 
    factory EditProfileEntity.unknown(){
-     return const EditProfileEntity(fileImageUrl: null, sex: '', dateBirth: '', hasKind: false, urlAva: '', subways: []);
+     return const EditProfileEntity(fileImageUrl: null, sex: '', dateBirth: '', hasKind: false, urlAva: '', subways: [], aboutMe: '', whoFindTeem: '');
    }
 
   EditProfileEntity copyWith({
@@ -34,9 +38,14 @@ class EditProfileEntity{
     String? dateBirth,
     bool? hasKind,
     String? urlAva,
-    List<SubwayEntity>? subways
+    List<SubwayEntity>? subways,
+    String? aboutMe,
+    String? whoFindTeem
+
   }) {
     return EditProfileEntity(
+      whoFindTeem: whoFindTeem??this.whoFindTeem,
+      aboutMe: aboutMe??this.aboutMe,
       subways: subways??this.subways,
       fileImageUrl: fileImageUrl ?? this.fileImageUrl,
       sex: sex ?? this.sex,

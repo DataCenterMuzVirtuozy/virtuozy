@@ -195,3 +195,71 @@ class _PassFieldLoginState extends State<PassFieldLogin> {
     );
   }
 }
+
+
+
+ class TextEdit extends StatefulWidget{
+  const TextEdit({super.key, required this.controller, required this.onChanged});
+
+
+  final TextEditingController controller;
+  final Function onChanged;
+
+
+  @override
+  State<TextEdit> createState() => _TextEditState();
+}
+
+class _TextEditState extends State<TextEdit> {
+  late FocusNode focusNode;
+
+
+  @override
+  void initState() {
+    super.initState();
+    focusNode = FocusNode();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: TextField(
+        focusNode: focusNode,
+        maxLines: null,
+        enabled: true,
+        onChanged: (text){
+          widget.onChanged.call(text);
+        },
+        textAlign: TextAlign.start,
+        controller: widget.controller,
+        style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),
+        decoration: InputDecoration(
+            suffixIcon: IconButton(
+              onPressed: (){
+                if(!focusNode.hasFocus){
+                  focusNode.requestFocus();
+                }
+              },
+              icon: Icon(Icons.edit,color: colorGrey,size: 20),
+            ),
+            filled: true,
+            fillColor:  Colors.transparent,
+            hintText: '',
+            hintStyle: TStyle.textStyleVelaSansRegular(colorGrey,size: 14.0),
+            contentPadding:const EdgeInsets.only(right: 0,top: 0),
+            enabledBorder:  const OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.transparent,
+                width: 1.0,
+              ),
+            ),
+            focusedBorder: const OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.transparent,
+                width: 1.0,
+              ),
+            )),
+      ),
+    );
+  }
+}
