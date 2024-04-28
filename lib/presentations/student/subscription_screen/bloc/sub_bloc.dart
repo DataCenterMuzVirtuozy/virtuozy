@@ -57,7 +57,7 @@ class SubBloc extends Bloc<SubEvent,SubState>{
          _listenUser(event);
        }else{
          print('U2');
-         emit(state.copyWith( subStatus: SubStatus.loaded));
+         emit(state.copyWith( subStatus: SubStatus.loaded,userEntity: user));
        }
 
 

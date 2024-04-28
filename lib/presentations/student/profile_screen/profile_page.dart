@@ -4,6 +4,7 @@
 
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -199,6 +200,7 @@ import 'bloc/profile_state.dart';
    }
 
 
+
    Widget _getAvatar(File? imageFile,String urlAva){
      ImageProvider image = NetworkImage(urlAva);
      if(imageFile==null){
@@ -208,6 +210,23 @@ import 'bloc/profile_state.dart';
              height: 100,
              child: Icon(Icons.image_search_rounded,color: colorWhite,size: 40,));
        }else{
+
+         return Container(
+           width: 100,
+           height: 100,
+           decoration: const BoxDecoration(
+             shape: BoxShape.circle,
+           ),
+           child: ClipOval(
+             child: CachedNetworkImage(
+               fit: BoxFit.cover,
+               imageUrl: urlAva,
+               progressIndicatorBuilder: (context, url, downloadProgress) =>
+                   CircularProgressIndicator(value: downloadProgress.progress,color: colorWhite),
+               errorWidget: (context, url, error) => const Icon(Icons.error),
+             ),
+           ),
+         );
          image = NetworkImage(urlAva);
          return CircleAvatar(
            radius: 50,

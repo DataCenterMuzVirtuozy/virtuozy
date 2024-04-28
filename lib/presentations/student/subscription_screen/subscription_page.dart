@@ -111,6 +111,8 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
 
      },
      builder: (context,state) {
+
+
        if(state.subStatus == SubStatus.unknown){
          return Container();
        }
@@ -119,21 +121,21 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
          return Center(child: CircularProgressIndicator(color: colorOrange));
        }
 
-       if(state.userEntity.userStatus.isModeration || state.userEntity.userStatus.isNotAuth){
-         return Center(
-           child: BoxInfo(
-               buttonVisible: state.userEntity.userStatus.isNotAuth,
-               title: state.userEntity.userStatus.isModeration?'Ваш аккаунт на модерации'.tr():'Абонементы недоступны'.tr(),
-               description: state.userEntity.userStatus.isModeration?'На период модерации работа с абонементами недоступна'.tr():
-               'Для работы с абонементами необходимо авторизироваться'.tr(),
-               iconData: CupertinoIcons.music_note_list),
-         );
+
+
+
+       if(state.subStatus == SubStatus.loaded){
+         if(state.userEntity.userStatus.isModeration || state.userEntity.userStatus.isNotAuth){
+           return Center(
+             child: BoxInfo(
+                 buttonVisible: state.userEntity.userStatus.isNotAuth,
+                 title: state.userEntity.userStatus.isModeration?'Ваш аккаунт на модерации'.tr():'Абонементы недоступны'.tr(),
+                 description: state.userEntity.userStatus.isModeration?'На период модерации работа с абонементами недоступна'.tr():
+                 'Для работы с абонементами необходимо авторизироваться'.tr(),
+                 iconData: CupertinoIcons.music_note_list),
+           );
+         }
        }
-
-
-
-
-
 
        if(state.directions.isEmpty && state.subStatus == SubStatus.loaded){
          return Center(
@@ -144,6 +146,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                iconData: CupertinoIcons.music_note_list),
          );
        }
+
 
 
 

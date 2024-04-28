@@ -49,8 +49,6 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
   }
 
   Widget _getAvatar(String urlAva){
-   // ImageProvider image = NetworkImage(urlAva);
-
     if(urlAva.isEmpty){
         return Container(
             width: 80,
@@ -249,7 +247,7 @@ required UserEntity user,
   //required int currentIndexItemMenu,
 required bool docsAccept}){
 
-  double h=0.0;
+
 
   if(userType.isStudent||userType.isUnknown){
     return ValueListenableBuilder<int>(
@@ -300,19 +298,8 @@ required bool docsAccept}){
           onSelectedPage.call(3);
           },),
 
-   //todo settings
-          Visibility(
-            visible: user.userStatus.isAuth||user.userStatus.isModeration,
-            child:
-            DrawerItemSetting(title: titlesDrawMenuStudent[5])
-
-            // DrawerItem(
-            //         title: titlesDrawMenuStudent[5],textColor: Theme.of(context).textTheme.displayMedium!.color!,
-            //   onPressed: () {
-            //
-            //
-            // },),
-          ),
+          //settings
+          DrawerItemSetting(title: titlesDrawMenuStudent[5],user: user),
 
 
           DrawerItem(
@@ -331,18 +318,21 @@ required bool docsAccept}){
           //     GoRouter.of(context).push(pathTheme);
           //   },
           // ),
-          DrawerItem(
-            title: user.userStatus.isModeration || user.userStatus.isAuth
-                ? titlesDrawMenuStudent[8]
-                : titlesDrawMenuStudent[9],
-            textColor: Theme.of(context).textTheme.displayMedium!.color!,
-            onPressed: () {
-              if (user.userStatus.isNotAuth) {
-                GoRouter.of(context).push(pathLogIn);
-              } else {
-                Dialoger.showLogOut(context: context, user: user);
-              }
-            },),
+          // Visibility(
+          //   visible:  user.userStatus.isNotAuth,
+          //   child: DrawerItem(
+          //     title: user.userStatus.isModeration || user.userStatus.isAuth
+          //         ? titlesDrawMenuStudent[8]
+          //         : titlesDrawMenuStudent[9],
+          //     textColor: Theme.of(context).textTheme.displayMedium!.color!,
+          //     onPressed: () {
+          //       if (user.userStatus.isNotAuth) {
+          //         GoRouter.of(context).push(pathLogIn);
+          //       } else {
+          //         Dialoger.showLogOut(context: context, user: user);
+          //       }
+          //     },),
+          // ),
 
            ]
           );
@@ -383,11 +373,11 @@ required bool docsAccept}){
             GoRouter.of(context).push(pathTheme);
           },),
 
-          DrawerItem(
-            title: 'Выйти'.tr(),
-            textColor: colorRed, onPressed: ()  {
-            Dialoger.showLogOutTeacher(context: context,teacher: teacher);
-            },),
+          // DrawerItem(
+          //   title: 'Выйти'.tr(),
+          //   textColor: colorRed, onPressed: ()  {
+          //   Dialoger.showLogOutTeacher(context: context,teacher: teacher);
+          //   },),
 
         ]
     );
@@ -396,12 +386,13 @@ required bool docsAccept}){
 }
 
  class DrawerItemSetting extends StatefulWidget{
-  const DrawerItemSetting({super.key,  this.index = -2,  this.currentIndexItemMenu = -1, required this.title});
+  const DrawerItemSetting({super.key,  this.index = -2,required this.user,  this.currentIndexItemMenu = -1, required this.title});
 
 
   final int index;
   final String title;
   final int currentIndexItemMenu;
+  final UserEntity user;
 
   @override
   State<DrawerItemSetting> createState() => _DrawerItemSettingState();
@@ -419,7 +410,7 @@ class _DrawerItemSettingState extends State<DrawerItemSetting> {
         onTap: (){
           setState(() {
             if(h==0){
-              h=100.0;
+              h=widget.user.userStatus.isAuth||widget.user.userStatus.isModeration?140.0:70.0;
             }else{
               h=0;
             }
@@ -429,64 +420,66 @@ class _DrawerItemSettingState extends State<DrawerItemSetting> {
           //GoRouter.of(context).push(pathSettings);
         },
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Visibility(
-                  visible: widget.index==widget.currentIndexItemMenu,
-                  child: Container(
-                    margin: const EdgeInsets.only(left: 20),
-                    width: 8,
-                    height: 8,
-                    decoration: BoxDecoration(
-                        color: colorOrange,
-                        shape: BoxShape.circle
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding:  EdgeInsets.only(left: widget.index==widget.currentIndexItemMenu?10:20),
-                  child: Text(widget.title,style: TStyle.textStyleVelaSansBold( Theme.of(context).textTheme.displayMedium!.color!,
-                      size: 18.0)),
-                ),
-
-
-              ],
+            Padding(
+              padding:  const EdgeInsets.only(left: 20),
+              child: Text(widget.title,style: TStyle.textStyleVelaSansBold( Theme.of(context).textTheme.displayMedium!.color!,
+                  size: 18.0)),
             ),
             AnimatedContainer(
+              alignment: Alignment.topCenter,
                 duration: const Duration(milliseconds: 400),
             height: h,
             child: SingleChildScrollView(
               padding: const EdgeInsets.only(left: 30),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Gap(10),
-                  InkWell(
-                    onTap: (){
-                      GoRouter.of(context).push(pathProfile);
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text('Профиль'.tr(),style: TStyle.textStyleVelaSansRegular( Theme.of(context).textTheme.displayMedium!.color!,
-                            size: 16.0)),
-                      ],
+                  Visibility(
+                    visible: widget.user.userStatus.isAuth||widget.user.userStatus.isModeration,
+                    child: InkWell(
+                      onTap: (){
+                        GoRouter.of(context).push(pathProfile);
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Gap(10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text('Профиль'.tr(),style: TStyle.textStyleVelaSansRegular( Theme.of(context).textTheme.displayMedium!.color!,
+                                  size: 16.0)),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  const Gap(10),
-                  InkWell(
-                    onTap: (){
-                      GoRouter.of(context).push(pathSettingNotifi);
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text('Уведомления'.tr(),style: TStyle.textStyleVelaSansRegular( Theme.of(context).textTheme.displayMedium!.color!,
-                            size: 16.0)),
-                      ],
+                  Visibility(
+                    visible: widget.user.userStatus.isAuth||widget.user.userStatus.isModeration,
+                    child: InkWell(
+                      onTap: (){
+                        GoRouter.of(context).push(pathSettingNotifi);
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Gap(10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text('Уведомления'.tr(),style: TStyle.textStyleVelaSansRegular( Theme.of(context).textTheme.displayMedium!.color!,
+                                  size: 16.0)),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   const Gap(10),
@@ -498,6 +491,26 @@ class _DrawerItemSettingState extends State<DrawerItemSetting> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text('Тема'.tr(),style: TStyle.textStyleVelaSansRegular( Theme.of(context).textTheme.displayMedium!.color!,
+                            size: 16.0)),
+                      ],
+                    ),
+                  ),
+                  const Gap(10),
+                  InkWell(
+                    onTap: (){
+                      if (widget.user.userStatus.isNotAuth) {
+                        GoRouter.of(context).push(pathLogIn);
+                      } else {
+                        Dialoger.showLogOut(context: context, user: widget.user);
+                      }
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text( widget.user.userStatus.isModeration || widget.user.userStatus.isAuth
+                    ? titlesDrawMenuStudent[8]
+                        : titlesDrawMenuStudent[9],
+                            style: TStyle.textStyleVelaSansRegular( Theme.of(context).textTheme.displayMedium!.color!,
                             size: 16.0)),
                       ],
                     ),
