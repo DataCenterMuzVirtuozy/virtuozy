@@ -10,6 +10,7 @@ import 'package:virtuozy/presentations/auth_screen/success_send_sms_page.dart';
 import 'package:virtuozy/presentations/student/document_screen/documents_page.dart';
 import 'package:virtuozy/presentations/student/finance_screen/list_bonus_lesson.dart';
 import 'package:virtuozy/presentations/student/notification_screen/setting_notifications_page.dart';
+import 'package:virtuozy/presentations/student/settings_screen/settings_page.dart';
 
 import 'package:virtuozy/router/paths.dart';
 
@@ -36,6 +37,15 @@ class AppRouter{
   static GoRouter get router=>GoRouter(
     initialLocation: pathApp,
     routes: [
+      GoRoute(
+        path: pathSettings,
+        pageBuilder: (context, state) {
+
+          return CupertinoPage(
+              key: state.pageKey,
+              child:   const SettingsPage());
+        },
+      ),
       GoRoute(
         path: pathBonusLessons,
         pageBuilder: (context, state) {

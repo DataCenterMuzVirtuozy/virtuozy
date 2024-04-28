@@ -167,8 +167,8 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                           alignment: Alignment.centerLeft,
                           child: InkWell(
                             onTap: (){
-                              GoRouter.of(context).push(pathProfile);
-                              Navigator.pop(context);
+                              // GoRouter.of(context).push(pathProfile);
+                              // Navigator.pop(context);
                             },
                             child: Container(
                               margin: const EdgeInsets.only(top: 50,left: 10),
@@ -249,6 +249,8 @@ required UserEntity user,
   //required int currentIndexItemMenu,
 required bool docsAccept}){
 
+  double h=0.0;
+
   if(userType.isStudent||userType.isUnknown){
     return ValueListenableBuilder<int>(
       valueListenable: currentItemNotifier,
@@ -298,14 +300,20 @@ required bool docsAccept}){
           onSelectedPage.call(3);
           },),
 
-
+   //todo settings
           Visibility(
             visible: user.userStatus.isAuth||user.userStatus.isModeration,
-            child: DrawerItem(
-                    title: titlesDrawMenuStudent[5],textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
-                    GoRouter.of(context).push(pathSettingNotifi);
-            },),
+            child:
+            DrawerItemSetting(title: titlesDrawMenuStudent[5])
+
+            // DrawerItem(
+            //         title: titlesDrawMenuStudent[5],textColor: Theme.of(context).textTheme.displayMedium!.color!,
+            //   onPressed: () {
+            //
+            //
+            // },),
           ),
+
 
           DrawerItem(
             index: 4,
@@ -316,13 +324,13 @@ required bool docsAccept}){
               onSelectedPage.call(4);
             },
           ),
-          DrawerItem(
-            title: titlesDrawMenuStudent[7],
-            textColor: Theme.of(context).textTheme.displayMedium!.color!,
-            onPressed: () {
-              GoRouter.of(context).push(pathTheme);
-            },
-          ),
+          // DrawerItem(
+          //   title: titlesDrawMenuStudent[7],
+          //   textColor: Theme.of(context).textTheme.displayMedium!.color!,
+          //   onPressed: () {
+          //     GoRouter.of(context).push(pathTheme);
+          //   },
+          // ),
           DrawerItem(
             title: user.userStatus.isModeration || user.userStatus.isAuth
                 ? titlesDrawMenuStudent[8]
@@ -382,6 +390,124 @@ required bool docsAccept}){
             },),
 
         ]
+    );
+
+  }
+}
+
+ class DrawerItemSetting extends StatefulWidget{
+  const DrawerItemSetting({super.key,  this.index = -2,  this.currentIndexItemMenu = -1, required this.title});
+
+
+  final int index;
+  final String title;
+  final int currentIndexItemMenu;
+
+  @override
+  State<DrawerItemSetting> createState() => _DrawerItemSettingState();
+}
+
+class _DrawerItemSettingState extends State<DrawerItemSetting> {
+
+  double h = 0;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 10,top: 10,bottom: 10),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(20),
+        onTap: (){
+          setState(() {
+            if(h==0){
+              h=100.0;
+            }else{
+              h=0;
+            }
+
+          });
+          //GoRouter.of(context).pop();
+          //GoRouter.of(context).push(pathSettings);
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Visibility(
+                  visible: widget.index==widget.currentIndexItemMenu,
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 20),
+                    width: 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                        color: colorOrange,
+                        shape: BoxShape.circle
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding:  EdgeInsets.only(left: widget.index==widget.currentIndexItemMenu?10:20),
+                  child: Text(widget.title,style: TStyle.textStyleVelaSansBold( Theme.of(context).textTheme.displayMedium!.color!,
+                      size: 18.0)),
+                ),
+
+
+              ],
+            ),
+            AnimatedContainer(
+                duration: const Duration(milliseconds: 400),
+            height: h,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.only(left: 30),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Gap(10),
+                  InkWell(
+                    onTap: (){
+                      GoRouter.of(context).push(pathProfile);
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text('Профиль'.tr(),style: TStyle.textStyleVelaSansRegular( Theme.of(context).textTheme.displayMedium!.color!,
+                            size: 16.0)),
+                      ],
+                    ),
+                  ),
+                  const Gap(10),
+                  InkWell(
+                    onTap: (){
+                      GoRouter.of(context).push(pathSettingNotifi);
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text('Уведомления'.tr(),style: TStyle.textStyleVelaSansRegular( Theme.of(context).textTheme.displayMedium!.color!,
+                            size: 16.0)),
+                      ],
+                    ),
+                  ),
+                  const Gap(10),
+                  InkWell(
+                    onTap: (){
+                      GoRouter.of(context).push(pathTheme);
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text('Тема'.tr(),style: TStyle.textStyleVelaSansRegular( Theme.of(context).textTheme.displayMedium!.color!,
+                            size: 16.0)),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),)
+          ],
+        ),
+      ),
     );
 
   }

@@ -21,3 +21,4 @@ const String pathDocuments = '/pathDoc';
 const String pathPreviewDoc = '/pathPredoc';
 const String pathSettingNotifi = '/pathSettingsNotifi';
 const String pathBonusLessons = '/pathBonusLesson';
+const String pathSettings = '/pathSettings';

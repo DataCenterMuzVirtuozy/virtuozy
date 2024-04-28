@@ -316,7 +316,7 @@ class _CalendarState extends State<Calendar> {
 
     }
     final indexLast = millisecondsSinceEpochList.indexOf(millisecondsSinceEpochList.reduce(max));
-    final monthLast = DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpochList[indexLast]).month;
+    final monthLast = DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpochList[indexLast]).month+2;
     final yearLast = DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpochList[indexLast]).year;
     final dayLast = DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpochList[indexLast]).day;
     final lastDay = DateTime.utc(yearLast, monthLast, dayLast);
