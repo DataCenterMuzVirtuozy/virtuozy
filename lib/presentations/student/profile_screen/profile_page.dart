@@ -95,6 +95,7 @@ import 'bloc/profile_state.dart';
                  urlAva: s.userEntity.avaUrl,
                  subways: s.userEntity.subways,
                  aboutMe: s.userEntity.about_me);
+
            }
          },
          builder: (context,state) {
@@ -276,7 +277,8 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
   void initState() {
     super.initState();
    _dateBirth = widget.profileEdit.dateBirth;
-   _subways = widget.user.subways;
+   _subways = widget.profileEdit.subways;
+   print('Subs init ${_subways.length}');
    _edit = widget.edit;
   _profileEdited = widget.profileEdit;
    _aboutMiController = TextEditingController(text: widget.user.about_me.isEmpty?'Нет данных':widget.user.about_me);
@@ -309,7 +311,10 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
   Widget build(BuildContext context) {
     return              BlocConsumer<ProfileBloc,ProfileState>(
       listener: (c,s){
-        if(s.addedSubway.name.isNotEmpty){
+
+
+        if(s.findSubwaysStatus == FindSubwaysStatus.added){
+          print('Add Subs ');
           if(!_subways.contains(s.addedSubway)){
             _edit = true;
             _subways.add(s.addedSubway);
@@ -317,10 +322,11 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
           }
         }
 
+        print('Subs init 2 ${_subways.length}');
+
 
       },
       builder: (context,state) {
-
         final theme=PreferencesUtil.getTheme;
 
         return Column(
@@ -343,8 +349,19 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
                    textAlign: TextAlign.center,
                    style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18),),
                  ),
+                  const Gap(8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.phone_enabled_rounded,color: colorWhite,
+                          size: 12.0),
+                      const Gap(5.0),
+                      Text(widget.user.phoneNumber,
+                          style: TStyle.textStyleVelaSansBold(colorWhite,size: 12.0)),
+                    ],
+                  ),
                    Center(child: Padding(
-                     padding: const EdgeInsets.symmetric(horizontal: 100),
+                     padding: const EdgeInsets.symmetric(horizontal: 100,vertical: 5),
                      child: Divider(color: colorGrey),
                    )),
                   const Gap(10.0),
@@ -356,55 +373,59 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
                       const Gap(8.0),
                     Column(
                       children: [
-                        ...List.generate(
-                            _subways.length, (index) {
+                        ...List.generate(_subways.length, (index) {
                           return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 3),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                     Container(
-                                       decoration: BoxDecoration(
-                                         shape: BoxShape.circle,
-                                         color: theme == ThemeStatus.dark?null:colorWhite,
-                                         border: Border.all(color:
-                                         _getColorSubway( _subways[index].color),
-                                             width: 1 )
-                                       ),
-                                       padding: const EdgeInsets.all(2),
-                                      margin: const EdgeInsets.only(top: 2),
-                                       child:  Icon(Icons.directions_subway,
-                                           color: _getColorSubway( _subways[index].color),
-                                           size: 14),
-                                     ),
-                                    const Gap(5),
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width-130,
-                                      child: Text(
-                                        _subways[index].name,
-                                        style: TStyle.textStyleVelaSansBold(
-                                            Theme.of(context)
-                                                .textTheme
-                                                .displayMedium!
-                                                .color!,
-                                            size: 18),
-                                      ),
-                                    ),
-                                  ],
+                                Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: theme == ThemeStatus.dark?null:colorWhite,
+                                    border: Border.all(color:
+                                    _getColorSubway( _subways[index].color),
+                                        width: 1 )
+                                  ),
+                                  padding: const EdgeInsets.all(2),
+                                 margin: const EdgeInsets.only(top: 3),
+                                  child:  Icon(Icons.directions_subway,
+                                      color: _getColorSubway( _subways[index].color),
+                                      size: 14),
                                 ),
-                                InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        _edit = true;
-                                        _subways.removeAt(index);
-                                        _profileEdited = _profileEdited.copyWith(subways: _subways);
-                                      });
-                                    },
-                                    child: Icon(Icons.remove_circle_outline,size: 16,color: colorRed))
+                                                                    const Gap(10),
+                                                                    SizedBox(
+                                 width: MediaQuery.of(context).size.width-130,
+                                 child: Text(
+                                   _subways[index].name,
+                                   style: TStyle.textStyleVelaSansBold(
+                                       Theme.of(context)
+                                           .textTheme
+                                           .displayMedium!
+                                           .color!,
+                                       size: 18),
+                                 ),
+                                                                    ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 5),
+                                  child: InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          _edit = true;
+                                          if(_subways.length>1){
+                                            print('Remove 1');
+                                            _subways.removeAt(index);
+                                          }else if(_subways.length==1){
+                                            print('Remove 2');
+                                            _subways.clear();
+                                          }
+
+                                          _profileEdited = _profileEdited.copyWith(subways: _subways);
+                                        });
+                                      },
+                                      child: Icon(Icons.remove_circle_outline,size: 16,color: colorRed)),
+                                )
                               ],
                             ),
                           );

@@ -62,30 +62,37 @@ class Dialoger{
        //textMessage: 'Dismiss All And Show Toast',
        widget: Padding(
          padding: const EdgeInsets.only(top: 60),
-         child: Container(
-           constraints: const BoxConstraints(maxWidth: 400),
-           height: 50,
-           margin: const EdgeInsets.symmetric(horizontal: 20),
-           padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-           alignment: Alignment.center,
-           decoration: BoxDecoration(
-             color: colorOrange,
-             borderRadius: BorderRadius.circular(20)
+         child: IntrinsicHeight(
+           child: Container(
+             constraints: const BoxConstraints(maxWidth: 400),
+             //height: 50,
+             margin: const EdgeInsets.symmetric(horizontal: 20),
+             padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+             alignment: Alignment.center,
+             decoration: BoxDecoration(
+               color: colorOrange,
+               borderRadius: BorderRadius.circular(20)
+             ),
+             child: Text(message,
+             textAlign: TextAlign.center,
+             style: TStyle.textStyleVelaSansBold(colorWhite,size: 14),),
            ),
-           child: Text(message,
-           style: TStyle.textStyleVelaSansBold(colorWhite,size: 14),),
          ),
        ),
      );
-     // Fluttertoast.showToast(
-     //   timeInSecForIosWeb: 2,
-     //   toastLength: Toast.LENGTH_LONG,
-     //   msg: message,
-     //   textColor: colorWhite,
-     //   backgroundColor: colorOrange,
-     //   fontSize: 14.0,
-     //   gravity: ToastGravity.CENTER,
-     // );
+
+   }
+
+   static void showToast(String text){
+     Fluttertoast.showToast(
+       timeInSecForIosWeb: 2,
+       toastLength: Toast.LENGTH_LONG,
+       msg: text,
+       textColor: colorWhite,
+       backgroundColor: colorOrange,
+       fontSize: 14.0,
+       gravity: ToastGravity.CENTER,
+     );
    }
 
    static void showModalBottomMenu({

@@ -91,16 +91,18 @@ class _MainPageState extends State<MainPage> with AuthMixin{
               return false;
             }
            if(_stackPopPage.isEmpty){
-
              if (_popUnderway) {
+               print('A1');
                return false;
              }
              _popUnderway = true;
-             Dialoger.showMessage('Нажмите быстро два раза, чтобы закрыть приложение'.tr());
+             print('A2');
+             Dialoger.showToast('Нажмите быстро два раза, чтобы закрыть приложение'.tr());
              await Future.delayed(const Duration(milliseconds: 700));
              _popUnderway = false;
              return true;
            }else{
+             print('A3');
              setState(() {
                int lastIndex = _stackPopPage.length -1;
                _stackPopPage.removeAt(lastIndex);

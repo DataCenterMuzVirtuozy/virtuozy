@@ -26,9 +26,9 @@ class ProfileBloc extends Bloc<ProfileEvent,ProfileState>{
 
   void _addSubway(AddSubwayEvent event,emit) async {
     try{
-      emit(state.copyWith(addedSubway: event.subway,profileStatus: ProfileStatus.unknown));
-      //await Future.delayed(const Duration(milliseconds: 300));
-    // emit(state.copyWith(addedSubway: SubwayEntity.unknown()));
+      emit(state.copyWith(findSubwaysStatus: FindSubwaysStatus.adding,addedSubway: SubwayEntity.unknown()));
+      await Future.delayed(const Duration(milliseconds: 300));
+      emit(state.copyWith(addedSubway: event.subway,findSubwaysStatus: FindSubwaysStatus.added));
     }on Failure catch(e){
 
     }
@@ -46,7 +46,9 @@ class ProfileBloc extends Bloc<ProfileEvent,ProfileState>{
 
   void _getDataUser(GetDataUserEvent event,emit) async {
     try{
-      emit(state.copyWith(profileStatus: ProfileStatus.loading));
+      emit(state.copyWith(profileStatus: ProfileStatus.loading,
+          findSubwaysStatus: FindSubwaysStatus.unknown,subways: [],
+          addedSubway: SubwayEntity.unknown()));
       await Future.delayed(const Duration(seconds: 1));
       UserEntity user = _userCubit.userEntity;
       emit(state.copyWith(profileStatus: ProfileStatus.loaded,userEntity: user));
@@ -59,7 +61,6 @@ class ProfileBloc extends Bloc<ProfileEvent,ProfileState>{
   void _saveNewUserData(SaveNewDataUserEvent event,emit) async {
    try{
      EditProfileEntity profileEdited = event.editProfileEntity;
-     print('Edit 1 ${profileEdited.whoFindTeem}');
      UserEntity user = _userCubit.userEntity;
      emit(state.copyWith(profileStatus: ProfileStatus.saving));
     if(profileEdited.fileImageUrl != null){
@@ -75,7 +76,6 @@ class ProfileBloc extends Bloc<ProfileEvent,ProfileState>{
          who_find: profileEdited.whoFindTeem,
          sex: profileEdited.sex);
      _userCubit.setUser(user: user);
-     print('Edit 2 ${user.who_find}');
      await _userRepository.saveSettingDataProfile(uid: user.id, profileEntity: profileEdited);
      emit(state.copyWith(profileStatus: ProfileStatus.saved,userEntity: user));
    }on Failure catch(e){

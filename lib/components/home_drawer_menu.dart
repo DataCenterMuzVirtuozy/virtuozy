@@ -114,50 +114,56 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                 children: [
                   Stack(
                     children: [
-                      Column(
-                        children: [
-                          Container(
-                            alignment: Alignment.bottomCenter,
-                            constraints: const BoxConstraints(minHeight: 100),
-                            padding: const EdgeInsets.only(left: 105,top: 50,right: 20,bottom: 5),
-                            width: width,
-                            decoration: BoxDecoration(
-                                color: colorYellow
-                            ),
-                            child:  Visibility(
-                              visible: user.userStatus.isAuth||user.userStatus.isModeration,
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Text('${userType.isStudent?user.firstName:teacher.firstName} ${userType.isStudent?user.lastName:teacher.lastName}',
-                                        maxLines: 2,
-                                        style: TStyle.textStyleGaretHeavy(colorWhite,size: 15.0)),
-                                  )
-                                ],
+                      InkWell(
+                        child: Column(
+                          children: [
+                            Container(
+                              alignment: Alignment.bottomCenter,
+                              constraints: const BoxConstraints(minHeight: 100),
+                              padding: const EdgeInsets.only(left: 105,top: 50,right: 20,bottom: 5),
+                              width: width,
+                              decoration: BoxDecoration(
+                                  color: colorYellow
+                              ),
+                              child:  Visibility(
+                                visible: user.userStatus.isAuth||user.userStatus.isModeration,
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text('${userType.isStudent?user.firstName:teacher.firstName} ${userType.isStudent?user.lastName:teacher.lastName}',
+                                          maxLines: 2,
+                                          style: TStyle.textStyleGaretHeavy(colorWhite,size: 15.0)),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          Visibility(
-                            visible: user.userStatus.isAuth||user.userStatus.isModeration,
-                            child: Container(
-                              alignment: Alignment.topLeft,
-                                padding: const EdgeInsets.only(left: 105,top: 10),
-                                width: width,
-                                height: 40,
-                                color: colorOrange,
-                            child:
-                               Row(
-                                 children: [
-                                   Icon(Icons.phone_enabled_rounded,color: colorWhite,
-                                       size: 12.0),
-                                   const Gap(5.0),
-                                   Text(userType.isStudent?user.phoneNumber:
-                                   teacher.phoneNum,
-                                       style: TStyle.textStyleVelaSansBold(colorWhite,size: 12.0)),
-                                 ],
-                               )),
-                          ),
-                        ],
+                            Visibility(
+                              visible: user.userStatus.isAuth||user.userStatus.isModeration,
+                              child: Container(
+                                alignment: Alignment.topLeft,
+                                  padding: const EdgeInsets.only(left: 105,top: 10),
+                                  width: width,
+                                  height: 40,
+                                  color: colorOrange,
+                              child:
+                                 Row(
+                                   children: [
+                                     Icon(Icons.phone_enabled_rounded,color: colorWhite,
+                                         size: 12.0),
+                                     const Gap(5.0),
+                                     Text(userType.isStudent?user.phoneNumber:
+                                     teacher.phoneNum,
+                                         style: TStyle.textStyleVelaSansBold(colorWhite,size: 12.0)),
+                                   ],
+                                 )),
+                            ),
+                          ],
+                        ),
+                        onTap: (){
+                          GoRouter.of(context).push(pathProfile);
+                          Navigator.pop(context);
+                        },
                       ),
                       Visibility(
                         visible: user.userStatus.isAuth||user.userStatus.isModeration,
@@ -165,8 +171,8 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                           alignment: Alignment.centerLeft,
                           child: InkWell(
                             onTap: (){
-                              // GoRouter.of(context).push(pathProfile);
-                              // Navigator.pop(context);
+                              GoRouter.of(context).push(pathProfile);
+                              Navigator.pop(context);
                             },
                             child: Container(
                               margin: const EdgeInsets.only(top: 50,left: 10),

@@ -19,6 +19,7 @@ class UserCubit extends Cubit<UserEntity>{
 
 
   setUser({required UserEntity user}){
+    print('setUser');
     userEntity = user;
     emit(userEntity);
   }
@@ -27,6 +28,7 @@ class UserCubit extends Cubit<UserEntity>{
 
 
   updateUser({required UserEntity newUser}){
+    print('updateUser');
       userEntity = newUser;
       emit(userEntity);
   }

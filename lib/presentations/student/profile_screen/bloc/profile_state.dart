@@ -17,6 +17,8 @@ enum ProfileStatus{
   loading,
    loaded,
    error,
+   adding,
+   added,
    unknown
  }
 
