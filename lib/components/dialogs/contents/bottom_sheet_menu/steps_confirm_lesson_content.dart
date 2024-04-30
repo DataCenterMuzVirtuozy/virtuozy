@@ -20,6 +20,7 @@ import '../../../../presentations/student/subscription_screen/bloc/sub_event.dar
 import '../../../../presentations/student/subscription_screen/bloc/sub_state.dart';
 import '../../../../resourses/colors.dart';
 import '../../../../utils/date_time_parser.dart';
+import '../../../../utils/status_to_color.dart';
 import '../../../../utils/text_style.dart';
 import '../../../buttons.dart';
 
@@ -181,7 +182,7 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson> with AuthMixin{
     child: Column(
           children: [
         Container(
-        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+        padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15.0),
         width: double.infinity,
         decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surfaceVariant,
@@ -215,22 +216,86 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson> with AuthMixin{
             ),
             const Gap(10.0),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Кабинет №',
-                    style: TStyle.textStyleVelaSansMedium(colorGrey, size: 16.0)),
-                Text('${lesson.idAuditory}',
-                    style: TStyle.textStyleVelaSansMedium(colorGrey, size: 16.0)),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(Icons.directions,
+                        color: colorGrey,size: 16.0),
+                    const Gap(5),
+                    Text('Направление: '.tr(),
+                        style: TStyle.textStyleVelaSansMedium(colorGrey, size: 15.0)),
+                  ],
+                ),
+                Text(lesson.nameDirection,
+                    style: TStyle.textStyleVelaSansBold( Theme.of(context).textTheme.displayMedium!.color!, size: 16.0)),
               ],
             ),
-            const Gap(10.0),
-            Text(lesson.nameTeacher,
-                style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!, size: 18.0)),
-            const Gap(10.0),
-            Text(direction.name,
-                style: TStyle.textStyleVelaSansMedium(colorGrey, size: 16.0)),
-            const Gap(20.0),
-         ],
+            Row(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(Icons.school_outlined,
+                        color: colorGrey,size: 16.0),
+                    const Gap(5),
+                    Text('Школа: '.tr(),
+                        style: TStyle.textStyleVelaSansMedium(colorGrey, size: 15.0)),
+                  ],
+                ),
+                Text(lesson.idSchool,
+                    style: TStyle.textStyleVelaSansBold( Theme.of(context).textTheme.displayMedium!.color!, size: 16.0)),
+              ],
+            ),
+            Row(
+              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(Icons.door_back_door_outlined,
+                        color: colorGrey,size: 16.0),
+                    const Gap(5),
+                    Text('Кабинет: '.tr(),
+                        style: TStyle.textStyleVelaSansMedium(colorGrey, size: 15.0)),
+                  ],
+                ),
+                Text(lesson.idAuditory,
+                    style: TStyle.textStyleVelaSansBold( Theme.of(context).textTheme.displayMedium!.color!, size: 16.0)),
+              ],
+            ),
+            const Gap(10),
+            Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(lesson.nameTeacher,
+                        style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!, size: 18.0)),
+                  ],
+                ),
+                const Gap(5),
+                Row(
+                  children: [
+                    Container(
+                      //margin: const EdgeInsets.only(left: 10.0),
+                      width: 10.0,
+                      height: 10.0,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: StatusToColor.getColor(lessonStatus: lesson.status)
+                      ),
+                    ),
+                    const Gap(10.0),
+                    Text(StatusToColor.getNameStatus(lesson.status),
+                        style: TStyle.textStyleVelaSansRegular(
+                            colorGrey, size: 14.0)),
+                  ],
+                ),
+              ],
+            ),
+
+          ],
         ),
           ),
 

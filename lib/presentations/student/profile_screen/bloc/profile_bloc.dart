@@ -14,7 +14,7 @@ import 'package:virtuozy/utils/failure.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent,ProfileState>{
   ProfileBloc():super(ProfileState.unknown()){
-    on<GetDataUserEvent>(_getDataUser);
+    on<GetDataUserProfileEvent>(_getDataUser);
     on<SaveNewDataUserEvent>(_saveNewUserData);
     on<GetSubwaysEvent>(_getSubways);
     on<AddSubwayEvent>(_addSubway);
@@ -44,7 +44,7 @@ class ProfileBloc extends Bloc<ProfileEvent,ProfileState>{
     }
   }
 
-  void _getDataUser(GetDataUserEvent event,emit) async {
+  void _getDataUser(GetDataUserProfileEvent event,emit) async {
     try{
       emit(state.copyWith(profileStatus: ProfileStatus.loading,
           findSubwaysStatus: FindSubwaysStatus.unknown,subways: [],

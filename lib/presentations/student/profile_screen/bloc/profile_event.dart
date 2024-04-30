@@ -15,9 +15,9 @@ class ProfileEvent extends Equatable{
 }
 
 
- class GetDataUserEvent extends ProfileEvent{
+ class GetDataUserProfileEvent extends ProfileEvent{
 
-   const GetDataUserEvent();
+   const GetDataUserProfileEvent();
 }
 
 class SaveNewDataUserEvent extends ProfileEvent{

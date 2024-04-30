@@ -92,17 +92,14 @@ class _MainPageState extends State<MainPage> with AuthMixin{
             }
            if(_stackPopPage.isEmpty){
              if (_popUnderway) {
-               print('A1');
                return false;
              }
              _popUnderway = true;
-             print('A2');
              Dialoger.showToast('Нажмите быстро два раза, чтобы закрыть приложение'.tr());
              await Future.delayed(const Duration(milliseconds: 700));
              _popUnderway = false;
              return true;
            }else{
-             print('A3');
              setState(() {
                int lastIndex = _stackPopPage.length -1;
                _stackPopPage.removeAt(lastIndex);
@@ -141,7 +138,12 @@ class _MainPageState extends State<MainPage> with AuthMixin{
                           CupertinoIcons.music_note_list,
                           color: Theme.of(context).iconTheme.color)),
 
-                      TitlePage(title: _titlePage),
+                      ValueListenableBuilder<int>(
+                          valueListenable: currentItemNotifier,
+                        builder: (context,currentIndexItemMenu,child) {
+                          return TitlePage(title: titlesDrawMenuStudent[currentIndexItemMenu]);
+                        }
+                      ),
                       badges.Badge(
                           position: badges.BadgePosition.topStart(start: 5.0,top: 3.0),
                         showBadge: false,
@@ -157,53 +159,24 @@ class _MainPageState extends State<MainPage> with AuthMixin{
                 )
               ],
             ),
-            drawer: HomeDrawerMenu(
-              onCallLogOut: () {  },
-            onSelectedPage: (index){
-              setState(() {
-                if(index == 0){
-                  _stackPopPage.clear();
-                }else{
-                  if(_stackPopPage.contains(index))return;
-                  _stackPopPage.add(index);
-
+            drawer: const HomeDrawerMenu(),
+          body: ValueListenableBuilder<int>(
+              valueListenable: currentItemNotifier,
+            builder: (context,currentIndexItemMenu,child) {
+              if(currentIndexItemMenu == 0){
+                _stackPopPage.clear();
+              }else{
+                if(!_stackPopPage.contains(currentIndexItemMenu)) {
+                  _stackPopPage.add(currentIndexItemMenu);
                 }
-                _indexPage = index;
-                _titlePage = titlesDrawMenuStudent[_indexPage];
-
-              });
 
 
-            },),
-          body: _buildScreens(userType: userType)[_indexPage],
-          //   body:  PersistentTabView(
-          //   context,
-          //   controller: _controller,
-          //   screens: _buildScreens(),
-          //   items: _navBarsItems(),
-          //   confineInSafeArea: true,
-          //   backgroundColor: Colors.white, // Default is Colors.white.
-          //   handleAndroidBackButtonPress: true, // Default is true.
-          //   resizeToAvoidBottomInset: true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
-          //   stateManagement: true, // Default is true.
-          //   hideNavigationBarWhenKeyboardShows: true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
-          //   decoration: NavBarDecoration(
-          //     borderRadius: BorderRadius.circular(10.0),
-          //     colorBehindNavBar: Colors.white,
-          //   ),
-          //   popAllScreensOnTapOfSelectedTab: true,
-          //   popActionScreens: PopActionScreensType.all,
-          //   itemAnimationProperties: ItemAnimationProperties( // Navigation Bar's items animation properties.
-          //     duration: Duration(milliseconds: 200),
-          //     curve: Curves.ease,
-          //   ),
-          //   screenTransitionAnimation: ScreenTransitionAnimation( // Screen transition animation on change of selected tab.
-          //     animateTabTransition: true,
-          //     curve: Curves.ease,
-          //     duration: Duration(milliseconds: 200),
-          //   ),
-          //   navBarStyle: NavBarStyle.style1, // Choose the nav bar style with this property.
-          // ),
+              }
+              _indexPage = currentIndexItemMenu;
+              return _buildScreens(userType: userType)[currentIndexItemMenu];
+            }
+          ),
+
           ),
         );
       },
@@ -241,38 +214,5 @@ class _MainPageState extends State<MainPage> with AuthMixin{
   void _openMenu(){
     scaffoldKey.currentState!.openDrawer();
   }
-  List<PersistentBottomNavBarItem> _navBarsItems() {
-    return [
-      PersistentBottomNavBarItem(
-        icon: const Icon(CupertinoIcons.home),
-        title: ("Главная".tr()),
-        activeColorPrimary: colorOrange,
-        inactiveColorPrimary: CupertinoColors.systemGrey,
-      ),
-      PersistentBottomNavBarItem(
-        icon: const Icon(CupertinoIcons.calendar_today),
-        title: ("Расписание".tr()),
-        activeColorPrimary: colorOrange,
-        inactiveColorPrimary: CupertinoColors.systemGrey,
-      ),
-      PersistentBottomNavBarItem(
-        icon: const Icon(CupertinoIcons.money_rubl_circle),
-        title: ("Финансы".tr()),
-        activeColorPrimary: colorOrange,
-        inactiveColorPrimary: CupertinoColors.systemGrey,
-      ),
-      PersistentBottomNavBarItem(
-        icon: const Icon(Icons.store_mall_directory_rounded),
-        title: ("Предложения".tr()),
-        activeColorPrimary: colorOrange,
-        inactiveColorPrimary: CupertinoColors.systemGrey,
-      ),
-      PersistentBottomNavBarItem(
-        icon: const Icon(CupertinoIcons.globe),
-        title: ("Сайт".tr()),
-        activeColorPrimary: colorOrange,
-        inactiveColorPrimary: CupertinoColors.systemGrey,
-      ),
-    ];
-  }
+
 }

@@ -29,10 +29,10 @@ int _currentIndexItemMenu = 0;
 ValueNotifier<int> currentItemNotifier = ValueNotifier(0);
 
 class HomeDrawerMenu extends StatefulWidget{
-  const HomeDrawerMenu({super.key,required this.onCallLogOut,required this.onSelectedPage});
+  const HomeDrawerMenu({super.key});
 
-  final VoidCallback onCallLogOut;
-  final Function onSelectedPage;
+  // final VoidCallback onCallLogOut;
+  // final Function onSelectedPage;
 
   @override
   State<HomeDrawerMenu> createState() => _HomeDrawerMenuState();
@@ -68,6 +68,7 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
         ),
         child: ClipOval(
           child: CachedNetworkImage(
+            key: ValueKey(user.avaUrl),
             fit: BoxFit.cover,
             imageUrl: user.avaUrl,
             progressIndicatorBuilder: (context, url, downloadProgress) =>
@@ -199,7 +200,7 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                         setState(() {
                           //_currentIndexItemMenu = item;
                           currentItemNotifier.value = item;
-                          widget.onSelectedPage.call(item);
+                          //widget.onSelectedPage.call(item);
                         });
 
                       }, teacher: teacher),
@@ -264,14 +265,20 @@ required bool docsAccept}){
         DrawerItem(
           currentIndexItemMenu: currentIndexItemMenu,
           index: 0,
-          title: titlesDrawMenuStudent[0],textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
-          onSelectedPage.call(0);
+          title: titlesDrawMenuStudent[0],textColor: Theme.of(context).textTheme.displayMedium!.color!,
+          onPressed: () {
+            print('Tap ${0}');
+            currentItemNotifier.value = 0;
+         // onSelectedPage.call(0);
           },),
           DrawerItem(
         currentIndexItemMenu:currentIndexItemMenu,
         index: 1,
-        title: titlesDrawMenuStudent[1],textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
-        onSelectedPage.call(1);
+        title: titlesDrawMenuStudent[1],
+            textColor: Theme.of(context).textTheme.displayMedium!.color!,
+            onPressed: () {
+              currentItemNotifier.value = 1;
+
           },),
 
           DrawerItem(
@@ -279,7 +286,9 @@ required bool docsAccept}){
         index: 2,
         title: titlesDrawMenuStudent[2],textColor: Theme.of(context).textTheme.displayMedium!.color!,
         onPressed: () {
-         onSelectedPage.call(2);
+
+          currentItemNotifier.value = 2;
+
           },),
 
               Visibility(

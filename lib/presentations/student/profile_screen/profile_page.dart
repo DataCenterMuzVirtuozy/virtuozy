@@ -65,7 +65,7 @@ import 'bloc/profile_state.dart';
    @override
   void initState() {
   super.initState();
-  context.read<ProfileBloc>().add(const GetDataUserEvent());
+  context.read<ProfileBloc>().add(const GetDataUserProfileEvent());
   }
 
   @override
@@ -104,97 +104,103 @@ import 'bloc/profile_state.dart';
              return Center(child: CircularProgressIndicator(color: colorOrange));
            }
 
-
-           return IgnorePointer(
-             ignoring: state.profileStatus == ProfileStatus.saving,
-             child: SingleChildScrollView(
-               padding:  EdgeInsets.only(top: h/12,right: 20,left: 20),
-               child: Stack(
-                 alignment: Alignment.topCenter,
-                 children: [
-                   Align(
-                     alignment: Alignment.centerLeft,
-                     child: IconButton(onPressed: (){
-                       Navigator.pop(context);
-                     },
-                       icon: Icon(Platform.isAndroid?Icons.arrow_back_rounded:
-                       Icons.arrow_back_ios_new_rounded),),
-                   ),
+          if(state.profileStatus == ProfileStatus.loaded){
+            return IgnorePointer(
+              ignoring: state.profileStatus == ProfileStatus.saving,
+              child: SingleChildScrollView(
+                padding:  EdgeInsets.only(top: h/12,right: 20,left: 20),
+                child: Stack(
+                  alignment: Alignment.topCenter,
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: IconButton(onPressed: (){
+                        Navigator.pop(context);
+                      },
+                        icon: Icon(Platform.isAndroid?Icons.arrow_back_rounded:
+                        Icons.arrow_back_ios_new_rounded),),
+                    ),
                     BodyInfoUser(
                       key: ValueKey(_edit),
-                        user: state.userEntity,edit: _edit,profileEdit: profileEntity,
-                    state: state),
-                   GestureDetector(
-                     onTap: (){
-                       setState(() {
-                         if(_editPhotoMode){
-                           _editPhotoMode = false;
-                         }else{
-                           _editPhotoMode = true;
-                         }
+                        user: state.userEntity,
+                        edit: _edit,
+                        profileEdit: profileEntity,
+                        state: state),
+                    GestureDetector(
+                      onTap: (){
+                        setState(() {
+                          if(_editPhotoMode){
+                            _editPhotoMode = false;
+                          }else{
+                            _editPhotoMode = true;
+                          }
 
-                       });
-                     },
-                     child: SizedBox(
-                       width: 240,
-                       child: Stack(
-                         alignment: Alignment.center,
-                         children: [
-                           Visibility(
-                             visible: _editPhotoMode,
-                             child: Container(
-                               padding: const EdgeInsets.symmetric(horizontal: 10),
-                               decoration: BoxDecoration(
-                                 color: colorOrange,
-                                 borderRadius: BorderRadius.circular(20)
-                               ),
-                               height: 50,
-                               child: Row(
-                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                 children: [
-                                   IconButton(onPressed: (){
-                                     _pickImage(true);
-                                   },
-                                       icon: Icon(Icons.image_rounded,color: colorWhite)),
-                                   IconButton(onPressed: (){
-                                     _pickImage(false);
-                                   },
-                                       icon: Icon(Icons.camera_alt_outlined,color: colorWhite))
-                                 ],
-                               ),
-                             ).animate().fadeIn(duration: const Duration(milliseconds: 700)),
-                           ),
-                           Container(
-                             decoration: BoxDecoration(
-                                 shape: BoxShape.circle,
-                                 color: colorOrange,
-                             ),
-                             padding: const EdgeInsets.all(2),
-                             child: _getAvatar(_imageFile,state.userEntity.avaUrl),
-                           ),
-                           Positioned(
-                             bottom: 0,
-                             right: 65,
-                             child: Container(
-                               padding: const EdgeInsets.all(5),
-                               decoration: BoxDecoration(
-                                 shape: BoxShape.circle,
-                                 color: colorOrange,
-                                 border: Border.all(color: colorWhite,width: 1.5)
-                               ),
-                               child: Icon(_editPhotoMode?Icons.close:
-                               Icons.edit,color: colorWhite,size: 20),
-                             ),
-                           ),
-                         ],
-                       ),
-                     ),
-                   ),
+                        });
+                      },
+                      child: SizedBox(
+                        width: 240,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Visibility(
+                              visible: _editPhotoMode,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 10),
+                                decoration: BoxDecoration(
+                                    color: colorOrange,
+                                    borderRadius: BorderRadius.circular(20)
+                                ),
+                                height: 50,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    IconButton(onPressed: (){
+                                      _pickImage(true);
+                                    },
+                                        icon: Icon(Icons.image_rounded,color: colorWhite)),
+                                    IconButton(onPressed: (){
+                                      _pickImage(false);
+                                    },
+                                        icon: Icon(Icons.camera_alt_outlined,color: colorWhite))
+                                  ],
+                                ),
+                              ).animate().fadeIn(duration: const Duration(milliseconds: 700)),
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: colorOrange,
+                              ),
+                              padding: const EdgeInsets.all(2),
+                              child: _getAvatar(_imageFile,state.userEntity.avaUrl),
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              right: 65,
+                              child: Container(
+                                padding: const EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: colorOrange,
+                                    border: Border.all(color: colorWhite,width: 1.5)
+                                ),
+                                child: Icon(_editPhotoMode?Icons.close:
+                                Icons.edit,color: colorWhite,size: 20),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
 
-                 ],
-               ),
-             ),
-           );
+                  ],
+                ),
+              ),
+            );
+
+          }
+
+           return Container();
          }
        ),
      );
@@ -278,7 +284,7 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
     super.initState();
    _dateBirth = widget.profileEdit.dateBirth;
    _subways = widget.profileEdit.subways;
-   print('Subs init ${_subways.length}');
+
    _edit = widget.edit;
   _profileEdited = widget.profileEdit;
    _aboutMiController = TextEditingController(text: widget.user.about_me.isEmpty?'Нет данных':widget.user.about_me);
@@ -322,13 +328,14 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
           }
         }
 
-        print('Subs init 2 ${_subways.length}');
+
 
 
       },
       builder: (context,state) {
         final theme=PreferencesUtil.getTheme;
 
+        print('Subs init 3 ${_subways.length}');
         return Column(
 
           children: [
@@ -372,6 +379,7 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
                       Text('Часто посещаемые станции метро:'.tr(),style: TStyle.textStyleVelaSansMedium(colorGrey,size: 16),),
                       const Gap(8.0),
                     Column(
+                      key: ValueKey(_subways),
                       children: [
                         ...List.generate(_subways.length, (index) {
                           return Padding(
