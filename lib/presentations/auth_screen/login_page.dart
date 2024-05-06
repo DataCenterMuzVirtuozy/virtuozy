@@ -213,10 +213,5 @@ class _LogInPageState extends State<LogInPage> {
     }
   }
 
-  Future<void> _launchUrl() async {
-    final Uri url = Uri.parse('https://virtuozy-msk.ru');
-    if (!await launchUrl(url)) {
-      throw Exception('Could not launch $url');
-    }
-  }
+
 }

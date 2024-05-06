@@ -111,6 +111,7 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
                 DatePageView(),
                 Gap(20.0),
                 CalendarCaller(lessons: [Lesson(
+                  contactValues: [],
                     id: 1,
                     idSub: 1,
                     idSchool: '',

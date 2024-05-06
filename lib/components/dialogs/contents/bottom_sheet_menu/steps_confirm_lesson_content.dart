@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:gap/gap.dart';
 import 'package:virtuozy/components/dialogs/dialoger.dart';
+import 'package:virtuozy/components/teacher_contacts.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/utils/auth_mixin.dart';
 
@@ -270,8 +271,11 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson> with AuthMixin{
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(lesson.nameTeacher,
-                        style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!, size: 18.0)),
+                    Expanded(
+                      child: Text(lesson.nameTeacher,
+                          style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!, size: 18.0)),
+                    ),
+                    TeacherContacts(contacts: lesson.contactValues)
                   ],
                 ),
                 const Gap(5),

@@ -200,8 +200,10 @@ class UserModel{
    final String timeAccept;
    final String nameDirection;
    final bool bonus;
+   final List<dynamic> contactValues;
 
    const LessonModel( {
+     required this.contactValues,
      required this.idDir,
      required this.idSchool,
      required this.nameStudent,
@@ -222,6 +224,7 @@ class UserModel{
   factory LessonModel.fromMap(Map<String, dynamic> map,String nameDirection) {
 
     return LessonModel(
+      contactValues: map['contactValues']??['8 (499) 322-71-04','https://wa.clck.bar/79231114616','https://t.me/@VirtuozyNskMs2'],
       idDir: map['idDir']??0,
       idSchool: map['idSchool']??'',
       idSub: map['idSub']??0,

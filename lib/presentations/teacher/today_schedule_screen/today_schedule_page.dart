@@ -67,6 +67,7 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
                 SelectSchoolMenu(),
                 DatePageView(),
                CalendarCaller(lessons: [Lesson(
+                 contactValues: [],
                    id: 1,
                    idSub: 1,
                    idSchool: '',

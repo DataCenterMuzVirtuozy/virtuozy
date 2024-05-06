@@ -28,8 +28,10 @@ class Lesson{
   final String nameDirection;
   final int idSub;
   final bool bonus;
+  final List<dynamic> contactValues;
 
   const Lesson({
+    required this.contactValues,
     required this.id,
     required this.idSub,
     required this.idSchool,
@@ -47,6 +49,7 @@ class Lesson{
 
   factory Lesson.unknown(){
     return const Lesson(
+      contactValues: [],
         idSub:0,
         bonus:false,
         nameDirection: '',
@@ -72,9 +75,11 @@ class Lesson{
     int? idSub,
     bool? bonus,
     String? nameStudent,
-    String? idSchool
+    String? idSchool,
+    List<String>? contactValues
   }) {
     return Lesson(
+      contactValues: contactValues??this.contactValues,
       idSchool: idSchool??this.idSchool,
       idSub: idSub??this.idSub,
       bonus: bonus??this.bonus,

@@ -10,8 +10,11 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/steps_confirm_lesson_content.dart';
+import 'package:virtuozy/components/teacher_contacts.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
+import 'package:virtuozy/resourses/images.dart';
 import 'package:virtuozy/utils/date_time_parser.dart';
 
 import '../../../../domain/entities/lesson_entity.dart';
@@ -35,7 +38,7 @@ class DetailsLessonContent extends StatefulWidget {
 
 class _DetailsLessonContentState extends State<DetailsLessonContent> {
 
-  final double _heightBox = 340.0;
+  final double _heightBox = 355.0;
   late int selectedPage;
   late final PageController _pageController;
 
@@ -208,9 +211,11 @@ class ItemDetailsLesson extends StatelessWidget{
              Row(
                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                children: [
-                 Text(lesson.nameTeacher,
-                     style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!, size: 18.0)),
-               ],
+                 Expanded(
+                   child: Text(lesson.nameTeacher,
+                       style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!, size: 18.0)),
+                 ),
+                  TeacherContacts(contacts: lesson.contactValues)               ],
              ),
              const Gap(5),
              Row(

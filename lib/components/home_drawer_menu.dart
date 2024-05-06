@@ -267,7 +267,6 @@ required bool docsAccept}){
           index: 0,
           title: titlesDrawMenuStudent[0],textColor: Theme.of(context).textTheme.displayMedium!.color!,
           onPressed: () {
-            print('Tap ${0}');
             currentItemNotifier.value = 0;
          // onSelectedPage.call(0);
           },),
