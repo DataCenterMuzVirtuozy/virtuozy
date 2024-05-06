@@ -90,6 +90,7 @@ class UserMapper{
   static List<SubscriptionEntity> fromApiPriceSub(List<SubscriptionModel> subscriptionModels){
 
     return subscriptionModels.map((e) => SubscriptionEntity(
+      contactValues: e.contactValues,
       option: fromOptionApi(
           optionModel: e.optionModel),
         idUser: e.idUser,
@@ -116,6 +117,7 @@ class UserMapper{
 
   static List<SubscriptionEntity> fromApiPriceSubAll(List<SubscriptionModel> subscriptionModelAll){
      return subscriptionModelAll.map((e) =>  SubscriptionEntity(
+       contactValues: e.contactValues,
        option: fromOptionApi(optionModel: e.optionModel),
        idDir: e.idDir,
        idUser: e.idUser,

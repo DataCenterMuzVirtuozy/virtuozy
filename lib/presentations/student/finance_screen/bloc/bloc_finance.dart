@@ -189,6 +189,7 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
       final statusNewSub = _getStatusSubNew(user.directions[indexCurrentDir].subscriptionsAll);
       final dateNow = DateTime.now();
       var newSub = SubscriptionEntity(
+        contactValues: ['','',''],
                 id: 0,
                 option: Option.unknown(),
                 idUser: user.id,

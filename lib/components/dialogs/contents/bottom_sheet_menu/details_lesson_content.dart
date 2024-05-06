@@ -215,7 +215,7 @@ class ItemDetailsLesson extends StatelessWidget{
                    child: Text(lesson.nameTeacher,
                        style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!, size: 18.0)),
                  ),
-                  TeacherContacts(contacts: lesson.contactValues)               ],
+                  TeacherContacts(contacts: lesson.contactValues, size: 30,)               ],
              ),
              const Gap(5),
              Row(

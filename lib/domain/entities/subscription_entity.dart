@@ -24,8 +24,10 @@ enum StatusSub{
    final String commentary;
    final StatusSub status;
    final Option option;
+   final List<dynamic> contactValues;
 
    const SubscriptionEntity( {
+     required this.contactValues,
      required this.nameTeacher,
      required this.idDir,
      required this.idUser,
@@ -60,9 +62,11 @@ enum StatusSub{
       int? idDir,
      int? id,
      Option? option,
-     String? nameTeacher
+     String? nameTeacher,
+     List<dynamic>? contactValues
   }) {
     return SubscriptionEntity(
+      contactValues: contactValues??this.contactValues,
       id:id??this.id,
       nameTeacher: nameTeacher??this.nameTeacher,
       option: option??this.option,

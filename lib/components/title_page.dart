@@ -48,8 +48,7 @@ class _TitlePageState extends State<TitlePage> {
          ),
          child: Stack(
            children: [
-             !_darkTheme?Image.asset(logoDark,width: 80.0):
-             SvgPicture.asset(logo, width: 80.0),
+             Image.asset(icLogoRec,width: 25.0),
              Padding(
                padding: const EdgeInsets.only(left: 30),
                child: Text(widget.title,style: TStyle.textStyleGaretHeavy(textColorBlack(context),size: 18),),

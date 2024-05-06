@@ -320,7 +320,6 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
 
 
         if(s.findSubwaysStatus == FindSubwaysStatus.added){
-          print('Add Subs ');
           if(!_subways.contains(s.addedSubway)){
             _edit = true;
             _subways.add(s.addedSubway);
@@ -335,7 +334,6 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
       builder: (context,state) {
         final theme=PreferencesUtil.getTheme;
 
-        print('Subs init 3 ${_subways.length}');
         return Column(
 
           children: [
@@ -360,11 +358,11 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.phone_enabled_rounded,color: colorWhite,
+                      Icon(Icons.phone_enabled_rounded,color: textColorBlack(context),
                           size: 12.0),
                       const Gap(5.0),
                       Text(widget.user.phoneNumber,
-                          style: TStyle.textStyleVelaSansBold(colorWhite,size: 12.0)),
+                          style: TStyle.textStyleVelaSansBold(textColorBlack(context),size: 12.0)),
                     ],
                   ),
                    Center(child: Padding(

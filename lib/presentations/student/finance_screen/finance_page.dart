@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtuozy/components/buttons.dart';
+import 'package:virtuozy/components/teacher_contacts.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/router/paths.dart';
@@ -736,15 +737,22 @@ class _FinancePageState extends State<FinancePage> {
                    ),
                  ),
 
-
+                  const Gap(5.0),
                  Visibility(
                    visible: widget.subscription.nameTeacher.isNotEmpty,
                    child: Row(
+                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                      children: [
-                       Icon(Icons.person,color: colorGreen,size: 10.0),
-                       const Gap(5.0),
-                       Text(widget.subscription.nameTeacher,
-                           style:TStyle.textStyleVelaSansMedium(colorGrey,size: 13.0)),
+                       Row(
+                         children: [
+                           Icon(Icons.person,color: colorGreen,size: 10.0),
+                           const Gap(5.0),
+                           Text(widget.subscription.nameTeacher,
+                               style:TStyle.textStyleVelaSansMedium(colorGrey,size: 13.0)),
+
+                         ],
+                       ),
+                       TeacherContacts(contacts: widget.subscription.contactValues, size: 20)
                      ],
                    ),
                  ),

@@ -12,6 +12,7 @@ import 'package:go_router/go_router.dart';
 import 'package:virtuozy/components/box_info.dart';
 import 'package:virtuozy/components/calendar/calendar.dart';
 import 'package:virtuozy/components/dialogs/dialoger.dart';
+import 'package:virtuozy/components/teacher_contacts.dart';
 import 'package:virtuozy/components/title_page.dart';
 import 'package:virtuozy/domain/entities/subscription_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
@@ -467,7 +468,7 @@ class _ItemSubState extends State<ItemSub> {
       child: Column(
         children: [
           AnimatedContainer(
-            height: !_open?50:125,
+            height: !_open?50:135,
             curve: Curves.easeIn,
             duration: const Duration(milliseconds: 500),
             child: SingleChildScrollView(
@@ -541,15 +542,21 @@ class _ItemSubState extends State<ItemSub> {
                     ),
                   ),
 
-
+                    const Gap(5.0),
                     Visibility(
                       visible: widget.subscription.nameTeacher.isNotEmpty,
                       child: Row(
+                        mainAxisAlignment:  MainAxisAlignment.spaceBetween,
                         children: [
-                          Icon(Icons.person,color: colorGreen,size: 10.0),
-                          const Gap(5.0),
-                          Text(widget.subscription.nameTeacher,
-                              style:TStyle.textStyleVelaSansMedium(colorGrey,size: 13.0)),
+                          Row(
+                            children: [
+                              Icon(Icons.person,color: colorGreen,size: 10.0),
+                              const Gap(5.0),
+                              Text(widget.subscription.nameTeacher,
+                                  style:TStyle.textStyleVelaSansMedium(colorGrey,size: 13.0)),
+                            ],
+                          ),
+                          TeacherContacts(contacts: widget.subscription.contactValues, size: 25.0,)
                         ],
                       ),
                     ),

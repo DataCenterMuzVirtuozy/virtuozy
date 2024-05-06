@@ -19,8 +19,10 @@ class SubscriptionModel{
   final String dateBay;
   final String nameTeacher;
   final OptionModel optionModel;
+  final List<dynamic> contactValues;
 
   const SubscriptionModel( {
+    required this.contactValues,
     required this.idUser,
     required this.idDir,
     required this.id,
@@ -65,6 +67,7 @@ class SubscriptionModel{
 
    final option = OptionModel.fromMap(map['options']);
     return SubscriptionModel(
+        contactValues: map['contactValues']??['8 (499) 322-71-04','https://wa.clck.bar/79231114616','https://t.me/@VirtuozyNskMs2'],
       idDir: map['idDir'] as int,
       idUser: map['idUser'] as int,
       id: map['id'] as int,

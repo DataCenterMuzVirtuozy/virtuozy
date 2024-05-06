@@ -18,5 +18,6 @@
    String get whatsapp => 'lib/assets/img/ic_whatsapp.png';
    String get dots => 'lib/assets/img/dots.png';
    String get icMenu => 'lib/assets/img/treble_clef.png';
+   String get icLogoRec => 'lib/assets/img/logo_rec.png';
 
 

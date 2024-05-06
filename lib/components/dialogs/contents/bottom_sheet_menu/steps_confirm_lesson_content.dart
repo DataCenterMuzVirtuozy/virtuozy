@@ -199,7 +199,7 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson> with AuthMixin{
                   children: [
                     Icon(Icons.calendar_month, color: Theme.of(context).textTheme.displayMedium!.color!, size: 15.0),
                     const Gap(5.0),
-                    Text(lesson.date,
+                    Text(DateTimeParser.getDateFromApi(date: lesson.date),
                         style: TStyle.textStyleVelaSansMedium(
                             Theme.of(context).textTheme.displayMedium!.color!, size: 16.0)),
                   ],
@@ -275,7 +275,7 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson> with AuthMixin{
                       child: Text(lesson.nameTeacher,
                           style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!, size: 18.0)),
                     ),
-                    TeacherContacts(contacts: lesson.contactValues)
+                    TeacherContacts(contacts: lesson.contactValues, size: 25)
                   ],
                 ),
                 const Gap(5),
