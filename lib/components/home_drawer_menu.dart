@@ -353,47 +353,51 @@ required bool docsAccept}){
       }
     );
   }else{
-    return Column(
-        children: [
-          DrawerItem(
-            //currentIndexItemMenu:currentIndexItemMenu,
-            index: 0,
-            title: 'Главная'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
-            onSelectedPage.call(0);
-          },),
+    return ValueListenableBuilder<int>(
+      builder: (context,currentIndexItemMenu,child) {
+        return Column(
+            children: [
+              DrawerItem(
+                currentIndexItemMenu:currentIndexItemMenu,
+                index: 0,
+                title: 'Главная'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+                onSelectedPage.call(0);
+              },),
 
-          DrawerItem(
-            //currentIndexItemMenu: currentIndexItemMenu,
-            index: 1,
-            title: 'Расписание'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
-            onSelectedPage.call(1);
-          },),
+              DrawerItem(
+                currentIndexItemMenu: currentIndexItemMenu,
+                index: 1,
+                title: 'Расписание'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+                onSelectedPage.call(1);
+              },),
 
-          DrawerItem(
-            //currentIndexItemMenu:currentIndexItemMenu,
-            index: 2,
-            title: 'Лиды'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
-            onSelectedPage.call(2);
-          },),
+              DrawerItem(
+                currentIndexItemMenu:currentIndexItemMenu,
+                index: 2,
+                title: 'Лиды'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+                onSelectedPage.call(2);
+              },),
 
-          DrawerItem(
-            //currentIndexItemMenu:currentIndexItemMenu,
-            index: 3,
-            title: 'Клиенты'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
-            onSelectedPage.call(3);
-          },),
-          DrawerItem(
-            title: 'Тема'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
-            GoRouter.of(context).push(pathTheme);
-          },),
+              DrawerItem(
+                currentIndexItemMenu:currentIndexItemMenu,
+                index: 3,
+                title: 'Клиенты'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+                onSelectedPage.call(3);
+              },),
+              DrawerItem(
+                title: 'Тема'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+                GoRouter.of(context).push(pathTheme);
+              },),
 
-          // DrawerItem(
-          //   title: 'Выйти'.tr(),
-          //   textColor: colorRed, onPressed: ()  {
-          //   Dialoger.showLogOutTeacher(context: context,teacher: teacher);
-          //   },),
+              // DrawerItem(
+              //   title: 'Выйти'.tr(),
+              //   textColor: colorRed, onPressed: ()  {
+              //   Dialoger.showLogOutTeacher(context: context,teacher: teacher);
+              //   },),
 
-        ]
+            ]
+        );
+      }, valueListenable: currentItemNotifier,
     );
 
   }

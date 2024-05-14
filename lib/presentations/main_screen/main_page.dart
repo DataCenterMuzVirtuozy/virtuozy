@@ -196,7 +196,10 @@ class _MainPageState extends State<MainPage> with AuthMixin{
     }else if(userType.isTeacher){
       return [
         const TodaySchedulePage(),
-        const ScheduleTablePage()
+        const ScheduleTablePage(),
+        Container(),
+        Container(),
+         Container()
       ];
     }else{
       return [
