@@ -9,3 +9,10 @@ class TodayScheduleEvent extends Equatable{
 
   const TodayScheduleEvent();
 }
+
+class GetIdsSchoolEvent extends TodayScheduleEvent{}
+  class GetLessonsByIdSchoolEvent extends TodayScheduleEvent{
+  final String id;
+
+  const GetLessonsByIdSchoolEvent(this.id);
+}

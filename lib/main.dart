@@ -13,6 +13,7 @@ import 'package:virtuozy/presentations/student/notification_screen/bloc/notifi_b
 import 'package:virtuozy/presentations/student/profile_screen/bloc/profile_bloc.dart';
 import 'package:virtuozy/presentations/student/schedule_screen/bloc/schedule_bloc.dart';
 import 'package:virtuozy/presentations/student/subscription_screen/bloc/sub_bloc.dart';
+import 'package:virtuozy/presentations/teacher/today_schedule_screen/bloc/today_schedule_bloc.dart';
 import 'package:virtuozy/router/app_router.dart';
 import 'package:virtuozy/utils/app_theme.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -81,7 +82,8 @@ class _MyAppState extends State<MyApp> {
               BlocProvider<UserCubit>(create: (_)=>UserCubit()),
               BlocProvider<NotifiBloc>(create: (_)=>NotifiBloc()),
               BlocProvider<DocsBloc>(create: (_)=>DocsBloc()),
-              BlocProvider<ProfileBloc>(create: (_)=> ProfileBloc())
+              BlocProvider<ProfileBloc>(create: (_)=> ProfileBloc()),
+              BlocProvider<TodayScheduleBloc>(create: (_)=>TodayScheduleBloc())
             ],
             child: MaterialApp.router(
               title: 'Flutter Demo',

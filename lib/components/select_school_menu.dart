@@ -8,18 +8,18 @@ import '../resourses/colors.dart';
 import '../utils/text_style.dart';
 
 class SelectSchoolMenu extends StatefulWidget{
-  const SelectSchoolMenu({super.key});
+  const SelectSchoolMenu({super.key, required this.idsSchool, required this.onChange});
+
+
+  final List<String> idsSchool;
+  final Function onChange;
 
   @override
   State<SelectSchoolMenu> createState() => _SelectSchoolMenuState();
 }
 
 class _SelectSchoolMenuState extends State<SelectSchoolMenu> {
-  final List<String> items = [
-    'мш1',
-    'мш2',
-    'мш3',
-  ];
+
 
   String? selectedValue;
 
@@ -27,7 +27,7 @@ class _SelectSchoolMenuState extends State<SelectSchoolMenu> {
   @override
   void initState() {
     super.initState();
-    selectedValue = items[0];
+    selectedValue = widget.idsSchool[0];
   }
 
   @override
@@ -39,7 +39,7 @@ class _SelectSchoolMenuState extends State<SelectSchoolMenu> {
             textAlign: TextAlign.center,
             style:TStyle.textStyleVelaSansExtraBolt(Theme.of(context)
                 .textTheme.displayMedium!.color!,size: 13.0)),
-        items: items
+        items: widget.idsSchool
             .map((String item) => DropdownMenuItem<String>(
           value: item,
           child: Text(

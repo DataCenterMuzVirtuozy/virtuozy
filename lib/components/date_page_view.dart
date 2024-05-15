@@ -2,11 +2,16 @@
 
   import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:virtuozy/domain/entities/lesson_entity.dart';
+import 'package:virtuozy/domain/entities/today_lessons.dart';
 
 import '../utils/text_style.dart';
 
 class DatePageView extends StatefulWidget{
-  const DatePageView({super.key});
+  const DatePageView({super.key,required, required this.lessonsToday, required this.onChangePage});
+
+  final List<TodayLessons> lessonsToday;
+  final Function onChangePage;
 
   @override
   State<DatePageView> createState() => _DatePageViewState();
@@ -19,12 +24,16 @@ class _DatePageViewState extends State<DatePageView> {
 
 
   late PageController _pageController;
+  int page = 0;
+  int countLessons = 0;
+
 
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: 0);
+    countLessons = widget.lessonsToday.length;
   }
 
   @override
@@ -44,8 +53,12 @@ class _DatePageViewState extends State<DatePageView> {
                flex: 1,
                child: IconButton(
                    onPressed: () {
-                     // _pageController1.nextPage(duration: const Duration(milliseconds: 700), curve: Curves.easeIn);
-                     // _pageController2.animateToPage(1,duration: const Duration(milliseconds: 700), curve: Curves.easeIn);
+                     if(page > 0){
+                       page--;
+                     }
+                     widget.onChangePage.call(page);
+                     _pageController.animateToPage(page,duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
+
                    },
                    icon: Icon(
                      Icons.arrow_back_ios_rounded,
@@ -63,16 +76,13 @@ class _DatePageViewState extends State<DatePageView> {
                  physics: const NeverScrollableScrollPhysics(),
                  controller: _pageController,
                  children: [
-                   Text('8 ноя. 2023',
-                       textAlign: TextAlign.center,
-                       style:TStyle.textStyleVelaSansExtraBolt(Theme.of(context)
-                           .textTheme.displayMedium!.color!,size: 13.0)),
-                   Text('9 ноя. 2023',
-                       style:TStyle.textStyleVelaSansExtraBolt(Theme.of(context)
-                           .textTheme.displayMedium!.color!,size: 13.0)),
-                   Text('10 ноя. 2023',
-                       style:TStyle.textStyleVelaSansExtraBolt(Theme.of(context)
-                           .textTheme.displayMedium!.color!,size: 13.0))
+                   ...List.generate(countLessons, (index) {
+                     return Text(parseDate(widget.lessonsToday[index].date),
+                         textAlign: TextAlign.center,
+                         style:TStyle.textStyleVelaSansExtraBolt(Theme.of(context)
+                             .textTheme.displayMedium!.color!,size: 13.0));
+                   })
+
                  ],
                ),
              ),
@@ -80,8 +90,11 @@ class _DatePageViewState extends State<DatePageView> {
            Flexible(
                flex: 1,
                child: IconButton(onPressed: (){
-                 // _pageController1.nextPage(duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
-                 // _pageController2.nextPage(duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
+                 if(page < countLessons-1){
+                   page++;
+                 }
+                 widget.onChangePage.call(page);
+                 _pageController.animateToPage(page,duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
                },
                    icon:  Icon(Icons.arrow_forward_ios_rounded,
                      size: 16,
@@ -90,4 +103,30 @@ class _DatePageViewState extends State<DatePageView> {
          ],
        ));
   }
+
+
+  //'8 ноя. 2023'
+   String parseDate(String date){
+    print('Date $date');
+    final y = date.split('-')[0];
+    final d = date.split('-')[1].split('-')[0];
+    final m = switch(date.split('-')[1].split('-')[0]){
+      '01' => 'янв.',
+      '02' => 'февр.',
+      '03' => 'март',
+      '04' => 'апрель',
+      '05' => 'май',
+      '06' => 'июнь',
+      '07' => 'июль',
+      '08' => 'авг.',
+      '09' => 'сент.',
+      '10' => 'октяб.',
+      '11' => 'ноябрь',
+      '12' => 'дек.',
+      String() => throw UnimplementedError(),
+    };
+
+     return  '$d $m $y';
+   }
+
 }

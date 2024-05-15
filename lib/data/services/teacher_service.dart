@@ -5,6 +5,7 @@
   import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:virtuozy/data/models/teacher_model.dart';
+import 'package:virtuozy/data/models/user_model.dart';
 
 import '../../di/locator.dart';
 import '../../utils/failure.dart';
@@ -42,6 +43,8 @@ class TeacherService{
         throw  Failure(e.message!);
       }
     }
+
+
 
 }
 
