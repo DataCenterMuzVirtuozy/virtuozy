@@ -10,7 +10,7 @@ class TodayScheduleEvent extends Equatable{
   const TodayScheduleEvent();
 }
 
-class GetIdsSchoolEvent extends TodayScheduleEvent{}
+class GetTodayLessonsEvent extends TodayScheduleEvent{}
   class GetLessonsByIdSchoolEvent extends TodayScheduleEvent{
   final String id;
 

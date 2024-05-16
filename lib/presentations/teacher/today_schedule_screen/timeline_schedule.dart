@@ -7,18 +7,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:virtuozy/domain/entities/lesson_entity.dart';
+import 'package:virtuozy/domain/entities/today_lessons.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/utils/status_to_color.dart';
 
 import '../../../utils/text_style.dart';
 
-class TimelineSchedule extends StatelessWidget{
-   TimelineSchedule({super.key});
+class TimelineSchedule extends StatefulWidget{
+
+   const TimelineSchedule({super.key,required this.todayLessons});
+
+
+   final TodayLessons todayLessons;
+
+  @override
+  State<TimelineSchedule> createState() => _TimelineScheduleState();
+}
+
+class _TimelineScheduleState extends State<TimelineSchedule> {
 
 
    final List<String> _times = [
     '10:00-11:00',
-    ' 11:00-12:00',
+    '11:00-12:00',
     '12:00-13:00',
     '13:00-14:00',
     '14:00-15:00',
@@ -32,18 +43,33 @@ class TimelineSchedule extends StatelessWidget{
   ];
 
 
+   @override
+  void initState() {
+    super.initState();
+    print('Time ${widget.todayLessons.lessons[0].timePeriod}');
+  }
+
+
+  bool indexView(TodayLessons less,String time){
+     bool view = false;
+     for(var i in less.lessons){
+       if(time == i.timePeriod){
+         view =  true;
+       }
+     }
+     return view;
+  }
 
   @override
   Widget build(BuildContext context) {
    return ListView.builder(
      itemCount: _times.length,
        itemBuilder: (context,index){
-
-          return Stack(
+       return Stack(
             alignment: Alignment.center,
             children: [
               Visibility(
-                visible: index == 4,
+                visible:indexView(widget.todayLessons, _times[index]),
                 child: Container(
                     margin: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 20.0),
                     width: MediaQuery.sizeOf(context).width,
@@ -96,7 +122,8 @@ class TimelineSchedule extends StatelessWidget{
                 margin: const EdgeInsets.symmetric(vertical: 5.0,horizontal: 20.0),
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
                 child: Text(_times[index],
-                    style:index == 4?TStyle.textStyleVelaSansExtraBolt(Theme.of(context)
+                    style:indexView(widget.todayLessons, _times[index])?
+                    TStyle.textStyleVelaSansExtraBolt(Theme.of(context)
                         .textTheme.displayMedium!.color!,size: 13.0):
          TStyle.textStyleOpenSansRegular(Theme.of(context)
              .textTheme.displayMedium!.color!,size: 13.0))),
@@ -105,5 +132,4 @@ class TimelineSchedule extends StatelessWidget{
           );
        });
   }
-
 }

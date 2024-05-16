@@ -42,7 +42,7 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: 0);
-    context.read<TodayScheduleBloc>().add(GetIdsSchoolEvent());
+    context.read<TodayScheduleBloc>().add(GetTodayLessonsEvent());
 
 
   }
@@ -88,6 +88,7 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
                       },
                     ),
                     DatePageView(
+                      initIndex: state.indexByDateNow,
                       onChangePage: (page){
                         _pageController.animateToPage(page,duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
                       },
@@ -100,10 +101,12 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
             ),
             Expanded(child: PageView.builder(
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: 3,
+              itemCount: state.todayLessons.length,
               controller: _pageController,
               itemBuilder: (BuildContext context, int index) {
-                return TimelineSchedule();
+                return TimelineSchedule(
+                  todayLessons: state.todayLessons[index],
+                );
             },
             )),
             Padding(

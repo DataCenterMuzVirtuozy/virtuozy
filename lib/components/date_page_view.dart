@@ -1,6 +1,7 @@
 
 
-  import 'package:flutter/cupertino.dart';
+  import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:virtuozy/domain/entities/lesson_entity.dart';
 import 'package:virtuozy/domain/entities/today_lessons.dart';
@@ -8,10 +9,11 @@ import 'package:virtuozy/domain/entities/today_lessons.dart';
 import '../utils/text_style.dart';
 
 class DatePageView extends StatefulWidget{
-  const DatePageView({super.key,required, required this.lessonsToday, required this.onChangePage});
+  const DatePageView({super.key,required, required this.lessonsToday, required this.onChangePage, required this.initIndex});
 
   final List<TodayLessons> lessonsToday;
   final Function onChangePage;
+  final int initIndex;
 
   @override
   State<DatePageView> createState() => _DatePageViewState();
@@ -32,7 +34,8 @@ class _DatePageViewState extends State<DatePageView> {
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: 0);
+    _pageController = PageController(initialPage: widget.initIndex);
+    page = widget.initIndex;
     countLessons = widget.lessonsToday.length;
   }
 
@@ -105,28 +108,26 @@ class _DatePageViewState extends State<DatePageView> {
   }
 
 
-  //'8 ноя. 2023'
+
    String parseDate(String date){
-    print('Date $date');
-    final y = date.split('-')[0];
-    final d = date.split('-')[1].split('-')[0];
-    final m = switch(date.split('-')[1].split('-')[0]){
-      '01' => 'янв.',
-      '02' => 'февр.',
-      '03' => 'март',
-      '04' => 'апрель',
-      '05' => 'май',
-      '06' => 'июнь',
-      '07' => 'июль',
-      '08' => 'авг.',
-      '09' => 'сент.',
-      '10' => 'октяб.',
-      '11' => 'ноябрь',
-      '12' => 'дек.',
-      String() => throw UnimplementedError(),
+    final d = DateFormat('yyyy-MM-dd').parse(date);
+    final m = switch(d.month){
+       1=> 'янв.',
+      2 => 'февр.',
+       3=> 'март',
+      4 => 'апрель',
+       5=> 'май',
+      6 => 'июнь',
+      7 => 'июль',
+      8 => 'авг.',
+      9 => 'сент.',
+      10 => 'октяб.',
+      11 => 'ноябрь',
+      12 => 'дек.',
+      int() => throw UnimplementedError(),
     };
 
-     return  '$d $m $y';
+     return  '${d.day} $m ${d.year}';
    }
 
 }

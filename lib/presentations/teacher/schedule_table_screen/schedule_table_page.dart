@@ -109,6 +109,7 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 DatePageView(
+                  initIndex: 0,
                   onChangePage: (page){
 
                   },
