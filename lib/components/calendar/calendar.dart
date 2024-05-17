@@ -74,6 +74,7 @@ class _CalendarState extends State<Calendar> {
   @override
   void initState() {
     super.initState();
+    print('Lessons ${widget.lessons.length}');
     _focusedDay = DateTime.now();
 
 
@@ -309,16 +310,19 @@ class _CalendarState extends State<Calendar> {
   }
 
   DateTime _getLastDate({required List<Lesson> lessons}){
-    final List<int> millisecondsSinceEpochList = [];
-
-    for(var element in lessons){
-      millisecondsSinceEpochList.add(DateFormat('yyyy-MM-dd').parse(element.date).millisecondsSinceEpoch);
-
-    }
-    final indexLast = millisecondsSinceEpochList.indexOf(millisecondsSinceEpochList.reduce(max));
-    final monthLast = DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpochList[indexLast]).month+2;
-    final yearLast = DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpochList[indexLast]).year;
-    final dayLast = DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpochList[indexLast]).day;
+    // final List<int> millisecondsSinceEpochList = [];
+    //
+    // for(var element in lessons){
+    //   millisecondsSinceEpochList.add(DateFormat('yyyy-MM-dd').parse(element.date).millisecondsSinceEpoch);
+    //
+    // }
+    // final indexLast = millisecondsSinceEpochList.indexOf(millisecondsSinceEpochList.reduce(max));
+    // final monthLast = DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpochList[indexLast]).month+2;
+    // final yearLast = DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpochList[indexLast]).year;
+    // final dayLast = DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpochList[indexLast]).day;
+    final monthLast = DateTime.now().month+2;
+    final yearLast = DateTime.now().year;
+    final dayLast = DateTime.now().day;
     final lastDay = DateTime.utc(yearLast, monthLast, dayLast);
     if(!_focusedDay.isBefore(lastDay)){
       return _focusedDay;

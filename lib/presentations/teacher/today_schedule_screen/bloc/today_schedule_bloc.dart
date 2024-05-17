@@ -1,7 +1,9 @@
 
 
 
- import 'package:easy_localization/easy_localization.dart';
+ import 'dart:math';
+
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:virtuozy/di/locator.dart';
 import 'package:virtuozy/domain/teacher_cubit.dart';
@@ -28,10 +30,11 @@ class TodayScheduleBloc extends Bloc<TodayScheduleEvent,TodayScheduleState>{
       final lessons = _cubitTeacher.teacherEntity.lessons;
       final ids = getIds(lessons);
       final lessonsById = getLessonsByIdsSchool(ids[0], lessons);
-      final todayLessons = getDays(lessonsById);
+      final todayLessons = getDays(lessonsById,true);
       final index = indexByDateNow(todayLessons);
       emit(state.copyWith(
         indexByDateNow: index,
+          lessons: lessons,
           status: TodayScheduleStatus.loadedIdsSchool,idsSchool: ids, todayLessons: todayLessons));
     }on Failure catch(e){
       emit(state.copyWith(status: TodayScheduleStatus.error,error: e.message));
@@ -58,27 +61,70 @@ class TodayScheduleBloc extends Bloc<TodayScheduleEvent,TodayScheduleState>{
     return index;
   }
 
-  List<TodayLessons> getDays(List<Lesson> lessons){
+  List<TodayLessons> getDays(List<Lesson> lessons,bool daysOnlyLesson){
     List<TodayLessons> less = [];
     List<String> dates = [];
     lessons.sort((a, b) => DateFormat('yyyy-MM-dd').parse(a.date).millisecondsSinceEpoch.compareTo(
        DateFormat('yyyy-MM-dd').parse(b.date).millisecondsSinceEpoch
    ));
-
-    for(var l in lessons){
-       if(!dates.contains(l.date)){
+     if(daysOnlyLesson){
+       for(var l in lessons){
+         if(!dates.contains(l.date)){
            dates.add(l.date);
+         }
        }
-    }
+
+     }else{
+       final fDay = _getFirstDate(lessons: lessons);
+       final lDay = _getLastDate(lessons: lessons);
+       for (int i = 0; i <= lDay.difference(fDay).inDays; i++) {
+         var d = fDay.add(Duration(days: i)).toString().split(' ')[0];
+         dates.add(d);
+       }
+
+
+     }
 
     for(var d in dates){
       less.add(TodayLessons(
           date: d,
-          lessons: lessons.where((element) => element.date == d).toList()));
+          lessons: lessons.where((element) => element.date == d).toList()
+      ));
     }
 
     return less;
   }
+
+  DateTime _getFirstDate({required List<Lesson> lessons}){
+    final List<int> millisecondsSinceEpochList = [];
+    for(var element in lessons){
+
+      millisecondsSinceEpochList.add(DateFormat('yyyy-MM-dd').parse(element.date).millisecondsSinceEpoch);
+
+    }
+
+    final indexFirst = millisecondsSinceEpochList.indexOf(millisecondsSinceEpochList.reduce(min));
+    final monthFirst = DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpochList[indexFirst]).month;
+    final yearFirst = DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpochList[indexFirst]).year;
+    final dayFirst = DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpochList[indexFirst]).day;
+    return DateTime.utc(yearFirst, monthFirst, dayFirst);
+  }
+
+  DateTime _getLastDate({required List<Lesson> lessons}){
+    // final List<int> millisecondsSinceEpochList = [];
+    //
+    // for(var element in lessons){
+    //   millisecondsSinceEpochList.add(DateFormat('yyyy-MM-dd').parse(element.date).millisecondsSinceEpoch);
+    //
+    // }
+    // final indexLast = millisecondsSinceEpochList.indexOf(millisecondsSinceEpochList.reduce(max));
+    final monthLast = DateTime.now().month+2;
+    final yearLast = DateTime.now().year;
+    final dayLast = DateTime.now().day;
+    final lastDay = DateTime.utc(yearLast, monthLast, dayLast);
+    return lastDay;
+  }
+
 
   void getLessonsByIdSchool(GetLessonsByIdSchoolEvent event,emit) async {
     try{
@@ -91,6 +137,7 @@ class TodayScheduleBloc extends Bloc<TodayScheduleEvent,TodayScheduleState>{
   }
 
   List<Lesson> getLessonsByIdsSchool(String idSchool,List<Lesson> lessons){
+    if(idSchool.isEmpty)return lessons;
     return lessons.where((element) => element.idSchool == idSchool).toList();
   }
 
@@ -102,8 +149,6 @@ class TodayScheduleBloc extends Bloc<TodayScheduleEvent,TodayScheduleState>{
         ids.add(l.idSchool);
       }
     }
-
-
     return ids;
 
   }

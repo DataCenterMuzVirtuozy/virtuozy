@@ -15,6 +15,7 @@ import 'package:virtuozy/domain/entities/lesson_entity.dart';
 import 'package:virtuozy/presentations/teacher/today_schedule_screen/bloc/today_schedule_bloc.dart';
 import 'package:virtuozy/presentations/teacher/today_schedule_screen/bloc/today_schedule_event.dart';
 import 'package:virtuozy/presentations/teacher/today_schedule_screen/bloc/today_schedule_state.dart';
+import 'package:virtuozy/presentations/teacher/today_schedule_screen/time_line_list.dart';
 import 'package:virtuozy/presentations/teacher/today_schedule_screen/timeline_schedule.dart';
 
 import '../../../components/buttons.dart';
@@ -34,14 +35,13 @@ class TodaySchedulePage extends StatefulWidget{
 class _TodaySchedulePageState extends State<TodaySchedulePage> {
 
 
-  late PageController _pageController;
+
 
 
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: 0);
     context.read<TodayScheduleBloc>().add(GetTodayLessonsEvent());
 
 
@@ -67,7 +67,7 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
         }
 
         return Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
         Padding(
         padding: const EdgeInsets.only(left: 20.0,bottom: 10.0,top: 20.0),
@@ -75,7 +75,7 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
             ,style: TStyle.textStyleGaretHeavy(Theme.of(context)
                 .textTheme.displayMedium!.color!,size: 18.0))),
              Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 20.0),
+              padding: const EdgeInsets.only(right: 20,left: 20,top: 10),
               child: SizedBox(
                 height: 30.0,
                 child: Row(
@@ -90,7 +90,7 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
                     DatePageView(
                       initIndex: state.indexByDateNow,
                       onChangePage: (page){
-                        _pageController.animateToPage(page,duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
+                        pageControllerTimeList.animateToPage(page,duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
                       },
                       lessonsToday: state.todayLessons,
                     ),
@@ -99,39 +99,58 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
                 ),
               ),
             ),
-            Expanded(child: PageView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: state.todayLessons.length,
-              controller: _pageController,
-              itemBuilder: (BuildContext context, int index) {
-                return TimelineSchedule(
-                  todayLessons: state.todayLessons[index],
-                );
-            },
-            )),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 40.0),
-              child: SizedBox(
-                height: 40.0,
-                child: SubmitButton(
-                  onTap: (){
-
-                    // Dialoger.showModalBottomMenu(
-                    //     blurred: false,
-                    //     args:[state.firstNotAcceptLesson,
-                    //       state.directions, state.listNotAcceptLesson,
-                    //       _allViewDirection],
-                    //     title:'Подтверждение урока'.tr(),
-                    //     content: ConfirmLesson());
-                  },
-                  //colorFill: Theme.of(context).colorScheme.tertiary,
-                  colorFill: colorGreen,
-                  borderRadius: 10.0,
-                  textButton:
-                  'Подтвердите прохождение урока'.tr(),
+            IntrinsicWidth(
+              child: Container(
+                margin: const EdgeInsets.only(top: 15,left: 20,right: 20,bottom: 20),
+                padding: const EdgeInsets.only(left: 10,right: 20,top: 8,bottom: 8),
+                height: 35,
+                decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surfaceVariant,
+                    borderRadius: BorderRadius.circular(20.0)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Checkbox(
+                        value: false, onChanged: (v){
+              
+                    }),
+                    Text('Дни только с уроками',
+                        textAlign: TextAlign.center,
+                        style:TStyle.textStyleVelaSansBold(Theme.of(context)
+                            .textTheme.displayMedium!.color!,size: 13.0)),
+              
+                  ],
                 ),
               ),
-            )
+            ),
+            TimeLineList(
+              initIndex: state.indexByDateNow,
+              todayLessons: state.todayLessons,
+            ),
+
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 40.0),
+            //   child: SizedBox(
+            //     height: 40.0,
+            //     child: SubmitButton(
+            //       onTap: (){
+            //
+            //         // Dialoger.showModalBottomMenu(
+            //         //     blurred: false,
+            //         //     args:[state.firstNotAcceptLesson,
+            //         //       state.directions, state.listNotAcceptLesson,
+            //         //       _allViewDirection],
+            //         //     title:'Подтверждение урока'.tr(),
+            //         //     content: ConfirmLesson());
+            //       },
+            //       //colorFill: Theme.of(context).colorScheme.tertiary,
+            //       colorFill: colorGreen,
+            //       borderRadius: 10.0,
+            //       textButton:
+            //       'Подтвердите прохождение урока'.tr(),
+            //     ),
+            //   ),
+            // ),
           ],
         );
       }

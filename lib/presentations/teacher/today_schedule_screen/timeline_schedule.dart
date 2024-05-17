@@ -46,18 +46,20 @@ class _TimelineScheduleState extends State<TimelineSchedule> {
    @override
   void initState() {
     super.initState();
-    print('Time ${widget.todayLessons.lessons[0].timePeriod}');
+
   }
 
 
-  bool indexView(TodayLessons less,String time){
+   (bool,Lesson) indexView(TodayLessons less,String time){
      bool view = false;
+     Lesson lesson = Lesson.unknown();
      for(var i in less.lessons){
        if(time == i.timePeriod){
          view =  true;
+         lesson = i;
        }
      }
-     return view;
+     return (view,lesson);
   }
 
   @override
@@ -65,16 +67,20 @@ class _TimelineScheduleState extends State<TimelineSchedule> {
    return ListView.builder(
      itemCount: _times.length,
        itemBuilder: (context,index){
+       var data = indexView(widget.todayLessons, _times[index]);
+
        return Stack(
             alignment: Alignment.center,
             children: [
               Visibility(
-                visible:indexView(widget.todayLessons, _times[index]),
+                visible: data.$1,
                 child: Container(
                     margin: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 20.0),
                     width: MediaQuery.sizeOf(context).width,
                     decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.surfaceVariant,
+                      border: Border.all(color: colorOrange,width: 0.5),
+                        //color: Theme.of(context).colorScheme.surfaceVariant,
+                      color:  colorOrange,
                         borderRadius: BorderRadius.circular(5.0)),
                     child: IntrinsicHeight(
                       child: Row(
@@ -83,29 +89,31 @@ class _TimelineScheduleState extends State<TimelineSchedule> {
                              width: 5.0,
                              margin: const EdgeInsets.only(right: 10.0),
                              decoration: BoxDecoration(
-                               color: StatusToColor.getColor(lessonStatus: LessonStatus.out),
+                               color: StatusToColor.getColor(lessonStatus:data.$2.status),
                                borderRadius: const BorderRadius.only(topLeft: Radius.circular(10.0),bottomLeft: Radius.circular(10.0))
                              ),
                            ),
 
                            Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.only(right: 10.0,left: 100.0,top: 10.0,bottom: 10.0),
+                          padding: const EdgeInsets.only(right: 10.0,left: 110.0,top: 10.0,bottom: 10.0),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Expanded(
-                                child: Text('Антонова Юлия', style:
+                                child: Text(data.$2.nameStudent, style:
                                 TStyle.textStyleVelaSansRegular(Theme.of(context)
                                       .textTheme.displayMedium!.color!,size: 14.0)),
                               ),
                               const Gap(10.0),
                              Expanded(
-                                child: Text('Кантри',
+                                child: Text(data.$2.idAuditory,
                                     textAlign: TextAlign.end,
                                     style:
-                                TStyle.textStyleVelaSansExtraBolt(StatusToColor.getColor(lessonStatus: LessonStatus.out),
+                                TStyle.textStyleVelaSansExtraBolt(
+                                    StatusToColor.getColor(
+                                        lessonStatus: data.$2.status),
                                     size: 12.0)),
                               ),
                             ],
@@ -122,11 +130,11 @@ class _TimelineScheduleState extends State<TimelineSchedule> {
                 margin: const EdgeInsets.symmetric(vertical: 5.0,horizontal: 20.0),
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
                 child: Text(_times[index],
-                    style:indexView(widget.todayLessons, _times[index])?
+                    style:data.$1?
                     TStyle.textStyleVelaSansExtraBolt(Theme.of(context)
-                        .textTheme.displayMedium!.color!,size: 13.0):
+                        .textTheme.displayMedium!.color!,size: 15.0):
          TStyle.textStyleOpenSansRegular(Theme.of(context)
-             .textTheme.displayMedium!.color!,size: 13.0))),
+             .textTheme.displayMedium!.color!,size: 15.0))),
 
             ],
           );
