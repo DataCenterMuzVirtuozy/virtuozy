@@ -12,6 +12,19 @@ class TeacherMapper{
 
     static TeacherEntity fromApi({required TeacherModel teacherModel}){
       final lessons = teacherModel.lessons.map((e) => _fromLessonModel(e)).toList();
+      lessons.add(Lesson(contactValues: ['',''],
+          id: 33,
+          idSub: 33,
+          idSchool: 'мш2',
+          bonus: false,
+          timeAccept: '',
+          date: '2024-05-16',
+          timePeriod: '15:00-16:00',
+          idAuditory: 'Rady',
+          nameTeacher: 'Bob',
+          nameStudent: 'Dan',
+          status: LessonStatus.awaitAccept,
+          nameDirection: 'Bass'));
       return TeacherEntity(
         lessons: lessons,
           id: teacherModel.id,

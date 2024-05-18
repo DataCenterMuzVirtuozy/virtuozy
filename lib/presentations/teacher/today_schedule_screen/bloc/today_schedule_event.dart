@@ -16,3 +16,13 @@ class GetTodayLessonsEvent extends TodayScheduleEvent{}
 
   const GetLessonsByIdSchoolEvent(this.id);
 }
+
+ class GetLessonsBySelDateEvent extends TodayScheduleEvent{
+   final String date;
+   const GetLessonsBySelDateEvent({required this.date});
+ }
+
+ class GetLessonsByModeViewEvent extends TodayScheduleEvent{
+  final bool onlyWithLesson;
+  const GetLessonsByModeViewEvent({required this.onlyWithLesson});
+ }

@@ -34,11 +34,13 @@ class Calendar extends StatefulWidget{
       this.clickableDay = true,
       this.resetFocusDay = true,
         this.visibleInfoColors = true,
-      this.colorFill = Colors.transparent});
+      this.colorFill = Colors.transparent,
+        required this.onDate});
 
   final List<Lesson> lessons;
   final Function onLesson;
   final Function onMonth;
+  final Function onDate;
   final bool clickableDay;
   final bool resetFocusDay;
   final Color colorFill;
@@ -74,7 +76,6 @@ class _CalendarState extends State<Calendar> {
   @override
   void initState() {
     super.initState();
-    print('Lessons ${widget.lessons.length}');
     _focusedDay = DateTime.now();
 
 
@@ -132,6 +133,7 @@ class _CalendarState extends State<Calendar> {
              if(selDay == nowDay){
                Dialoger.showMessage('Нет записей на текущий день'.tr());
              }
+             widget.onDate.call(d1.toString().split(' ')[0]);
 
            },
            headerStyle:  HeaderStyle(
@@ -166,7 +168,8 @@ class _CalendarState extends State<Calendar> {
                    lessons: widget.lessons,
                    day: day.day,
                    context: context,
-               onLesson: (lessons){
+               onLesson: (List<Lesson> lessons){
+                 widget.onDate.call(lessons[0].date);
                  widget.onLesson.call(lessons);
                });
              },

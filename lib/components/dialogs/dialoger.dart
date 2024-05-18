@@ -271,10 +271,10 @@ class Dialoger{
      );
    }
 
-   static void showSelectDate({required BuildContext context,required List<Lesson> lessons}){
+   static void showSelectDate({required BuildContext context,required List<Lesson> lessons,required Function onDate}){
      showCustomDialog(
          contextUp: context,
-         args: lessons,
+         args: [lessons,onDate],
          content: SelectDate()
 
      );

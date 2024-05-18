@@ -29,7 +29,6 @@ class TeacherService{
           return throw   Failure('Пользователь не найден'.tr());
         }
         final idTeacher = res.data[0]['id'] as int;
-        print('Id User ${idTeacher}');
         final resLesson = await _dio.get(Endpoints.lessons,
             queryParameters: {
               'idTeacher': idTeacher

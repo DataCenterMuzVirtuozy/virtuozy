@@ -176,6 +176,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                ),
                const Gap(10.0),
                 Calendar(
+                  onDate: (date){},
                   colorFill: Theme.of(context).colorScheme.surfaceVariant,
                   resetFocusDay: _resetFocus,
                   lessons: state.lessons,

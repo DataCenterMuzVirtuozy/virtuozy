@@ -9,10 +9,11 @@ import '../../../../domain/entities/lesson_entity.dart';
 import '../../../calendar/calendar.dart';
 
 class SelectDateContent extends StatelessWidget{
-  const SelectDateContent({super.key, required this.lessons,});
+  const SelectDateContent({super.key, required this.lessons, required this.onDate});
 
 
   final List<Lesson> lessons;
+  final Function onDate;
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +29,12 @@ class SelectDateContent extends StatelessWidget{
         onMonth: (month){
 
         },
+        onDate:(String date){
+          onDate.call(date);
+          Navigator.pop(context);
+        },
         onLesson: (lessons){
-            Navigator.pop(context);
+
         },),
     );
   }

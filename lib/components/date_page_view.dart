@@ -5,15 +5,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:virtuozy/domain/entities/lesson_entity.dart';
 import 'package:virtuozy/domain/entities/today_lessons.dart';
+import 'package:virtuozy/presentations/teacher/today_schedule_screen/time_line_list.dart';
 
 import '../utils/text_style.dart';
+import 'dialogs/dialoger.dart';
 
+
+  late PageController pageControllerDates;
 class DatePageView extends StatefulWidget{
-  const DatePageView({super.key,required, required this.lessonsToday, required this.onChangePage, required this.initIndex});
+  const DatePageView({super.key,required, required this.lessonsToday, required this.initIndex, required this.onVisibleTodayButton});
 
   final List<TodayLessons> lessonsToday;
-  final Function onChangePage;
   final int initIndex;
+  final Function onVisibleTodayButton;
 
   @override
   State<DatePageView> createState() => _DatePageViewState();
@@ -25,7 +29,6 @@ class DatePageView extends StatefulWidget{
 class _DatePageViewState extends State<DatePageView> {
 
 
-  late PageController _pageController;
   int page = 0;
   int countLessons = 0;
 
@@ -34,9 +37,17 @@ class _DatePageViewState extends State<DatePageView> {
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: widget.initIndex);
+    pageControllerDates = PageController(initialPage: widget.initIndex);
+    pageControllerDates.addListener(() {
+      if(widget.lessonsToday[pageControllerDates.page!.toInt()].date=='2024-05-18'){
+         widget.onVisibleTodayButton.call(false);
+      }else{
+        widget.onVisibleTodayButton.call(true);
+      }
+    });
     page = widget.initIndex;
     countLessons = widget.lessonsToday.length;
+
   }
 
   @override
@@ -57,11 +68,17 @@ class _DatePageViewState extends State<DatePageView> {
                child: IconButton(
                    onPressed: () {
                      if(page > 0){
-                       page--;
+                       page = pageControllerDates.page!.toInt()-1;
                      }
-                     widget.onChangePage.call(page);
-                     _pageController.animateToPage(page,duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
 
+                     if (pageControllerDates.page!.toInt() ==
+                         0) {
+                       Dialoger.showMessage('Нет записей'.tr(),context: context);
+                       return;
+                     }
+                     pageControllerDates.animateToPage(page,duration: const Duration(milliseconds: 400), curve: Curves.ease);
+                     pageControllerTimeList.animateToPage(page,
+                         duration: const Duration(milliseconds: 400), curve: Curves.ease);
                    },
                    icon: Icon(
                      Icons.arrow_back_ios_rounded,
@@ -77,7 +94,7 @@ class _DatePageViewState extends State<DatePageView> {
                height: 20.0,
                child: PageView(
                  physics: const NeverScrollableScrollPhysics(),
-                 controller: _pageController,
+                 controller: pageControllerDates,
                  children: [
                    ...List.generate(countLessons, (index) {
                      return Text(parseDate(widget.lessonsToday[index].date),
@@ -94,10 +111,18 @@ class _DatePageViewState extends State<DatePageView> {
                flex: 1,
                child: IconButton(onPressed: (){
                  if(page < countLessons-1){
-                   page++;
+                   page = pageControllerDates.page!.toInt()+1;
                  }
-                 widget.onChangePage.call(page);
-                 _pageController.animateToPage(page,duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
+
+                 if (pageControllerDates.page!.toInt() ==
+                          countLessons - 1) {
+                   Dialoger.showMessage('Нет записей'.tr(),context: context);
+                        return;
+                      }
+
+                      pageControllerDates.animateToPage(page,duration: const Duration(milliseconds: 400), curve: Curves.ease);
+                 pageControllerTimeList.animateToPage(page,
+                     duration: const Duration(milliseconds: 400), curve: Curves.ease);
                },
                    icon:  Icon(Icons.arrow_forward_ios_rounded,
                      size: 16,

@@ -4,10 +4,13 @@
   import 'package:flutter/cupertino.dart';
 import 'package:virtuozy/presentations/teacher/today_schedule_screen/timeline_schedule.dart';
 
+import '../../../components/date_page_view.dart';
 import '../../../domain/entities/today_lessons.dart';
 
-  late PageController pageControllerTimeList;
 
+  late PageController pageControllerTimeList;
+  bool scrollTimeListPage = false;
+  
 class TimeLineList extends StatefulWidget{
   const TimeLineList({super.key, required this.todayLessons, required this.initIndex});
 
@@ -26,7 +29,12 @@ class _TimeLineListState extends State<TimeLineList> {
   @override
   void initState() {
     super.initState();
-    pageControllerTimeList = PageController(initialPage: widget.initIndex);
+    pageControllerTimeList =  PageController(initialPage: widget.initIndex);
+   pageControllerTimeList.addListener(() {
+       pageControllerDates.animateToPage(pageControllerTimeList.page!.toInt(),
+           duration: const Duration(milliseconds: 400), curve: Curves.ease);
+
+   });
 
   }
 
@@ -34,7 +42,7 @@ class _TimeLineListState extends State<TimeLineList> {
   @override
   Widget build(BuildContext context) {
     return   Expanded(child: PageView.builder(
-      physics: const NeverScrollableScrollPhysics(),
+      //physics: const NeverScrollableScrollPhysics(),
       itemCount: widget.todayLessons.length,
       controller: pageControllerTimeList,
       itemBuilder: (BuildContext context, int index) {

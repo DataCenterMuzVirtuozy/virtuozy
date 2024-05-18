@@ -49,7 +49,7 @@ class AcceptDocuments extends AlertDialogContent{
 class SelectDate extends AlertDialogContent {
   @override
   build({required BuildContext context, Object? args}) {
-    return SelectDateContent(lessons: (args as List<Lesson>));
+    return SelectDateContent(lessons: (args as List)[0] as List<Lesson>,onDate: (args)[1] as Function);
   }
 }
 

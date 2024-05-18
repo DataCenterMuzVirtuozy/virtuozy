@@ -101,22 +101,25 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-         Padding(
+          Padding(
           padding: const EdgeInsets.only(bottom: 10.0,top: 10.0),
           child: SizedBox(
             height: 30.0,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                DatePageView(
+                 DatePageView(
+                  onVisibleTodayButton: (visible){},
                   initIndex: 0,
-                  onChangePage: (page){
-
-                  },
+                  // onChangePage: (page){
+                  //
+                  // },
                   lessonsToday: [],
                 ),
                 const Gap(20.0),
-                CalendarCaller(lessons: [Lesson(
+                CalendarCaller(
+                  dateSelect: (date){},
+                    lessons: const [Lesson(
                   contactValues: [],
                     id: 1,
                     idSub: 1,
@@ -139,7 +142,10 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SelectSchoolMenu(idsSchool: [], onChange: (id){},),
+              SelectSchoolMenu(
+                currentIdSchool: '',
+                idsSchool: [],
+                onChange: (id){},),
               const Gap(20.0),
               const SelectAuditoryMenu(),
             ],

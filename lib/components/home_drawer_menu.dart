@@ -389,11 +389,11 @@ required bool docsAccept}){
                 GoRouter.of(context).push(pathTheme);
               },),
 
-              // DrawerItem(
-              //   title: 'Выйти'.tr(),
-              //   textColor: colorRed, onPressed: ()  {
-              //   Dialoger.showLogOutTeacher(context: context,teacher: teacher);
-              //   },),
+              DrawerItem(
+                title: 'Выйти'.tr(),
+                textColor: colorRed, onPressed: ()  {
+                Dialoger.showLogOutTeacher(context: context,teacher: teacher);
+                },),
 
             ]
         );

@@ -8,11 +8,12 @@ import '../resourses/colors.dart';
 import '../utils/text_style.dart';
 
 class SelectSchoolMenu extends StatefulWidget{
-  const SelectSchoolMenu({super.key, required this.idsSchool, required this.onChange});
+  const SelectSchoolMenu({super.key, required this.idsSchool, required this.onChange, required this.currentIdSchool});
 
 
   final List<String> idsSchool;
   final Function onChange;
+  final String currentIdSchool;
 
   @override
   State<SelectSchoolMenu> createState() => _SelectSchoolMenuState();
@@ -27,7 +28,7 @@ class _SelectSchoolMenuState extends State<SelectSchoolMenu> {
   @override
   void initState() {
     super.initState();
-    selectedValue = widget.idsSchool[0];
+    selectedValue = widget.currentIdSchool;
   }
 
   @override
@@ -54,6 +55,7 @@ class _SelectSchoolMenuState extends State<SelectSchoolMenu> {
         onChanged: (value) {
           setState(() {
             selectedValue = value;
+            widget.onChange.call(selectedValue);
           });
         },
         buttonStyleData: ButtonStyleData(

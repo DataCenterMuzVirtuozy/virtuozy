@@ -6,8 +6,10 @@
   import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:virtuozy/components/calendar_caller.dart';
@@ -36,6 +38,8 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
 
 
 
+  bool _onlyWithLesson = false;
+  bool _visibleTodayButton = false;
 
 
 
@@ -59,10 +63,10 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
   Widget build(BuildContext context) {
     return BlocConsumer<TodayScheduleBloc,TodayScheduleState>(
       listener: (c,s){
-
+         _visibleTodayButton = s.visibleTodayButton;
       },
       builder: (context,state) {
-        if(state.status == TodayScheduleStatus.loadingIdsSchool){
+        if(state.status == TodayScheduleStatus.loading){
           return Center(child: CircularProgressIndicator(color: colorOrange));
         }
 
@@ -82,19 +86,28 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SelectSchoolMenu(
+                      currentIdSchool: state.currentIdSchool,
                       idsSchool: state.idsSchool,
                       onChange: (id){
                         context.read<TodayScheduleBloc>().add(GetLessonsByIdSchoolEvent(id));
                       },
                     ),
                     DatePageView(
-                      initIndex: state.indexByDateNow,
-                      onChangePage: (page){
-                        pageControllerTimeList.animateToPage(page,duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
+                      onVisibleTodayButton: (visible){
+                        setState(() {
+                            _visibleTodayButton = visible;
+                          });
+
                       },
+                      initIndex: state.indexByDateNow,
                       lessonsToday: state.todayLessons,
                     ),
-                   CalendarCaller(lessons: state.lessons)
+                   CalendarCaller(
+                     dateSelect: (date){
+                       _onlyWithLesson = false;
+                       context.read<TodayScheduleBloc>().add(GetLessonsBySelDateEvent(date: date));
+                     },
+                       lessons: state.lessons)
                   ],
                 ),
               ),
@@ -111,8 +124,15 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Checkbox(
-                        value: false, onChanged: (v){
-              
+                        side: BorderSide(color: Theme.of(context).textTheme.displayMedium!.color!),
+                        checkColor: colorWhite,
+                        value: _onlyWithLesson,
+                        onChanged: (only){
+                          setState(() {
+                            _onlyWithLesson = only!;
+                            context.read<TodayScheduleBloc>().add(GetLessonsByModeViewEvent(onlyWithLesson: _onlyWithLesson));
+                          });
+
                     }),
                     Text('Дни только с уроками',
                         textAlign: TextAlign.center,
@@ -128,29 +148,48 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
               todayLessons: state.todayLessons,
             ),
 
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 40.0),
-            //   child: SizedBox(
-            //     height: 40.0,
-            //     child: SubmitButton(
-            //       onTap: (){
-            //
-            //         // Dialoger.showModalBottomMenu(
-            //         //     blurred: false,
-            //         //     args:[state.firstNotAcceptLesson,
-            //         //       state.directions, state.listNotAcceptLesson,
-            //         //       _allViewDirection],
-            //         //     title:'Подтверждение урока'.tr(),
-            //         //     content: ConfirmLesson());
-            //       },
-            //       //colorFill: Theme.of(context).colorScheme.tertiary,
-            //       colorFill: colorGreen,
-            //       borderRadius: 10.0,
-            //       textButton:
-            //       'Подтвердите прохождение урока'.tr(),
-            //     ),
-            //   ),
-            // ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 40.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  // SizedBox(
+                  //   width: MediaQuery.of(context).size.width-100,
+                  //   height: 40.0,
+                  //   child: SubmitButton(
+                  //     onTap: (){
+                  //
+                  //       // Dialoger.showModalBottomMenu(
+                  //       //     blurred: false,
+                  //       //     args:[state.firstNotAcceptLesson,
+                  //       //       state.directions, state.listNotAcceptLesson,
+                  //       //       _allViewDirection],
+                  //       //     title:'Подтверждение урока'.tr(),
+                  //       //     content: ConfirmLesson());
+                  //     },
+                  //     //colorFill: Theme.of(context).colorScheme.tertiary,
+                  //     colorFill: colorGreen,
+                  //     borderRadius: 10.0,
+                  //     textButton:
+                  //     'Подтвердите прохождение урока'.tr(),
+                  //   ),
+                  // ),
+
+                  Visibility(
+                      visible: _visibleTodayButton,
+                        child: FloatingActionButton(
+                          mini: true,
+                          child: Icon(Icons.today_outlined,color: colorWhite),
+                            onPressed: (){
+                          _onlyWithLesson = false;
+                          final date  = DateTime.now().toString().split(' ')[0];
+                          context.read<TodayScheduleBloc>().add(GetLessonsBySelDateEvent(date: date));
+                        }),
+                      )
+
+                ],
+              ),
+            ),
           ],
         );
       }
