@@ -13,11 +13,12 @@ import 'dialogs/dialoger.dart';
 
   late PageController pageControllerDates;
 class DatePageView extends StatefulWidget{
-  const DatePageView({super.key,required, required this.lessonsToday, required this.initIndex, required this.onVisibleTodayButton});
+  const DatePageView({super.key,required, required this.lessonsToday, required this.initIndex, required this.onVisibleTodayButton,this.weekMode = false});
 
   final List<TodayLessons> lessonsToday;
   final int initIndex;
   final Function onVisibleTodayButton;
+  final bool weekMode;
 
   @override
   State<DatePageView> createState() => _DatePageViewState();
@@ -38,16 +39,22 @@ class _DatePageViewState extends State<DatePageView> {
   void initState() {
     super.initState();
     pageControllerDates = PageController(initialPage: widget.initIndex);
+    final dateNow = DateTime.now().toString().split(' ')[0];
     pageControllerDates.addListener(() {
-      if(widget.lessonsToday[pageControllerDates.page!.toInt()].date=='2024-05-18'){
+      if(widget.lessonsToday[pageControllerDates.page!.toInt()].date==dateNow){
          widget.onVisibleTodayButton.call(false);
       }else{
         widget.onVisibleTodayButton.call(true);
       }
     });
     page = widget.initIndex;
-    countLessons = widget.lessonsToday.length;
+    countLessons = getCountLessons(lessonsToday: widget.lessonsToday, weekMode: widget.weekMode);
 
+  }
+
+ int getCountLessons({required List<TodayLessons> lessonsToday,required bool weekMode}){
+
+    return lessonsToday.length;
   }
 
   @override
@@ -130,6 +137,28 @@ class _DatePageViewState extends State<DatePageView> {
                          .textTheme.displayMedium!.color!,))),
          ],
        ));
+  }
+
+
+  String parseDateWeek(String date){
+    final d = DateFormat('yyyy-MM-dd').parse(date);
+    final m = switch(d.month){
+      1=> 'янв.',
+      2 => 'февр.',
+      3=> 'март',
+      4 => 'апрель',
+      5=> 'май',
+      6 => 'июнь',
+      7 => 'июль',
+      8 => 'авг.',
+      9 => 'сент.',
+      10 => 'октяб.',
+      11 => 'ноябрь',
+      12 => 'дек.',
+      int() => throw UnimplementedError(),
+    };
+
+    return  '${d.day} $m ${d.year}';
   }
 
 
