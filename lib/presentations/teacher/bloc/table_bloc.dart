@@ -24,6 +24,8 @@ class TableBloc extends Bloc<TableEvent,TableState>{
 
   TableBloc():super(TableState.unknown()){
    on<GetInitLessonsEvent>(getLessonsTable);
+   on<GetLessonsTableByIdSchool>(getLessonsTableByIdSchool);
+   on<GetLessonsTableByDate>(getLessonsTableByDate);
   }
 
   final _cubitTeacher = locator.get<TeacherCubit>();
@@ -58,6 +60,64 @@ class TableBloc extends Bloc<TableEvent,TableState>{
   }
 
 
+
+  void getLessonsTableByIdSchool(GetLessonsTableByIdSchool event, emit) async {
+    try {
+      emit(state.copyWith(
+          status: TableStatus.loading, error: ''));
+      await Future.delayed(const Duration(seconds: 1));
+      final lessons = _cubitTeacher.teacherEntity.lessons;
+      final ids = getIds(lessons);
+      final lessonsById = getLessons(
+          event.id, lessons);
+      final todayLessons = getDays(lessonsById, false);
+      final index = indexByDateNow(todayLessons);
+      final tasks = getTasks(todayLesson: todayLessons,indexDate: index.$1);
+      final headerTable = getHeaderTable(weekMode: false);
+      emit(state.copyWith(
+          titles: headerTable,
+          indexByDateNow: index.$1,
+          visibleTodayButton: index.$2,
+          lessons: lessonsById,
+          currentIdSchool: event.id,
+          status: TableStatus.loaded,
+          idsSchool: ids,
+          tasks: tasks,
+          todayLessons: todayLessons));
+    } on Failure catch (e) {
+      emit(state.copyWith(status: TableStatus.error, error: e.message));
+    }
+  }
+
+  void getLessonsTableByDate(GetLessonsTableByDate event, emit) async {
+    try {
+      emit(state.copyWith(
+          status: TableStatus.loadingByDate, error: ''));
+      await Future.delayed(const Duration(seconds: 1));
+      final lessons = _cubitTeacher.teacherEntity.lessons;
+      final ids = getIds(lessons);
+      final lessonsById = getLessons(
+          state.currentIdSchool, lessons);
+      final todayLessons = getDays(lessonsById, false);
+      final tasks = getTasks(todayLesson: todayLessons,indexDate: event.indexDate);
+      final headerTable = getHeaderTable(weekMode: false);
+      emit(state.copyWith(
+          titles: headerTable,
+          indexByDateNow: event.indexDate,
+          visibleTodayButton: false,
+          lessons: lessonsById,
+          currentIdSchool: state.currentIdSchool,
+          status: TableStatus.loadedByDate,
+          idsSchool: ids,
+          tasks: tasks,
+          todayLessons: todayLessons));
+    } on Failure catch (e) {
+      emit(state.copyWith(status: TableStatus.error, error: e.message));
+    }
+  }
+
+
+
   List<TitlesTable> getHeaderTable({required bool weekMode}){
     const listAuditory = ['Свинг','Авангард','Опера','Блюз','Эстрада'];
     List<TitlesTable> titles = [];
@@ -72,79 +132,80 @@ class TableBloc extends Bloc<TableEvent,TableState>{
   }
 
   List<TableTask> getTasks({required List<TodayLessons> todayLesson, required int indexDate}){
-    final lessons = [
-      Lesson(
-          contactValues: [],
-          id: 0,
-          idSub: 0,
-          idSchool: 'mc',
-          bonus: false,
-          timeAccept: '',
-          date: '',
-          timePeriod: '12:00-13:00',
-          idAuditory: 'Свинг',
-          nameTeacher: '',
-          nameStudent: 'Dad Petrov',
-          status: LessonStatus.awaitAccept,
-          nameDirection: 'HH'),
-      Lesson(
-          contactValues: [],
-          id: 0,
-          idSub: 0,
-          idSchool: 'mc',
-          bonus: false,
-          timeAccept: '',
-          date: '',
-          timePeriod: '14:00-15:00',
-          idAuditory: 'Эстрада',
-          nameTeacher: '',
-          nameStudent: 'Dad Petrov 1',
-          status: LessonStatus.planned,
-          nameDirection: 'HH'),
-      Lesson(
-          contactValues: [],
-          id: 0,
-          idSub: 0,
-          idSchool: 'mc',
-          bonus: false,
-          timeAccept: '',
-          date: '',
-          timePeriod: '16:00-17:00',
-          idAuditory: 'Блюз',
-          nameTeacher: '',
-          nameStudent: 'Dad Petrov 2',
-          status: LessonStatus.firstLesson,
-          nameDirection: 'HH'),
-      Lesson(
-          contactValues: [],
-          id: 0,
-          idSub: 0,
-          idSchool: 'mc',
-          bonus: false,
-          timeAccept: '',
-          date: '',
-          timePeriod: '10:00-11:00',
-          idAuditory: 'Опера',
-          nameTeacher: '',
-          nameStudent: 'Dad Petrov 3',
-          status: LessonStatus.cancel,
-          nameDirection: 'HH'),
-      Lesson(
-          contactValues: [],
-          id: 0,
-          idSub: 0,
-          idSchool: 'mc',
-          bonus: false,
-          timeAccept: '',
-          date: '',
-          timePeriod: '18:00-19:00',
-          idAuditory: 'Авангард',
-          nameTeacher: '',
-          nameStudent: 'Dad Petrov 4',
-          status: LessonStatus.complete,
-          nameDirection: 'HH')
-
-    ];
+    // final lessons = [
+    //   Lesson(
+    //       contactValues: [],
+    //       id: 0,
+    //       idSub: 0,
+    //       idSchool: 'mc',
+    //       bonus: false,
+    //       timeAccept: '',
+    //       date: '',
+    //       timePeriod: '12:00-13:00',
+    //       idAuditory: 'Свинг',
+    //       nameTeacher: '',
+    //       nameStudent: 'Dad Petrov',
+    //       status: LessonStatus.awaitAccept,
+    //       nameDirection: 'HH'),
+    //   Lesson(
+    //       contactValues: [],
+    //       id: 0,
+    //       idSub: 0,
+    //       idSchool: 'mc',
+    //       bonus: false,
+    //       timeAccept: '',
+    //       date: '',
+    //       timePeriod: '14:00-15:00',
+    //       idAuditory: 'Эстрада',
+    //       nameTeacher: '',
+    //       nameStudent: 'Dad Petrov 1',
+    //       status: LessonStatus.planned,
+    //       nameDirection: 'HH'),
+    //   Lesson(
+    //       contactValues: [],
+    //       id: 0,
+    //       idSub: 0,
+    //       idSchool: 'mc',
+    //       bonus: false,
+    //       timeAccept: '',
+    //       date: '',
+    //       timePeriod: '16:00-17:00',
+    //       idAuditory: 'Блюз',
+    //       nameTeacher: '',
+    //       nameStudent: 'Dad Petrov 2',
+    //       status: LessonStatus.firstLesson,
+    //       nameDirection: 'HH'),
+    //   Lesson(
+    //       contactValues: [],
+    //       id: 0,
+    //       idSub: 0,
+    //       idSchool: 'mc',
+    //       bonus: false,
+    //       timeAccept: '',
+    //       date: '',
+    //       timePeriod: '10:00-11:00',
+    //       idAuditory: 'Опера',
+    //       nameTeacher: '',
+    //       nameStudent: 'Dad Petrov 3',
+    //       status: LessonStatus.cancel,
+    //       nameDirection: 'HH'),
+    //   Lesson(
+    //       contactValues: [],
+    //       id: 0,
+    //       idSub: 0,
+    //       idSchool: 'mc',
+    //       bonus: false,
+    //       timeAccept: '',
+    //       date: '',
+    //       timePeriod: '18:00-19:00',
+    //       idAuditory: 'Авангард',
+    //       nameTeacher: '',
+    //       nameStudent: 'Dad Petrov 4',
+    //       status: LessonStatus.complete,
+    //       nameDirection: 'HH')
+    //
+    // ];
+    final lessons = todayLesson[indexDate].lessons;
     const listAuditory = ['Свинг','Авангард','Опера','Блюз','Эстрада'];
     List<TableTask> tasks = [];
     for(var t in lessons){

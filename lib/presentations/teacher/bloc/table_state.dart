@@ -12,6 +12,8 @@ enum TableStatus{
   loading,
   loaded,
   error,
+  loadingByDate,
+  loadedByDate,
   unknown
 }
 
