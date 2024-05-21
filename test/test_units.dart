@@ -2,31 +2,20 @@
 
 
 
-  import 'package:flutter_test/flutter_test.dart';
+  import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main(){
 
     test('Test',(){
 
-        var sum = 6/2;
-
-        if(sum == 3) ()=> print('Степа');
-
-   if(sum == 3){
-     print('STSTTSTS');
-   }
 
 
+     const d = '2024-05-20/2024-05-30';
+     final fDay =  DateFormat('yyyy-MM-dd').parse(d.split('/')[0]);
+     final lDay = DateFormat('yyyy-MM-dd').parse(d.split('/')[1]);
 
-    int sumInt(int a,int b){
-     return a+b;
-    }
-
-
-    print('Result ${sumInt(2, 3)}');
-
-
-
+      print('${lDay} ${fDay}');
     });
 
 

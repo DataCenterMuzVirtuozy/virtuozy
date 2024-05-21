@@ -12,6 +12,7 @@ import 'package:virtuozy/presentations/student/finance_screen/bloc/bloc_finance.
 import 'package:virtuozy/presentations/student/notification_screen/bloc/notifi_bloc.dart';
 import 'package:virtuozy/presentations/student/profile_screen/bloc/profile_bloc.dart';
 import 'package:virtuozy/presentations/student/schedule_screen/bloc/schedule_bloc.dart';
+import 'package:virtuozy/presentations/student/splash_screen/splash_page.dart';
 import 'package:virtuozy/presentations/student/subscription_screen/bloc/sub_bloc.dart';
 import 'package:virtuozy/presentations/teacher/bloc/table_bloc.dart';
 import 'package:virtuozy/presentations/teacher/today_schedule_screen/bloc/today_schedule_bloc.dart';
@@ -127,7 +128,7 @@ class _InitPageState extends State<InitPage> {
   Widget build(BuildContext context) {
     return BlocConsumer<AppBloc,AppState>(
       listener: (c,s){
-        if(s.error.isNotEmpty){
+        if(s.authStatusCheck == AuthStatusCheck.error){
           Dialoger.showActionMaterialSnackBar(context: context, onAction: () {  }, title: s.error);
         }
         if (s.statusNetwork.isDisconnect){
@@ -135,12 +136,12 @@ class _InitPageState extends State<InitPage> {
         }
       },
         builder: (context,state){
-        // if(state.authStatusCheck == AuthStatusCheck.unknown){
-        //   return const SplashPage();
-        // }else if(state.authStatusCheck == AuthStatusCheck.unauthenticated||
-        // state.authStatusCheck == AuthStatusCheck.moderation){
-        //    return const MainPage();
-        // }
+        if(state.authStatusCheck == AuthStatusCheck.unknown){
+          return const SplashPage();
+        }else if(state.authStatusCheck == AuthStatusCheck.unauthenticated||
+        state.authStatusCheck == AuthStatusCheck.moderation){
+           return const MainPage();
+        }
 
         return const MainPage();
     });

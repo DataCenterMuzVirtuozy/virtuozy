@@ -20,6 +20,7 @@ import 'package:virtuozy/presentations/teacher/today_schedule_screen/bloc/today_
 import 'package:virtuozy/presentations/teacher/today_schedule_screen/time_line_list.dart';
 import 'package:virtuozy/presentations/teacher/today_schedule_screen/timeline_schedule.dart';
 
+import '../../../components/box_info.dart';
 import '../../../components/buttons.dart';
 import '../../../components/date_page_view.dart';
 import '../../../components/dialogs/dialoger.dart';
@@ -68,6 +69,10 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
       builder: (context,state) {
         if(state.status == TodayScheduleStatus.loading){
           return Center(child: CircularProgressIndicator(color: colorOrange));
+        }
+
+        if(state.todayLessons.isEmpty){
+          return const BoxInfo(title: 'Empty', iconData: Icons.table_chart_outlined,);
         }
 
         return Column(

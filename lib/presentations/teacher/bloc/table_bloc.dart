@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:time_planner/time_planner.dart';
 import 'package:virtuozy/presentations/teacher/bloc/table_event.dart';
 import 'package:virtuozy/presentations/teacher/bloc/table_state.dart';
+import 'package:virtuozy/utils/date_time_parser.dart';
 
 import '../../../di/locator.dart';
 import '../../../domain/entities/lesson_entity.dart';
@@ -17,7 +18,7 @@ import '../../../domain/entities/titles_table.dart';
 import '../../../domain/entities/today_lessons.dart';
 import '../../../domain/teacher_cubit.dart';
 import '../../../utils/failure.dart';
-import '../../../utils/text_style.dart';
+
 
 class TableBloc extends Bloc<TableEvent,TableState>{
 
@@ -37,6 +38,13 @@ class TableBloc extends Bloc<TableEvent,TableState>{
           status: TableStatus.loading, error: ''));
       await Future.delayed(const Duration(seconds: 1));
       final lessons = _cubitTeacher.teacherEntity.lessons;
+      if (lessons.isEmpty) {
+        emit(state.copyWith(
+          status: TableStatus.loaded,
+          tasks: [],
+        ));
+        return;
+      }
       final ids = getIds(lessons);
       final idSchool = ids.isEmpty ? '' : ids[0];
       final lessonsById = getLessons(
@@ -144,7 +152,8 @@ class TableBloc extends Bloc<TableEvent,TableState>{
 
   List<TitlesTable> getHeaderTable({required bool weekMode,required List<TodayLessons> todayLesson,required int indexDate}){
     const listAuditory = ['Свинг','Авангард','Опера','Блюз','Эстрада'];
-    List<String> headers = [];
+    List<String> headers1 = [];
+    List<String> headers2 =[];
     if(weekMode){
       List<String> daysWeek = [];
       final fDay =  DateFormat('yyyy-MM-dd').parse(todayLesson[indexDate].date.split('/')[0]);
@@ -155,15 +164,16 @@ class TableBloc extends Bloc<TableEvent,TableState>{
         var d = fDay.add(Duration(days: i)).toString().split(' ')[0];
         daysWeek.add(d);
       }
-      headers = daysWeek.map((e) => DateFormat('yyyy-MM-dd').parse(e).day.toString()).toList();
+      headers1 = daysWeek.map((e) => DateFormat('yyyy-MM-dd').parse(e).day.toString()).toList();
+      headers2 = daysWeek.map((e) => DateTimeParser.getDayByNumber(DateFormat('yyyy-MM-dd').parse(e).weekday)).toList();
     }else{
-      headers = listAuditory;
+      headers1 = listAuditory;
     }
     List<TitlesTable> titles = [];
-    for(var h in headers){
+    for(var i = 0; headers1.length>i; i++){
       titles.add( TitlesTable(
-        date: "",
-        title: h,
+        date: weekMode?headers1[i]:'',
+        title: weekMode?headers2[i]:headers1[i],
       ),);
     }
 
@@ -174,13 +184,17 @@ class TableBloc extends Bloc<TableEvent,TableState>{
     final lessons = todayLesson[indexDate].lessons;
     const listAuditory = ['Свинг','Авангард','Опера','Блюз','Эстрада'];
     List<String> daysWeek = [];
-    final fDay =  DateFormat('yyyy-MM-dd').parse(todayLesson[indexDate].date.split('/')[0]);
-    final lDay = DateFormat('yyyy-MM-dd').parse(todayLesson[indexDate].date.split('/')[0]); //1
-    for (int i = 0; i <= lDay
-        .difference(fDay)
-        .inDays; i++) {
-      var d = fDay.add(Duration(days: i)).toString().split(' ')[0];
-      daysWeek.add(d);
+    if(weekMode) {
+      final fDay = DateFormat('yyyy-MM-dd').parse(
+          todayLesson[indexDate].date.split('/')[0]);
+      final lDay = DateFormat('yyyy-MM-dd').parse(
+          todayLesson[indexDate].date.split('/')[1]);
+      for (int i = 0; i <= lDay
+          .difference(fDay)
+          .inDays; i++) {
+        var d = fDay.add(Duration(days: i)).toString().split(' ')[0];
+        daysWeek.add(d);
+      }
     }
     List<TableTask> tasks = [];
     int rowPosition = 0;

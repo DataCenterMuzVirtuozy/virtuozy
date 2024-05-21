@@ -15,12 +15,12 @@ import 'dialogs/dialoger.dart';
 
 
 class DatePageTable extends StatefulWidget{
-  const DatePageTable({super.key,required, required this.lessonsToday, required this.initIndex, required this.onChange,this.weekMode = false});
+  const DatePageTable({super.key,required, required this.lessonsToday, required this.initIndex, required this.onChange});
 
 final List<TodayLessons> lessonsToday;
 final int initIndex;
 final Function onChange;
-final bool weekMode;
+
 
 @override
 State<DatePageTable> createState() => _DatePageTableState();
@@ -45,12 +45,11 @@ class _DatePageTableState extends State<DatePageTable> {
       widget.onChange.call(_pageControllerDates.page!.toInt());
     });
     page = widget.initIndex;
-    countLessons = getCountLessons(lessonsToday: widget.lessonsToday, weekMode: widget.weekMode);
+    countLessons = getCountLessons(lessonsToday: widget.lessonsToday);
 
   }
 
-  int getCountLessons({required List<TodayLessons> lessonsToday,required bool weekMode}){
-
+  int getCountLessons({required List<TodayLessons> lessonsToday}){
     return lessonsToday.length;
   }
 
@@ -58,7 +57,7 @@ class _DatePageTableState extends State<DatePageTable> {
   Widget build(BuildContext context) {
     return                 Container(
         alignment: Alignment.center,
-        width: 200.0,
+        width: 220.0,
         decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surfaceVariant,
             borderRadius: BorderRadius.circular(20.0)),
@@ -94,13 +93,15 @@ class _DatePageTableState extends State<DatePageTable> {
             Flexible(
               flex: 2,
               child: SizedBox(
-                height: 20.0,
+                height: 18.0,
                 child: PageView(
                   physics: const NeverScrollableScrollPhysics(),
                   controller: _pageControllerDates,
                   children: [
                     ...List.generate(countLessons, (index) {
-                      return Text(parseDate(widget.lessonsToday[index].date),
+                      return Text(widget.lessonsToday[index].date.contains('/')?
+                          parseDateWeek(widget.lessonsToday[index].date):
+                      parseDate(widget.lessonsToday[index].date),
                           textAlign: TextAlign.center,
                           style:TStyle.textStyleVelaSansExtraBolt(Theme.of(context)
                               .textTheme.displayMedium!.color!,size: 13.0));
@@ -136,45 +137,45 @@ class _DatePageTableState extends State<DatePageTable> {
 
 
   String parseDateWeek(String date){
-    final d = DateFormat('yyyy-MM-dd').parse(date);
-    final m = switch(d.month){
+    final d1 = DateFormat('yyyy-MM-dd').parse(date.split('/')[0]);
+    final d2 = DateFormat('yyyy-MM-dd').parse(date.split('/')[1]);
+    if(d1.month == d2.month && d1.year == d2.year){
+      final m = getMonth(d1.month);
+      return  '${d1.day}-${d2.day} $m ${d1.year}';
+    }else if(d1.month!=d2.month&&d1.year==d2.year){
+      final m1 = getMonth(d1.month);
+      final m2 = getMonth(d2.month);
+      return '${d1.day} $m1 - ${d2.day} $m2 ${d1.year}';
+    }else{
+      final m1 = getMonth(d1.month);
+      final m2 = getMonth(d2.month);
+      return '${d1.day} $m1 ${d1.year} - ${d2.day} $m2 ${d2.year}';
+    }
+  }
+
+  String getMonth(int m){
+    return switch(m){
       1=> 'янв.',
-      2 => 'февр.',
-      3=> 'март',
-      4 => 'апрель',
+      2 => 'фев.',
+      3=> 'мар.',
+      4 => 'апр.',
       5=> 'май',
-      6 => 'июнь',
-      7 => 'июль',
+      6 => 'июнь.',
+      7 => 'июль.',
       8 => 'авг.',
-      9 => 'сент.',
-      10 => 'октяб.',
-      11 => 'ноябрь',
+      9 => 'сен.',
+      10 => 'окт..',
+      11 => 'нояб.',
       12 => 'дек.',
       int() => throw UnimplementedError(),
     };
-
-    return  '${d.day} $m ${d.year}';
   }
 
 
 
   String parseDate(String date){
     final d = DateFormat('yyyy-MM-dd').parse(date);
-    final m = switch(d.month){
-      1=> 'янв.',
-      2 => 'февр.',
-      3=> 'март',
-      4 => 'апрель',
-      5=> 'май',
-      6 => 'июнь',
-      7 => 'июль',
-      8 => 'авг.',
-      9 => 'сент.',
-      10 => 'октяб.',
-      11 => 'ноябрь',
-      12 => 'дек.',
-      int() => throw UnimplementedError(),
-    };
+    final m = getMonth(d.month);
 
     return  '${d.day} $m ${d.year}';
   }

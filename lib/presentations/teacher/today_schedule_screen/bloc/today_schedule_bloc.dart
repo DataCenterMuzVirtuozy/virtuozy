@@ -33,6 +33,17 @@ class TodayScheduleBloc extends Bloc<TodayScheduleEvent,TodayScheduleState> {
           status: TodayScheduleStatus.loading, error: ''));
       await Future.delayed(const Duration(seconds: 1));
       final lessons = _cubitTeacher.teacherEntity.lessons;
+      if(lessons.isEmpty){
+        emit(state.copyWith(
+            indexByDateNow: 0,
+            visibleTodayButton: false,
+            lessons: [],
+            currentIdSchool: '',
+            status: TodayScheduleStatus.loaded,
+            idsSchool: [],
+            todayLessons: []));
+        return;
+      }
       final ids = getIds(lessons);
       final idSchool = ids.isEmpty ? '' : ids[0];
       final lessonsById = getLessons(

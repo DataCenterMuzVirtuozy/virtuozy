@@ -20,25 +20,24 @@ class TeacherService{
 
     Future<TeacherModel> getTeacher({required String uid}) async {
       try{
-        final res = await _dio.get(Endpoints.teacher,
-            queryParameters: {
-              'phoneNum': uid.replaceAll(' ', '')
-            });
-
-        if((res.data as List<dynamic>).isEmpty){
-          return throw   Failure('Пользователь не найден'.tr());
-        }
-        final idTeacher = res.data[0]['id'] as int;
-        final resLesson = await _dio.get(Endpoints.lessons,
-            queryParameters: {
-              'idTeacher': idTeacher
-            });
-        return TeacherModel.fromMap( mapTeacher: res.data[0], mapLessons: resLesson.data);
+        // final res = await _dio.get(Endpoints.teacher,
+        //     queryParameters: {
+        //       'phoneNum': uid.replaceAll(' ', '')
+        //     });
+        //
+        // if((res.data as List<dynamic>).isEmpty){
+        //   return throw   Failure('Пользователь не найден'.tr());
+        // }
+        // final idTeacher = res.data[0]['id'] as int;
+        // final resLesson = await _dio.get(Endpoints.lessons,
+        //     queryParameters: {
+        //       'idTeacher': idTeacher
+        //     });
+        //return TeacherModel.fromMap( mapTeacher: res.data[0], mapLessons: resLesson.data);
+        return TeacherModel.fromMap(mapTeacher: {}, mapLessons: []);
       } on Failure catch(e){
-        print('Error A ${e.message}');
         throw  Failure(e.message);
       } on DioException catch(e){
-        print('Error B ${e.message}');
         throw  Failure(e.message!);
       }
     }

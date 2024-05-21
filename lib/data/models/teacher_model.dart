@@ -2,6 +2,7 @@
 
 
  import 'package:virtuozy/data/models/user_model.dart';
+import 'package:virtuozy/domain/entities/lesson_entity.dart';
 
 class TeacherModel{
 
@@ -30,15 +31,53 @@ class TeacherModel{
 
   factory TeacherModel.fromMap({required Map<String, dynamic> mapTeacher,required List<dynamic> mapLessons}) {
 
-     final lessons = mapLessons.map((e) => LessonModel.fromMap(e,'')).toList();
+     //final lessons = mapLessons.map((e) => LessonModel.fromMap(e,'')).toList();
 
 
     return TeacherModel(
-      lessons: lessons,
-      id: mapTeacher['id'] as int,
-      lastName: mapTeacher['lastName'] as String,
-      firstName: mapTeacher['firstName'] as String,
-      phoneNum: mapTeacher['phoneNum'] as String,
+      lessons: l,
+      id: 0,
+      lastName: 'Go',
+        firstName: 'ff',
+      phoneNum: '9009'
+      // id: mapTeacher['id'] as int,
+      // lastName: mapTeacher['lastName'] as String,
+      // firstName: mapTeacher['firstName'] as String,
+      // phoneNum: mapTeacher['phoneNum'] as String,
     );
   }
+
+  static final l = [
+     const LessonModel(
+        contactValues: [],
+        idDir: 0,
+        idSchool: 'мш1',
+        nameStudent: 'Петя Тяпкин',
+        nameDirection: '',
+        id: 0,
+        idSub: 0,
+        timeAccept: '',
+        date: '2024-05-21',
+        timePeriod: '12:00-13:00',
+        idAuditory: 'Свинг',
+        nameTeacher: "Мария Белова",
+        status: 2,
+        bonus: false),
+    const LessonModel(
+        contactValues: [],
+        idDir: 0,
+        idSchool: 'мш1',
+        nameStudent: 'Петя Тяпкин',
+        nameDirection: '',
+        id: 0,
+        idSub: 0,
+        timeAccept: '',
+        date: '2024-05-23',
+        timePeriod: '14:00-15:00',
+        idAuditory: 'Опера',
+        nameTeacher: "Мария Белова",
+        status: 4,
+        bonus: false)
+  ];
+
 }
