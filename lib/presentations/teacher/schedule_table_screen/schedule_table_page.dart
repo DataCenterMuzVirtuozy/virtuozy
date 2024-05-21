@@ -38,7 +38,7 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
   @override
   void initState() {
     super.initState();
-   context.read<TableBloc>().add(GetInitLessonsEvent());
+   context.read<TableBloc>().add(const GetInitLessonsEvent(weekMode: false));
 
   }
 
@@ -84,14 +84,21 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
                     const Gap(10.0),
                      DatePageTable(
                        onChange: (index){
-                         context.read<TableBloc>().add(GetLessonsTableByDate(indexDate: index));
+                         context.read<TableBloc>().add(GetLessonsTableByDate(indexDate: index,
+                             weekMode: state.modeTable == ViewModeTable.week));
                        },
                       initIndex: state.indexByDateNow,
                       lessonsToday: state.todayLessons,
                     ),
                     const Gap(10.0),
                     CalendarCaller(
-                      dateSelect: (date){},
+                      dateSelect: (date){
+                        context.read<TableBloc>().add(
+                                GetLessonsTableByCalendarDateEvent(
+                                    date: date,
+                                    weekMode:
+                                        state.modeTable == ViewModeTable.week));
+                          },
                         lessons: state.lessons)
                   ],
                 ),
@@ -115,9 +122,9 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
                  child: MyTimePlanner(
                    modeView: (ViewModeTable mode){
                      if(mode == ViewModeTable.week){
-                       context.read<TableBloc>().add(GetLessonsTableWeek());
+                       context.read<TableBloc>().add(const GetLessonsTableWeek(weekMode: true));
                      }else if(mode == ViewModeTable.day){
-                       context.read<TableBloc>().add(GetInitLessonsEvent());
+                       context.read<TableBloc>().add(const GetInitLessonsEvent(weekMode: false));
                      }else{
                        //my shedule
                      }

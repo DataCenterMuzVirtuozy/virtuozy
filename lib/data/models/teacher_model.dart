@@ -48,6 +48,21 @@ class TeacherModel{
   }
 
   static final l = [
+    const LessonModel(
+   contactValues: ['',''],
+   id: 33,
+   idSub: 33,
+   idSchool: 'мш2',
+   bonus: false,
+   timeAccept: '',
+   date: '2024-05-16',
+   timePeriod: '15:00-16:00',
+   idAuditory: 'Свинг',
+   nameTeacher: 'Bob',
+   nameStudent: 'Dan',
+   status: 6,
+   nameDirection: 'Bass',
+        idDir: 0),
      const LessonModel(
         contactValues: [],
         idDir: 0,

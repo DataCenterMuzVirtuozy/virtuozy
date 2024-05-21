@@ -40,6 +40,7 @@ class TableState extends Equatable{
   final bool visibleTodayButton;
 
 
+
   const TableState(
       {required this.error,
       required this.status,
