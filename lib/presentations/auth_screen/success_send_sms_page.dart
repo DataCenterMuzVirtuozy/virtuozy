@@ -11,8 +11,6 @@ import 'package:timer_count_down/timer_count_down.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:virtuozy/router/paths.dart';
 
-import '../../components/buttons.dart';
-import '../../components/text_fields.dart';
 import '../../resourses/colors.dart';
 import '../../resourses/images.dart';
 import '../../utils/text_style.dart';

@@ -38,6 +38,7 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
   void initState() {
     super.initState();
    context.read<TableBloc>().add(GetInitLessonsEvent());
+
   }
 
 
@@ -98,14 +99,23 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
                ],
              ),
             const Gap(10.0),
-           if(state.status == TableStatus.loadingByDate)...{
+           if(state.status == TableStatus.loadingTable)...{
              Center(
                child: CircularProgressIndicator(color: colorOrange),
              )
-           }else if(state.status == TableStatus.loadedByDate
+           }else if(state.status == TableStatus.loadedTable
                || state.status == TableStatus.loaded)...{
              Expanded(
                child: MyTimePlanner(
+                 modeView: (ViewModeTable mode){
+                   if(mode == ViewModeTable.week){
+                     context.read<TableBloc>().add(GetLessonsTableWeek());
+                   }else if(mode == ViewModeTable.day){
+                     context.read<TableBloc>().add(GetInitLessonsEvent());
+                   }else{
+                     //my shedule
+                   }
+                 },
                  startHour: 10,
                  endHour: 21,
                  use24HourFormat: true,
@@ -133,7 +143,9 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
                        minutesDuration: 60,
                        // Days duration of task (use for multi days task)
                        daysDuration: 1,
-                       onTap: () {},
+                       onTap: () {
+
+                       },
                        child: Padding(
                          padding: const EdgeInsets.all(5.0),
                          child: Text(
@@ -142,8 +154,8 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
                              maxLines: 3,
                              overflow: TextOverflow.ellipsis,
                              style:
-                             TStyle.textStyleVelaSansRegular(Theme.of(context)
-                                 .textTheme.displayMedium!.color!,size: 15.0)),
+                             TStyle.textStyleVelaSansBold(Theme.of(context)
+                                 .textTheme.displayMedium!.color!,size: 12.0)),
                        ),
                      );
                    })

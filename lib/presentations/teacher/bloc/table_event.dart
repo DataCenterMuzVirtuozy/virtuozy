@@ -17,3 +17,7 @@ class GetInitLessonsEvent extends TableEvent{}
   final int indexDate;
   const GetLessonsTableByDate({required this.indexDate});
  }
+
+ class GetLessonsTableWeek extends TableEvent{
+
+ }

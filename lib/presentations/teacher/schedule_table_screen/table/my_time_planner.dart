@@ -4,11 +4,13 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:time_planner/time_planner.dart';
 import 'package:time_planner/src/config/global_config.dart' as config;
 
 import '../../../../resourses/colors.dart';
 import '../../../../utils/text_style.dart';
+import '../../bloc/table_state.dart';
 
 class MyTimePlanner extends StatefulWidget {
   /// Time start from this, it will start from 0
@@ -36,7 +38,7 @@ class MyTimePlanner extends StatefulWidget {
 
   //Whether the time is displayed on the axis of the tim or on the center of the timeblock. Default is false.
   final bool setTimeOnAxis;
-
+  final Function modeView;
   /// Time planner widget
   const MyTimePlanner({
     Key? key,
@@ -48,6 +50,7 @@ class MyTimePlanner extends StatefulWidget {
     this.use24HourFormat = false,
     this.setTimeOnAxis = false,
     this.currentTimeAnimation,
+    required this.modeView,
   }) : super(key: key);
   @override
   _MyTimePlannerState createState() => _MyTimePlannerState();
@@ -163,9 +166,13 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  const SizedBox(
+                   SizedBox(
                     width: 60,
-                    child: SelectModeCalendar(),
+                    child: SelectModeCalendar(
+                      modeView: (mode){
+                        widget.modeView.call(mode);
+                      },
+                    ),
                   ),
                   for (int i = 0; i < config.totalDays; i++) widget.headers[i],
                 ],
@@ -439,7 +446,9 @@ class MyTimePlannerTime extends StatelessWidget {
 }
 
 class SelectModeCalendar extends StatefulWidget{
-  const SelectModeCalendar({super.key});
+  const SelectModeCalendar({super.key, required this.modeView});
+
+  final Function modeView;
 
   @override
   State<SelectModeCalendar> createState() => _SelectModeCalendarState();
@@ -454,6 +463,7 @@ class _SelectModeCalendarState extends State<SelectModeCalendar> {
   ];
 
   String? selectedValue;
+
 
   @override
   void initState() {
@@ -493,6 +503,13 @@ class _SelectModeCalendarState extends State<SelectModeCalendar> {
         onChanged: (value) {
           setState(() {
             selectedValue = value;
+            widget.modeView.call(
+              selectedValue == 'День'?
+              ViewModeTable.day:
+                  selectedValue == 'Неделя'?
+                  ViewModeTable.week:
+                  ViewModeTable.my
+            );
           });
         },
         buttonStyleData: ButtonStyleData(
