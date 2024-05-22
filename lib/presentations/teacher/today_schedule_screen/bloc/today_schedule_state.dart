@@ -37,7 +37,7 @@ class TodayScheduleState extends Equatable {
   factory TodayScheduleState.unknown(){
     return const TodayScheduleState(
       visibleTodayButton: false,
-        error: '', status: TodayScheduleStatus.unknown,lessons: [],idsSchool: ['...'],currentIdSchool: '', todayLessons: [], indexByDateNow: 0);
+        error: '', status: TodayScheduleStatus.unknown,lessons: [],idsSchool: ['...'],currentIdSchool: '...', todayLessons: [], indexByDateNow: 0);
   }
 
   TodayScheduleState copyWith({

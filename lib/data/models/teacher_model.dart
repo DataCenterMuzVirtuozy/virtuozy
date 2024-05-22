@@ -31,19 +31,20 @@ class TeacherModel{
 
   factory TeacherModel.fromMap({required Map<String, dynamic> mapTeacher,required List<dynamic> mapLessons}) {
 
-     //final lessons = mapLessons.map((e) => LessonModel.fromMap(e,'')).toList();
+     final lessons = mapLessons.map((e) => LessonModel.fromMap(e,'')).toList();
 
 
     return TeacherModel(
-      lessons: l,
-      id: 0,
-      lastName: 'Go',
-        firstName: 'ff',
-      phoneNum: '9009'
-      // id: mapTeacher['id'] as int,
-      // lastName: mapTeacher['lastName'] as String,
-      // firstName: mapTeacher['firstName'] as String,
-      // phoneNum: mapTeacher['phoneNum'] as String,
+      // lessons: l,
+      // id: 0,
+      // lastName: 'Go',
+      //   firstName: 'ff',
+      // phoneNum: '9009'
+      lessons: lessons,
+      id: mapTeacher['id'] as int,
+      lastName: mapTeacher['lastName'] as String,
+      firstName: mapTeacher['firstName'] as String,
+      phoneNum: mapTeacher['phoneNum'] as String,
     );
   }
 

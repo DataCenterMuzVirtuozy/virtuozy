@@ -12,8 +12,13 @@ enum TableStatus{
   loading,
   loaded,
   error,
-  loadingTable,
-  loadedTable,
+  unknown
+}
+
+enum ScheduleStatus{
+  loading,
+  loaded,
+  error,
   unknown
 }
 
@@ -28,6 +33,7 @@ class TableState extends Equatable{
 
   final String error;
   final TableStatus status;
+  final ScheduleStatus scheduleStatus;
   final ViewModeTable modeTable;
   final List<String> idsAuditory;
   final List<Lesson> lessons;
@@ -53,6 +59,7 @@ class TableState extends Equatable{
       required this.idsAuditory,
         required this.tasks,
         required this.titles,
+        required this.scheduleStatus,
       required this.modeTable});
 
   factory TableState.unknown(){
@@ -60,6 +67,7 @@ class TableState extends Equatable{
         status: TableStatus.unknown,
         lessons: [],
         idsSchool: [],
+        scheduleStatus: ScheduleStatus.unknown,
         currentIdSchool: '',
         todayLessons: [],
         indexByDateNow: 0,
@@ -82,7 +90,8 @@ class TableState extends Equatable{
      ViewModeTable? modeTable,
     List<String>? idsAuditory,
     List<TableTask>? tasks,
-    List<TitlesTable>? titles
+    List<TitlesTable>? titles,
+    ScheduleStatus? scheduleStatus
 }){
     return TableState(error: error??this.error,
         status: status??this.status,
@@ -95,10 +104,11 @@ class TableState extends Equatable{
         indexByDateNow: indexByDateNow??this.indexByDateNow,
         modeTable: modeTable??this.modeTable,
         idsAuditory: idsAuditory??this.idsAuditory,
+        scheduleStatus: scheduleStatus??this.scheduleStatus,
         visibleTodayButton: visibleTodayButton??this.visibleTodayButton);
   }
 
   @override
-  List<Object?> get props => [error,status,lessons,idsSchool,currentIdSchool,todayLessons,indexByDateNow,visibleTodayButton,idsAuditory,modeTable,titles];
+  List<Object?> get props => [error,status,lessons,idsSchool,currentIdSchool,todayLessons,indexByDateNow,visibleTodayButton,idsAuditory,modeTable,titles,scheduleStatus];
 
 }

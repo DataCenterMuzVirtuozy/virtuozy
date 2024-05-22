@@ -23,6 +23,7 @@ class SelectDateContent extends StatelessWidget{
       width: MediaQuery.of(context).size.width-100.0,
       height: MediaQuery.of(context).size.height/2.7,
       child: Calendar(
+        visibleStatusColor: false,
         visibleInfoColors: false,
         resetFocusDay: false,
         lessons: lessons,

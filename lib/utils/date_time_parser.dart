@@ -1,9 +1,13 @@
 
 
 
- import 'package:easy_localization/easy_localization.dart';
+ import 'dart:math';
+
+import 'package:easy_localization/easy_localization.dart';
 
 class DateTimeParser{
+
+
 
 
     static getDateTime({required DateTime dateNow}){
@@ -118,6 +122,35 @@ class DateTimeParser{
         int() => throw UnimplementedError(),
       };
 
+    }
+
+    //временный метод для генерации
+    static String date(){
+      int randomNumber = Random().nextInt(3);
+      final date = DateTime(DateTime.now().day+randomNumber);
+      return date.toString().split(' ')[0];
+    }
+
+
+    //временный метод для генерации
+    static String time(){
+      int randomNumber = Random().nextInt(12);
+      final times = [
+        '10:00-11:00',
+        '11:00-12:00',
+        '12:00-13:00',
+        '13:00-14:00',
+        '14:00-15:00',
+        '15:00-16:00',
+        '16:00-17:00',
+        '17:00-18:00',
+        '18:00-19:00',
+        '19:00-20:00',
+        '20:00-21:00',
+        '21:00-22:00',
+      ];
+
+      return times[randomNumber];
     }
 
 

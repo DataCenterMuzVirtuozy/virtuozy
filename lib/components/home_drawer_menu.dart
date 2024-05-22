@@ -162,6 +162,9 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                           ],
                         ),
                         onTap: (){
+                          if(userType.isTeacher){
+                            return;
+                          }
                           GoRouter.of(context).push(pathProfile);
                           Navigator.pop(context);
                         },
@@ -207,30 +210,33 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                 ],
               ),
 
-              Padding(
-                padding: const EdgeInsets.only(bottom: 30),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    //todo url enter
-                    IconButton(onPressed: ()async{
-                      Dialoger.showBottomMenu(
-                          title: 'Telegram',
-                          args: TypeMessager.telegram,
-                          context: context,
-                          content: ListSupport());
-                    }, icon:  Image.asset(telegram,width: 30,height: 30,)),
-                    IconButton(onPressed: () async {
-                      Dialoger.showBottomMenu(
-                          title: 'WhatsApp',
-                          args: TypeMessager.whatsapp,
-                          context: context,
-                          content: ListSupport());
-                    }, icon:  Image.asset(whatsapp,width: 35,height: 35,))
+              Visibility(
+                visible: userType.isStudent,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 30),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      //todo url enter
+                      IconButton(onPressed: ()async{
+                        Dialoger.showBottomMenu(
+                            title: 'Telegram',
+                            args: TypeMessager.telegram,
+                            context: context,
+                            content: ListSupport());
+                      }, icon:  Image.asset(telegram,width: 30,height: 30,)),
+                      IconButton(onPressed: () async {
+                        Dialoger.showBottomMenu(
+                            title: 'WhatsApp',
+                            args: TypeMessager.whatsapp,
+                            context: context,
+                            content: ListSupport());
+                      }, icon:  Image.asset(whatsapp,width: 35,height: 35,))
 
 
-                  ],
+                    ],
+                  ),
                 ),
               ),
 
@@ -375,14 +381,14 @@ required bool docsAccept}){
                 currentIndexItemMenu:currentIndexItemMenu,
                 index: 2,
                 title: 'Лиды'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
-                onSelectedPage.call(2);
+                //onSelectedPage.call(2);
               },),
 
               DrawerItem(
                 currentIndexItemMenu:currentIndexItemMenu,
                 index: 3,
                 title: 'Клиенты'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
-                onSelectedPage.call(3);
+                //onSelectedPage.call(3);
               },),
               DrawerItem(
                 title: 'Тема'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {

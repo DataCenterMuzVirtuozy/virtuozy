@@ -11,6 +11,7 @@ import 'package:virtuozy/data/models/price_subscription_model.dart';
 import 'package:virtuozy/data/models/subscription_model.dart';
 import 'package:virtuozy/data/models/subway_model.dart';
 import 'package:virtuozy/domain/entities/subscription_entity.dart';
+import 'package:virtuozy/utils/date_time_parser.dart';
 
 import '../../domain/entities/notifi_setting_entity.dart';
 
@@ -223,6 +224,9 @@ class UserModel{
 
   factory LessonModel.fromMap(Map<String, dynamic> map,String nameDirection) {
 
+
+    final date  = DateTimeParser.date();
+    final time = DateTimeParser.time();
     return LessonModel(
       contactValues: map['contactValues']??['8 (499) 322-71-04','https://wa.clck.bar/79231114616','https://t.me/@VirtuozyNskMs2'],
       idDir: map['idDir']??0,
@@ -231,7 +235,8 @@ class UserModel{
       id: map['id']??0,
       timeAccept: map['timeAccept']??'',
       date: map['date']??'',
-      timePeriod: map['timePeriod']??'',
+      //timePeriod: map['timePeriod']??'',
+        timePeriod: time,
       idAuditory: map['idAuditory']??'',
       nameTeacher: map['nameTeacher']??'',
       status: map['status']??0,
@@ -241,6 +246,9 @@ class UserModel{
     );
   }
 }
+
+
+
 
 
   class BonusModel{

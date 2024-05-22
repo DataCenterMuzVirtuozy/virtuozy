@@ -33,6 +33,7 @@ class Calendar extends StatefulWidget{
       required this.onMonth,
       this.clickableDay = true,
       this.resetFocusDay = true,
+        this.visibleStatusColor = true,
         this.visibleInfoColors = true,
       this.colorFill = Colors.transparent,
         required this.onDate});
@@ -42,6 +43,7 @@ class Calendar extends StatefulWidget{
   final Function onMonth;
   final Function onDate;
   final bool clickableDay;
+  final bool visibleStatusColor;
   final bool resetFocusDay;
   final Color colorFill;
   final bool visibleInfoColors;
@@ -131,7 +133,7 @@ class _CalendarState extends State<Calendar> {
              final selDay  =  d2.day;
              final nowDay = DateTime.now().day;
              if(selDay == nowDay){
-               Dialoger.showMessage('Нет записей на текущий день'.tr());
+               Dialoger.showMessage('Нет записей на текущий день'.tr(),context: context);
              }
              widget.onDate.call(d1.toString().split(' ')[0]);
 
@@ -148,6 +150,7 @@ class _CalendarState extends State<Calendar> {
            calendarBuilders: CalendarBuilders(
              todayBuilder: (context, day,values){
                return _handlerDay(
+                 visibleStatusColor: widget.visibleStatusColor,
                    clickableDay: widget.clickableDay,
                    dateTime:day,
                    monthOfDay: day.month,
@@ -162,6 +165,7 @@ class _CalendarState extends State<Calendar> {
              defaultBuilder: (context, day,values) {
                _onMonth(day.month);
                return _handlerDay(
+                 visibleStatusColor: widget.visibleStatusColor,
                  clickableDay: widget.clickableDay,
                    dateTime:day,
                    monthOfDay: day.month,
@@ -219,6 +223,7 @@ class _CalendarState extends State<Calendar> {
    _handlerDay({
      required List<Lesson> lessons,
      required int day,
+     required bool visibleStatusColor,
      required DateTime dateTime,
      required int monthOfDay,
      required BuildContext context,
@@ -263,11 +268,11 @@ class _CalendarState extends State<Calendar> {
                                    width: index>0?34.0:45.0,
                                    decoration: BoxDecoration(
                                        borderRadius: index == 0?null:const BorderRadius.vertical(bottom: Radius.circular(23.0)),
-                                       color: StatusToColor.getColor(
-                                           lessonStatus: lessonsDay.length>2?LessonStatus.layering:lessonsDay[index].status),
+                                       color: visibleStatusColor?StatusToColor.getColor(
+                                           lessonStatus: lessonsDay.length>2?LessonStatus.layering:lessonsDay[index].status):Colors.transparent,
                                        shape: index==0?BoxShape.circle:BoxShape.rectangle,
-                                       border: Border.all(color: colorOrange,
-                                           width: valueDay == day ? 3.0 : 1.0)
+                                       border: visibleStatusColor?Border.all(color: colorOrange,
+                                           width: valueDay == day ? 3.0 : 1.0):null
                                    ),
                                  ),
                                );

@@ -67,136 +67,150 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
          _visibleTodayButton = s.visibleTodayButton;
       },
       builder: (context,state) {
+
         if(state.status == TodayScheduleStatus.loading){
           return Center(child: CircularProgressIndicator(color: colorOrange));
         }
 
-        if(state.todayLessons.isEmpty){
+        if(state.todayLessons.isEmpty&&state.status  == TodayScheduleStatus.loaded){
           return const BoxInfo(title: 'Empty', iconData: Icons.table_chart_outlined,);
         }
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-        Padding(
-        padding: const EdgeInsets.only(left: 20.0,bottom: 10.0,top: 20.0),
-        child: Text('Мое расписание на сегодня'.tr()
-            ,style: TStyle.textStyleGaretHeavy(Theme.of(context)
-                .textTheme.displayMedium!.color!,size: 18.0))),
-             Padding(
-              padding: const EdgeInsets.only(right: 20,left: 20,top: 10),
-              child: SizedBox(
-                height: 30.0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SelectSchoolMenu(
-                      currentIdSchool: state.currentIdSchool,
-                      idsSchool: state.idsSchool,
-                      onChange: (id){
-                        context.read<TodayScheduleBloc>().add(GetLessonsByIdSchoolEvent(id));
-                      },
-                    ),
-                    DatePageView(
-                      onVisibleTodayButton: (visible){
-                        setState(() {
-                            _visibleTodayButton = visible;
-                          });
-
-                      },
-                      initIndex: state.indexByDateNow,
-                      lessonsToday: state.todayLessons,
-                    ),
-                   CalendarCaller(
-                     dateSelect: (date){
-                       _onlyWithLesson = false;
-                       context.read<TodayScheduleBloc>().add(GetLessonsBySelDateEvent(date: date));
-                     },
-                       lessons: state.lessons)
-                  ],
-                ),
-              ),
-            ),
-            IntrinsicWidth(
-              child: Container(
-                margin: const EdgeInsets.only(top: 15,left: 20,right: 20,bottom: 20),
-                padding: const EdgeInsets.only(left: 10,right: 20,top: 8,bottom: 8),
-                height: 35,
-                decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surfaceVariant,
-                    borderRadius: BorderRadius.circular(20.0)),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Checkbox(
-                        side: BorderSide(color: Theme.of(context).textTheme.displayMedium!.color!),
-                        checkColor: colorWhite,
-                        value: _onlyWithLesson,
-                        onChanged: (only){
-                          setState(() {
-                            _onlyWithLesson = only!;
-                            context.read<TodayScheduleBloc>().add(GetLessonsByModeViewEvent(onlyWithLesson: _onlyWithLesson));
-                          });
-
-                    }),
-                    Text('Дни только с уроками',
-                        textAlign: TextAlign.center,
-                        style:TStyle.textStyleVelaSansBold(Theme.of(context)
-                            .textTheme.displayMedium!.color!,size: 13.0)),
-              
-                  ],
-                ),
-              ),
-            ),
-            TimeLineList(
-              initIndex: state.indexByDateNow,
-              todayLessons: state.todayLessons,
-            ),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 40.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+        if(state.status == TodayScheduleStatus.loaded){
+          return Stack(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // SizedBox(
-                  //   width: MediaQuery.of(context).size.width-100,
-                  //   height: 40.0,
-                  //   child: SubmitButton(
-                  //     onTap: (){
+                  Padding(
+                      padding: const EdgeInsets.only(left: 20.0,bottom: 10.0,top: 20.0),
+                      child: Text('Мое расписание на сегодня'.tr()
+                          ,style: TStyle.textStyleGaretHeavy(Theme.of(context)
+                              .textTheme.displayMedium!.color!,size: 18.0))),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 20,left: 20,top: 10),
+                    child: SizedBox(
+                      height: 30.0,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SelectSchoolMenu(
+                            currentIdSchool: state.currentIdSchool,
+                            idsSchool: state.idsSchool,
+                            onChange: (id){
+                              context.read<TodayScheduleBloc>().add(GetLessonsByIdSchoolEvent(id));
+                            },
+                          ),
+                          DatePageView(
+                            onVisibleTodayButton: (visible){
+                              setState(() {
+                                _visibleTodayButton = visible;
+                              });
+
+                            },
+                            initIndex: state.indexByDateNow,
+                            lessonsToday: state.todayLessons,
+                          ),
+                          CalendarCaller(
+                              dateSelect: (date){
+                                _onlyWithLesson = false;
+                                context.read<TodayScheduleBloc>().add(GetLessonsBySelDateEvent(date: date));
+                              },
+                              lessons: state.lessons)
+                        ],
+                      ),
+                    ),
+                  ),
+                  IntrinsicWidth(
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 15,left: 20,right: 20,bottom: 20),
+                      padding: const EdgeInsets.only(left: 10,right: 20,top: 8,bottom: 8),
+                      height: 35,
+                      decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.surfaceVariant,
+                          borderRadius: BorderRadius.circular(20.0)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Checkbox(
+                              side: BorderSide(color: Theme.of(context).textTheme.displayMedium!.color!),
+                              checkColor: colorWhite,
+                              value: _onlyWithLesson,
+                              onChanged: (only){
+                                setState(() {
+                                  _onlyWithLesson = only!;
+                                  context.read<TodayScheduleBloc>().add(GetLessonsByModeViewEvent(onlyWithLesson: _onlyWithLesson));
+                                });
+
+                              }),
+                          Text('Дни только с уроками',
+                              textAlign: TextAlign.center,
+                              style:TStyle.textStyleVelaSansBold(Theme.of(context)
+                                  .textTheme.displayMedium!.color!,size: 13.0)),
+
+                        ],
+                      ),
+                    ),
+                  ),
+                  TimeLineList(
+                    initIndex: state.indexByDateNow,
+                    todayLessons: state.todayLessons,
+                  ),
+
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 40.0),
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.end,
+                  //     children: [
+                  //       // SizedBox(
+                  //       //   width: MediaQuery.of(context).size.width-100,
+                  //       //   height: 40.0,
+                  //       //   child: SubmitButton(
+                  //       //     onTap: (){
+                  //       //
+                  //       //       // Dialoger.showModalBottomMenu(
+                  //       //       //     blurred: false,
+                  //       //       //     args:[state.firstNotAcceptLesson,
+                  //       //       //       state.directions, state.listNotAcceptLesson,
+                  //       //       //       _allViewDirection],
+                  //       //       //     title:'Подтверждение урока'.tr(),
+                  //       //       //     content: ConfirmLesson());
+                  //       //     },
+                  //       //     //colorFill: Theme.of(context).colorScheme.tertiary,
+                  //       //     colorFill: colorGreen,
+                  //       //     borderRadius: 10.0,
+                  //       //     textButton:
+                  //       //     'Подтвердите прохождение урока'.tr(),
+                  //       //   ),
+                  //       // ),
                   //
-                  //       // Dialoger.showModalBottomMenu(
-                  //       //     blurred: false,
-                  //       //     args:[state.firstNotAcceptLesson,
-                  //       //       state.directions, state.listNotAcceptLesson,
-                  //       //       _allViewDirection],
-                  //       //     title:'Подтверждение урока'.tr(),
-                  //       //     content: ConfirmLesson());
-                  //     },
-                  //     //colorFill: Theme.of(context).colorScheme.tertiary,
-                  //     colorFill: colorGreen,
-                  //     borderRadius: 10.0,
-                  //     textButton:
-                  //     'Подтвердите прохождение урока'.tr(),
+                  //
+                  //     ],
                   //   ),
                   // ),
-
-                  Visibility(
-                      visible: _visibleTodayButton,
-                        child: FloatingActionButton(
-                          mini: true,
-                          child: Icon(Icons.today_outlined,color: colorWhite),
-                            onPressed: (){
-                          _onlyWithLesson = false;
-                          final date  = DateTime.now().toString().split(' ')[0];
-                          context.read<TodayScheduleBloc>().add(GetLessonsBySelDateEvent(date: date));
-                        }),
-                      )
-
                 ],
-              ),
-            ),
-          ],
-        );
+              ).animate().fade(duration: const Duration(milliseconds: 400)),
+              Positioned(
+                bottom: 50,
+                right: 50,
+                child: Visibility(
+                  visible: _visibleTodayButton,
+                  child: FloatingActionButton(
+                      mini: true,
+                      child: Icon(Icons.today_outlined,color: colorWhite),
+                      onPressed: (){
+                        _onlyWithLesson = false;
+                        final date  = DateTime.now().toString().split(' ')[0];
+                        context.read<TodayScheduleBloc>().add(GetLessonsBySelDateEvent(date: date));
+                      }).animate().fade(duration: const Duration(milliseconds: 400)),
+                ),
+              )
+            ],
+          );
+
+        }
+
+        return Container();
       }
     );
   }
