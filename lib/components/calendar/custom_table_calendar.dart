@@ -2,6 +2,7 @@
 
 
 
+import 'dart:ffi';
 import 'dart:math';
 
 import 'package:flutter/widgets.dart';
@@ -35,7 +36,7 @@ class CustomTableCalendar<T> extends StatefulWidget {
 
   final VoidCallback onLeftChevronTap;
   final VoidCallback onRightChevronTap;
-
+  final Function  onDayTapped;
   /// The start of the selected day range.
   final DateTime? rangeStartDay;
 
@@ -260,7 +261,7 @@ class CustomTableCalendar<T> extends StatefulWidget {
     this.onHeaderLongPressed,
     this.onPageChanged,
     this.onFormatChanged,
-    this.onCalendarCreated, required this.onLeftChevronTap, required this.onRightChevronTap,
+    this.onCalendarCreated, required this.onLeftChevronTap, required this.onRightChevronTap, required this.onDayTapped,
   })  : assert(availableCalendarFormats.keys.contains(calendarFormat)),
         assert(availableCalendarFormats.length <= CalendarFormat.values.length),
         assert(weekendDays.isNotEmpty
@@ -353,6 +354,7 @@ class CustomTableCalendarState<T> extends State<CustomTableCalendar<T>> {
   }
 
   void _onDayTapped(DateTime day) {
+    widget.onDayTapped.call(day);
     final isOutside = day.month != _focusedDay.value.month;
     if (isOutside && _shouldBlockOutsideDays) {
       return;

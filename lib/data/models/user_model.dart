@@ -225,7 +225,7 @@ class UserModel{
   factory LessonModel.fromMap(Map<String, dynamic> map,String nameDirection) {
 
 
-    final date  = DateTimeParser.date();
+    //final date  = DateTimeParser.date();
     final time = DateTimeParser.time();
     return LessonModel(
       contactValues: map['contactValues']??['8 (499) 322-71-04','https://wa.clck.bar/79231114616','https://t.me/@VirtuozyNskMs2'],
@@ -240,7 +240,7 @@ class UserModel{
       idAuditory: map['idAuditory']??'',
       nameTeacher: map['nameTeacher']??'',
       status: map['status']??0,
-      nameDirection: nameDirection,
+      nameDirection: map['nameDir']??'',
       bonus: map['bonus']??false,
         nameStudent: map['nameStudent']??''
     );

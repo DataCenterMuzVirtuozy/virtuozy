@@ -25,7 +25,6 @@ class CalendarCaller extends StatelessWidget{
        onPressed: () {
        Dialoger.showSelectDate(context: context, lessons: lessons,
        onDate: (String date){
-         currentDayNotifi.value = 0;
          dateSelect.call(date);
        });
      },

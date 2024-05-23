@@ -62,9 +62,10 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
         }
 
 
-        // if(state.scheduleStatus == ScheduleStatus.loaded){
-        //   return const BoxInfo(title: 'Empty', iconData: Icons.table_chart_outlined,);
-        // }
+        if(state.scheduleStatus == ScheduleStatus.error){
+          return const BoxInfo(title: 'Ошибка получения данных',
+            iconData: Icons.error);
+        }
 
         return Column(
              children: [

@@ -7,6 +7,7 @@ import 'package:virtuozy/resourses/colors.dart';
 
 import '../../../../domain/entities/lesson_entity.dart';
 import '../../../calendar/calendar.dart';
+import '../bottom_sheet_menu/steps_confirm_lesson_content.dart';
 
 class SelectDateContent extends StatelessWidget{
   const SelectDateContent({super.key, required this.lessons, required this.onDate});
@@ -23,8 +24,10 @@ class SelectDateContent extends StatelessWidget{
       width: MediaQuery.of(context).size.width-100.0,
       height: MediaQuery.of(context).size.height/2.7,
       child: Calendar(
-        visibleStatusColor: false,
+        visibleStatusColor: true,
         visibleInfoColors: false,
+        clickableDay: true,
+        focusedDayStatus: false,
         resetFocusDay: false,
         lessons: lessons,
         onMonth: (month){

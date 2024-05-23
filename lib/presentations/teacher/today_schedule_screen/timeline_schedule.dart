@@ -80,7 +80,7 @@ class _TimelineScheduleState extends State<TimelineSchedule> {
                     decoration: BoxDecoration(
                       border: Border.all(color: colorOrange,width: 0.5),
                         //color: Theme.of(context).colorScheme.surfaceVariant,
-                      color:  colorOrange,
+                      color:  Theme.of(context).colorScheme.surfaceVariant,
                         borderRadius: BorderRadius.circular(5.0)),
                     child: IntrinsicHeight(
                       child: Row(
@@ -90,6 +90,10 @@ class _TimelineScheduleState extends State<TimelineSchedule> {
                              margin: const EdgeInsets.only(right: 10.0),
                              decoration: BoxDecoration(
                                color: StatusToColor.getColor(lessonStatus:data.$2.status),
+                               // border: Border.all(
+                               //   color: colorOrange,
+                               //   width: 1
+                               // ),
                                borderRadius: const BorderRadius.only(topLeft: Radius.circular(10.0),bottomLeft: Radius.circular(10.0))
                              ),
                            ),
@@ -97,24 +101,52 @@ class _TimelineScheduleState extends State<TimelineSchedule> {
                            Expanded(
                         child: Padding(
                           padding: const EdgeInsets.only(right: 10.0,left: 110.0,top: 10.0,bottom: 10.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Expanded(
                                 child: Text(data.$2.nameStudent, style:
                                 TStyle.textStyleVelaSansRegular(Theme.of(context)
                                       .textTheme.displayMedium!.color!,size: 14.0)),
                               ),
-                              const Gap(10.0),
+                              const Gap(5.0),
                              Expanded(
-                                child: Text(data.$2.idAuditory,
-                                    textAlign: TextAlign.end,
-                                    style:
-                                TStyle.textStyleVelaSansExtraBolt(
-                                    StatusToColor.getColor(
-                                        lessonStatus: data.$2.status),
-                                    size: 12.0)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.directions,
+                                            color: colorGrey,size: 14.0),
+                                        const Gap(5),
+                                        Text(data.$2.nameDirection,
+                                            textAlign: TextAlign.end,
+                                            style:
+                                            TStyle.textStyleVelaSansExtraBolt(
+                                                Theme.of(context)
+                                                    .textTheme.displayMedium!.color!,
+                                                size: 12.0)),
+                                      ],
+                                    ),
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.door_back_door_outlined,
+                                            color: colorGrey,size: 14.0),
+                                        const Gap(5),
+                                        Text(data.$2.idAuditory,
+                                            textAlign: TextAlign.end,
+                                            style:
+                                        TStyle.textStyleVelaSansExtraBolt(
+                                            Theme.of(context)
+                                                .textTheme.displayMedium!.color!,
+                                            size: 12.0)),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),

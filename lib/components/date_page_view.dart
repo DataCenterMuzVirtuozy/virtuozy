@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:virtuozy/domain/entities/lesson_entity.dart';
 import 'package:virtuozy/domain/entities/today_lessons.dart';
 import 'package:virtuozy/presentations/teacher/today_schedule_screen/time_line_list.dart';
+import 'package:virtuozy/utils/date_time_parser.dart';
 
 import '../utils/text_style.dart';
 import 'dialogs/dialoger.dart';
@@ -61,7 +62,7 @@ class _DatePageViewState extends State<DatePageView> {
   Widget build(BuildContext context) {
    return                 Container(
        alignment: Alignment.center,
-       width: 200.0,
+       width: 280.0,
        decoration: BoxDecoration(
            color: Theme.of(context).colorScheme.surfaceVariant,
            borderRadius: BorderRadius.circular(20.0)),
@@ -140,26 +141,6 @@ class _DatePageViewState extends State<DatePageView> {
   }
 
 
-  String parseDateWeek(String date){
-    final d = DateFormat('yyyy-MM-dd').parse(date);
-    final m = switch(d.month){
-      1=> 'янв.',
-      2 => 'февр.',
-      3=> 'март',
-      4 => 'апрель',
-      5=> 'май',
-      6 => 'июнь',
-      7 => 'июль',
-      8 => 'авг.',
-      9 => 'сент.',
-      10 => 'октяб.',
-      11 => 'ноябрь',
-      12 => 'дек.',
-      int() => throw UnimplementedError(),
-    };
-
-    return  '${d.day} $m ${d.year}';
-  }
 
 
 
@@ -181,7 +162,8 @@ class _DatePageViewState extends State<DatePageView> {
       int() => throw UnimplementedError(),
     };
 
-     return  '${d.day} $m ${d.year}';
+    final nameDay = DateTimeParser.getDayByNumber(d.weekday);
+    return  '$nameDay,  ${d.day} $m ${d.year}';
    }
 
 }
