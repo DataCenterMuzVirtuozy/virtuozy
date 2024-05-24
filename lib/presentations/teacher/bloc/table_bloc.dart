@@ -3,6 +3,7 @@
 
   import 'dart:math';
 
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,17 +28,19 @@ class TableBloc extends Bloc<TableEvent,TableState>{
    on<GetInitLessonsEvent>(getLessonsTable);
    on<GetLessonsTableByIdSchool>(getLessonsTableByIdSchool);
    on<GetLessonsTableByDate>(getLessonsTableByDate);
-   on<GetLessonsTableWeek>(getLessonTableOnWeek);
+   on<GetLessonsTableWeek>(getLessonTableOnWeek,transformer: droppable());
    on<GetLessonsTableByCalendarDateEvent>(_getLessonsByCalendarDate);
   }
 
   final _cubitTeacher = locator.get<TeacherCubit>();
 
+
+  //todo lessons all school
   void getLessonsTable(GetInitLessonsEvent event, emit) async {
     try {
       emit(state.copyWith(
-          scheduleStatus: ScheduleStatus.loading, error: ''));
-      await Future.delayed(const Duration(seconds: 1));
+          status: TableStatus.loading, error: ''));
+      await Future.delayed(const Duration(milliseconds: 300));
       final lessons = _cubitTeacher.teacherEntity.lessons;
       if (lessons.isEmpty) {
         emit(state.copyWith(
@@ -73,19 +76,27 @@ class TableBloc extends Bloc<TableEvent,TableState>{
   }
 
 
+
+
   void _getLessonsByCalendarDate(GetLessonsTableByCalendarDateEvent event, emit) async {
     try {
       emit(state.copyWith(
           status: TableStatus.loading, scheduleStatus:ScheduleStatus.loading, error: ''));
-      await Future.delayed(const Duration(seconds: 1));
+      await Future.delayed(const Duration(milliseconds: 300));
+      List<TodayLessons> todayLessons = [];
       final lessons = _cubitTeacher.teacherEntity.lessons;
       final lessonsByIdSchool = getLessons(state.currentIdSchool, lessons);
-      final todayLessons = getDays(lessonsByIdSchool, false);
-      final index = indexByDateSelect(todayLessons,event.date);
-      final tasks = getTasks(todayLesson: todayLessons,indexDate: index,weekMode: false);
-      final headerTable = getHeaderTable(weekMode: false,todayLesson: todayLessons,indexDate: index);
+
+      if(state.modeTable == ViewModeTable.week){
+        todayLessons = getLessWeek(lessonsByIdSchool);
+      }else{
+        todayLessons = getDays(lessonsByIdSchool, false);
+      }
+      final index = indexByDateSelect(todayLessons,event.date,state.modeTable == ViewModeTable.week);
+      final tasks = getTasks(todayLesson: todayLessons,indexDate: index,weekMode: state.modeTable == ViewModeTable.week);
+      final headerTable = getHeaderTable(weekMode: state.modeTable == ViewModeTable.week,todayLesson: todayLessons,indexDate: index);
       emit(state.copyWith(
-        modeTable: ViewModeTable.day,
+        modeTable: state.modeTable,
           indexByDateNow: index,
           lessons: lessonsByIdSchool,
           tasks: tasks,
@@ -98,11 +109,21 @@ class TableBloc extends Bloc<TableEvent,TableState>{
     }
   }
 
-  int indexByDateSelect(List<TodayLessons> todayLessons,String dateSelect) {
+  int indexByDateSelect(List<TodayLessons> todayLessons,String dateSelect,bool weekMode) {
     int index = 0;
-    index = todayLessons.indexWhere((element){
-      return  element.date == dateSelect;
-    });
+    final dSel =  DateFormat('yyyy-MM-dd')
+        .parse(dateSelect)
+        .millisecondsSinceEpoch;
+    if(weekMode){
+      index = todayLessons.indexWhere((element){
+        return hasLessonInWeek(element.date, dSel);
+      });
+    }else{
+      index = todayLessons.indexWhere((element){
+        return  element.date == dateSelect;
+      });
+    }
+
 
     return index;
   }
@@ -111,19 +132,19 @@ class TableBloc extends Bloc<TableEvent,TableState>{
 
   void getLessonTableOnWeek(GetLessonsTableWeek event,emit) async {
     try {
-      emit(state.copyWith(
-          status: TableStatus.loading, scheduleStatus: ScheduleStatus.loading, error: ''));
-      await Future.delayed(const Duration(seconds: 1));
+      emit(state.copyWith(status: TableStatus.loading, error: ''));
+      await Future.delayed(const Duration(milliseconds: 300));
       final lessons = _cubitTeacher.teacherEntity.lessons;
       final lessonsByIdSchool = getLessons(state.currentIdSchool, lessons);
       final weekLessons = getLessWeek(lessonsByIdSchool);
-      final index = indexByDateNow(weekLessons,true);
-      final tasks = getTasks(todayLesson: weekLessons,indexDate: index.$1,weekMode: true);
-      final headerTable = getHeaderTable(weekMode: true,todayLesson: weekLessons,indexDate: index.$1);
+      final dateNow = DateTime.now().toString().split(' ')[0];
+      final index = indexByDateSelect(weekLessons,dateNow,true);
+      final tasks = getTasks(todayLesson: weekLessons,indexDate: index,weekMode: true);
+      final headerTable = getHeaderTable(weekMode: true,todayLesson: weekLessons,indexDate: index);
       emit(state.copyWith(
           titles: headerTable,
-          indexByDateNow: index.$1,
-          visibleTodayButton: index.$2,
+          indexByDateNow: index,
+          visibleTodayButton: false,
           status: TableStatus.loaded,
           scheduleStatus: ScheduleStatus.loaded,
           tasks: tasks,
@@ -138,9 +159,8 @@ class TableBloc extends Bloc<TableEvent,TableState>{
 
   void getLessonsTableByIdSchool(GetLessonsTableByIdSchool event, emit) async {
     try {
-      emit(state.copyWith(
-          scheduleStatus: ScheduleStatus.loading, status: TableStatus.loading, error: ''));
-      await Future.delayed(const Duration(seconds: 1));
+      emit(state.copyWith(status: TableStatus.loading, error: ''));
+      await Future.delayed(const Duration(milliseconds: 300));
       List<TodayLessons> todayLessons = [];
       final lessons = _cubitTeacher.teacherEntity.lessons;
       final ids = getIds(lessons);
@@ -176,7 +196,7 @@ class TableBloc extends Bloc<TableEvent,TableState>{
     try {
       emit(state.copyWith(
           status: TableStatus.loading,tasks: [],titles: [], error: ''));
-      await Future.delayed(const Duration(seconds: 1));
+      await Future.delayed(const Duration(milliseconds: 300));
       List<TodayLessons> todayLessons = [];
       final lessons = _cubitTeacher.teacherEntity.lessons;
       final ids = getIds(lessons);
@@ -242,7 +262,6 @@ class TableBloc extends Bloc<TableEvent,TableState>{
     const listAuditory = ['Свинг','Авангард','Опера','Блюз','Эстрада'];
     List<String> daysWeek = [];
     if(weekMode) {
-      print('Day  ${todayLesson[indexDate].date}');
       final fDay = DateFormat('yyyy-MM-dd').parse(
           todayLesson[indexDate].date.split('/')[0]);
       final lDay = DateFormat('yyyy-MM-dd').parse(

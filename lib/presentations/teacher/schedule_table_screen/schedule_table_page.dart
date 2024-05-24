@@ -128,7 +128,7 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
                        }else if(mode == ViewModeTable.day){
                          context.read<TableBloc>().add(const GetInitLessonsEvent(weekMode: false));
                        }else{
-                         Dialoger.showToast('В разработке');
+                         context.read<TableBloc>().add(const GetInitLessonsEvent(weekMode: false));
                        }
                      },
                      startHour: 10,
@@ -159,15 +159,42 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
 
                            },
                            child: Padding(
-                             padding: const EdgeInsets.all(5.0),
-                             child: Text(
-                                 state.tasks[index].lesson.nameStudent,
-                                 textAlign: TextAlign.center,
-                                 maxLines: 3,
-                                 overflow: TextOverflow.ellipsis,
-                                 style:
-                                 TStyle.textStyleVelaSansBold(Theme.of(context)
-                                     .textTheme.displayMedium!.color!,size: 12.0)),
+                             padding: const EdgeInsets.all(7.0),
+                             child: Column(
+                               crossAxisAlignment: CrossAxisAlignment.center,
+                               mainAxisAlignment: MainAxisAlignment.center,
+                               children: [
+                                 Expanded(
+                                   child: Text(
+                                       state.tasks[index].lesson.nameStudent,
+                                       textAlign: TextAlign.center,
+                                       maxLines: 2,
+                                       overflow: TextOverflow.ellipsis,
+                                       style:
+                                       TStyle.textStyleVelaSansBold(Theme.of(context)
+                                           .textTheme.displayMedium!.color!,size: 12.0)),
+                                 ),
+                                 Row(
+                                   crossAxisAlignment: CrossAxisAlignment.center,
+
+                                   children: [
+                                     Icon(Icons.directions,
+                                         color: Theme.of(context)
+                                             .textTheme.displayMedium!.color!,size: 10.0),
+                                     const Gap(3),
+                                     Expanded(
+                                       child: Text(state.tasks[index].lesson.nameDirection,
+                                           overflow: TextOverflow.ellipsis,
+                                           style:
+                                           TStyle.textStyleVelaSansMedium(
+                                               Theme.of(context)
+                                                   .textTheme.displayMedium!.color!,
+                                               size: 12.0)),
+                                     ),
+                                   ],
+                                 )
+                               ],
+                             ),
                            ),
                          );
                        })
