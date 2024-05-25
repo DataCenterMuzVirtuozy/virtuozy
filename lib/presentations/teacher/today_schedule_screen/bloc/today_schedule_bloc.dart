@@ -3,6 +3,7 @@
 
  import 'dart:math';
 
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:virtuozy/di/locator.dart';
@@ -16,10 +17,10 @@ import '../../../../domain/entities/today_lessons.dart';
 
 class TodayScheduleBloc extends Bloc<TodayScheduleEvent,TodayScheduleState> {
   TodayScheduleBloc() : super(TodayScheduleState.unknown()) {
-    on<GetTodayLessonsEvent>(getTodayLessons);
-    on<GetLessonsByIdSchoolEvent>(getLessonsByIdSchool);
-    on<GetLessonsBySelDateEvent>(_getLessonsBySelDate);
-    on<GetLessonsByModeViewEvent>(_getLessonsByModeView);
+    on<GetTodayLessonsEvent>(getTodayLessons,transformer: droppable());
+    on<GetLessonsByIdSchoolEvent>(getLessonsByIdSchool,transformer: droppable());
+    on<GetLessonsBySelDateEvent>(_getLessonsBySelDate,transformer: droppable());
+    on<GetLessonsByModeViewEvent>(_getLessonsByModeView,transformer: droppable());
   }
 
   final _cubitTeacher = locator.get<TeacherCubit>();
@@ -30,9 +31,9 @@ class TodayScheduleBloc extends Bloc<TodayScheduleEvent,TodayScheduleState> {
   void getTodayLessons(GetTodayLessonsEvent event, emit) async {
     try {
       emit(state.copyWith(
-          status: TodayScheduleStatus.loading, error: ''));
+          status: TodayScheduleStatus.loading, error: '',idsSchool: ['...'],));
       final lessons = _cubitTeacher.teacherEntity.lessons;
-      await Future.delayed(const Duration(seconds: 1));
+      await Future.delayed(const Duration(milliseconds: 300));
       if(lessons.isEmpty){
         emit(state.copyWith(
             indexByDateNow: 0,
@@ -193,7 +194,7 @@ class TodayScheduleBloc extends Bloc<TodayScheduleEvent,TodayScheduleState> {
     try {
       emit(state.copyWith(
           status: TodayScheduleStatus.loading, error: ''));
-      await Future.delayed(const Duration(seconds: 1));
+      await Future.delayed(const Duration(milliseconds: 300));
       final lessons = _cubitTeacher.teacherEntity.lessons;
       final lessonsByIdSchool = getLessons(
           event.id, lessons);
@@ -222,7 +223,7 @@ class TodayScheduleBloc extends Bloc<TodayScheduleEvent,TodayScheduleState> {
     try {
       emit(state.copyWith(
           status: TodayScheduleStatus.loading, error: ''));
-      await Future.delayed(const Duration(seconds: 1));
+      await Future.delayed(const Duration(milliseconds: 300));
       final lessons = _cubitTeacher.teacherEntity.lessons;
       final lessonsByIdSchool = getLessons(state.currentIdSchool, lessons);
       final todayLessons = getDays(lessonsByIdSchool, false);
@@ -242,7 +243,7 @@ class TodayScheduleBloc extends Bloc<TodayScheduleEvent,TodayScheduleState> {
     try {
       emit(state.copyWith(
           status: TodayScheduleStatus.loading, error: ''));
-      await Future.delayed(const Duration(seconds: 1));
+      await Future.delayed(const Duration(milliseconds: 300));
       final lessons = _cubitTeacher.teacherEntity.lessons;
       final lessonsByIdSchool = getLessons(
           state.currentIdSchool, lessons);

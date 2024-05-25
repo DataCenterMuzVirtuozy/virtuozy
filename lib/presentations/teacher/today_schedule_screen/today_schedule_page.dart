@@ -19,6 +19,7 @@ import 'package:virtuozy/presentations/teacher/today_schedule_screen/bloc/today_
 import 'package:virtuozy/presentations/teacher/today_schedule_screen/bloc/today_schedule_state.dart';
 import 'package:virtuozy/presentations/teacher/today_schedule_screen/time_line_list.dart';
 import 'package:virtuozy/presentations/teacher/today_schedule_screen/timeline_schedule.dart';
+import 'package:virtuozy/utils/theme_provider.dart';
 
 import '../../../components/box_info.dart';
 import '../../../components/buttons.dart';
@@ -50,6 +51,7 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
     context.read<TodayScheduleBloc>().add(GetTodayLessonsEvent());
 
 
+
   }
 
 
@@ -68,15 +70,14 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
       },
       builder: (context,state) {
 
-        if(state.status == TodayScheduleStatus.loading){
-          return Center(child: CircularProgressIndicator(color: colorOrange));
-        }
+        // if(state.status == TodayScheduleStatus.loading){
+        //   return Center(child: CircularProgressIndicator(color: colorOrange));
+        // }
 
         if(state.todayLessons.isEmpty&&state.status  == TodayScheduleStatus.loaded){
           return const BoxInfo(title: 'Empty', iconData: Icons.table_chart_outlined,);
         }
 
-        if(state.status == TodayScheduleStatus.loaded){
           return Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -93,6 +94,8 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       DatePageView(
+                        key: ValueKey(state.todayLessons),
+                        loading: state.status == TodayScheduleStatus.loading,
                         onVisibleTodayButton: (visible){
                           setState(() {
                             _visibleTodayButton = visible;
@@ -145,6 +148,8 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
                       //   ),
                       // ),
                       SelectSchoolMenu(
+                        key: ValueKey(state.idsSchool),
+                        loading: state.status == TodayScheduleStatus.loading,
                         currentIdSchool: state.currentIdSchool,
                         idsSchool: state.idsSchool,
                         onChange: (id){
@@ -204,10 +209,17 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
                 ),
               ),
               const Gap(20),
-              TimeLineList(
-                initIndex: state.indexByDateNow,
-                todayLessons: state.todayLessons,
-              ),
+              if(state.status == TodayScheduleStatus.loading)...{
+                 Expanded(
+                   child: Center(child: CircularProgressIndicator(color: colorOrange)),
+                 )
+              }else...{
+                TimeLineList(
+                  initIndex: state.indexByDateNow,
+                  todayLessons: state.todayLessons,
+                )
+              }
+
 
               // Padding(
               //   padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 40.0),
@@ -243,9 +255,7 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
             ],
           ).animate().fade(duration: const Duration(milliseconds: 400));
 
-        }
 
-        return Container();
       }
     );
   }

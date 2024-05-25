@@ -1,6 +1,4 @@
-
-
-  import 'package:easy_localization/easy_localization.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:virtuozy/domain/entities/lesson_entity.dart';
@@ -8,33 +6,35 @@ import 'package:virtuozy/domain/entities/today_lessons.dart';
 import 'package:virtuozy/presentations/teacher/today_schedule_screen/time_line_list.dart';
 import 'package:virtuozy/utils/date_time_parser.dart';
 
+import '../presentations/teacher/today_schedule_screen/bloc/today_schedule_state.dart';
 import '../utils/text_style.dart';
 import 'dialogs/dialoger.dart';
 
+late PageController pageControllerDates;
 
-  late PageController pageControllerDates;
-class DatePageView extends StatefulWidget{
-  const DatePageView({super.key,required, required this.lessonsToday, required this.initIndex, required this.onVisibleTodayButton,this.weekMode = false});
+class DatePageView extends StatefulWidget {
+  const DatePageView(
+      {super.key,
+      required,
+      required this.lessonsToday,
+      required this.initIndex,
+      required this.onVisibleTodayButton,
+      this.weekMode = false,
+      required this.loading});
 
   final List<TodayLessons> lessonsToday;
   final int initIndex;
   final Function onVisibleTodayButton;
   final bool weekMode;
+  final bool loading;
 
   @override
   State<DatePageView> createState() => _DatePageViewState();
 }
 
-
-
-
 class _DatePageViewState extends State<DatePageView> {
-
-
   int page = 0;
   int countLessons = 0;
-
-
 
   @override
   void initState() {
@@ -42,116 +42,130 @@ class _DatePageViewState extends State<DatePageView> {
     pageControllerDates = PageController(initialPage: widget.initIndex);
     final dateNow = DateTime.now().toString().split(' ')[0];
     pageControllerDates.addListener(() {
-      if(widget.lessonsToday[pageControllerDates.page!.toInt()].date==dateNow){
-         widget.onVisibleTodayButton.call(false);
-      }else{
+      if (widget.lessonsToday[pageControllerDates.page!.toInt()].date ==
+          dateNow) {
+        widget.onVisibleTodayButton.call(false);
+      } else {
         widget.onVisibleTodayButton.call(true);
       }
     });
     page = widget.initIndex;
-    countLessons = getCountLessons(lessonsToday: widget.lessonsToday, weekMode: widget.weekMode);
-
+    countLessons = getCountLessons(
+        lessonsToday: widget.lessonsToday, weekMode: widget.weekMode);
   }
 
- int getCountLessons({required List<TodayLessons> lessonsToday,required bool weekMode}){
-
+  int getCountLessons(
+      {required List<TodayLessons> lessonsToday, required bool weekMode}) {
     return lessonsToday.length;
   }
 
   @override
   Widget build(BuildContext context) {
-   return                 Container(
-       alignment: Alignment.center,
-       width: 280.0,
-       decoration: BoxDecoration(
-           color: Theme.of(context).colorScheme.surfaceVariant,
-           borderRadius: BorderRadius.circular(20.0)),
-       child: Flex(
-         crossAxisAlignment: CrossAxisAlignment.center,
-         mainAxisAlignment: MainAxisAlignment.center,
-         direction: Axis.horizontal,
-         children: [
-           Flexible(
-               flex: 1,
-               child: IconButton(
-                   onPressed: () {
-                     if(page > 0){
-                       page = pageControllerDates.page!.toInt()-1;
-                     }
+    return Container(
+        alignment: Alignment.center,
+        width: 280.0,
+        decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surfaceVariant,
+            borderRadius: BorderRadius.circular(20.0)),
+        child: Flex(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          direction: Axis.horizontal,
+          children: [
+            Flexible(
+                flex: 1,
+                child: IconButton(
+                    onPressed: () {
+                      if (page > 0) {
+                        page = pageControllerDates.page!.toInt() - 1;
+                      }
 
-                     if (pageControllerDates.page!.toInt() ==
-                         0) {
-                       Dialoger.showMessage('Нет записей'.tr(),context: context);
-                       return;
-                     }
-                     pageControllerDates.animateToPage(page,duration: const Duration(milliseconds: 400), curve: Curves.ease);
-                     pageControllerTimeList.animateToPage(page,
-                         duration: const Duration(milliseconds: 400), curve: Curves.ease);
-                   },
-                   icon: Icon(
-                     Icons.arrow_back_ios_rounded,
-                     size: 16,
-                     color: Theme.of(context)
-                         .textTheme
-                         .displayMedium!
-                         .color!,
-                   ))),
-           Flexible(
-             flex: 2,
-             child: SizedBox(
-               height: 20.0,
-               child: PageView(
-                 physics: const NeverScrollableScrollPhysics(),
-                 controller: pageControllerDates,
-                 children: [
-                   ...List.generate(countLessons, (index) {
-                     return Text(parseDate(widget.lessonsToday[index].date),
-                         textAlign: TextAlign.center,
-                         style:TStyle.textStyleVelaSansExtraBolt(Theme.of(context)
-                             .textTheme.displayMedium!.color!,size: 13.0));
-                   })
+                      if (pageControllerDates.page!.toInt() == 0) {
+                        Dialoger.showMessage('Нет записей'.tr(),
+                            context: context);
+                        return;
+                      }
+                      pageControllerDates.animateToPage(page,
+                          duration: const Duration(milliseconds: 400),
+                          curve: Curves.ease);
+                      pageControllerTimeList.animateToPage(page,
+                          duration: const Duration(milliseconds: 400),
+                          curve: Curves.ease);
+                    },
+                    icon: Icon(
+                      Icons.arrow_back_ios_rounded,
+                      size: 16,
+                      color: Theme.of(context).textTheme.displayMedium!.color!,
+                    ))),
+            Flexible(
+              flex: 2,
+              child: SizedBox(
+                height: 20.0,
+                child: PageView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  controller: pageControllerDates,
+                  children: [
+                    if (widget.loading) ...{
+                      Text('...',
+                          textAlign: TextAlign.center,
+                          style: TStyle.textStyleVelaSansExtraBolt(
+                              Theme.of(context).textTheme.displayMedium!.color!,
+                              size: 13.0))
+                    } else ...{
+                      ...List.generate(widget.lessonsToday.length, (index) {
+                        return Text(parseDate(widget.lessonsToday[index].date),
+                            textAlign: TextAlign.center,
+                            style: TStyle.textStyleVelaSansExtraBolt(
+                                Theme.of(context)
+                                    .textTheme
+                                    .displayMedium!
+                                    .color!,
+                                size: 13.0));
+                      })
+                    }
+                  ],
+                ),
+              ),
+            ),
+            Flexible(
+                flex: 1,
+                child: IconButton(
+                    onPressed: () {
+                      if (page < countLessons - 1) {
+                        page = pageControllerDates.page!.toInt() + 1;
+                      }
 
-                 ],
-               ),
-             ),
-           ),
-           Flexible(
-               flex: 1,
-               child: IconButton(onPressed: (){
-                 if(page < countLessons-1){
-                   page = pageControllerDates.page!.toInt()+1;
-                 }
-
-                 if (pageControllerDates.page!.toInt() ==
+                      if (pageControllerDates.page!.toInt() ==
                           countLessons - 1) {
-                   Dialoger.showMessage('Нет записей'.tr(),context: context);
+                        Dialoger.showMessage('Нет записей'.tr(),
+                            context: context);
                         return;
                       }
 
-                      pageControllerDates.animateToPage(page,duration: const Duration(milliseconds: 400), curve: Curves.ease);
-                 pageControllerTimeList.animateToPage(page,
-                     duration: const Duration(milliseconds: 400), curve: Curves.ease);
-               },
-                   icon:  Icon(Icons.arrow_forward_ios_rounded,
-                     size: 16,
-                     color: Theme.of(context)
-                         .textTheme.displayMedium!.color!,))),
-         ],
-       ));
+                      pageControllerDates.animateToPage(page,
+                          duration: const Duration(milliseconds: 400),
+                          curve: Curves.ease);
+                      pageControllerTimeList.animateToPage(page,
+                          duration: const Duration(milliseconds: 400),
+                          curve: Curves.ease);
+                    },
+                    icon: Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: 16,
+                      color: Theme.of(context).textTheme.displayMedium!.color!,
+                    ))),
+          ],
+        ));
   }
 
-
-
-
-
-   String parseDate(String date){
+  String parseDate(String date) {
     final d = DateFormat('yyyy-MM-dd').parse(date);
-    final m = switch(d.month){
-       1=> 'янв.',
+    final m = switch (d.month) {
+      1 => 'янв.',
       2 => 'февр.',
-       3=> 'март',
+      3 => 'март',
       4 => 'апрель',
-       5=> 'май',
+      5 => 'май',
       6 => 'июнь',
       7 => 'июль',
       8 => 'авг.',
@@ -163,7 +177,6 @@ class _DatePageViewState extends State<DatePageView> {
     };
 
     final nameDay = DateTimeParser.getDayByNumber(d.weekday);
-    return  '$nameDay,  ${d.day} $m ${d.year}';
-   }
-
+    return '$nameDay,  ${d.day} $m ${d.year}';
+  }
 }

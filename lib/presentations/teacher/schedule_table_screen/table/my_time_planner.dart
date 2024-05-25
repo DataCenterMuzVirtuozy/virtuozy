@@ -15,7 +15,8 @@ import '../../bloc/table_state.dart';
 class MyTimePlanner extends StatefulWidget {
   /// Time start from this, it will start from 0
   final int startHour;
-
+   final Color colorDividerVertical;
+   final Color colorDividerHorizontal;
   /// Time end at this hour, max value is 23
   final int endHour;
 
@@ -42,6 +43,8 @@ class MyTimePlanner extends StatefulWidget {
   /// Time planner widget
   const MyTimePlanner({
     Key? key,
+    required this.colorDividerHorizontal,
+    required this.colorDividerVertical,
     required this.startHour,
     required this.endHour,
     required this.headers,
@@ -244,86 +247,87 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
     if (style.showScrollBar!) {
       return Scrollbar(
         controller: mainVerticalController,
-        thumbVisibility: true,
+        thumbVisibility: false,
+        trackVisibility: false,
+        interactive: false,
         child: SingleChildScrollView(
           controller: mainVerticalController,
-          child: Scrollbar(
+          child: SingleChildScrollView(
             controller: mainHorizontalController,
-            thumbVisibility: true,
-            child: SingleChildScrollView(
-              controller: mainHorizontalController,
-              scrollDirection: Axis.horizontal,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.end,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      SizedBox(
-                        height: (config.totalHours * config.cellHeight!) + 80,
-                        width:
-                        (config.totalDays * config.cellWidth!).toDouble(),
-                        child: Stack(
-                          children: <Widget>[
-                            Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                for (var i = 0; i < config.totalHours; i++)
-                                  Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      Container(
-                                        color: i.isOdd
-                                            ? style.interstitialOddColor
-                                            : style.interstitialEvenColor,
-                                        height:
-                                        (config.cellHeight! - 1).toDouble(),
-                                      ),
-                                      // The horizontal lines tat divides the rows
-                                      //TODO: Make a configurable color for this (maybe a size too)
-                                      const Divider(
-                                        height: 1,
-                                      ),
-                                    ],
-                                  )
-                              ],
-                            ),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                for (var i = 0; i < config.totalDays; i++)
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      SizedBox(
-                                        width:
-                                        (config.cellWidth! - 1).toDouble(),
-                                      ),
-                                      // The vertical lines that divides the columns
-                                      //TODO: Make a configurable color for this (maybe a size too)
-                                      Container(
-                                        width: 1,
-                                        height: (config.totalHours *
-                                            config.cellHeight!) +
-                                            config.cellHeight!,
-                                        color: Colors.black12,
-                                      )
-                                    ],
-                                  )
-                              ],
-                            ),
-                            for (int i = 0; i < tasks.length; i++) tasks[i],
-                          ],
-                        ),
+            scrollDirection: Axis.horizontal,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    SizedBox(
+                      height: (config.totalHours * config.cellHeight!) + 80,
+                      width:
+                      (config.totalDays * config.cellWidth!).toDouble(),
+                      child: Stack(
+                        children: <Widget>[
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              for (var i = 0; i < config.totalHours; i++)
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Container(
+                                      color: i.isOdd
+                                          ? style.interstitialOddColor
+                                          : style.interstitialEvenColor,
+                                      height:
+                                      (config.cellHeight! - 1).toDouble(),
+                                    ),
+                                    // The horizontal lines tat divides the rows
+                                    //TODO: Make a configurable color for this (maybe a size too)
+                                     Divider(
+                                      height: 1,
+                                      color: widget.colorDividerHorizontal,
+                                    ),
+
+                                  ],
+                                ),
+
+                            ],
+                          ),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              for (var i = 0; i < config.totalDays; i++)
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    SizedBox(
+                                      width:
+                                      (config.cellWidth! - 1).toDouble(),
+                                    ),
+                                    // The vertical lines that divides the columns
+                                    //TODO: Make a configurable color for this (maybe a size too)
+                                    Container(
+                                      width: 0.3,
+                                      height: (config.totalHours *
+                                          config.cellHeight!) +
+                                          config.cellHeight!,
+                                      color: widget.colorDividerVertical,
+                                    )
+                                  ],
+                                )
+                            ],
+                          ),
+                          for (int i = 0; i < tasks.length; i++) tasks[i],
+                        ],
                       ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),
@@ -359,8 +363,9 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
                                 SizedBox(
                                   height: (config.cellHeight! - 1).toDouble(),
                                 ),
-                                const Divider(
-                                  height: 1,
+                                 Divider(
+                                  height: 0.3,
+                                  color: widget.colorDividerHorizontal,
                                 ),
                               ],
                             )
@@ -377,11 +382,11 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
                                   width: (config.cellWidth! - 1).toDouble(),
                                 ),
                                 Container(
-                                  width: 1,
+                                  width: 0.3,
                                   height:
                                   (config.totalHours * config.cellHeight!) +
                                       config.cellHeight!,
-                                  color: Colors.black12,
+                                  color: widget.colorDividerVertical,
                                 )
                               ],
                             )

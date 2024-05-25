@@ -22,7 +22,9 @@ import '../../../components/date_page_table.dart';
 import '../../../components/date_page_view.dart';
 import '../../../components/dialogs/dialoger.dart';
 import '../../../components/select_school_menu.dart';
+import '../../../di/locator.dart';
 import '../../../utils/text_style.dart';
+import '../../../utils/theme_provider.dart';
 import '../bloc/table_bloc.dart';
 import '../bloc/table_state.dart';
 
@@ -35,7 +37,7 @@ class ScheduleTablePage extends StatefulWidget{
 
 class _ScheduleTablePageState extends State<ScheduleTablePage> {
 
-
+  final themeProvider = locator.get<ThemeProvider>();
 
   @override
   void initState() {
@@ -77,6 +79,8 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
                      mainAxisAlignment: MainAxisAlignment.center,
                      children: [
                        SelectSchoolMenu(
+                         key: ValueKey(state.idsSchool),
+                         loading: state.status == TableStatus.loading,
                          currentIdSchool: state.currentIdSchool,
                          idsSchool: state.idsSchool,
                          onChange: (id){
@@ -122,6 +126,8 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
                }else if(state.status == TableStatus.loaded)...{
                  Expanded(
                    child: MyTimePlanner(
+                     colorDividerVertical: themeProvider.themeStatus == ThemeStatus.dark?colorGrey:Colors.black12,
+                     colorDividerHorizontal: colorGrey,
                      modeView: (ViewModeTable mode){
                        if(mode == ViewModeTable.week){
                          context.read<TableBloc>().add(const GetLessonsTableWeek(weekMode: true));
@@ -150,7 +156,6 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
                      tasks: [
                        ...List.generate(state.tasks.length, (index){
                          return TimePlannerTask(
-
                            color: StatusToColor.getColor(lessonStatus: state.tasks[index].lesson.status),
                            dateTime: state.tasks[index].timePlannerDateTime,
                            minutesDuration: 60,
@@ -200,14 +205,13 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
                        })
                      ],
                      style: TimePlannerStyle(
-                       backgroundColor: Theme.of(context).colorScheme.background,
-                       //cellHeight: 60,
-                       //cellWidth: 60,
-                       dividerColor: Colors.black,
-                       interstitialEvenColor: Colors.grey[50],
-                       interstitialOddColor: Colors.grey[200],
+                       //backgroundColor: Theme.of(context).colorScheme.background,
+                       dividerColor: themeProvider.themeStatus == ThemeStatus.dark?colorGrey:Colors.black,
+                       interstitialEvenColor: themeProvider.themeStatus == ThemeStatus.dark?
+                       Theme.of(context).colorScheme.surfaceVariant:Colors.grey[50],
+                       interstitialOddColor:  themeProvider.themeStatus == ThemeStatus.dark?
+                       Theme.of(context).colorScheme.background:Colors.grey[200],
                        showScrollBar: true,
-                       //horizontalTaskPadding: 5,
                        borderRadius: const BorderRadius.all(Radius.circular(8)),
                      ),
                    ),

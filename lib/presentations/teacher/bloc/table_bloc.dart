@@ -25,11 +25,11 @@ class TableBloc extends Bloc<TableEvent,TableState>{
 
 
   TableBloc():super(TableState.unknown()){
-   on<GetInitLessonsEvent>(getLessonsTable);
-   on<GetLessonsTableByIdSchool>(getLessonsTableByIdSchool);
-   on<GetLessonsTableByDate>(getLessonsTableByDate);
+   on<GetInitLessonsEvent>(getLessonsTable,transformer: droppable());
+   on<GetLessonsTableByIdSchool>(getLessonsTableByIdSchool,transformer: droppable());
+   on<GetLessonsTableByDate>(getLessonsTableByDate,transformer: droppable());
    on<GetLessonsTableWeek>(getLessonTableOnWeek,transformer: droppable());
-   on<GetLessonsTableByCalendarDateEvent>(_getLessonsByCalendarDate);
+   on<GetLessonsTableByCalendarDateEvent>(_getLessonsByCalendarDate,transformer: droppable());
   }
 
   final _cubitTeacher = locator.get<TeacherCubit>();
