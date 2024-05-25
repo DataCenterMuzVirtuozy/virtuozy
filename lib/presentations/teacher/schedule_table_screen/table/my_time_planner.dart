@@ -2,11 +2,13 @@
 
 
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:time_planner/time_planner.dart';
 import 'package:time_planner/src/config/global_config.dart' as config;
+
 
 import '../../../../resourses/colors.dart';
 import '../../../../utils/text_style.dart';
@@ -196,6 +198,7 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
                       physics: const NeverScrollableScrollPhysics(),
                       controller: timeVerticalController,
                       child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           Column(
@@ -217,12 +220,18 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
                                     time: formattedTime(i),
                                     setTimeOnAxis: config.setTimeOnAxis,
                                   ),
-                                )
+                                ),
+                              //todo test
+                              SizedBox(
+                                height: config.cellHeight!.toDouble() - 1,
+                                width: 60,
+                              )
                             ],
                           ),
                           Container(
                             height:
-                            (config.totalHours * config.cellHeight!) + 80,
+                            (config.totalHours * config.cellHeight!) + 80
+                                +config.cellHeight!.toDouble()-1,
                             width: 1,
                             color: style.dividerColor ??
                                 Theme.of(context).primaryColor,
@@ -237,6 +246,7 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
                 ],
               ),
             ),
+
           ],
         ),
       ),
@@ -278,6 +288,7 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
                                 Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: <Widget>[
+
                                     Container(
                                       color: i.isOdd
                                           ? style.interstitialOddColor
@@ -294,9 +305,9 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
 
                                   ],
                                 ),
-
                             ],
                           ),
+
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
@@ -321,12 +332,41 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
                                 )
                             ],
                           ),
+
                           for (int i = 0; i < tasks.length; i++) tasks[i],
                         ],
                       ),
                     ),
                   ],
                 ),
+
+                ///bottom space
+                Padding(
+                  padding: const EdgeInsets.only(right: 3.5),
+                  child: Row(
+                    children: [
+                      for (var i = 0; i < config.totalDays; i++)
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Container(
+                              height: 1,
+                              color:  widget.colorDividerHorizontal,
+                              width:
+                              (config.cellWidth! - 1).toDouble(),
+                            ),
+                            Container(
+                              width: 0.3,
+                              height: 80,
+                              color: widget.colorDividerVertical,
+                            )
+                          ],
+                        ),
+                    ],
+                  ),
+                ),
+
               ],
             ),
           ),
@@ -547,9 +587,9 @@ class _SelectModeCalendarState extends State<SelectModeCalendar> {
           elevation: 2,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20.0),
-            color: colorWhite,
+            color: Theme.of(context).colorScheme.surfaceVariant,
           ),
-          offset: const Offset(20,5),
+          offset:  const Offset(20,5),
           scrollbarTheme: ScrollbarThemeData(
             radius: const Radius.circular(40),
             thickness: MaterialStateProperty.all(6),
