@@ -8,7 +8,6 @@ import 'package:time_planner/time_planner.dart';
 import 'package:virtuozy/components/box_info.dart';
 import 'package:virtuozy/components/select_auditory_menu.dart';
 import 'package:virtuozy/domain/entities/lesson_entity.dart';
-import 'package:virtuozy/presentations/teacher/bloc/table_event.dart';
 import 'package:virtuozy/presentations/teacher/schedule_table_screen/table/my_time_planner.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/utils/status_to_color.dart';
@@ -16,14 +15,14 @@ import 'package:virtuozy/utils/status_to_color.dart';
 
 import '../../../components/calendar_caller.dart';
 import '../../../components/date_page_table.dart';
-import '../../../components/date_page_view.dart';
-import '../../../components/dialogs/dialoger.dart';
 import '../../../components/select_school_menu.dart';
 import '../../../di/locator.dart';
 import '../../../utils/text_style.dart';
 import '../../../utils/theme_provider.dart';
-import '../bloc/table_bloc.dart';
-import '../bloc/table_state.dart';
+
+import 'bloc/table_bloc.dart';
+import 'bloc/table_event.dart';
+import 'bloc/table_state.dart';
 
 class ScheduleTablePage extends StatefulWidget {
   const ScheduleTablePage({super.key});

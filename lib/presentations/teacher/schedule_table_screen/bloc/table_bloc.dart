@@ -8,17 +8,19 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:time_planner/time_planner.dart';
-import 'package:virtuozy/presentations/teacher/bloc/table_event.dart';
-import 'package:virtuozy/presentations/teacher/bloc/table_state.dart';
+import 'package:virtuozy/presentations/teacher/schedule_table_screen/bloc/table_event.dart';
+import 'package:virtuozy/presentations/teacher/schedule_table_screen/bloc/table_state.dart';
+
 import 'package:virtuozy/utils/date_time_parser.dart';
 
-import '../../../di/locator.dart';
-import '../../../domain/entities/lesson_entity.dart';
-import '../../../domain/entities/table_task.dart';
-import '../../../domain/entities/titles_table.dart';
-import '../../../domain/entities/today_lessons.dart';
-import '../../../domain/teacher_cubit.dart';
-import '../../../utils/failure.dart';
+import '../../../../di/locator.dart';
+import '../../../../domain/entities/lesson_entity.dart';
+import '../../../../domain/entities/table_task.dart';
+import '../../../../domain/entities/titles_table.dart';
+import '../../../../domain/entities/today_lessons.dart';
+import '../../../../domain/teacher_cubit.dart';
+import '../../../../utils/failure.dart';
+
 
 
 class TableBloc extends Bloc<TableEvent,TableState>{

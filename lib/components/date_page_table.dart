@@ -1,13 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:virtuozy/domain/entities/lesson_entity.dart';
 import 'package:virtuozy/domain/entities/today_lessons.dart';
-import 'package:virtuozy/presentations/teacher/bloc/table_bloc.dart';
-import 'package:virtuozy/presentations/teacher/today_schedule_screen/time_line_list.dart';
 
-import '../presentations/teacher/bloc/table_state.dart';
 import '../utils/date_time_parser.dart';
 import '../utils/text_style.dart';
 import 'dialogs/dialoger.dart';

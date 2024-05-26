@@ -15,6 +15,15 @@ List<String> get titlesDrawMenuStudent => [
   'Войти'.tr()
  ];
 
+ List<String> get titlesDrawMenuTeacher => [
+   'Главная'.tr(),
+   'Расписание'.tr(),
+   'Лиды'.tr(),
+   'Клиенты'.tr(),
+   'Тема'.tr(),
+   'Выйти'.tr(),
+ ];
+
 
  List<String> get listSupportTelegramMSK =>[
    'Музыкальная школа Виртуозы, м. Парк Культуры',

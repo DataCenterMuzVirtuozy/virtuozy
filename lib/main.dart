@@ -14,7 +14,8 @@ import 'package:virtuozy/presentations/student/profile_screen/bloc/profile_bloc.
 import 'package:virtuozy/presentations/student/schedule_screen/bloc/schedule_bloc.dart';
 import 'package:virtuozy/presentations/student/splash_screen/splash_page.dart';
 import 'package:virtuozy/presentations/student/subscription_screen/bloc/sub_bloc.dart';
-import 'package:virtuozy/presentations/teacher/bloc/table_bloc.dart';
+import 'package:virtuozy/presentations/teacher/clients_screen/clients_page.dart';
+import 'package:virtuozy/presentations/teacher/schedule_table_screen/bloc/table_bloc.dart';
 import 'package:virtuozy/presentations/teacher/today_schedule_screen/bloc/today_schedule_bloc.dart';
 import 'package:virtuozy/router/app_router.dart';
 import 'package:virtuozy/utils/app_theme.dart';
@@ -136,6 +137,7 @@ class _InitPageState extends State<InitPage> {
         }
       },
         builder: (context,state){
+        //return const ClientsPage();
         if(state.authStatusCheck == AuthStatusCheck.unknown){
           return const SplashPage();
         }else if(state.authStatusCheck == AuthStatusCheck.unauthenticated||

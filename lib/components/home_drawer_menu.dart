@@ -388,7 +388,7 @@ required bool docsAccept}){
                 currentIndexItemMenu:currentIndexItemMenu,
                 index: 3,
                 title: 'Клиенты'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
-                //onSelectedPage.call(3);
+                onSelectedPage.call(3);
               },),
               DrawerItem(
                 title: 'Тема'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {

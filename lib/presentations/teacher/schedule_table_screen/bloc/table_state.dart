@@ -2,11 +2,12 @@
 
   import 'package:equatable/equatable.dart';
 import 'package:time_planner/time_planner.dart';
+import 'package:virtuozy/domain/entities/lesson_entity.dart';
 
-import '../../../domain/entities/lesson_entity.dart';
-import '../../../domain/entities/table_task.dart';
-import '../../../domain/entities/titles_table.dart';
-import '../../../domain/entities/today_lessons.dart';
+import '../../../../domain/entities/table_task.dart';
+import '../../../../domain/entities/titles_table.dart';
+import '../../../../domain/entities/today_lessons.dart';
+
 
 enum TableStatus{
   loading,

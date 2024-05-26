@@ -14,6 +14,7 @@ import 'package:virtuozy/components/dialogs/dialoger.dart';
 import 'package:virtuozy/components/home_drawer_menu.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/presentations/auth_screen/bloc/auth_state.dart';
+import 'package:virtuozy/presentations/teacher/clients_screen/clients_page.dart';
 
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/resourses/images.dart';
@@ -141,7 +142,8 @@ class _MainPageState extends State<MainPage> with AuthMixin{
                       ValueListenableBuilder<int>(
                           valueListenable: currentItemNotifier,
                         builder: (context,currentIndexItemMenu,child) {
-                          return TitlePage(title: titlesDrawMenuStudent[currentIndexItemMenu]);
+                          return TitlePage(title: userType.isStudent?titlesDrawMenuStudent[currentIndexItemMenu]:
+                          titlesDrawMenuTeacher[currentIndexItemMenu]);
                         }
                       ),
                       badges.Badge(
@@ -198,7 +200,7 @@ class _MainPageState extends State<MainPage> with AuthMixin{
         const TodaySchedulePage(),
         const ScheduleTablePage(),
         Container(),
-        Container(),
+        const ClientsPage(),
          Container()
       ];
     }else{

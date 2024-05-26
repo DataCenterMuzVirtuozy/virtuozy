@@ -12,7 +12,8 @@ import 'package:time_planner/src/config/global_config.dart' as config;
 
 import '../../../../resourses/colors.dart';
 import '../../../../utils/text_style.dart';
-import '../../bloc/table_state.dart';
+import '../bloc/table_state.dart';
+
 
 class MyTimePlanner extends StatefulWidget {
   /// Time start from this, it will start from 0
