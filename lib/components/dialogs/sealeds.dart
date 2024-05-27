@@ -6,13 +6,16 @@ import 'package:virtuozy/components/dialogs/contents/alert_dialog/download_doc_c
 import 'package:virtuozy/components/dialogs/contents/alert_dialog/log_out_content.dart';
 import 'package:virtuozy/components/dialogs/contents/alert_dialog/log_out_teacher_content.dart';
 import 'package:virtuozy/components/dialogs/contents/alert_dialog/select_date_content.dart';
+import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/add_lesson_content.dart';
 import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/bonuses_list_content.dart';
+import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/details_client_content.dart';
 import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/details_lesson_content.dart';
 import 'package:virtuozy/domain/entities/document_entity.dart';
 import 'package:virtuozy/domain/entities/teacher_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 
 import '../../domain/entities/lesson_entity.dart';
+import 'contents/bottom_sheet_menu/info_status_lesson_content.dart';
 import 'contents/bottom_sheet_menu/seach_location_cmplete_content.dart';
 import 'contents/bottom_sheet_menu/select_branch_content.dart';
 import 'contents/bottom_sheet_menu/steps_confirm_lesson_content.dart';
@@ -123,6 +126,30 @@ class FindSubways extends DialogsContent{
   @override
   build({required BuildContext context, Object? args}) {
     return const SubwaysContent();
+  }
+
+}
+
+
+class DetailsClient extends DialogsContent{
+  @override
+  build({required BuildContext context, Object? args}) {
+    return const DetailsClientContent();
+  }
+
+}
+
+class AddLesson extends DialogsContent{
+  @override
+  build({required BuildContext context, Object? args}) {
+    return const AddLessonContent();
+  }
+
+}
+class InfoStatusLesson extends DialogsContent{
+  @override
+  build({required BuildContext context, Object? args}) {
+    return const InfoStatusLessonContent();
   }
 
 }

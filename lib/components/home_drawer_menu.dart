@@ -381,7 +381,7 @@ required bool docsAccept}){
                 currentIndexItemMenu:currentIndexItemMenu,
                 index: 2,
                 title: 'Лиды'.tr(),textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
-                //onSelectedPage.call(2);
+                onSelectedPage.call(2);
               },),
 
               DrawerItem(

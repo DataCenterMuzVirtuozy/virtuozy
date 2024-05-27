@@ -32,7 +32,6 @@ class _SelectSchoolMenuState extends State<SelectSchoolMenu> {
   void initState() {
     super.initState();
     selectedValue = widget.currentIdSchool;
-    print('Items ${widget.idsSchool}');
   }
 
   @override
