@@ -2,6 +2,7 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:virtuozy/components/dialogs/contents/alert_dialog/accept_docunents_content.dart';
+import 'package:virtuozy/components/dialogs/contents/alert_dialog/details_info_lesson_content.dart';
 import 'package:virtuozy/components/dialogs/contents/alert_dialog/download_doc_content.dart';
 import 'package:virtuozy/components/dialogs/contents/alert_dialog/log_out_content.dart';
 import 'package:virtuozy/components/dialogs/contents/alert_dialog/log_out_teacher_content.dart';
@@ -31,6 +32,14 @@ sealed class DialogsContent{
 
 sealed class AlertDialogContent{
   build({required BuildContext context,Object? args});
+}
+
+class InfoDetailsLesson extends AlertDialogContent{
+  @override
+  build({required BuildContext context, Object? args}) {
+     return const InfoDetailsLessonContent();
+  }
+
 }
 
 class DownloadDocument extends AlertDialogContent{
@@ -149,7 +158,7 @@ class AddLesson extends DialogsContent{
 class InfoStatusLesson extends DialogsContent{
   @override
   build({required BuildContext context, Object? args}) {
-    return const InfoStatusLessonContent();
+    return  InfoStatusLessonContent(lesson: args as Lesson);
   }
 
 }

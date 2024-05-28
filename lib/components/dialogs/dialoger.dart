@@ -103,7 +103,7 @@ class Dialoger {
             FindSubways() => FindSubways().build(context: _),
             DetailsClient() => DetailsClient().build(context: _),
             AddLesson() => AddLesson().build(context: _),
-            InfoStatusLesson() => InfoStatusLesson().build(context: _),
+            InfoStatusLesson() => InfoStatusLesson().build(context: _,args: args),
           };
           return BackdropFilter(
             filter: blurred
@@ -282,6 +282,8 @@ class Dialoger {
         AcceptDocuments().build(context: contextUp, args: args),
       DownloadDocument() =>
         DownloadDocument().build(context: contextUp, args: args),
+
+      InfoDetailsLesson() => InfoDetailsLesson().build(context: contextUp),
     };
     return showDialog<T>(
       context: contextUp,

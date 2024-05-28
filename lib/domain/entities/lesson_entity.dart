@@ -11,6 +11,7 @@ enum LessonStatus{
   layering,
   firstLesson,
   lastLesson,
+  reschedule,
   unknown
 }
 

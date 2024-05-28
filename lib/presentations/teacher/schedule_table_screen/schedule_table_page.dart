@@ -178,7 +178,10 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
 
                               Dialoger.showModalBottomMenu(
                                   blurred: true,
-                                  title: 'Информация об уроке'.tr(), content: InfoStatusLesson());
+                                  title: 'Информация об уроке'.tr(),
+                                  args: state.tasks[index].lesson,
+                                  content: InfoStatusLesson(
+                              ));
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(7.0),

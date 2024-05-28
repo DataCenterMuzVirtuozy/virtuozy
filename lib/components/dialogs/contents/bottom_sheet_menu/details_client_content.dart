@@ -37,7 +37,7 @@ class DetailsClientContent extends StatelessWidget {
                 children: [
                   Icon(Icons.phone, color: colorGreen, size: 16.0),
                   const Gap(5),
-                  Text('+7 999 999 99 99'.tr(),
+                  Text('+7 999 999 99 99',
                       style: TStyle.textStyleVelaSansMedium(colorGrey,
                           size: 15.0)),
                 ],

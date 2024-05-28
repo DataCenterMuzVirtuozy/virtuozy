@@ -35,7 +35,8 @@ class StatusToColor{
      'Ожидает подтверждения ученика',
     'Совпадение дней из нескольких направлений',
     'Первый урок',
-    'Последний урок'
+    'Последний урок',
+    'Перенесен'
 
   ];
 
@@ -70,6 +71,8 @@ class StatusToColor{
      case LessonStatus.unknown:
        return '';
 
+     case LessonStatus.reschedule:
+       return StatusToColor.namesStatus[11];
    }
  }
 
@@ -88,6 +91,8 @@ class StatusToColor{
       case LessonStatus.firstLesson: return _colors[9];
       case LessonStatus.lastLesson: return _colors[10];
 
+      case LessonStatus.reschedule:
+        return _colors[2];
     }
 
    }
