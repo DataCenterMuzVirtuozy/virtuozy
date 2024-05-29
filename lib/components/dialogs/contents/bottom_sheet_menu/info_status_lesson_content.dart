@@ -23,7 +23,7 @@ class InfoStatusLessonContent extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Container(
-      //height: MediaQuery.of(context).size.height-200,
+      constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height-200),
       padding:  const EdgeInsets.symmetric(horizontal: 20),
       child: SingleChildScrollView(
         child: Column(
