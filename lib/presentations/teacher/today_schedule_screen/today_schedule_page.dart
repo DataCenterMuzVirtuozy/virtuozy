@@ -177,7 +177,7 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
                               if(_onlyWithLesson){
                                 _onlyWithLesson =  false;
                               }else{
-                                Dialoger.showToast('Показать дни только с уроками');
+                                Dialoger.showToast('Показать дни только с уроками'.tr());
                                 _onlyWithLesson = true;
                               }
                               context.read<TodayScheduleBloc>().add(GetLessonsByModeViewEvent(onlyWithLesson: _onlyWithLesson));
@@ -198,6 +198,7 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
                               if(!_visibleTodayButton){
                                 return;
                               }
+                              Dialoger.showToast('Вернуться в сегодняшний день'.tr());
                               _onlyWithLesson = false;
                               final date  = DateTime.now().toString().split(' ')[0];
                               context.read<TodayScheduleBloc>().add(GetLessonsBySelDateEvent(date: date));

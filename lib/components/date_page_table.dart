@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:virtuozy/domain/entities/today_lessons.dart';
 
+import '../domain/entities/lesson_entity.dart';
 import '../utils/date_time_parser.dart';
 import '../utils/text_style.dart';
 import 'dialogs/dialoger.dart';
@@ -13,11 +14,15 @@ class DatePageTable extends StatefulWidget {
       required,
       required this.lessonsToday,
       required this.initIndex,
-      required this.onChange});
+      required this.onChange,
+      required this.lessons,
+      required this.dateSelect});
 
   final List<TodayLessons> lessonsToday;
   final int initIndex;
   final Function onChange;
+  final List<Lesson> lessons;
+  final Function dateSelect;
 
   @override
   State<DatePageTable> createState() => _DatePageTableState();
@@ -45,7 +50,7 @@ class _DatePageTableState extends State<DatePageTable> {
 
   @override
   Widget build(BuildContext context) {
-    return      Container(
+    return Container(
         alignment: Alignment.center,
         width: 230.0,
         decoration: BoxDecoration(
@@ -76,8 +81,7 @@ class _DatePageTableState extends State<DatePageTable> {
                     icon: Icon(
                       Icons.arrow_back_ios_rounded,
                       size: 16,
-                      color:
-                      Theme.of(context).textTheme.displayMedium!.color!,
+                      color: Theme.of(context).textTheme.displayMedium!.color!,
                     ))),
             Flexible(
               flex: 2,
@@ -88,24 +92,32 @@ class _DatePageTableState extends State<DatePageTable> {
                   controller: _pageControllerDates,
                   children: [
                     ...List.generate(widget.lessonsToday.length, (index) {
-                      return Text(
-                          widget.lessonsToday[index].date.contains('/')
-                              ? parseDateWeek(
-                              widget.lessonsToday[index].date)
-                              : parseDate(widget.lessonsToday[index].date),
-                          textAlign: TextAlign.center,
-                          style: TStyle.textStyleVelaSansExtraBolt(
-                              Theme.of(context)
-                                  .textTheme
-                                  .displayMedium!
-                                  .color!,
-                              size: 12.0));
+                      return InkWell(
+                        onTap: (){
+                          Dialoger.showSelectDate(
+                              context: context,
+                              lessons: widget.lessons,
+                              onDate: (String date) {
+                                widget.dateSelect.call(date);
+                              });
+                        },
+                        child: Text(
+                            widget.lessonsToday[index].date.contains('/')
+                                ? parseDateWeek(widget.lessonsToday[index].date)
+                                : parseDate(widget.lessonsToday[index].date),
+                            textAlign: TextAlign.center,
+                            style: TStyle.textStyleVelaSansExtraBolt(
+                                Theme.of(context)
+                                    .textTheme
+                                    .displayMedium!
+                                    .color!,
+                                size: 12.0)),
+                      );
                     })
                   ],
                 ),
               ),
             ),
-
             Flexible(
                 flex: 1,
                 child: IconButton(
@@ -128,12 +140,10 @@ class _DatePageTableState extends State<DatePageTable> {
                     icon: Icon(
                       Icons.arrow_forward_ios_rounded,
                       size: 16,
-                      color:
-                      Theme.of(context).textTheme.displayMedium!.color!,
+                      color: Theme.of(context).textTheme.displayMedium!.color!,
                     ))),
           ],
         ));
-
   }
 
   String parseDateWeek(String date) {

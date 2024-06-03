@@ -10,8 +10,10 @@ import 'package:time_planner/time_planner.dart';
 import 'package:time_planner/src/config/global_config.dart' as config;
 
 
+import '../../../../di/locator.dart';
 import '../../../../resourses/colors.dart';
 import '../../../../utils/text_style.dart';
+import '../../../../utils/theme_provider.dart';
 import '../bloc/table_state.dart';
 
 
@@ -172,13 +174,14 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                   SizedBox(
+                   const SizedBox(
+                     height: 60,
                     width: 60,
-                    child: SelectModeCalendar(
-                      modeView: (mode){
-                        widget.modeView.call(mode);
-                      },
-                    ),
+                    // child: SelectModeCalendar(
+                    //   modeView: (mode){
+                    //     widget.modeView.call(mode);
+                    //   },
+                    // ),
                   ),
                   for (int i = 0; i < config.totalDays; i++) widget.headers[i],
                 ],
@@ -231,11 +234,11 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
                           ),
                           Container(
                             height:
-                            (config.totalHours * config.cellHeight!) + 80
-                                +config.cellHeight!.toDouble()-1,
+                            (config.totalHours * config.cellHeight!) +68,
+                                //+config.cellHeight!.toDouble()-1,
                             width: 1,
                             color: style.dividerColor ??
-                                Theme.of(context).primaryColor,
+                          Theme.of(context).primaryColor,
                           ),
                         ],
                       ),
@@ -390,7 +393,7 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 SizedBox(
-                  height: (config.totalHours * config.cellHeight!) + 80,
+                  height: (config.totalHours * config.cellHeight!) +80,
                   width: (config.totalDays * config.cellWidth!).toDouble(),
                   child: Stack(
                     children: <Widget>[
@@ -502,6 +505,7 @@ class SelectModeCalendar extends StatefulWidget{
 
 class _SelectModeCalendarState extends State<SelectModeCalendar> {
 
+  final themeProvider = locator.get<ThemeProvider>();
   final List<String> items = [
     'День',
     'Неделя',
@@ -588,9 +592,9 @@ class _SelectModeCalendarState extends State<SelectModeCalendar> {
           elevation: 2,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20.0),
-            color: Theme.of(context).colorScheme.surfaceVariant,
+            color:  themeProvider.themeStatus == ThemeStatus.dark?colorBlack:colorBeruza2,
           ),
-          offset:  const Offset(20,5),
+          offset:  const Offset(20,-10),
           scrollbarTheme: ScrollbarThemeData(
             radius: const Radius.circular(40),
             thickness: MaterialStateProperty.all(6),

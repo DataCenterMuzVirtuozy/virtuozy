@@ -268,19 +268,24 @@ class _Step2State extends State<Step2> {
             ),
           ),
            Gap(_h1),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-            decoration:  BoxDecoration(
-              borderRadius: BorderRadius.circular(50),
-              border: Border.all(
-                color: colorGrey,
-                width: 1.0,
+          InkWell(
+            onTap: (){
+              Dialoger.showToast('В разработке');
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+              decoration:  BoxDecoration(
+                borderRadius: BorderRadius.circular(50),
+                border: Border.all(
+                  color: colorGrey,
+                  width: 1.0,
+                ),
               ),
+              child: Text('Поиск...'.tr(),
+                  style: TStyle.textStyleOpenSansRegular(colorGrey,
+                      size: 14)),
             ),
-            child: Text('Поиск...'.tr(),
-                style: TStyle.textStyleOpenSansRegular(colorGrey,
-                    size: 14)),
           ),
            Gap(_h2),
           Align(

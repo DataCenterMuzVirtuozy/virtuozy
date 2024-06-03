@@ -23,23 +23,25 @@ class SelectDateContent extends StatelessWidget{
       constraints: const BoxConstraints(maxWidth: 400.0,maxHeight: 600.0),
       width: MediaQuery.of(context).size.width-100.0,
       height: MediaQuery.of(context).size.height/2.7,
-      child: Calendar(
-        visibleStatusColor: true,
-        visibleInfoColors: false,
-        clickableDay: true,
-        focusedDayStatus: false,
-        resetFocusDay: false,
-        lessons: lessons,
-        onMonth: (month){
+      child: SingleChildScrollView(
+        child: Calendar(
+          visibleStatusColor: true,
+          visibleInfoColors: false,
+          clickableDay: true,
+          focusedDayStatus: false,
+          resetFocusDay: false,
+          lessons: lessons,
+          onMonth: (month){
 
-        },
-        onDate:(String date){
-          onDate.call(date);
-          Navigator.pop(context);
-        },
-        onLesson: (lessons){
+          },
+          onDate:(String date){
+            onDate.call(date);
+            Navigator.pop(context);
+          },
+          onLesson: (lessons){
 
-        },),
+          },),
+      ),
     );
   }
 

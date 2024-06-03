@@ -9,6 +9,7 @@ import 'package:time_planner/time_planner.dart';
 import 'package:virtuozy/components/box_info.dart';
 import 'package:virtuozy/components/dialogs/sealeds.dart';
 import 'package:virtuozy/components/select_auditory_menu.dart';
+import 'package:virtuozy/components/table_mode_menu.dart';
 import 'package:virtuozy/domain/entities/lesson_entity.dart';
 import 'package:virtuozy/presentations/teacher/schedule_table_screen/table/my_time_planner.dart';
 import 'package:virtuozy/resourses/colors.dart';
@@ -93,6 +94,14 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
                         ),
                         const Gap(10.0),
                         DatePageTable(
+                            dateSelect: (date) {
+                              context.read<TableBloc>().add(
+                                  GetLessonsTableByCalendarDateEvent(
+                                      date: date,
+                                      weekMode:
+                                      state.modeTable == ViewModeTable.week));
+                            },
+                            lessons: state.lessons,
                           onChange: (index) {
                             context.read<TableBloc>().add(GetLessonsTableByDate(
                                 indexDate: index,
@@ -102,15 +111,23 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
                           lessonsToday: state.todayLessons,
                         ),
                         const Gap(10.0),
-                        CalendarCaller(
-                            dateSelect: (date) {
-                              context.read<TableBloc>().add(
-                                  GetLessonsTableByCalendarDateEvent(
-                                      date: date,
-                                      weekMode:
-                                          state.modeTable == ViewModeTable.week));
-                            },
-                            lessons: state.lessons)
+                        TableModeMenu(
+                           modeView: (ViewModeTable mode) {
+                             if (mode == ViewModeTable.week) {
+                               context
+                                   .read<TableBloc>()
+                                   .add(const GetLessonsTableWeek(weekMode: true));
+                             } else if (mode == ViewModeTable.day) {
+                               context
+                                   .read<TableBloc>()
+                                   .add(const GetInitLessonsEvent(weekMode: false));
+                             } else {
+                               context
+                                   .read<TableBloc>()
+                                   .add(const GetInitLessonsEvent(weekMode: false));
+                             }
+                           }
+                       )
                       ],
                     ),
                   ),

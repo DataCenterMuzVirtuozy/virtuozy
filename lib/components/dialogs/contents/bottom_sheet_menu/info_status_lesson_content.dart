@@ -309,8 +309,8 @@ class InfoStatusLessonContent extends StatelessWidget{
                   textButton: 'Подробнее'.tr(),
                 ),
               ),
-            )
-
+            ),
+           const Gap(40)
           ],
         ),
       ),

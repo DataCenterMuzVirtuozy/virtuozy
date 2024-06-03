@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:virtuozy/presentations/teacher/today_schedule_screen/bloc/today_schedule_state.dart';
 
+import '../di/locator.dart';
 import '../resourses/colors.dart';
 import '../utils/text_style.dart';
+import '../utils/theme_provider.dart';
 
 class SelectSchoolMenu extends StatefulWidget{
   const SelectSchoolMenu({super.key, required this.idsSchool, required this.onChange, required this.currentIdSchool, required this.loading});
@@ -26,6 +28,7 @@ class _SelectSchoolMenuState extends State<SelectSchoolMenu> {
 
 
   String? selectedValue= '...';
+  final themeProvider = locator.get<ThemeProvider>();
 
 
   @override
@@ -83,7 +86,7 @@ class _SelectSchoolMenuState extends State<SelectSchoolMenu> {
           padding:const EdgeInsets.symmetric(horizontal: 13.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20.0),
-            color:Theme.of(context).colorScheme.surfaceVariant,
+            color: Theme.of(context).colorScheme.surfaceVariant,
           ),
           //elevation: 2,
         ),
@@ -102,7 +105,7 @@ class _SelectSchoolMenuState extends State<SelectSchoolMenu> {
           elevation: 0,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20.0),
-            color: colorGrey,
+            color: themeProvider.themeStatus == ThemeStatus.dark?colorBlack:colorBeruza2,
           ),
           offset: const Offset(0,-10),
           scrollbarTheme: ScrollbarThemeData(
