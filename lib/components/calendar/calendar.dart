@@ -382,6 +382,12 @@ class _CalendarState extends State<Calendar> {
 
   DateTime _getFirstDate({required List<Lesson> lessons}) {
     final List<int> millisecondsSinceEpochList = [];
+
+    if(lessons.isEmpty){
+      final date = DateTime.now().millisecondsSinceEpoch - 10519200000; // -4 month
+      return DateTime.fromMillisecondsSinceEpoch(date.toInt());
+    }
+
     for (var element in lessons) {
       millisecondsSinceEpochList.add(
           DateFormat('yyyy-MM-dd')
@@ -417,6 +423,14 @@ class _CalendarState extends State<Calendar> {
     // final monthLast = DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpochList[indexLast]).month+2;
     // final yearLast = DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpochList[indexLast]).year;
     // final dayLast = DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpochList[indexLast]).day;
+
+
+      if(lessons.isEmpty){
+        final date = DateTime.now().millisecondsSinceEpoch + 10519200000; // +4 month
+        return DateTime.fromMillisecondsSinceEpoch(date.toInt());
+      }
+
+
     final monthLast = DateTime
         .now()
         .month + 2;
