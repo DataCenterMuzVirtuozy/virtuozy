@@ -216,6 +216,8 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
 
   void _logOutTeacher(LogOutTeacherEvent event,emit) async{
     await PreferencesUtil.clear();
+    final teacher = _teacherCubit.teacherEntity.copyWith(userStatus: UserStatus.notAuth);
+    _teacherCubit.updateTeacher(newTeacher: teacher);
     emit(state.copyWith(authStatus: AuthStatus.logOut));
   }
 

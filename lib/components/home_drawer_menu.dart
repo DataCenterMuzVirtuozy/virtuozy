@@ -49,6 +49,7 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
   }
 
   Widget _getAvatar(String urlAva){
+
     if(urlAva.isEmpty){
         return Container(
             width: 80,
@@ -68,12 +69,14 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
         ),
         child: ClipOval(
           child: CachedNetworkImage(
-            key: ValueKey(user.avaUrl),
+            key: ValueKey(urlAva),
             fit: BoxFit.cover,
-            imageUrl: user.avaUrl,
+            imageUrl: urlAva,
             progressIndicatorBuilder: (context, url, downloadProgress) =>
                 CircularProgressIndicator(value: downloadProgress.progress,color: colorWhite),
-            errorWidget: (context, url, error) => const Icon(Icons.error),
+            errorWidget: (context, url, error) {
+              return const Icon(Icons.error);
+            },
           ),
         ),
       );
@@ -127,7 +130,7 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                                   color: colorYellow
                               ),
                               child:  Visibility(
-                                visible: user.userStatus.isAuth||user.userStatus.isModeration,
+                                visible: available(),
                                 child: Row(
                                   children: [
                                     Expanded(
@@ -140,7 +143,7 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                               ),
                             ),
                             Visibility(
-                              visible: user.userStatus.isAuth||user.userStatus.isModeration,
+                              visible: available(),
                               child: Container(
                                 alignment: Alignment.topLeft,
                                   padding: const EdgeInsets.only(left: 105,top: 10),
@@ -170,11 +173,14 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                         },
                       ),
                       Visibility(
-                        visible: user.userStatus.isAuth||user.userStatus.isModeration,
+                        visible: available(),
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: InkWell(
                             onTap: (){
+                              if(userType.isTeacher){
+                                return;
+                              }
                               GoRouter.of(context).push(pathProfile);
                               Navigator.pop(context);
                             },
@@ -185,7 +191,7 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                                   color: colorOrange
                               ),
                               padding: const EdgeInsets.all(2),
-                              child:  _getAvatar(user.avaUrl),
+                              child:  _getAvatar(userType.isStudent?user.avaUrl:teacher.urlAva),
                             ),
                           ),
                         ),
@@ -244,6 +250,15 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
           ),
         ),
       ),);
+  }
+
+  bool available() {
+    if(userType.isStudent){
+      return user.userStatus.isAuth||user.userStatus.isModeration;
+    }else{
+      return teacher.userStatus.isAuth;
+    }
+
   }
 
 
@@ -527,6 +542,7 @@ class _DrawerItemSettingState extends State<DrawerItemSetting> {
                       } else {
                         Dialoger.showLogOut(context: context, user: widget.user);
                       }
+                      Navigator.pop(context);
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,

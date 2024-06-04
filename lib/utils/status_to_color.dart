@@ -3,6 +3,7 @@
 
  import 'dart:ui';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 
@@ -76,7 +77,12 @@ class StatusToColor{
    }
  }
 
-   static Color getColor({required LessonStatus lessonStatus}){
+   static Color getColor({required LessonStatus lessonStatus, UserType userType = UserType.unknown}){
+
+     if(userType.isTeacher){
+       return _colors[3];
+      }
+
     switch(lessonStatus){
      case LessonStatus.planned: return _colors[6];
      case LessonStatus.complete: return _colors[0];
@@ -95,6 +101,19 @@ class StatusToColor{
         return _colors[2];
     }
 
+   }
+
+
+   //показать статус ближайшего урока
+  static  Color getColorNearLesson({required List<Lesson> lessons,required DateTime today}){
+    final dt = today.millisecondsSinceEpoch;
+    for(var l  in lessons){
+      final dl = DateFormat('yyyy-MM-dd').parse(l.date).millisecondsSinceEpoch;
+      if(dl>dt){
+        return getColor(lessonStatus: l.status);
+      }
+    }
+     return _colors[3];
    }
 
  }

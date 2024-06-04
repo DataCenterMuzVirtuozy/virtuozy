@@ -2,6 +2,7 @@
 
   import 'package:virtuozy/data/models/teacher_model.dart';
 import 'package:virtuozy/domain/entities/teacher_entity.dart';
+import 'package:virtuozy/domain/entities/user_entity.dart';
 
 import '../../domain/entities/lesson_entity.dart';
 import '../models/user_model.dart';
@@ -15,10 +16,12 @@ class TeacherMapper{
 
       return TeacherEntity(
         lessons: lessons,
+          userStatus: UserStatus.auth,
           id: teacherModel.id,
           lastName: teacherModel.lastName,
           firstName: teacherModel.firstName,
-          phoneNum: teacherModel.phoneNum);
+          phoneNum: teacherModel.phoneNum,
+          urlAva: teacherModel.urlAva);
     }
 
 

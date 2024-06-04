@@ -11,6 +11,7 @@ import 'package:virtuozy/components/dialogs/sealeds.dart';
 import 'package:virtuozy/components/select_auditory_menu.dart';
 import 'package:virtuozy/components/table_mode_menu.dart';
 import 'package:virtuozy/domain/entities/lesson_entity.dart';
+import 'package:virtuozy/domain/entities/table_tap_location_entity.dart';
 import 'package:virtuozy/presentations/teacher/schedule_table_screen/table/my_time_planner.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/utils/status_to_color.dart';
@@ -132,10 +133,10 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
                     ),
                   ),
                 ),
-                Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Visibility(visible: false, child: SelectAuditoryMenu()),
+                    Visibility(visible: false, child: SelectAuditoryMenu()),
                   ],
                 ),
                 const Gap(10.0),
@@ -147,6 +148,9 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
                 } else if (state.status == TableStatus.loaded) ...{
                   Expanded(
                     child: MyTimePlanner(
+                      onTapTable: (TableTapLocation locTap){
+                        print('TAP x = ${locTap.x} y = ${locTap.y}');
+                      },
                       colorDividerVertical:
                           themeProvider.themeStatus == ThemeStatus.dark
                               ? colorGrey
@@ -174,7 +178,8 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
                       headers: [
                         ...List.generate(state.titles.length, (index) {
                           return TimePlannerTitle(
-                            date: state.titles[index].date,
+                            date: state.titles[index].date.isEmpty?
+                            index.toString():state.titles[index].date,
                             title: state.titles[index].title,
                             titleStyle: TStyle.textStyleVelaSansBold(
                                 Theme.of(context).textTheme.displayMedium!.color!,
@@ -192,7 +197,6 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
                             minutesDuration: 60,
                             daysDuration: 1,
                             onTap: () {
-
                               Dialoger.showModalBottomMenu(
                                   blurred: true,
                                   title: 'Информация об уроке'.tr(),

@@ -1,38 +1,34 @@
+import 'package:virtuozy/data/models/user_model.dart';
 
+class TeacherModel {
+  final int id;
+  final String lastName;
+  final String firstName;
+  final String phoneNum;
+  final List<LessonModel> lessons;
+  final String urlAva;
 
+  const TeacherModel(
+      {required this.urlAva,
+      required this.id,
+      required this.lastName,
+      required this.firstName,
+      required this.phoneNum,
+      required this.lessons});
 
- import 'package:virtuozy/data/models/user_model.dart';
-import 'package:virtuozy/domain/entities/lesson_entity.dart';
-
-class TeacherModel{
-
-   final int id;
-   final String lastName;
-   final String firstName;
-   final String phoneNum;
-   final List<LessonModel> lessons;
-
-   const TeacherModel({
-    required this.id,
-    required this.lastName,
-    required this.firstName,
-    required this.phoneNum,
-     required this.lessons
-  });
-
-   Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap() {
     return {
-      'id': this.id,
-      'lastName': this.lastName,
-      'firstName': this.firstName,
-      'phoneNum': this.phoneNum,
+      'id': id,
+      'lastName': lastName,
+      'firstName': firstName,
+      'phoneNum': phoneNum,
     };
   }
 
-  factory TeacherModel.fromMap({required Map<String, dynamic> mapTeacher,required List<dynamic> mapLessons}) {
-
-     final lessons = mapLessons.map((e) => LessonModel.fromMap(e,'')).toList();
-
+  factory TeacherModel.fromMap(
+      {required Map<String, dynamic> mapTeacher,
+      required List<dynamic> mapLessons}) {
+    final lessons = mapLessons.map((e) => LessonModel.fromMap(e, '')).toList();
 
     return TeacherModel(
       // lessons: l,
@@ -41,6 +37,7 @@ class TeacherModel{
       //   firstName: 'ff',
       // phoneNum: '9009'
       lessons: lessons,
+      urlAva: mapTeacher['urlAva'] as String,
       id: mapTeacher['id'] as int,
       lastName: mapTeacher['lastName'] as String,
       firstName: mapTeacher['firstName'] as String,
@@ -50,21 +47,21 @@ class TeacherModel{
 
   static final l = [
     const LessonModel(
-   contactValues: ['',''],
-   id: 33,
-   idSub: 33,
-   idSchool: 'мш2',
-   bonus: false,
-   timeAccept: '',
-   date: '2024-05-16',
-   timePeriod: '15:00-16:00',
-   idAuditory: 'Свинг',
-   nameTeacher: 'Bob',
-   nameStudent: 'Dan',
-   status: 6,
-   nameDirection: 'Bass',
+        contactValues: ['', ''],
+        id: 33,
+        idSub: 33,
+        idSchool: 'мш2',
+        bonus: false,
+        timeAccept: '',
+        date: '2024-05-16',
+        timePeriod: '15:00-16:00',
+        idAuditory: 'Свинг',
+        nameTeacher: 'Bob',
+        nameStudent: 'Dan',
+        status: 6,
+        nameDirection: 'Bass',
         idDir: 0),
-     const LessonModel(
+    const LessonModel(
         contactValues: [],
         idDir: 0,
         idSchool: 'мш1',
@@ -95,5 +92,4 @@ class TeacherModel{
         status: 4,
         bonus: false)
   ];
-
 }

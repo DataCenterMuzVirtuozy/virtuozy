@@ -9,6 +9,7 @@ import 'package:gap/gap.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:virtuozy/di/locator.dart';
 import 'package:virtuozy/resourses/colors.dart';
+import 'package:virtuozy/utils/auth_mixin.dart';
 import 'package:virtuozy/utils/status_to_color.dart';
 
 import '../../domain/entities/lesson_entity.dart';
@@ -49,7 +50,7 @@ class Calendar extends StatefulWidget {
   State<Calendar> createState() => _CalendarState();
 }
 
-class _CalendarState extends State<Calendar> {
+class _CalendarState extends State<Calendar> with AuthMixin{
   final currentDayNotifi = locator.get<ValueNotifier<int>>();
   int month = 0;
   int i = 0;
@@ -186,6 +187,12 @@ class _CalendarState extends State<Calendar> {
             },
             calendarBuilders: CalendarBuilders(
               todayBuilder: (context, day, values) {
+                if(userType.isTeacher){
+                  return _handleTodayTeacher(
+                    lessons: widget.lessons,
+                    today: day
+                  );
+                }
                 return _handlerDay(
                     visibleStatusColor: widget.visibleStatusColor,
                     clickableDay: widget.clickableDay,
@@ -252,6 +259,59 @@ class _CalendarState extends State<Calendar> {
     }
   }
 
+
+  _handleTodayTeacher({
+    required List<Lesson> lessons,
+    required DateTime today,
+  }){
+    return ValueListenableBuilder<int>(
+        valueListenable: currentDayNotifi,
+        builder: (context, valueDay, child) {
+          return Padding(
+            padding: const EdgeInsets.all(3.0),
+            child: InkWell(
+                borderRadius: BorderRadius.circular(60.0),
+                onTap: () {
+                  currentDayNotifi.value = today.day;
+                  },
+                child: Container(
+                  width: 45.0,
+                  height: 45.0,
+                  decoration: const BoxDecoration(shape: BoxShape.circle),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Container(
+                        height: 45.0,
+                        width: 45.0,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color:
+                                 StatusToColor.getColorNearLesson(
+                                   lessons: lessons,
+                                   today: today
+                                 ),
+                            border: Border.all(
+                                color: colorOrange,
+                                width:
+                                valueDay == today.day ? 3.0 : 1.0)
+                        ),
+                      ),
+
+                      Center(
+                        child: Text(
+                          today.day.toString(),
+                          style: TStyle.textStyleVelaSansBold(colorBlack),
+                        ),
+                      ),
+                    ],
+                  ),
+                )),
+          );
+        });
+
+  }
+
   _handlerDay({
     required List<Lesson> lessons,
     required int day,
@@ -307,6 +367,7 @@ class _CalendarState extends State<Calendar> {
                                   shape: BoxShape.circle,
                                   color: visibleStatusColor
                                       ? StatusToColor.getColor(
+                                    userType: userType,
                                       lessonStatus: lessonsDay.length > 1
                                           ? LessonStatus.layering
                                           : lessonsDay[0].status)
@@ -326,39 +387,6 @@ class _CalendarState extends State<Calendar> {
                                     color: colorOrange,
                                                               ),
                                 )),
-                            // ...List.generate(lessonsDay.length, (index) {
-                            // return RotationTransition(
-                            //   turns: const AlwaysStoppedAnimation(135 / 360),
-                            //   child: Container(
-                            //     margin: EdgeInsets.only(
-                            //         top: index > 0 ? 6.5 : 0.0,
-                            //         left: index > 0 ? 4.5 : 0.0),
-                            //     height: index > 0 ? 18.0 : 45.0,
-                            //     width: index > 0 ? 34.0 : 45.0,
-                            //     decoration: BoxDecoration(
-                            //         borderRadius: index == 0
-                            //             ? null
-                            //             : const BorderRadius.vertical(
-                            //                 bottom: Radius.circular(23.0)),
-                            //         color: visibleStatusColor
-                            //             ? StatusToColor.getColor(
-                            //                 lessonStatus: lessonsDay.length >
-                            //                         2
-                            //                     ? LessonStatus.layering
-                            //                     : lessonsDay[index].status)
-                            //             : Colors.transparent,
-                            //         shape: index == 0
-                            //             ? BoxShape.circle
-                            //             : BoxShape.rectangle,
-                            //         border: visibleStatusColor
-                            //             ? Border.all(
-                            //                 color: colorOrange,
-                            //                 width:
-                            //                     valueDay == day ? 3.0 : 1.0)
-                            //             : null),
-                            //   ),
-                            // );
-                            //}),
                             Center(
                               child: Text(
                                 day.toString(),

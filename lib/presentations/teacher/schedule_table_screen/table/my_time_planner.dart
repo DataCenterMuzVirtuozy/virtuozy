@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:time_planner/time_planner.dart';
 import 'package:time_planner/src/config/global_config.dart' as config;
+import 'package:virtuozy/domain/entities/table_tap_location_entity.dart';
 
 
 import '../../../../di/locator.dart';
@@ -41,7 +42,7 @@ class MyTimePlanner extends StatefulWidget {
 
   /// Whether time is displayed in 24 hour format or am/pm format in the time column on the left.
   final bool use24HourFormat;
-
+  final Function onTapTable;
   //Whether the time is displayed on the axis of the tim or on the center of the timeblock. Default is false.
   final bool setTimeOnAxis;
   final Function modeView;
@@ -53,6 +54,7 @@ class MyTimePlanner extends StatefulWidget {
     required this.startHour,
     required this.endHour,
     required this.headers,
+    required this.onTapTable,
     this.tasks,
     this.style,
     this.use24HourFormat = false,
@@ -71,6 +73,7 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
   ScrollController timeVerticalController = ScrollController();
   TimePlannerStyle style = TimePlannerStyle();
   List<TimePlannerTask> tasks = [];
+  TableTapLocation tableTapLocation = TableTapLocation.unknown();
   bool? isAnimated = true;
 
   /// check input value rules
@@ -289,25 +292,30 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               for (var i = 0; i < config.totalHours; i++)
-                                Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
+                                GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: (){
+                                    print('Y $i');
+                                    tableTapLocation = tableTapLocation.copyWith(y: i);
+                                    widget.onTapTable.call(tableTapLocation);
+                                  },
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Container(
+                                        color: i.isOdd
+                                            ? style.interstitialOddColor
+                                            : style.interstitialEvenColor,
+                                        height: (config.cellHeight! - 1).toDouble(),
+                                      ),
+                                      // The horizontal lines tat divides the rows
+                                       Divider(
+                                        height: 1,
+                                        color: widget.colorDividerHorizontal,
+                                      ),
 
-                                    Container(
-                                      color: i.isOdd
-                                          ? style.interstitialOddColor
-                                          : style.interstitialEvenColor,
-                                      height:
-                                      (config.cellHeight! - 1).toDouble(),
-                                    ),
-                                    // The horizontal lines tat divides the rows
-                                    //TODO: Make a configurable color for this (maybe a size too)
-                                     Divider(
-                                      height: 1,
-                                      color: widget.colorDividerHorizontal,
-                                    ),
-
-                                  ],
+                                    ],
+                                  ),
                                 ),
                             ],
                           ),
@@ -316,23 +324,31 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               for (var i = 0; i < config.totalDays; i++)
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    SizedBox(
-                                      width:
-                                      (config.cellWidth! - 1).toDouble(),
-                                    ),
-                                    // The vertical lines that divides the columns
-                                    //TODO: Make a configurable color for this (maybe a size too)
-                                    Container(
-                                      width: 0.3,
-                                      height: (config.totalHours *
-                                          config.cellHeight!) +
-                                          config.cellHeight!,
-                                      color: widget.colorDividerVertical,
-                                    )
-                                  ],
+                                GestureDetector(
+                                  behavior: HitTestBehavior.translucent,
+                                  onPanDown: (d){
+                                    print('X $i');
+                                    tableTapLocation = tableTapLocation.copyWith(x: i);
+                                    widget.onTapTable.call(tableTapLocation);
+                                  },
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      SizedBox(
+                                        width:
+                                        (config.cellWidth! - 1).toDouble(),
+                                      ),
+                                      // The vertical lines that divides the columns
+                                      //TODO: Make a configurable color for this (maybe a size too)
+                                      Container(
+                                        width: 0.3,
+                                        height: (config.totalHours *
+                                            config.cellHeight!) +
+                                            config.cellHeight!,
+                                        color: widget.colorDividerVertical,
+                                      )
+                                    ],
+                                  ),
                                 )
                             ],
                           ),
