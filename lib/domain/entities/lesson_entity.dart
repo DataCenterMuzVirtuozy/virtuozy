@@ -12,7 +12,16 @@ enum LessonStatus{
   firstLesson,
   lastLesson,
   reschedule,
+  unknown,
+
+}
+
+enum LessonType{
+  trial,
+  group,
+  singly,
   unknown
+
 }
 
 
@@ -26,12 +35,16 @@ class Lesson{
   final String nameTeacher;
   final String nameStudent;
   final LessonStatus status;
+  final LessonType type;
   final String nameDirection;
   final int idSub;
   final bool bonus;
+  final bool alien;
   final List<dynamic> contactValues;
 
   const Lesson({
+    required this.type,
+    required this.alien,
     required this.contactValues,
     required this.id,
     required this.idSub,
@@ -50,6 +63,8 @@ class Lesson{
 
   factory Lesson.unknown(){
     return const Lesson(
+      type: LessonType.unknown,
+      alien: false,
       contactValues: [],
         idSub:0,
         bonus:false,
@@ -77,9 +92,13 @@ class Lesson{
     bool? bonus,
     String? nameStudent,
     String? idSchool,
-    List<String>? contactValues
+    List<String>? contactValues,
+    bool? alien,
+    LessonType? type
   }) {
     return Lesson(
+      type: type??this.type,
+      alien: alien??this.alien,
       contactValues: contactValues??this.contactValues,
       idSchool: idSchool??this.idSchool,
       idSub: idSub??this.idSub,

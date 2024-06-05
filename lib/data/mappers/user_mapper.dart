@@ -153,6 +153,8 @@ class UserMapper{
 
   static Lesson _fromLessonModel(LessonModel lessonModel){
     return Lesson(
+      type: _lessonType(lessonModel.type),
+      alien: true,
       contactValues: lessonModel.contactValues,
       idSub: lessonModel.idSub,
       bonus: lessonModel.bonus,
@@ -170,6 +172,16 @@ class UserMapper{
 
   static SubwayEntity fromApiSubway({required SubwayModel model}){
     return SubwayEntity(name: model.name,color: model.color);
+  }
+
+  static LessonType _lessonType(int status){
+    switch(status){
+      case 1: return LessonType.trial;
+      case 2: return LessonType.group;
+      case 3: return LessonType.singly;
+    }
+
+    return LessonType.unknown;
   }
 
  }

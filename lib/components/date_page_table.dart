@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:virtuozy/domain/entities/today_lessons.dart';
+import 'package:virtuozy/presentations/teacher/schedule_table_screen/schedule_table_page.dart';
 
 import '../domain/entities/lesson_entity.dart';
 import '../utils/date_time_parser.dart';
@@ -16,13 +17,14 @@ class DatePageTable extends StatefulWidget {
       required this.initIndex,
       required this.onChange,
       required this.lessons,
-      required this.dateSelect});
+      required this.dateSelect,});
 
   final List<TodayLessons> lessonsToday;
   final int initIndex;
   final Function onChange;
   final List<Lesson> lessons;
   final Function dateSelect;
+
 
   @override
   State<DatePageTable> createState() => _DatePageTableState();
@@ -92,29 +94,30 @@ class _DatePageTableState extends State<DatePageTable> {
                   controller: _pageControllerDates,
                   children: [
                     ...List.generate(widget.lessonsToday.length, (index) {
-                      return InkWell(
-                        onTap: (){
-                          Dialoger.showSelectDate(
-                              context: context,
-                              lessons: widget.lessons,
-                              onDate: (String date) {
-                                widget.dateSelect.call(date);
-                              });
-                        },
-                        child: Text(
-                            widget.lessonsToday[index].date.contains('/')
-                                ? parseDateWeek(widget.lessonsToday[index].date)
-                                : parseDate(widget.lessonsToday[index].date),
-                            textAlign: TextAlign.center,
-                            style: TStyle.textStyleVelaSansExtraBolt(
-                                Theme.of(context)
-                                    .textTheme
-                                    .displayMedium!
-                                    .color!,
-                                size: 12.0)),
-                      );
-                    })
-                  ],
+                        return InkWell(
+                          onTap: (){
+                            Dialoger.showSelectDate(
+                                context: context,
+                                lessons: widget.lessons,
+                                onDate: (String date) {
+                                  widget.dateSelect.call(date);
+                                });
+                          },
+                          child: Text(
+                              widget.lessonsToday[index].date.contains('/')
+                                  ? parseDateWeek(widget.lessonsToday[index].date)
+                                  : parseDate(widget.lessonsToday[index].date),
+                              textAlign: TextAlign.center,
+                              style: TStyle.textStyleVelaSansExtraBolt(
+                                  Theme.of(context)
+                                      .textTheme
+                                      .displayMedium!
+                                      .color!,
+                                  size: 12.0)),
+                        );
+                      })
+
+                                      ],
                 ),
               ),
             ),

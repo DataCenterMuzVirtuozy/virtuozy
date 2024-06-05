@@ -22,7 +22,7 @@ class StatusToColor{
     const Color.fromRGBO(0, 148, 77, 1.0),
     const Color.fromRGBO(3, 252, 244,1.0),
     const Color.fromRGBO(0, 255, 0, 1),
-    const Color.fromRGBO(255, 230, 0, 1)
+    const Color.fromRGBO(255, 230, 0, 1),
   ];
 
   static final List<String> _namesStatus = [
@@ -37,7 +37,8 @@ class StatusToColor{
     'Совпадение дней из нескольких направлений',
     'Первый урок',
     'Последний урок',
-    'Перенесен'
+    'Перенесен',
+
 
   ];
 
@@ -96,7 +97,6 @@ class StatusToColor{
       case LessonStatus.unknown: return const Color.fromRGBO(255, 255, 255, 0.0);
       case LessonStatus.firstLesson: return _colors[9];
       case LessonStatus.lastLesson: return _colors[10];
-
       case LessonStatus.reschedule:
         return _colors[2];
     }

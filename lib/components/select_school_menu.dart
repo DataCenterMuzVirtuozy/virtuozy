@@ -3,6 +3,7 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:virtuozy/presentations/teacher/schedule_table_screen/schedule_table_page.dart';
 import 'package:virtuozy/presentations/teacher/today_schedule_screen/bloc/today_schedule_state.dart';
 
 import '../di/locator.dart';
@@ -29,12 +30,15 @@ class _SelectSchoolMenuState extends State<SelectSchoolMenu> {
 
   String? selectedValue= '...';
   final themeProvider = locator.get<ThemeProvider>();
+  int selectIndex = 0;
 
 
   @override
   void initState() {
     super.initState();
     selectedValue = widget.currentIdSchool;
+
+
   }
 
   @override
@@ -43,19 +47,54 @@ class _SelectSchoolMenuState extends State<SelectSchoolMenu> {
       return Container(
         alignment: Alignment.center,
         height: 35,
-        padding:const EdgeInsets.symmetric(horizontal: 30.0),
+        padding:const EdgeInsets.symmetric(horizontal: 20.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20.0),
           color:Theme.of(context).colorScheme.surfaceVariant,
         ),
         child: Text(
-          '...',
+          '....',
           style: TStyle.textStyleVelaSansExtraBolt(Theme.of(context)
-              .textTheme.displayMedium!.color!,size: 18.0),
+              .textTheme.displayMedium!.color!,size: 20.0),
           overflow: TextOverflow.ellipsis,
         ),
       );
     }
+
+
+    if(widget.idsSchool.length<=2){
+      return Container(
+        alignment: Alignment.center,
+        height: 35,
+        padding:const EdgeInsets.symmetric(horizontal: 20.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20.0),
+          color:Theme.of(context).colorScheme.surfaceVariant,
+        ),
+        child: InkWell(
+          onTap: (){
+            if(widget.idsSchool.length == 1){
+              return;
+            }
+            if(selectIndex == 0){
+              selectIndex = 1;
+            }else{
+              selectIndex = 0;
+            }
+            selectedValue = widget.idsSchool[selectIndex];
+            widget.onChange.call(selectedValue);
+          },
+          child: Text(
+            widget.idsSchool[selectIndex],
+            style: TStyle.textStyleVelaSansExtraBolt(Theme.of(context)
+                .textTheme.displayMedium!.color!,size: 13.0),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      );
+
+    }
+
     return DropdownButtonHideUnderline(
       child: DropdownButton2<String>(
         isExpanded: true,

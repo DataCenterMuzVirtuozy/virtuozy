@@ -12,8 +12,7 @@ class TeacherMapper{
 
 
     static TeacherEntity fromApi({required TeacherModel teacherModel}){
-      final lessons = teacherModel.lessons.map((e) => _fromLessonModel(e)).toList();
-
+      final lessons = teacherModel.lessons.map((e) => _fromLessonModel(e,teacherModel.id)).toList();
       return TeacherEntity(
         lessons: lessons,
           userStatus: UserStatus.auth,
@@ -25,8 +24,10 @@ class TeacherMapper{
     }
 
 
-    static Lesson _fromLessonModel(LessonModel lessonModel){
+    static Lesson _fromLessonModel(LessonModel lessonModel, int idTeacher){
       return Lesson(
+        type: _lessonType(lessonModel.type),
+          alien: lessonModel.idTeacher != idTeacher,
           contactValues: lessonModel.contactValues,
           idSub: lessonModel.idSub,
           bonus: lessonModel.bonus,
@@ -41,6 +42,17 @@ class TeacherMapper{
           nameStudent: lessonModel.nameStudent,
           idSchool: lessonModel.idSchool);
     }
+
+    static LessonType _lessonType(int status){
+      switch(status){
+        case 1: return LessonType.trial;
+        case 2: return LessonType.group;
+        case 3: return LessonType.singly;
+      }
+
+      return LessonType.unknown;
+    }
+
 
     static LessonStatus _lessonStatus(int status){
       switch(status){

@@ -47,6 +47,8 @@ class TeacherModel {
 
   static final l = [
     const LessonModel(
+      type: 3,
+      idTeacher: 0,
         contactValues: ['', ''],
         id: 33,
         idSub: 33,
@@ -62,6 +64,8 @@ class TeacherModel {
         nameDirection: 'Bass',
         idDir: 0),
     const LessonModel(
+      type: 3,
+      idTeacher: 0,
         contactValues: [],
         idDir: 0,
         idSchool: 'мш1',
@@ -77,6 +81,8 @@ class TeacherModel {
         status: 2,
         bonus: false),
     const LessonModel(
+      type: 1,
+      idTeacher: 0,
         contactValues: [],
         idDir: 0,
         idSchool: 'мш1',

@@ -94,7 +94,6 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       DatePageView(
-                        key: ValueKey(state.todayLessons),
                         loading: state.status == TodayScheduleStatus.loading,
                         onVisibleTodayButton: (visible){
                           setState(() {
@@ -117,36 +116,6 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // IntrinsicWidth(
-                      //   child: Container(
-                      //     padding: const EdgeInsets.only(left: 10,right: 20,top: 8,bottom: 8),
-                      //     height: 35,
-                      //     decoration: BoxDecoration(
-                      //         color: Theme.of(context).colorScheme.surfaceVariant,
-                      //         borderRadius: BorderRadius.circular(20.0)),
-                      //     child: Row(
-                      //       mainAxisAlignment: MainAxisAlignment.end,
-                      //       children: [
-                      //         Checkbox(
-                      //             side: BorderSide(color: Theme.of(context).textTheme.displayMedium!.color!),
-                      //             checkColor: colorWhite,
-                      //             value: _onlyWithLesson,
-                      //             onChanged: (only){
-                      //               setState(() {
-                      //                 _onlyWithLesson = only!;
-                      //                 context.read<TodayScheduleBloc>().add(GetLessonsByModeViewEvent(onlyWithLesson: _onlyWithLesson));
-                      //               });
-                      //
-                      //             }),
-                      //         Text('Только с уроками',
-                      //             textAlign: TextAlign.center,
-                      //             style:TStyle.textStyleVelaSansBold(Theme.of(context)
-                      //                 .textTheme.displayMedium!.color!,size: 13.0)),
-                      //
-                      //       ],
-                      //     ),
-                      //   ),
-                      // ),
                       SelectSchoolMenu(
                         key: ValueKey(state.idsSchool),
                         loading: state.status == TodayScheduleStatus.loading,

@@ -198,12 +198,16 @@ class UserModel{
    final String nameTeacher;
   final String nameStudent;
    final int status;
+   final int type;
    final String timeAccept;
    final String nameDirection;
    final bool bonus;
+   final int idTeacher;
    final List<dynamic> contactValues;
 
    const LessonModel( {
+     required this.type,
+     required this.idTeacher,
      required this.contactValues,
      required this.idDir,
      required this.idSchool,
@@ -228,6 +232,7 @@ class UserModel{
     //final date  = DateTimeParser.date();
     final time = DateTimeParser.time();
     return LessonModel(
+      type: map['type']??10,
       contactValues: map['contactValues']??['8 (499) 322-71-04','https://wa.clck.bar/79231114616','https://t.me/@VirtuozyNskMs2'],
       idDir: map['idDir']??0,
       idSchool: map['idSchool']??'',
@@ -237,6 +242,7 @@ class UserModel{
       date: map['date']??'',
       //timePeriod: map['timePeriod']??'',
         timePeriod: time,
+      idTeacher: map['idTeacher'],
       idAuditory: map['idAuditory']??'',
       nameTeacher: map['nameTeacher']??'',
       status: map['status']??0,
