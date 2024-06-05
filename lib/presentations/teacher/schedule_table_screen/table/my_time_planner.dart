@@ -75,6 +75,8 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
   List<TimePlannerTask> tasks = [];
   TableTapLocation tableTapLocation = TableTapLocation.unknown();
   bool? isAnimated = true;
+  int yTap = 0;
+  int xTap = 0;
 
   /// check input value rules
   void _checkInputValue() {
@@ -160,102 +162,100 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
     mainVerticalController.addListener(() {
       timeVerticalController.jumpTo(mainVerticalController.offset);
     });
-    return GestureDetector(
-      child: Container(
-        color: style.backgroundColor,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            SingleChildScrollView(
-              controller: dayHorizontalController,
-              scrollDirection: Axis.horizontal,
-              physics: const NeverScrollableScrollPhysics(),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.end,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                   const SizedBox(
-                     height: 60,
-                    width: 60,
-                    // child: SelectModeCalendar(
-                    //   modeView: (mode){
-                    //     widget.modeView.call(mode);
-                    //   },
-                    // ),
-                  ),
-                  for (int i = 0; i < config.totalDays; i++) widget.headers[i],
-                ],
-              ),
+    return Container(
+      color: style.backgroundColor,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          SingleChildScrollView(
+            controller: dayHorizontalController,
+            scrollDirection: Axis.horizontal,
+            physics: const NeverScrollableScrollPhysics(),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                 const SizedBox(
+                   height: 60,
+                  width: 60,
+                  // child: SelectModeCalendar(
+                  //   modeView: (mode){
+                  //     widget.modeView.call(mode);
+                  //   },
+                  // ),
+                ),
+                for (int i = 0; i < config.totalDays; i++) widget.headers[i],
+              ],
             ),
-            Container(
-              height: 1,
-              color: style.dividerColor ?? Theme.of(context).primaryColor,
-            ),
-            Expanded(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  ScrollConfiguration(
-                    behavior: ScrollConfiguration.of(context)
-                        .copyWith(scrollbars: false),
-                    child: SingleChildScrollView(
-                      physics: const NeverScrollableScrollPhysics(),
-                      controller: timeVerticalController,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              //first number is start hour and second number is end hour
-                              for (int i = widget.startHour;
-                              i <= widget.endHour;
-                              i++)
-                                Padding(
-                                  // we need some additional padding horizontally if we're showing in am/pm format
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: !config.use24HourFormat ? 4 : 0,
-                                  ),
-                                  child: MyTimePlannerTime(
-                                    // this returns the formatted time string based on the use24HourFormat argument.
-                                    time: formattedTime(i),
-                                    setTimeOnAxis: config.setTimeOnAxis,
-                                  ),
+          ),
+          Container(
+            height: 1,
+            color: style.dividerColor ?? Theme.of(context).primaryColor,
+          ),
+          Expanded(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                ScrollConfiguration(
+                  behavior: ScrollConfiguration.of(context)
+                      .copyWith(scrollbars: false),
+                  child: SingleChildScrollView(
+                    physics: const NeverScrollableScrollPhysics(),
+                    controller: timeVerticalController,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            //first number is start hour and second number is end hour
+                            for (int i = widget.startHour;
+                            i <= widget.endHour;
+                            i++)
+                              Padding(
+                                // we need some additional padding horizontally if we're showing in am/pm format
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: !config.use24HourFormat ? 4 : 0,
                                 ),
-                              //todo test
-                              SizedBox(
-                                height: config.cellHeight!.toDouble() - 1,
-                                width: 60,
-                              )
-                            ],
-                          ),
-                          Container(
-                            height:
-                            (config.totalHours * config.cellHeight!) +68,
-                                //+config.cellHeight!.toDouble()-1,
-                            width: 1,
-                            color: style.dividerColor ??
-                          Theme.of(context).primaryColor,
-                          ),
-                        ],
-                      ),
+                                child: MyTimePlannerTime(
+                                  // this returns the formatted time string based on the use24HourFormat argument.
+                                  time: formattedTime(i),
+                                  setTimeOnAxis: config.setTimeOnAxis,
+                                ),
+                              ),
+                            //todo test
+                            SizedBox(
+                              height: config.cellHeight!.toDouble() - 1,
+                              width: 60,
+                            )
+                          ],
+                        ),
+                        Container(
+                          height:
+                          (config.totalHours * config.cellHeight!) +68,
+                              //+config.cellHeight!.toDouble()-1,
+                          width: 1,
+                          color: style.dividerColor ??
+                        Theme.of(context).primaryColor,
+                        ),
+                      ],
                     ),
                   ),
-                  Expanded(
-                    child: buildMainBody(),
-                  ),
-                ],
-              ),
+                ),
+                Expanded(
+                  child: buildMainBody(),
+                ),
+              ],
             ),
+          ),
 
-          ],
-        ),
+        ],
       ),
     );
   }
@@ -291,12 +291,12 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
                           Column(
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
-                              for (var i = 0; i < config.totalHours; i++)
+                              for (var i = 0; i < 12; i++)...{
                                 GestureDetector(
                                   behavior: HitTestBehavior.opaque,
-                                  onTap: (){
-                                    print('Y $i');
-                                    tableTapLocation = tableTapLocation.copyWith(y: i);
+                                  onDoubleTap: (){
+                                    yTap = i;
+                                    tableTapLocation = tableTapLocation.copyWith(x: xTap,y: yTap);
                                     widget.onTapTable.call(tableTapLocation);
                                   },
                                   child: Column(
@@ -309,14 +309,15 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
                                         height: (config.cellHeight! - 1).toDouble(),
                                       ),
                                       // The horizontal lines tat divides the rows
-                                       Divider(
+                                      Divider(
                                         height: 1,
                                         color: widget.colorDividerHorizontal,
                                       ),
 
                                     ],
                                   ),
-                                ),
+                                )
+                              },
                             ],
                           ),
 
@@ -327,9 +328,7 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
                                 GestureDetector(
                                   behavior: HitTestBehavior.translucent,
                                   onPanDown: (d){
-                                    print('X $i');
-                                    tableTapLocation = tableTapLocation.copyWith(x: i);
-                                    widget.onTapTable.call(tableTapLocation);
+                                    xTap = i;
                                   },
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
@@ -339,7 +338,6 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
                                         (config.cellWidth! - 1).toDouble(),
                                       ),
                                       // The vertical lines that divides the columns
-                                      //TODO: Make a configurable color for this (maybe a size too)
                                       Container(
                                         width: 0.3,
                                         height: (config.totalHours *

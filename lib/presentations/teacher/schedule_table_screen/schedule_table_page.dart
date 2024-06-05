@@ -38,6 +38,20 @@ class ScheduleTablePage extends StatefulWidget {
 
 class _ScheduleTablePageState extends State<ScheduleTablePage> {
   final themeProvider = locator.get<ThemeProvider>();
+  final List<String> _times = [
+    '10:00-11:00',
+    '11:00-12:00',
+    '12:00-13:00',
+    '13:00-14:00',
+    '14:00-15:00',
+    '15:00-16:00',
+    '16:00-17:00',
+    '17:00-18:00',
+    '18:00-19:00',
+    '19:00-20:00',
+    '20:00-21:00',
+    '21:00-22:00',
+  ];
 
   @override
   void initState() {
@@ -149,7 +163,13 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
                   Expanded(
                     child: MyTimePlanner(
                       onTapTable: (TableTapLocation locTap){
-                        print('TAP x = ${locTap.x} y = ${locTap.y}');
+                        Dialoger.showModalBottomMenu(
+                            blurred: true,
+                            args: _addLesson(timePeriod: _times[locTap.y],
+                                dateDay: state.titles[locTap.x].dateChoice,
+                                idAuditory: state.modeTable == ViewModeTable.day?state.titles[locTap.x].title:
+                                ''),
+                            title: 'Добавить урок'.tr(), content: AddLesson());
                       },
                       colorDividerVertical:
                           themeProvider.themeStatus == ThemeStatus.dark
@@ -309,5 +329,28 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
             ).animate().fade(duration: const Duration(milliseconds: 400)),
           );
         });
+
+
+  }
+
+
+
+  Lesson _addLesson({required String timePeriod, required String idAuditory, required String dateDay}){
+    print('Time ${timePeriod} IDA ${idAuditory} Date ${dateDay}');
+    return Lesson(
+        contactValues: [],
+        id: 0,
+        idSub: 0,
+        idSchool: '',
+        bonus: false,
+        timeAccept: '',
+        date: '',
+        timePeriod: '',
+        idAuditory: '',
+        nameTeacher: '',
+        nameStudent: '',
+        status: LessonStatus.firstLesson,
+        nameDirection: ''
+    );
   }
 }

@@ -59,7 +59,7 @@ class TableBloc extends Bloc<TableEvent,TableState>{
       final todayLessons = getDays(lessonsById, false);
       final index = indexByDateNow(todayLessons,false);
       final tasks = getTasks(todayLesson: todayLessons,indexDate: index.$1,weekMode: false);
-      final headerTable = getHeaderTable(weekMode: false,todayLesson: todayLessons,indexDate: index.$1);
+      final headerTable = getHeaderTable(weekMode: false,todayLesson: todayLessons, indexDate: index.$1);
       emit(state.copyWith(
         titles: headerTable,
           indexByDateNow: index.$1,
@@ -233,6 +233,7 @@ class TableBloc extends Bloc<TableEvent,TableState>{
     const listAuditory = ['Свинг','Авангард','Опера','Блюз','Эстрада'];
     List<String> headers1 = [];
     List<String> headers2 =[];
+    List<String> dateChoice = [];
     if(weekMode){
       List<String> daysWeek = [];
       final fDay =  DateFormat('yyyy-MM-dd').parse(todayLesson[indexDate].date.split('/')[0]);
@@ -245,12 +246,15 @@ class TableBloc extends Bloc<TableEvent,TableState>{
       }
       headers1 = daysWeek.map((e) => DateFormat('yyyy-MM-dd').parse(e).day.toString()).toList();
       headers2 = daysWeek.map((e) => DateTimeParser.getDayByNumber(DateFormat('yyyy-MM-dd').parse(e).weekday)).toList();
+      dateChoice = daysWeek.map((e) => DateFormat('yyyy-MM-dd').parse(e).toString().split(' ')[0]).toList();
     }else{
       headers1 = listAuditory;
+      dateChoice = List.generate(headers1.length, (index) => todayLesson[indexDate].date.split('/')[0]);
     }
     List<TitlesTable> titles = [];
     for(var i = 0; headers1.length>i; i++){
       titles.add( TitlesTable(
+        dateChoice: dateChoice[i],
         date: weekMode?headers1[i]:'',
         title: weekMode?headers2[i]:headers1[i],
       ),);
