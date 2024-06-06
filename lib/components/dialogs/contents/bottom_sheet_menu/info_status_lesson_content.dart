@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:virtuozy/components/dialogs/contents/alert_dialog/details_info_lesson_content.dart';
+import 'package:virtuozy/utils/date_time_parser.dart';
 
 import '../../../../domain/entities/lesson_entity.dart';
 import '../../../../resourses/colors.dart';
@@ -28,26 +29,133 @@ class InfoStatusLessonContent extends StatelessWidget{
       child: SingleChildScrollView(
         child: Column(
           children: [
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 2),
-                  decoration:  BoxDecoration(
-                      color:  colorGrey,
-                      borderRadius: BorderRadius.circular(5)
-                  ),
-                  child: Text(
-                      'offline',
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TStyle.textStyleVelaSansBold(Theme.of(context)
-                          .textTheme
-                          .displayMedium!
-                          .color!,
-                          size: 10.0)),
+                Text('Тип занятия:',
+                    style: TStyle.textStyleVelaSansMedium(colorGrey,
+                        size: 15.0)),
+                Row(
+                  children: [
+                    Text(lesson.type == LessonType.singly?'Индивидуальный':
+                        lesson.type == LessonType.group?'Групповой':'Можно ПУ',
+                        style: TStyle.textStyleVelaSansBold(textColorBlack(context),
+                            size: 16.0)),
+                    const Gap(10),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 2),
+                      decoration:  BoxDecoration(
+                          color:  colorGrey,
+                          borderRadius: BorderRadius.circular(5)
+                      ),
+                      child: Text(
+                          !lesson.online?'offline':"offline",
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TStyle.textStyleVelaSansBold(Theme.of(context)
+                              .textTheme
+                              .displayMedium!
+                              .color!,
+                              size: 10.0)),
+                    )
+                  ],
+                )
+              ],
+            ),
+            const Gap(5),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.calendar_month, color: colorGreen, size: 16.0),
+                    const Gap(5),
+                    Text(lesson.date,
+                        style: TStyle.textStyleVelaSansMedium(colorGrey,
+                            size: 15.0)),
+                  ],
                 ),
+                Row(
+                  children: [
+                    Icon(Icons.timelapse, color: colorGreen, size: 16.0),
+                    const Gap(5),
+                    Text(lesson.timePeriod.split('-')[0],
+                        style: TStyle.textStyleVelaSansMedium(colorGrey,
+                            size: 15.0)),
+                  ],
+                )
+              ],
+            ),
+            const Gap(5),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.location_on_outlined, color: colorGreen, size: 16.0),
+                    const Gap(5),
+                    Text(lesson.idSchool,
+                        style: TStyle.textStyleVelaSansMedium(colorGrey,
+                            size: 15.0)),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Icon(Icons.directions, color: colorGreen, size: 16.0),
+                    const Gap(5),
+                    Text(lesson.nameDirection,
+                        style: TStyle.textStyleVelaSansMedium(colorGrey,
+                            size: 15.0)),
+                  ],
+                )
+              ],
+            ),
+           const Gap(5),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Аудитория:',
+                    style: TStyle.textStyleVelaSansMedium(colorGrey,
+                        size: 15.0)),
+                Text(lesson.idAuditory,
+                    style: TStyle.textStyleVelaSansBold(textColorBlack(context),
+                        size: 16.0))
+              ],
+            ),
+            const Gap(5),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Преподаватель:',
+                    style: TStyle.textStyleVelaSansMedium(colorGrey,
+                        size: 15.0)),
+                Text(lesson.nameTeacher,
+                    style: TStyle.textStyleVelaSansBold(textColorBlack(context),
+                        size: 16.0))
+              ],
+            ),
+            const Gap(5),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Длительность:',
+                    style: TStyle.textStyleVelaSansMedium(colorGrey,
+                        size: 15.0)),
+                Text('${lesson.duration} мин.',
+                    style: TStyle.textStyleVelaSansBold(textColorBlack(context),
+                        size: 16.0))
+              ],
+            ),
+            const Gap(5),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Статус урока:',
+                    style: TStyle.textStyleVelaSansMedium(colorGrey,
+                        size: 15.0)),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 2),
                   decoration:  BoxDecoration(
@@ -68,104 +176,6 @@ class InfoStatusLessonContent extends StatelessWidget{
                 ),
               ],
             ),
-            const Gap(10),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Тип занятия:',
-                    style: TStyle.textStyleVelaSansMedium(colorGrey,
-                        size: 15.0)),
-                Text('индивидуальный',
-                    style: TStyle.textStyleVelaSansBold(textColorBlack(context),
-                        size: 16.0))
-              ],
-            ),
-            const Gap(5),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Icon(Icons.calendar_month, color: colorGreen, size: 16.0),
-                    const Gap(5),
-                    Text('23.05.2024',
-                        style: TStyle.textStyleVelaSansMedium(colorGrey,
-                            size: 15.0)),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Icon(Icons.timelapse, color: colorGreen, size: 16.0),
-                    const Gap(5),
-                    Text('12:30',
-                        style: TStyle.textStyleVelaSansMedium(colorGrey,
-                            size: 15.0)),
-                  ],
-                )
-              ],
-            ),
-            const Gap(5),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Icon(Icons.location_on_outlined, color: colorGreen, size: 16.0),
-                    const Gap(5),
-                    Text('МШ1',
-                        style: TStyle.textStyleVelaSansMedium(colorGrey,
-                            size: 15.0)),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Icon(Icons.directions, color: colorGreen, size: 16.0),
-                    const Gap(5),
-                    Text('Вокал',
-                        style: TStyle.textStyleVelaSansMedium(colorGrey,
-                            size: 15.0)),
-                  ],
-                )
-              ],
-            ),
-           const Gap(5),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Аудитория:',
-                    style: TStyle.textStyleVelaSansMedium(colorGrey,
-                        size: 15.0)),
-                Text('2 - Эстрада',
-                    style: TStyle.textStyleVelaSansBold(textColorBlack(context),
-                        size: 16.0))
-              ],
-            ),
-            const Gap(5),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Преподаватель:',
-                    style: TStyle.textStyleVelaSansMedium(colorGrey,
-                        size: 15.0)),
-                Text('Орлова Ольга',
-                    style: TStyle.textStyleVelaSansBold(textColorBlack(context),
-                        size: 16.0))
-              ],
-            ),
-            const Gap(5),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Длительность:',
-                    style: TStyle.textStyleVelaSansMedium(colorGrey,
-                        size: 15.0)),
-                Text('60 мин.',
-                    style: TStyle.textStyleVelaSansBold(textColorBlack(context),
-                        size: 16.0))
-              ],
-            ),
             const Gap(5),
             Divider(color: colorGrey,),
             Row(
@@ -174,7 +184,7 @@ class InfoStatusLessonContent extends StatelessWidget{
                 Text('Клиент:',
                     style: TStyle.textStyleVelaSansMedium(colorGrey,
                         size: 15.0)),
-                Text('Манкова Маргарита',
+                Text(lesson.nameStudent,
                     style: TStyle.textStyleVelaSansBold(textColorBlack(context),
                         size: 16.0))
               ],
@@ -193,7 +203,7 @@ class InfoStatusLessonContent extends StatelessWidget{
                       borderRadius: BorderRadius.circular(5)
                   ),
                   child: Text(
-                      'вчера',
+                      _getStatusTime(lesson),
                       textAlign: TextAlign.center,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -213,7 +223,7 @@ class InfoStatusLessonContent extends StatelessWidget{
                     style: TStyle.textStyleVelaSansMedium(colorGrey,
                         size: 15.0)),
                 Expanded(
-                  child: Text('Абик 4 12.05.2024 - 12.06.2024',
+                  child: Text(lesson.nameSub,
                       textAlign: TextAlign.end,
                       style: TStyle.textStyleVelaSansBold(textColorBlack(context),
                           size: 13.0)),
@@ -227,7 +237,7 @@ class InfoStatusLessonContent extends StatelessWidget{
                 Text('Комментарий:',
                     style: TStyle.textStyleVelaSansMedium(colorGrey,
                         size: 15.0)),
-                Text('...',
+                Text(lesson.comments,
                     style: TStyle.textStyleVelaSansBold(textColorBlack(context),
                         size: 16.0))
               ],
@@ -252,64 +262,75 @@ class InfoStatusLessonContent extends StatelessWidget{
               child: Column(
                 children: [
                   SizedBox(
-                    height: 40.0,
-                    child: SubmitButton(
-                      colorFill: colorGreen,
-                      onTap: () {},
-                      borderRadius: 10.0,
-                      textButton: 'Провести'.tr(),
+                    height: 35.0,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: SubmitButton(
+                            colorFill: colorGreen,
+                            onTap: () {},
+                            borderRadius: 10.0,
+                            textButton: 'Провести'.tr(),
+                          ),
+                        ),
+                        const Gap(8),
+                        Expanded(
+                          child: SubmitButton(
+                            colorFill: colorGreen,
+                            onTap: () {},
+                            borderRadius: 10.0,
+                            textButton: 'Пропуск'.tr(),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   const Gap(8),
                   SizedBox(
-                    height: 40.0,
-                    child: SubmitButton(
-                      colorFill: colorGreen,
-                      onTap: () {},
-                      borderRadius: 10.0,
-                      textButton: 'Пропуск'.tr(),
-                    ),
-                  ),
-                  const Gap(8),
-                  SizedBox(
-                    height: 40.0,
-                    child: SubmitButton(
-                      colorFill: colorGreen,
-                      onTap: () {},
-                      borderRadius: 10.0,
-                      textButton: 'Перенести'.tr(),
-                    ),
-                  ),
-                  const Gap(8),
-                  SizedBox(
-                    height: 40.0,
-                    child: SubmitButton(
-                      colorFill: colorRed,
-                      onTap: () {},
-                      borderRadius: 10.0,
-                      textButton: 'Отменить'.tr(),
+                    height: 35.0,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: SubmitButton(
+                            colorFill: colorGreen,
+                            onTap: () {},
+                            borderRadius: 10.0,
+                            textButton: 'Перенести'.tr(),
+                          ),
+                        ),
+                        const Gap(8),
+                        Expanded(
+                          child: SubmitButton(
+                            colorFill: colorRed,
+                            onTap: () {},
+                            borderRadius: 10.0,
+                            textButton: 'Отменить'.tr(),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
-            const Gap(8),
-            Visibility(
-              visible: lesson.status != LessonStatus.complete || lesson.status == LessonStatus.reschedule,
-              child: SizedBox(
-                height: 40.0,
-                child: SubmitButton(
-                  colorFill: colorGrey,
-                  onTap: () {
-                    Dialoger.showCustomDialog(contextUp: context,
-                        content: InfoDetailsLesson());
-
-                  },
-                  borderRadius: 10.0,
-                  textButton: 'Подробнее'.tr(),
-                ),
-              ),
-            ),
+            //const Gap(8),
+            // Visibility(
+            //   visible: lesson.status != LessonStatus.complete || lesson.status == LessonStatus.reschedule,
+            //   child: SizedBox(
+            //     height: 40.0,
+            //     child: SubmitButton(
+            //       colorFill: colorGrey,
+            //       onTap: () {
+            //         Dialoger.showCustomDialog(contextUp: context,
+            //             content: InfoDetailsLesson());
+            //
+            //       },
+            //       borderRadius: 10.0,
+            //       textButton: 'Подробнее'.tr(),
+            //     ),
+            //   ),
+            // ),
            const Gap(40)
           ],
         ),
@@ -317,4 +338,10 @@ class InfoStatusLessonContent extends StatelessWidget{
     );
   }
 
+
+   String _getStatusTime(Lesson lesson){
+    final intToDay = DateTime.now().millisecondsSinceEpoch;
+    final intTimeLesson = DateTimeParser.getTimeMillisecondEpochByDate(date: lesson.date);
+    return intToDay>intTimeLesson?'вчера':intToDay == intTimeLesson?'сегодня':'завтра';
+   }
 }

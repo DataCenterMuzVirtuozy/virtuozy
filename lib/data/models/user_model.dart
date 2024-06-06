@@ -204,8 +204,17 @@ class UserModel{
    final bool bonus;
    final int idTeacher;
    final List<dynamic> contactValues;
+  final String comments;
+  final String nameSub;
+  final bool online;
+  final int duration;
+
 
    const LessonModel( {
+     required this.nameSub,
+     required this.comments,
+     required this.duration,
+     required this.online,
      required this.type,
      required this.idTeacher,
      required this.contactValues,
@@ -232,6 +241,10 @@ class UserModel{
     //final date  = DateTimeParser.date();
     final time = DateTimeParser.time();
     return LessonModel(
+      online: map['online']??false,
+      comments: map['comments']??'...',
+      nameSub: map['nameSub']??'...',
+      duration: map['duration']??60,
       type: map['type']??10,
       contactValues: map['contactValues']??['8 (499) 322-71-04','https://wa.clck.bar/79231114616','https://t.me/@VirtuozyNskMs2'],
       idDir: map['idDir']??0,

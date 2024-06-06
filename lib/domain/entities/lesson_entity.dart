@@ -27,6 +27,7 @@ enum LessonType{
 
 class Lesson{
   final int id;
+  final int idTeacher;
   final String idSchool;
   final String date; //2024-12-22
   final String timePeriod;
@@ -39,10 +40,19 @@ class Lesson{
   final String nameDirection;
   final int idSub;
   final bool bonus;
-  final bool alien;
+  final bool online;
+  final int duration;
+  final bool alien;  //чужой урок
   final List<dynamic> contactValues;
+  final String comments;
+  final String nameSub;
 
   const Lesson({
+    required this.nameSub,
+    required this.comments,
+    required this.duration,
+    required this.online,
+    required this.idTeacher,
     required this.type,
     required this.alien,
     required this.contactValues,
@@ -63,6 +73,11 @@ class Lesson{
 
   factory Lesson.unknown(){
     return const Lesson(
+      duration: 0,
+      nameSub: '',
+      comments: '',
+      online: false,
+      idTeacher: 0,
       type: LessonType.unknown,
       alien: false,
       contactValues: [],
@@ -94,9 +109,19 @@ class Lesson{
     String? idSchool,
     List<String>? contactValues,
     bool? alien,
-    LessonType? type
+    LessonType? type,
+    int? idTeacher,
+    bool? online,
+    String? nameSub,
+    String? comments,
+    int? duration
   }) {
     return Lesson(
+      duration: duration??this.duration,
+      nameSub: nameSub??this.nameSub,
+      comments: comments??this.comments,
+      online: online??this.online,
+      idTeacher: idTeacher??this.idTeacher,
       type: type??this.type,
       alien: alien??this.alien,
       contactValues: contactValues??this.contactValues,

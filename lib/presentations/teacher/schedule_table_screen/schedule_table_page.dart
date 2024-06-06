@@ -57,7 +57,7 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
   @override
   void initState() {
     super.initState();
-    context.read<TableBloc>().add(const GetInitLessonsEvent(weekMode: false));
+    context.read<TableBloc>().add(const GetInitLessonsEvent(viewMode: ViewModeTable.day));
   }
 
   @override
@@ -79,6 +79,7 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
 
           return Scaffold(
             floatingActionButton: FloatingActionButton(
+              mini: true,
               child: Icon(Icons.add, color: colorWhite),
               onPressed: () {
                 Dialoger.showModalBottomMenu(
@@ -99,7 +100,7 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
                         SelectSchoolMenu(
                           loading: state.status == TableStatus.loading,
                           currentIdSchool: state.currentIdSchool,
-                          idsSchool: state.idsSchool,
+                          idsSchool: state.idsSchool.isEmpty?['...']:state.idsSchool,
                           onChange: (id) {
                             context
                                 .read<TableBloc>()
@@ -113,15 +114,13 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
                             context.read<TableBloc>().add(
                                 GetLessonsTableByCalendarDateEvent(
                                     date: date,
-                                    weekMode:
-                                        state.modeTable == ViewModeTable.week));
+                                    viewMode: state.modeTable));
                           },
                           lessons: state.lessons,
                           onChange: (index) {
                             context.read<TableBloc>().add(GetLessonsTableByDate(
                                 indexDate: index,
-                                weekMode:
-                                    state.modeTable == ViewModeTable.week));
+                                viewMode: state.modeTable));
                           },
                           initIndex: state.indexByDateNow,
                           lessonsToday: state.todayLessons,
@@ -131,13 +130,13 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
                           if (mode == ViewModeTable.week) {
                             context
                                 .read<TableBloc>()
-                                .add(const GetLessonsTableWeek(weekMode: true));
+                                .add( GetLessonsTableWeek(viewMode: mode));
                           } else if (mode == ViewModeTable.day) {
                             context.read<TableBloc>().add(
-                                const GetInitLessonsEvent(weekMode: false));
+                                 GetInitLessonsEvent(viewMode: mode));
                           } else {
                             context.read<TableBloc>().add(
-                                const GetInitLessonsEvent(weekMode: false));
+                                 GetMyLessonEvent(weekMode: false,indexDate: state.indexByDateNow));
                           }
                         })
                       ],
@@ -191,13 +190,13 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
                           if (mode == ViewModeTable.week) {
                             context
                                 .read<TableBloc>()
-                                .add(const GetLessonsTableWeek(weekMode: true));
+                                .add( GetLessonsTableWeek(viewMode: mode));
                           } else if (mode == ViewModeTable.day) {
                             context.read<TableBloc>().add(
-                                const GetInitLessonsEvent(weekMode: false));
+                                 GetInitLessonsEvent(viewMode: mode));
                           } else {
                             context.read<TableBloc>().add(
-                                const GetInitLessonsEvent(weekMode: false));
+                                 GetInitLessonsEvent(viewMode: mode));
                           }
                         },
                         startHour: 10,
@@ -342,8 +341,12 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
   Lesson _addLesson(
       {required String timePeriod,
       required String idAuditory,
-      required String dateDay}) {
+      required String dateDay,}) {
     return Lesson(
+      comments: '',
+         nameSub: '',
+         duration: 0,
+         idTeacher: 0,
         type: LessonType.unknown,
         alien: false,
         contactValues: [],
@@ -358,6 +361,7 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
         nameTeacher: '',
         nameStudent: '',
         status: LessonStatus.firstLesson,
-        nameDirection: '');
+        nameDirection: '',
+        online: false);
   }
 }

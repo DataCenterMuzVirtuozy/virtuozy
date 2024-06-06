@@ -32,6 +32,7 @@ class TableBloc extends Bloc<TableEvent,TableState>{
    on<GetLessonsTableByDate>(getLessonsTableByDate,transformer: droppable());
    on<GetLessonsTableWeek>(getLessonTableOnWeek,transformer: droppable());
    on<GetLessonsTableByCalendarDateEvent>(_getLessonsByCalendarDate,transformer: droppable());
+   on<GetMyLessonEvent>(getMyLesson,transformer: droppable());
   }
 
   final _cubitTeacher = locator.get<TeacherCubit>();
@@ -86,7 +87,15 @@ class TableBloc extends Bloc<TableEvent,TableState>{
           status: TableStatus.loading, scheduleStatus:ScheduleStatus.loading, error: ''));
       await Future.delayed(const Duration(milliseconds: 300));
       List<TodayLessons> todayLessons = [];
-      final lessons = _cubitTeacher.teacherEntity.lessons;
+      List<Lesson> lessons = [];
+      if(event.viewMode == ViewModeTable.my){
+        final idTeacher = _cubitTeacher.teacherEntity.id;
+        lessons = _cubitTeacher.teacherEntity.lessons.where((element) => element.idTeacher == idTeacher).toList();
+
+      }else{
+        lessons = _cubitTeacher.teacherEntity.lessons;
+
+      }
       final lessonsByIdSchool = getLessons(state.currentIdSchool, lessons);
 
       if(state.modeTable == ViewModeTable.week){
@@ -131,6 +140,36 @@ class TableBloc extends Bloc<TableEvent,TableState>{
   }
 
 
+  void getMyLesson(GetMyLessonEvent event,emit) async {
+
+    try {
+      emit(state.copyWith(status: TableStatus.loading, error: ''));
+      await Future.delayed(const Duration(milliseconds: 300));
+      final idTeacher = _cubitTeacher.teacherEntity.id;
+      final lessons = _cubitTeacher.teacherEntity.lessons.where((element) => element.idTeacher == idTeacher).toList();
+      final lessonsByIdSchool = getLessons(state.currentIdSchool, lessons);
+      final weekLessons = getLessWeek(lessonsByIdSchool);
+      final dateNow = DateTime.now().toString().split(' ')[0];
+      final index = indexByDateSelect(weekLessons,dateNow,true);
+      final tasks = getTasks(todayLesson: weekLessons,indexDate: index,weekMode: true);
+      final headerTable = getHeaderTable(weekMode: true,todayLesson: weekLessons,indexDate: index);
+      emit(state.copyWith(
+          titles: headerTable,
+          indexByDateNow: index,
+          visibleTodayButton: false,
+          status: TableStatus.loaded,
+          scheduleStatus: ScheduleStatus.loaded,
+          tasks: tasks,
+          modeTable: ViewModeTable.my,
+          todayLessons: weekLessons));
+    } on Failure catch (e) {
+      emit(state.copyWith(scheduleStatus: ScheduleStatus.error, error: e.message));
+    }
+
+
+  }
+
+
 
   void getLessonTableOnWeek(GetLessonsTableWeek event,emit) async {
     try {
@@ -150,7 +189,7 @@ class TableBloc extends Bloc<TableEvent,TableState>{
           status: TableStatus.loaded,
           scheduleStatus: ScheduleStatus.loaded,
           tasks: tasks,
-          modeTable: event.weekMode?ViewModeTable.week:ViewModeTable.day,
+          modeTable: event.viewMode,
           todayLessons: weekLessons));
     } on Failure catch (e) {
       emit(state.copyWith(scheduleStatus: ScheduleStatus.error, error: e.message));
@@ -164,7 +203,13 @@ class TableBloc extends Bloc<TableEvent,TableState>{
       emit(state.copyWith(status: TableStatus.loading, error: ''));
       await Future.delayed(const Duration(milliseconds: 300));
       List<TodayLessons> todayLessons = [];
-      final lessons = _cubitTeacher.teacherEntity.lessons;
+      List<Lesson> lessons = [];
+      if(state.modeTable == ViewModeTable.my){
+        final idTeacher = _cubitTeacher.teacherEntity.id;
+        lessons = _cubitTeacher.teacherEntity.lessons.where((element) => element.idTeacher == idTeacher).toList();
+      }else{
+        lessons = _cubitTeacher.teacherEntity.lessons;
+      }
       final ids = getIds(lessons);
       final lessonsByIdSchool = getLessons(
           event.id, lessons);
@@ -200,17 +245,25 @@ class TableBloc extends Bloc<TableEvent,TableState>{
           status: TableStatus.loading,tasks: [],titles: [], error: ''));
       await Future.delayed(const Duration(milliseconds: 300));
       List<TodayLessons> todayLessons = [];
-      final lessons = _cubitTeacher.teacherEntity.lessons;
+      List<Lesson> lessons = [];
+      if(event.viewMode == ViewModeTable.my){
+        final idTeacher = _cubitTeacher.teacherEntity.id;
+         lessons = _cubitTeacher.teacherEntity.lessons.where((element) => element.idTeacher == idTeacher).toList();
+      }else{
+        lessons = _cubitTeacher.teacherEntity.lessons;
+
+      }
+
       final ids = getIds(lessons);
       final lessonsByIdSchool = getLessons(
           state.currentIdSchool, lessons);
-      if(event.weekMode){
+      if(event.viewMode == ViewModeTable.week){
         todayLessons = getLessWeek(lessonsByIdSchool);
       }else{
         todayLessons = getDays(lessonsByIdSchool, false);
       }
-      final tasks = getTasks(todayLesson: todayLessons,indexDate: event.indexDate,weekMode: event.weekMode);
-      final headerTable = getHeaderTable(weekMode: event.weekMode,todayLesson: todayLessons,indexDate: event.indexDate);
+      final tasks = getTasks(todayLesson: todayLessons,indexDate: event.indexDate,weekMode: event.viewMode == ViewModeTable.week);
+      final headerTable = getHeaderTable(weekMode: event.viewMode == ViewModeTable.week,todayLesson: todayLessons,indexDate: event.indexDate);
       emit(state.copyWith(
           titles: headerTable,
           indexByDateNow: event.indexDate,
@@ -220,7 +273,7 @@ class TableBloc extends Bloc<TableEvent,TableState>{
           status: TableStatus.loaded,
           idsSchool: ids,
           tasks: tasks,
-          modeTable: event.weekMode?ViewModeTable.week:ViewModeTable.day,
+          modeTable: event.viewMode,
           todayLessons: todayLessons));
     } on Failure catch (e) {
       emit(state.copyWith(status: TableStatus.error, error: e.message));

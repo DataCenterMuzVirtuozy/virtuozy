@@ -26,6 +26,10 @@ class TeacherMapper{
 
     static Lesson _fromLessonModel(LessonModel lessonModel, int idTeacher){
       return Lesson(
+        comments: lessonModel.comments,
+        nameSub: lessonModel.nameSub,
+        duration: lessonModel.duration,
+        idTeacher: idTeacher,
         type: _lessonType(lessonModel.type),
           alien: lessonModel.idTeacher != idTeacher,
           contactValues: lessonModel.contactValues,
@@ -40,7 +44,8 @@ class TeacherMapper{
           timeAccept: lessonModel.timeAccept,
           status: _lessonStatus(lessonModel.status),
           nameStudent: lessonModel.nameStudent,
-          idSchool: lessonModel.idSchool);
+          idSchool: lessonModel.idSchool,
+          online: lessonModel.online);
     }
 
     static LessonType _lessonType(int status){
