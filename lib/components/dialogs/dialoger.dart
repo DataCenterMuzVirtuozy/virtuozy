@@ -102,7 +102,7 @@ class Dialoger {
             ListSupport() => ListSupport().build(context: _, args: args),
             FindSubways() => FindSubways().build(context: _),
             DetailsClient() => DetailsClient().build(context: _),
-            AddLesson() => AddLesson().build(context: _),
+            AddLesson() => AddLesson().build(context: _,args: args),
             InfoStatusLesson() => InfoStatusLesson().build(context: _,args: args),
           };
           return BackdropFilter(

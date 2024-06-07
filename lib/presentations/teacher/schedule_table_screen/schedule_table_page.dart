@@ -14,6 +14,7 @@ import 'package:virtuozy/domain/entities/lesson_entity.dart';
 import 'package:virtuozy/domain/entities/table_tap_location_entity.dart';
 import 'package:virtuozy/presentations/teacher/schedule_table_screen/table/my_time_planner.dart';
 import 'package:virtuozy/resourses/colors.dart';
+import 'package:virtuozy/utils/auth_mixin.dart';
 import 'package:virtuozy/utils/status_to_color.dart';
 
 import '../../../components/date_page_table.dart';
@@ -36,7 +37,7 @@ class ScheduleTablePage extends StatefulWidget {
   State<ScheduleTablePage> createState() => _ScheduleTablePageState();
 }
 
-class _ScheduleTablePageState extends State<ScheduleTablePage> {
+class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
   final themeProvider = locator.get<ThemeProvider>();
   final List<String> _times = [
     '10:00-11:00',
@@ -84,6 +85,13 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
               onPressed: () {
                 Dialoger.showModalBottomMenu(
                     blurred: true,
+                    args: _addLesson(
+                      idSchool: state.currentIdSchool,
+                        nameTeacher: '${teacher.firstName} ${teacher.lastName}',
+                        idTeacher: teacher.id,
+                        timePeriod: '',
+                        dateDay: '',
+                        idAuditory:''),
                     title: 'Добавить урок'.tr(),
                     content: AddLesson());
               },
@@ -172,6 +180,9 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
                           Dialoger.showModalBottomMenu(
                               blurred: true,
                               args: _addLesson(
+                                idSchool: state.currentIdSchool,
+                                nameTeacher: '${teacher.firstName} ${teacher.lastName}',
+                                idTeacher: teacher.id,
                                   timePeriod: _times[locTap.y],
                                   dateDay: state.titles[locTap.x].dateChoice,
                                   idAuditory:
@@ -341,24 +352,27 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> {
   Lesson _addLesson(
       {required String timePeriod,
       required String idAuditory,
+        required int idTeacher,
+        required String idSchool,
+        required String nameTeacher,
       required String dateDay,}) {
     return Lesson(
       comments: '',
          nameSub: '',
          duration: 0,
-         idTeacher: 0,
+         idTeacher: idTeacher,
         type: LessonType.unknown,
         alien: false,
         contactValues: [],
         id: 0,
         idSub: 0,
-        idSchool: '',
+        idSchool: idSchool,
         bonus: false,
         timeAccept: '',
         date: dateDay,
         timePeriod: timePeriod,
         idAuditory: idAuditory,
-        nameTeacher: '',
+        nameTeacher: nameTeacher,
         nameStudent: '',
         status: LessonStatus.firstLesson,
         nameDirection: '',

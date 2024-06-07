@@ -151,7 +151,7 @@ class DetailsClient extends DialogsContent{
 class AddLesson extends DialogsContent{
   @override
   build({required BuildContext context, Object? args}) {
-    return const AddLessonContent();
+    return  AddLessonContent(initLesson: args as Lesson,);
   }
 
 }

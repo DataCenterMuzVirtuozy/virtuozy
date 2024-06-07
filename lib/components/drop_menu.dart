@@ -12,13 +12,14 @@ class DropMenu extends StatefulWidget{
   const DropMenu({super.key, required this.items, required this.onChange,
   this.selectedValue = '',
   this.width = 0.0,
-    this.widthDrop = 0.0});
+    this.widthDrop = 0.0,  this.alignment = Alignment.centerLeft});
 
   final List<String> items;
   final Function onChange;
   final String selectedValue;
   final double width;
   final double widthDrop;
+  final Alignment alignment;
 
   @override
   State<DropMenu> createState() => _DropMenuState();
@@ -66,14 +67,17 @@ class _DropMenuState extends State<DropMenu> {
             .map((String item) =>
             DropdownMenuItem<String>(
               value: item,
-              child: Text(
-                item,
-                style: TStyle.textStyleVelaSansExtraBolt(Theme
-                    .of(context)
-                    .textTheme
-                    .displayMedium!
-                    .color!, size: 13.0),
-                overflow: TextOverflow.ellipsis,
+              child: Align(
+                alignment: widget.alignment,
+                child: Text(
+                  item,
+                  style: TStyle.textStyleVelaSansExtraBolt(Theme
+                      .of(context)
+                      .textTheme
+                      .displayMedium!
+                      .color!, size: 13.0),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ))
             .toList(),

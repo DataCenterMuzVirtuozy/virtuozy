@@ -73,7 +73,7 @@ class InfoStatusLessonContent extends StatelessWidget{
                   children: [
                     Icon(Icons.calendar_month, color: colorGreen, size: 16.0),
                     const Gap(5),
-                    Text(lesson.date,
+                    Text(DateTimeParser.getDateFromApi(date: lesson.date),
                         style: TStyle.textStyleVelaSansMedium(colorGrey,
                             size: 15.0)),
                   ],
@@ -160,11 +160,11 @@ class InfoStatusLessonContent extends StatelessWidget{
                   padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 2),
                   decoration:  BoxDecoration(
                       color:  StatusToColor.getColor(
-                          lessonStatus: LessonStatus.cancel),
+                          lessonStatus: lesson.status),
                       borderRadius: BorderRadius.circular(5)
                   ),
                   child: Text(
-                      StatusToColor.getNameStatus(LessonStatus.cancel),
+                      StatusToColor.getNameStatus(lesson.status),
                       textAlign: TextAlign.center,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,

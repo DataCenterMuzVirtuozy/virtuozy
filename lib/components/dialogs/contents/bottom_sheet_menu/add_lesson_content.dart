@@ -2,19 +2,27 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 import 'package:virtuozy/components/drop_menu.dart';
+import 'package:virtuozy/utils/date_time_parser.dart';
 
+import '../../../../domain/entities/lesson_entity.dart';
 import '../../../../resourses/colors.dart';
 import '../../../../utils/text_style.dart';
 import '../../../buttons.dart';
 import '../../dialoger.dart';
 
 String _selectedTypeLesson = '';
+
+
 PageController pageController = PageController();
 
 class AddLessonContent extends StatefulWidget {
-  const AddLessonContent({super.key});
+  const AddLessonContent({super.key, required this.initLesson});
+
+
+  final Lesson initLesson;
 
   @override
   State<AddLessonContent> createState() => _AddLessonContentState();
@@ -46,6 +54,7 @@ class _AddLessonContentState extends State<AddLessonContent> {
                 },
               ),
                Step2(
+                 lesson: widget.initLesson,
                 key: ValueKey(_selectedTypeLesson),
               )
             ][index];
@@ -67,7 +76,6 @@ class _Step1State extends State<Step1> {
   String? selectedValue = '...';
 
   final List<String> items = [
-    'Не выбрано',
     'Индивидуальные',
     'Можно ПУ',
     'Групповой',
@@ -76,7 +84,7 @@ class _Step1State extends State<Step1> {
   @override
   void initState() {
     super.initState();
-    selectedValue = items[0];
+    selectedValue = items[1];
   }
 
   @override
@@ -84,17 +92,12 @@ class _Step1State extends State<Step1> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20),
-            child: Text('Тип занятия'.tr(),
-                style: TStyle.textStyleVelaSansBold(textColorBlack(context),
-                    size: 20)),
-          ),
-        ),
+        Text('Тип занятия'.tr(),
+            style: TStyle.textStyleVelaSansBold(textColorBlack(context),
+                size: 20)),
         const Gap(10),
         DropMenu(
+          alignment: Alignment.center,
           items: items,
           onChange: (value) {
             selectedValue = value;
@@ -121,6 +124,7 @@ class _Step1State extends State<Step1> {
             ],
           ),
         ),
+        const Gap(15),
         TextButton(
             onPressed: () {
               Navigator.pop(context);
@@ -135,7 +139,8 @@ class _Step1State extends State<Step1> {
 }
 
 class Step2 extends StatefulWidget {
-  const Step2({super.key});
+  const Step2({super.key, required this.lesson});
+  final Lesson lesson;
 
   @override
   State<Step2> createState() => _Step2State();
@@ -143,7 +148,6 @@ class Step2 extends StatefulWidget {
 
 class _Step2State extends State<Step2> {
   final List<String> itemsStudyes = [
-    'Не выбрано',
     'Индивидуальные',
     'Можно ПУ',
     'Групповой',
@@ -156,11 +160,20 @@ class _Step2State extends State<Step2> {
     'Абик 3',
   ];
 
+  final List<String> itemsCountLess = [
+    '',
+    '3',
+    '10',
+    '5',
+  ];
+
+
+
+
   final List<String> itemsTeacher = [
-    'Не выбрано',
-    'Вася Пупкин',
-    'Петя Иванов',
-    'Анатолий Петров',
+    'Кристина Евженко',
+    'Анастасия Перова',
+    'Александр Трапезников',
   ];
 
   final List<String> itemsDir = [
@@ -194,35 +207,39 @@ class _Step2State extends State<Step2> {
   ];
 
   final List<String> itemsRemote = [
-    'Не выбрано',
     'online',
     'offline',
   ];
 
   final List<String> itemsLocation = [
-    'Не выбрано',
     'мш1',
     'мш2',
   ];
 
   final List<String> itemsAuditory = [
     'Не выбрано',
-    'Опера',
-    'Классика',
-    'Авангард',
-    'Шансонье',
+    'Свинг','Авангард','Опера','Блюз','Эстрада'
+  ];
+
+  final List<String> itemsClient = [
+    'Мананкова Маргарита',
+    'Иванов Богдан',
   ];
 
 
-  String selectedValueLesson = '...';
-  String selectedValueSubs = '...';
-  String selectedValueTeacher = '...';
-  String selectedValueDir = '...';
-  String selectedValueDur = '...';
-  String selectedValueTimeStart = '...';
-  String selectedValueRemote = '...';
-  String selectedValueLocation = '...';
-  String selectedValueAuditory = '...';
+
+
+  String selectedValueLesson = '';
+  String selectedValueSubs = 'Не выбрано';
+  String selectedValueTeacher = '';
+  String selectedValueDir = '';
+  String selectedValueDur = '';
+  String selectedValueTimeStart = '';
+  String selectedValueRemote = '';
+  String selectedValueLocation = '';
+  String selectedValueAuditory = '';
+  String selectedValueStudent = '';
+  String selectedValueDate = '';
 
   final double _h1 = 8.0;
   final double _h2 = 15.0;
@@ -231,6 +248,11 @@ class _Step2State extends State<Step2> {
   void initState() {
     super.initState();
     selectedValueLesson = _selectedTypeLesson;
+    selectedValueTeacher = widget.lesson.nameTeacher;
+    selectedValueLocation = widget.lesson.idSchool;
+    selectedValueAuditory = widget.lesson.idAuditory.isEmpty?itemsAuditory[0]:widget.lesson.idAuditory;
+    selectedValueDate = DateTimeParser.getDateFromApi(date: DateTime.now().toString().split(' ')[0].tr());
+    selectedValueTimeStart = itemsTimesStart.firstWhere((element) => element == widget.lesson.timePeriod.split('-')[0]);
   }
 
   @override
@@ -268,25 +290,31 @@ class _Step2State extends State<Step2> {
             ),
           ),
            Gap(_h1),
-          InkWell(
-            onTap: (){
-              Dialoger.showToast('В разработке');
+          DropMenu(
+            items: itemsClient,
+            onChange: (value) {
+              selectedValueStudent = value;
             },
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-              decoration:  BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                border: Border.all(
-                  color: colorGrey,
-                  width: 1.0,
-                ),
-              ),
-              child: Text('Поиск...'.tr(),
-                  style: TStyle.textStyleOpenSansRegular(colorGrey,
-                      size: 14)),
-            ),
           ),
+          // InkWell(
+          //   onTap: (){
+          //     Dialoger.showToast('В разработке');
+          //   },
+          //   child: Container(
+          //     width: MediaQuery.of(context).size.width,
+          //     padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+          //     decoration:  BoxDecoration(
+          //       borderRadius: BorderRadius.circular(50),
+          //       border: Border.all(
+          //         color: colorGrey,
+          //         width: 1.0,
+          //       ),
+          //     ),
+          //     child: Text('Поиск...'.tr(),
+          //         style: TStyle.textStyleOpenSansRegular(colorGrey,
+          //             size: 14)),
+          //   ),
+          // ),
            Gap(_h2),
           Align(
             alignment: Alignment.centerLeft,
@@ -301,27 +329,36 @@ class _Step2State extends State<Step2> {
           DropMenu(
             items: itemsSubs,
             onChange: (value) {
-              selectedValueSubs = value;
+              setState(() {
+                selectedValueSubs = value;
+              });
             },
           ),
-          const Gap(5),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Row(
-                children: [
-                  Text('Осталось уроков:'.tr(),
-                      style: TStyle.textStyleVelaSansBold(colorGrey,
-                          size: 12)),
-                  const Gap(8),
-                  Text('20',
-                      style: TStyle.textStyleVelaSansBold(textColorBlack(context),
-                          size: 12))
-                ],
-              ),
+          Visibility(
+            visible: selectedValueSubs != 'Не выбрано',
+            child: Column(
+              children: [
+                const Gap(5),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Row(
+                      children: [
+                        Text('Осталось уроков:'.tr(),
+                            style: TStyle.textStyleVelaSansBold(colorGrey,
+                                size: 12)),
+                        const Gap(8),
+                        Text(itemsCountLess[itemsSubs.indexOf(selectedValueSubs)],
+                            style: TStyle.textStyleVelaSansBold(textColorBlack(context),
+                                size: 12))
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
+          ).animate().fade(duration: const Duration(milliseconds: 400)),
           Gap(_h2),
           Align(
             alignment: Alignment.centerLeft,
@@ -334,6 +371,7 @@ class _Step2State extends State<Step2> {
           ),
           Gap(_h1),
           DropMenu(
+            selectedValue: selectedValueTeacher,
             items: itemsTeacher,
             onChange: (value) {
               selectedValueTeacher = value;
@@ -391,7 +429,9 @@ class _Step2State extends State<Step2> {
                   onTap: (){
                     Dialoger.showSelectDate(context: context, lessons: [],
                         onDate: (String date){
-
+                           setState(() {
+                              selectedValueDate = DateTimeParser.getDateFromApi(date: date);
+                           });
                         });
                   },
                   child: Container(
@@ -403,7 +443,7 @@ class _Step2State extends State<Step2> {
                         width: 1.0,
                       ),
                     ),
-                    child: Text(DateTime.now().toString().split(' ')[0].tr(),
+                    child: Text(selectedValueDate,
                         style: TStyle.textStyleOpenSansRegular(colorGrey,
                             size: 14)),
                   ),
@@ -413,6 +453,7 @@ class _Step2State extends State<Step2> {
               Expanded(
                 child: DropMenu(
                   widthDrop: 100,
+                  selectedValue: selectedValueTimeStart,
                   items: itemsTimesStart,
                   onChange: (value) {
                     selectedValueTimeStart = value;
@@ -434,6 +475,7 @@ class _Step2State extends State<Step2> {
           ),
           Gap(_h1),
           DropMenu(
+            selectedValue: itemsRemote[2],
             items: itemsRemote,
             onChange: (value) {
               selectedValueRemote = value;
@@ -452,6 +494,7 @@ class _Step2State extends State<Step2> {
           ),
           Gap(_h1),
           DropMenu(
+            selectedValue: selectedValueLocation,
             items: itemsLocation,
             onChange: (value) {
               selectedValueLocation = value;
@@ -470,6 +513,7 @@ class _Step2State extends State<Step2> {
           ),
           Gap(_h1),
           DropMenu(
+            selectedValue: selectedValueAuditory,
             items: itemsAuditory,
             onChange: (value) {
               selectedValueAuditory = value;
@@ -526,7 +570,13 @@ class _Step2State extends State<Step2> {
             height: 40.0,
             child: SubmitButton(
               colorFill: colorGreen,
-              onTap: () {},
+              onTap: () {
+                if(!_checkData()){
+                  return;
+                }
+                Dialoger.showToast('START ADD');
+
+              },
               borderRadius: 10.0,
               textButton: 'Сохранить'.tr(),
             ),
@@ -545,5 +595,32 @@ class _Step2State extends State<Step2> {
         ],
       ),
     );
+  }
+
+  bool _checkData(){
+    if(selectedValueSubs.isEmpty){
+      Dialoger.showToast('selectedValueSubs');
+      return false;
+    }
+
+    if(selectedValueDir.isEmpty){
+      Dialoger.showToast('selectedValueDir');
+      return false;
+    }
+    if(selectedValueDur.isEmpty){
+      Dialoger.showToast('selectedValueDur');
+      return false;
+    }
+    if(selectedValueTimeStart.isEmpty){
+      Dialoger.showToast('selectedValueTimeStart');
+      return false;
+    }
+
+    if(selectedValueAuditory.isEmpty){
+      Dialoger.showToast('selectedValueAuditory');
+      return  false;
+    }
+
+    return true;
   }
 }
