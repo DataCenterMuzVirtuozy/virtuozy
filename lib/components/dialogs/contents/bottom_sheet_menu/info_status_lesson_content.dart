@@ -1,14 +1,19 @@
 
 
- import 'package:easy_localization/easy_localization.dart';
+
+
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:virtuozy/components/dialogs/contents/alert_dialog/details_info_lesson_content.dart';
+import 'package:virtuozy/presentations/teacher/schedule_table_screen/bloc/table_event.dart';
 import 'package:virtuozy/utils/date_time_parser.dart';
 
 import '../../../../domain/entities/lesson_entity.dart';
+import '../../../../presentations/teacher/schedule_table_screen/bloc/table_bloc.dart';
 import '../../../../resourses/colors.dart';
 import '../../../../utils/status_to_color.dart';
 import '../../../../utils/text_style.dart';
@@ -16,10 +21,27 @@ import '../../../buttons.dart';
 import '../../dialoger.dart';
 import '../../sealeds.dart';
 
-class InfoStatusLessonContent extends StatelessWidget{
+class InfoStatusLessonContent extends StatefulWidget{
   const InfoStatusLessonContent({super.key, required this.lesson});
 
   final Lesson lesson;
+
+  @override
+  State<InfoStatusLessonContent> createState() => _InfoStatusLessonContentState();
+}
+
+class _InfoStatusLessonContentState extends State<InfoStatusLessonContent> {
+
+
+  LessonStatus _statusChange = LessonStatus.unknown;
+  Lesson? _editedLesson;
+
+  @override
+  void initState() {
+    super.initState();
+    _statusChange = widget.lesson.status;
+    _editedLesson = widget.lesson;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +51,6 @@ class InfoStatusLessonContent extends StatelessWidget{
       child: SingleChildScrollView(
         child: Column(
           children: [
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -38,8 +59,8 @@ class InfoStatusLessonContent extends StatelessWidget{
                         size: 15.0)),
                 Row(
                   children: [
-                    Text(lesson.type == LessonType.singly?'Индивидуальный':
-                        lesson.type == LessonType.group?'Групповой':'Можно ПУ',
+                    Text(widget.lesson.type == LessonType.singly?'Индивидуальный':
+                        widget.lesson.type == LessonType.group?'Групповой':'Можно ПУ',
                         style: TStyle.textStyleVelaSansBold(textColorBlack(context),
                             size: 16.0)),
                     const Gap(10),
@@ -50,7 +71,7 @@ class InfoStatusLessonContent extends StatelessWidget{
                           borderRadius: BorderRadius.circular(5)
                       ),
                       child: Text(
-                          !lesson.online?'offline':"offline",
+                          !widget.lesson.online?'offline':"offline",
                           textAlign: TextAlign.center,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -73,7 +94,7 @@ class InfoStatusLessonContent extends StatelessWidget{
                   children: [
                     Icon(Icons.calendar_month, color: colorGreen, size: 16.0),
                     const Gap(5),
-                    Text(DateTimeParser.getDateFromApi(date: lesson.date),
+                    Text(DateTimeParser.getDateFromApi(date: widget.lesson.date),
                         style: TStyle.textStyleVelaSansMedium(colorGrey,
                             size: 15.0)),
                   ],
@@ -82,7 +103,7 @@ class InfoStatusLessonContent extends StatelessWidget{
                   children: [
                     Icon(Icons.timelapse, color: colorGreen, size: 16.0),
                     const Gap(5),
-                    Text(lesson.timePeriod.split('-')[0],
+                    Text(widget.lesson.timePeriod.split('-')[0],
                         style: TStyle.textStyleVelaSansMedium(colorGrey,
                             size: 15.0)),
                   ],
@@ -97,7 +118,7 @@ class InfoStatusLessonContent extends StatelessWidget{
                   children: [
                     Icon(Icons.location_on_outlined, color: colorGreen, size: 16.0),
                     const Gap(5),
-                    Text(lesson.idSchool,
+                    Text(widget.lesson.idSchool,
                         style: TStyle.textStyleVelaSansMedium(colorGrey,
                             size: 15.0)),
                   ],
@@ -106,7 +127,7 @@ class InfoStatusLessonContent extends StatelessWidget{
                   children: [
                     Icon(Icons.directions, color: colorGreen, size: 16.0),
                     const Gap(5),
-                    Text(lesson.nameDirection,
+                    Text(widget.lesson.nameDirection,
                         style: TStyle.textStyleVelaSansMedium(colorGrey,
                             size: 15.0)),
                   ],
@@ -120,7 +141,7 @@ class InfoStatusLessonContent extends StatelessWidget{
                 Text('Аудитория:',
                     style: TStyle.textStyleVelaSansMedium(colorGrey,
                         size: 15.0)),
-                Text(lesson.idAuditory,
+                Text(widget.lesson.idAuditory,
                     style: TStyle.textStyleVelaSansBold(textColorBlack(context),
                         size: 16.0))
               ],
@@ -132,7 +153,7 @@ class InfoStatusLessonContent extends StatelessWidget{
                 Text('Преподаватель:',
                     style: TStyle.textStyleVelaSansMedium(colorGrey,
                         size: 15.0)),
-                Text(lesson.nameTeacher,
+                Text(widget.lesson.nameTeacher,
                     style: TStyle.textStyleVelaSansBold(textColorBlack(context),
                         size: 16.0))
               ],
@@ -144,7 +165,7 @@ class InfoStatusLessonContent extends StatelessWidget{
                 Text('Длительность:',
                     style: TStyle.textStyleVelaSansMedium(colorGrey,
                         size: 15.0)),
-                Text('${lesson.duration} мин.',
+                Text('${widget.lesson.duration} мин.',
                     style: TStyle.textStyleVelaSansBold(textColorBlack(context),
                         size: 16.0))
               ],
@@ -160,11 +181,11 @@ class InfoStatusLessonContent extends StatelessWidget{
                   padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 2),
                   decoration:  BoxDecoration(
                       color:  StatusToColor.getColor(
-                          lessonStatus: lesson.status),
+                          lessonStatus: widget.lesson.status),
                       borderRadius: BorderRadius.circular(5)
                   ),
                   child: Text(
-                      StatusToColor.getNameStatus(lesson.status),
+                      StatusToColor.getNameStatus(widget.lesson.status),
                       textAlign: TextAlign.center,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -184,7 +205,7 @@ class InfoStatusLessonContent extends StatelessWidget{
                 Text('Клиент:',
                     style: TStyle.textStyleVelaSansMedium(colorGrey,
                         size: 15.0)),
-                Text(lesson.nameStudent,
+                Text(widget.lesson.nameStudent,
                     style: TStyle.textStyleVelaSansBold(textColorBlack(context),
                         size: 16.0))
               ],
@@ -203,7 +224,7 @@ class InfoStatusLessonContent extends StatelessWidget{
                       borderRadius: BorderRadius.circular(5)
                   ),
                   child: Text(
-                      _getStatusTime(lesson),
+                      _getStatusTime(widget.lesson),
                       textAlign: TextAlign.center,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -223,7 +244,7 @@ class InfoStatusLessonContent extends StatelessWidget{
                     style: TStyle.textStyleVelaSansMedium(colorGrey,
                         size: 15.0)),
                 Expanded(
-                  child: Text(lesson.nameSub,
+                  child: Text(widget.lesson.nameSub,
                       textAlign: TextAlign.end,
                       style: TStyle.textStyleVelaSansBold(textColorBlack(context),
                           size: 13.0)),
@@ -237,14 +258,14 @@ class InfoStatusLessonContent extends StatelessWidget{
                 Text('Комментарий:',
                     style: TStyle.textStyleVelaSansMedium(colorGrey,
                         size: 15.0)),
-                Text(lesson.comments,
+                Text(widget.lesson.comments,
                     style: TStyle.textStyleVelaSansBold(textColorBlack(context),
                         size: 16.0))
               ],
             ),
             const Gap(30),
             Visibility(
-              visible: lesson.status==LessonStatus.complete,
+              visible: widget.lesson.status==LessonStatus.complete,
                 child:
             SizedBox(
               height: 40.0,
@@ -257,8 +278,8 @@ class InfoStatusLessonContent extends StatelessWidget{
             )
             ),
             Visibility(
-              visible: lesson.status==LessonStatus.cancel || lesson.status == LessonStatus.singly|| lesson.status == LessonStatus.lastLesson
-                  || lesson.status == LessonStatus.firstLesson|| lesson.status == LessonStatus.planned|| lesson.status == LessonStatus.awaitAccept,
+              visible: widget.lesson.status==LessonStatus.cancel || widget.lesson.status == LessonStatus.singly|| widget.lesson.status == LessonStatus.lastLesson
+                  || widget.lesson.status == LessonStatus.firstLesson|| widget.lesson.status == LessonStatus.planned|| widget.lesson.status == LessonStatus.awaitAccept,
               child: Column(
                 children: [
                   SizedBox(
@@ -269,7 +290,12 @@ class InfoStatusLessonContent extends StatelessWidget{
                         Expanded(
                           child: SubmitButton(
                             colorFill: colorGreen,
-                            onTap: () {},
+                            onTap: () {
+                              //todo call alert
+                              _editedLesson = _editedLesson?.copyWith(status: LessonStatus.awaitAccept);
+                                context.read<TableBloc>().add(EditStatusLessonEvent(lesson: _editedLesson!));
+                                Navigator.pop(context);
+                            },
                             borderRadius: 10.0,
                             textButton: 'Провести'.tr(),
                           ),
@@ -337,7 +363,6 @@ class InfoStatusLessonContent extends StatelessWidget{
       ),
     );
   }
-
 
    String _getStatusTime(Lesson lesson){
     final intToDay = DateTime.now().millisecondsSinceEpoch;

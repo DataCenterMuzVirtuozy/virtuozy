@@ -69,7 +69,7 @@ class TeacherMapper{
         case 5: return LessonStatus.reservation;
         case 6: return LessonStatus.singly;
         case 7: return LessonStatus.trial;
-        case 8:return LessonStatus.awaitAccept;
+        case 8 :return LessonStatus.awaitAccept;
         case 9: return LessonStatus.firstLesson;
         case 10: return LessonStatus.lastLesson;
       }

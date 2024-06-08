@@ -87,7 +87,6 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
           }
 
 
-          print('Date CAl ${_dateCurrent}');
           return Scaffold(
             floatingActionButton: FloatingActionButton(
               mini: true,

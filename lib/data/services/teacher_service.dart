@@ -45,14 +45,18 @@ class TeacherService{
     }
 
 
+
+
+
     Future<void> editLesson({required LessonModel lessonModel}) async {
       try{
-        await _dio.get('${Endpoints.lessons}/${lessonModel.id}',
-          queryParameters: {
+        print('Id ${lessonModel.id} Status ${lessonModel.status}');
+       final r = await _dio.patch('${Endpoints.lessons}/${lessonModel.id}',
+          data: {
             'status': lessonModel.status
           }
         );
-
+     print('Response ${r.data}');
       } on Failure catch(e){
         throw  Failure(e.message);
       } on DioException catch(e){

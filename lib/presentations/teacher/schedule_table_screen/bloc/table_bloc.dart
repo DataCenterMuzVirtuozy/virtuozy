@@ -8,6 +8,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:time_planner/time_planner.dart';
+import 'package:virtuozy/domain/repository/teacher_repository.dart';
 import 'package:virtuozy/presentations/teacher/schedule_table_screen/bloc/table_event.dart';
 import 'package:virtuozy/presentations/teacher/schedule_table_screen/bloc/table_state.dart';
 
@@ -33,9 +34,50 @@ class TableBloc extends Bloc<TableEvent,TableState>{
    on<GetLessonsTableWeek>(getLessonTableOnWeek,transformer: droppable());
    on<GetLessonsTableByCalendarDateEvent>(_getLessonsByCalendarDate,transformer: droppable());
    on<GetMyLessonEvent>(getMyLesson,transformer: droppable());
+   on<EditStatusLessonEvent>(editLesson,transformer: droppable());
   }
 
   final _cubitTeacher = locator.get<TeacherCubit>();
+   final _teacherRepository = locator.get<TeacherRepository>();
+
+
+   void editLesson(EditStatusLessonEvent event,emit) async {
+     try{
+       emit(state.copyWith(
+           status: TableStatus.loading, error: ''));
+       await _teacherRepository.editLesson(lesson: event.lesson);
+       final phoneTeacher = _cubitTeacher.teacherEntity.phoneNum;
+       final teacher =await _teacherRepository.getTeacher(uid: phoneTeacher);
+       _cubitTeacher.setTeacher(teacher: teacher);
+       List<TodayLessons> todayLessons = [];
+       List<Lesson> lessons = [];
+       if(state.modeTable == ViewModeTable.my){
+         lessons = teacher.lessons.where((element) => element.idTeacher == teacher.id).toList();
+
+       }else{
+         lessons = teacher.lessons;
+
+       }
+       final lessonsByIdSchool = getLessons(state.currentIdSchool, lessons);
+
+       if(state.modeTable == ViewModeTable.week){
+         todayLessons = getLessWeek(lessonsByIdSchool);
+       }else{
+         todayLessons = getDays(lessonsByIdSchool, false);
+       }
+       print('Lessonn Edit ${lessons.firstWhere((element) => element.id == 24).status}');
+       emit(state.copyWith(
+           status: TableStatus.loaded,
+           scheduleStatus: ScheduleStatus.loaded,
+           modeTable: state.modeTable,
+           todayLessons: todayLessons));
+
+     }on Failure catch (e) {
+       emit(state.copyWith(status: TableStatus.error, error: e.message));
+     }
+
+
+   }
 
 
   //todo lessons all school

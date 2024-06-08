@@ -1,6 +1,7 @@
 
 
  import 'package:equatable/equatable.dart';
+import 'package:virtuozy/domain/entities/lesson_entity.dart';
 import 'package:virtuozy/presentations/teacher/schedule_table_screen/bloc/table_state.dart';
 
 class TableEvent extends Equatable{
@@ -40,4 +41,9 @@ class GetInitLessonsEvent extends TableEvent{
   final String date;
   final ViewModeTable viewMode;
   const GetLessonsTableByCalendarDateEvent({required this.date,required this.viewMode});
+ }
+
+ class EditStatusLessonEvent extends TableEvent{
+  final Lesson lesson;
+  const EditStatusLessonEvent({required this.lesson});
  }
