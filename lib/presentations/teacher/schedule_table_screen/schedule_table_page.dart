@@ -15,6 +15,7 @@ import 'package:virtuozy/domain/entities/table_tap_location_entity.dart';
 import 'package:virtuozy/presentations/teacher/schedule_table_screen/table/my_time_planner.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/utils/auth_mixin.dart';
+import 'package:virtuozy/utils/date_time_parser.dart';
 import 'package:virtuozy/utils/status_to_color.dart';
 
 import '../../../components/date_page_table.dart';
@@ -54,6 +55,7 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
     '21:00-22:00',
   ];
   String _dateCurrent = '';
+  int _changeIndexDate = -1 ;
 
   @override
   void initState() {
@@ -69,7 +71,13 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<TableBloc, TableState>(
-        listener: (c, s) {},
+        listener: (c, s) {
+          if(_changeIndexDate<0){
+            _changeIndexDate = s.indexByDateNow;
+          }
+
+
+        },
         builder: (context, state) {
 
 
@@ -78,6 +86,8 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
                 title: 'Ошибка получения данных', iconData: Icons.error);
           }
 
+
+          print('Date CAl ${_dateCurrent}');
           return Scaffold(
             floatingActionButton: FloatingActionButton(
               mini: true,
@@ -90,7 +100,7 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
                         nameTeacher: '${teacher.firstName} ${teacher.lastName}',
                         idTeacher: teacher.id,
                         timePeriod: '',
-                        dateDay: '',
+                        dateDay: _dateCurrent,
                         idAuditory:''),
                     title: 'Добавить урок'.tr(),
                     content: AddLesson());
@@ -125,12 +135,14 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
                                     viewMode: state.modeTable));
                           },
                           lessons: state.lessons,
-                          onChange: (index) {
+                          onChange: (int index) {
+                            _dateCurrent = _parseDate(state.todayLessons[index].date);
+                            _changeIndexDate = index;
                             context.read<TableBloc>().add(GetLessonsTableByDate(
                                 indexDate: index,
                                 viewMode: state.modeTable));
                           },
-                          initIndex: state.indexByDateNow,
+                          initIndex: _changeIndexDate<0?state.indexByDateNow:_changeIndexDate,
                           lessonsToday: state.todayLessons,
                         ),
                         const Gap(10.0),
@@ -355,7 +367,7 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
         required int idTeacher,
         required String idSchool,
         required String nameTeacher,
-      required String dateDay,}) {
+      required String dateDay}) {
     return Lesson(
       comments: '',
          nameSub: '',
@@ -377,5 +389,13 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
         status: LessonStatus.firstLesson,
         nameDirection: '',
         online: false);
+  }
+
+  String _parseDate(String dateCurrent){
+
+    if(dateCurrent.contains('/')){
+        return dateCurrent.split('/')[0];
+    }
+    return dateCurrent;
   }
 }

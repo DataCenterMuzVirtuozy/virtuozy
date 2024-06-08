@@ -84,7 +84,7 @@ class _Step1State extends State<Step1> {
   @override
   void initState() {
     super.initState();
-    selectedValue = items[1];
+    selectedValue = items[0];
   }
 
   @override
@@ -240,6 +240,11 @@ class _Step2State extends State<Step2> {
   String selectedValueAuditory = '';
   String selectedValueStudent = '';
   String selectedValueDate = '';
+  bool errorSubs = false;
+  bool errorDir = false;
+  bool errorDur = false;
+  bool errorTimeStart = false;
+  bool errorAuditory = false;
 
   final double _h1 = 8.0;
   final double _h2 = 15.0;
@@ -251,8 +256,9 @@ class _Step2State extends State<Step2> {
     selectedValueTeacher = widget.lesson.nameTeacher;
     selectedValueLocation = widget.lesson.idSchool;
     selectedValueAuditory = widget.lesson.idAuditory.isEmpty?itemsAuditory[0]:widget.lesson.idAuditory;
-    selectedValueDate = DateTimeParser.getDateFromApi(date: DateTime.now().toString().split(' ')[0].tr());
-    selectedValueTimeStart = itemsTimesStart.firstWhere((element) => element == widget.lesson.timePeriod.split('-')[0]);
+    selectedValueDate = widget.lesson.date.isEmpty?DateTimeParser.getDateFromApi(date: DateTime.now().toString().split(' ')[0].tr()):
+    DateTimeParser.getDateFromApi(date: widget.lesson.date);
+    selectedValueTimeStart = widget.lesson.timePeriod.isNotEmpty?itemsTimesStart.firstWhere((element) => element == widget.lesson.timePeriod.split('-')[0]):'';
   }
 
   @override
@@ -326,13 +332,26 @@ class _Step2State extends State<Step2> {
             ),
           ),
            Gap(_h1),
-          DropMenu(
-            items: itemsSubs,
-            onChange: (value) {
-              setState(() {
-                selectedValueSubs = value;
-              });
-            },
+          Row(
+            children: [
+              Expanded(
+                child: DropMenu(
+                  items: itemsSubs,
+                  onChange: (value) {
+                    setState(() {
+                      errorSubs = false;
+                      selectedValueSubs = value;
+                    });
+                  },
+                ),
+              ),
+              Visibility(
+                visible: errorSubs,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Icon(Icons.error,color: colorRed),
+                  ))
+            ],
           ),
           Visibility(
             visible: selectedValueSubs != 'Не выбрано',
@@ -388,11 +407,28 @@ class _Step2State extends State<Step2> {
             ),
           ),
           Gap(_h1),
-          DropMenu(
-            items: itemsDir,
-            onChange: (value) {
-              selectedValueDir = value;
-            },
+          Row(
+            children: [
+              Expanded(
+                child: DropMenu(
+                  items: itemsDir,
+                  onChange: (value) {
+                    setState(() {
+                      errorDir = false;
+                      selectedValueDir = value;
+                    });
+
+                  },
+                ),
+              ),
+              Visibility(
+                  visible: errorDir,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Icon(Icons.error,color: colorRed),
+                  ))
+
+            ],
           ),
           Gap(_h2),
           Align(
@@ -405,11 +441,26 @@ class _Step2State extends State<Step2> {
             ),
           ),
           Gap(_h1),
-          DropMenu(
-            items: itemsDuration,
-            onChange: (value) {
-              selectedValueDur = value;
-            },
+          Row(
+            children: [
+              Expanded(
+                child: DropMenu(
+                  items: itemsDuration,
+                  onChange: (value) {
+                    setState(() {
+                      errorDur = false;
+                      selectedValueDur = value;
+                    });
+                  },
+                ),
+              ),
+              Visibility(
+                  visible: errorDur,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Icon(Icons.error,color: colorRed),
+                  ))
+            ],
           ),
           Gap(_h2),
           Align(
@@ -451,13 +502,29 @@ class _Step2State extends State<Step2> {
               ),
               const Gap(10),
               Expanded(
-                child: DropMenu(
-                  widthDrop: 100,
-                  selectedValue: selectedValueTimeStart,
-                  items: itemsTimesStart,
-                  onChange: (value) {
-                    selectedValueTimeStart = value;
-                  },
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: DropMenu(
+                        widthDrop:100,
+                        selectedValue: selectedValueTimeStart,
+                        items: itemsTimesStart,
+                        onChange: (value) {
+                          setState(() {
+                            selectedValueTimeStart = value;
+                            errorTimeStart = false;
+                          });
+                                      
+                        },
+                      ),
+                    ),
+                    Visibility(
+                        visible: errorTimeStart,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Icon(Icons.error,color: colorRed),
+                        ))
+                  ],
                 ),
               ),
             ],
@@ -475,7 +542,7 @@ class _Step2State extends State<Step2> {
           ),
           Gap(_h1),
           DropMenu(
-            selectedValue: itemsRemote[2],
+            selectedValue: itemsRemote[1],
             items: itemsRemote,
             onChange: (value) {
               selectedValueRemote = value;
@@ -512,12 +579,29 @@ class _Step2State extends State<Step2> {
             ),
           ),
           Gap(_h1),
-          DropMenu(
-            selectedValue: selectedValueAuditory,
-            items: itemsAuditory,
-            onChange: (value) {
-              selectedValueAuditory = value;
-            },
+          Row(
+            children: [
+              Expanded(
+                child: DropMenu(
+                  selectedValue: selectedValueAuditory,
+                  items: itemsAuditory,
+                  onChange: (value) {
+                    setState(() {
+                      errorAuditory = false;
+                      selectedValueAuditory = value;
+                    });
+
+                  },
+                ),
+              ),
+              Visibility(
+                  visible: errorAuditory,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Icon(Icons.error,color: colorRed),
+                  ))
+
+            ],
           ),
 
 
@@ -598,29 +682,47 @@ class _Step2State extends State<Step2> {
   }
 
   bool _checkData(){
-    if(selectedValueSubs.isEmpty){
-      Dialoger.showToast('selectedValueSubs');
-      return false;
+    bool res = true;
+    if(selectedValueSubs == 'Не выбрано'||selectedValueSubs.isEmpty){
+      setState(() {
+        errorSubs = true;
+        res =  false;
+      });
+
     }
 
-    if(selectedValueDir.isEmpty){
-      Dialoger.showToast('selectedValueDir');
-      return false;
+    if(selectedValueDir.isEmpty || selectedValueDir == 'Не выбрано'){
+      setState(() {
+        errorDir = true;
+        res =  false;
+      });
     }
     if(selectedValueDur.isEmpty){
-      Dialoger.showToast('selectedValueDur');
-      return false;
+      setState(() {
+        errorDur = true;
+        res =  false;
+      });
+
     }
-    if(selectedValueTimeStart.isEmpty){
-      Dialoger.showToast('selectedValueTimeStart');
-      return false;
+    if(selectedValueTimeStart.isEmpty||selectedValueTimeStart == 'Не выбрано'){
+      setState(() {
+        errorTimeStart = true;
+        res =  false;
+      });
+
     }
 
     if(selectedValueAuditory.isEmpty){
-      Dialoger.showToast('selectedValueAuditory');
-      return  false;
+      setState(() {
+        errorAuditory = true;
+        res =  false;
+      });
     }
 
-    return true;
+    if(!res){
+      Dialoger.showToast('Не все данные заполненны'.tr());
+    }
+
+    return res;
   }
 }

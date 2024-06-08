@@ -37,7 +37,6 @@ class _DatePageTableState extends State<DatePageTable> {
   @override
   void initState() {
     super.initState();
-
     if (widget.initIndex < 0) {
       _pageControllerDates = PageController();
     } else {
