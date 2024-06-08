@@ -65,11 +65,23 @@ class TableBloc extends Bloc<TableEvent,TableState>{
        }else{
          todayLessons = getDays(lessonsByIdSchool, false);
        }
+       final lessonsById = getLessons(
+           state.currentIdSchool, lessons);
+       final index = indexByDateNow(todayLessons,false);
+       final tasks = getTasks(todayLesson: todayLessons,indexDate: index.$1,weekMode: false);
+       final headerTable = getHeaderTable(weekMode: false,todayLesson: todayLessons, indexDate: index.$1);
        print('Lessonn Edit ${lessons.firstWhere((element) => element.id == 24).status}');
        emit(state.copyWith(
+           titles: headerTable,
+           indexByDateNow: index.$1,
+           visibleTodayButton: index.$2,
+           lessons: lessonsById,
+           currentIdSchool: state.currentIdSchool,
            status: TableStatus.loaded,
            scheduleStatus: ScheduleStatus.loaded,
-           modeTable: state.modeTable,
+           idsSchool: state.idsSchool,
+           tasks: tasks,
+           modeTable: ViewModeTable.day,
            todayLessons: todayLessons));
 
      }on Failure catch (e) {
