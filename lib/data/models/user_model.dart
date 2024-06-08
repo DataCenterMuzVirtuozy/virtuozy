@@ -210,6 +210,7 @@ class UserModel{
   final int duration;
 
 
+
    const LessonModel( {
      required this.nameSub,
      required this.comments,
@@ -233,7 +234,27 @@ class UserModel{
      required this.bonus
   });
 
-
+ static Map<String,dynamic> toMap(LessonModel lessonModel){
+    return {
+      'online':lessonModel.online,
+      'comments':lessonModel.comments,
+      'nameSub':lessonModel.nameSub,
+      'duration':lessonModel.duration,
+      'type':lessonModel.type,
+      'contactValues':lessonModel.contactValues,
+      'idDir':lessonModel.idDir,
+      'idSchool':lessonModel.idSchool,
+      'idSub':lessonModel.idSub,
+      'timeAccept':lessonModel.timeAccept,
+      'date':lessonModel.date,
+      'timePeriod':lessonModel.timePeriod,
+    'idTeacher':lessonModel.idTeacher,
+    'idAuditory':lessonModel.idAuditory,
+      'nameTeacher':lessonModel.nameTeacher,
+      'nameDir':lessonModel.nameDirection,
+      'nameStudent':lessonModel.nameStudent
+    };
+  }
 
   factory LessonModel.fromMap(Map<String, dynamic> map,String nameDirection) {
 

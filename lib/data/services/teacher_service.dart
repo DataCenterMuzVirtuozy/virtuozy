@@ -6,6 +6,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:virtuozy/data/models/teacher_model.dart';
 import 'package:virtuozy/data/models/user_model.dart';
+import 'package:virtuozy/domain/entities/lesson_entity.dart';
 
 import '../../di/locator.dart';
 import '../../utils/failure.dart';
@@ -41,6 +42,23 @@ class TeacherService{
       } on DioException catch(e){
         throw  Failure(e.message!);
       }
+    }
+
+
+    Future<void> editLesson({required LessonModel lessonModel}) async {
+      try{
+        await _dio.get('${Endpoints.lessons}/${lessonModel.id}',
+          queryParameters: {
+            'status': lessonModel.status
+          }
+        );
+
+      } on Failure catch(e){
+        throw  Failure(e.message);
+      } on DioException catch(e){
+        throw  Failure(e.message!);
+      }
+
     }
 
 

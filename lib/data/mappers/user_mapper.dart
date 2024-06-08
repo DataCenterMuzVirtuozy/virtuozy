@@ -73,6 +73,7 @@ class UserMapper{
       case 8:return LessonStatus.awaitAccept;
       case 9: return LessonStatus.firstLesson;
       case 10: return LessonStatus.lastLesson;
+      case 11: return LessonStatus.reschedule;
     }
     return LessonStatus.unknown;
   }
@@ -153,6 +154,7 @@ class UserMapper{
 
   static Lesson _fromLessonModel(LessonModel lessonModel){
     return Lesson(
+      idDir: lessonModel.idDir,
       idTeacher: lessonModel.idTeacher,
       type: _lessonType(lessonModel.type),
       alien: true,
@@ -188,5 +190,6 @@ class UserMapper{
 
     return LessonType.unknown;
   }
+
 
  }

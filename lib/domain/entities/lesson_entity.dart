@@ -46,8 +46,10 @@ class Lesson{
   final List<dynamic> contactValues;
   final String comments;
   final String nameSub;
+  final int idDir;
 
   const Lesson({
+    required this.idDir,
     required this.nameSub,
     required this.comments,
     required this.duration,
@@ -73,6 +75,7 @@ class Lesson{
 
   factory Lesson.unknown(){
     return const Lesson(
+      idDir: 0,
       duration: 0,
       nameSub: '',
       comments: '',
@@ -114,9 +117,11 @@ class Lesson{
     bool? online,
     String? nameSub,
     String? comments,
-    int? duration
+    int? duration,
+    int? idDir
   }) {
     return Lesson(
+      idDir: idDir??this.idDir,
       duration: duration??this.duration,
       nameSub: nameSub??this.nameSub,
       comments: comments??this.comments,
