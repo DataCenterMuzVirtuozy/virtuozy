@@ -47,3 +47,7 @@ class GetInitLessonsEvent extends TableEvent{
   final Lesson lesson;
   const EditStatusLessonEvent({required this.lesson});
  }
+ class AddLessonEvent extends TableEvent{
+  final Lesson lesson;
+  const AddLessonEvent({required this.lesson});
+ }

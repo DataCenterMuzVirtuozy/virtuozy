@@ -97,11 +97,37 @@ class StatusToColor{
       case LessonStatus.unknown: return const Color.fromRGBO(255, 255, 255, 0.0);
       case LessonStatus.firstLesson: return _colors[9];
       case LessonStatus.lastLesson: return _colors[10];
-      case LessonStatus.reschedule:
-        return _colors[2];
+      case LessonStatus.reschedule:return _colors[2];
     }
 
    }
+
+  static LessonStatus lessonStatusFromApi(int status){
+    switch(status){
+      case 1: return LessonStatus.planned;
+      case 2: return LessonStatus.complete;
+      case 3: return LessonStatus.cancel;
+      case 4: return LessonStatus.out;
+      case 5: return LessonStatus.reservation;
+      case 6: return LessonStatus.singly;
+      case 7: return LessonStatus.trial;
+      case 8 :return LessonStatus.awaitAccept;
+      case 9: return LessonStatus.firstLesson;
+      case 10: return LessonStatus.lastLesson;
+      case 11: return LessonStatus.reschedule;
+    }
+    return LessonStatus.unknown;
+  }
+
+  static LessonType lessonType(int status){
+    switch(status){
+      case 1: return LessonType.trial;
+      case 2: return LessonType.group;
+      case 3: return LessonType.singly;
+    }
+
+    return LessonType.unknown;
+  }
 
 
    //показать статус ближайшего урока

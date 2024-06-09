@@ -1,17 +1,12 @@
-
-
-
-  import 'dart:math';
+import 'dart:math';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:time_planner/time_planner.dart';
 import 'package:virtuozy/domain/repository/teacher_repository.dart';
 import 'package:virtuozy/presentations/teacher/schedule_table_screen/bloc/table_event.dart';
 import 'package:virtuozy/presentations/teacher/schedule_table_screen/bloc/table_state.dart';
-
 import 'package:virtuozy/utils/date_time_parser.dart';
 
 import '../../../../di/locator.dart';
@@ -22,81 +17,121 @@ import '../../../../domain/entities/today_lessons.dart';
 import '../../../../domain/teacher_cubit.dart';
 import '../../../../utils/failure.dart';
 
-
-
-class TableBloc extends Bloc<TableEvent,TableState>{
-
-
-  TableBloc():super(TableState.unknown()){
-   on<GetInitLessonsEvent>(getLessonsTable,transformer: droppable());
-   on<GetLessonsTableByIdSchool>(getLessonsTableByIdSchool,transformer: droppable());
-   on<GetLessonsTableByDate>(getLessonsTableByDate,transformer: droppable());
-   on<GetLessonsTableWeek>(getLessonTableOnWeek,transformer: droppable());
-   on<GetLessonsTableByCalendarDateEvent>(_getLessonsByCalendarDate,transformer: droppable());
-   on<GetMyLessonEvent>(getMyLesson,transformer: droppable());
-   on<EditStatusLessonEvent>(editLesson,transformer: droppable());
+class TableBloc extends Bloc<TableEvent, TableState> {
+  TableBloc() : super(TableState.unknown()) {
+    on<GetInitLessonsEvent>(getLessonsTable, transformer: droppable());
+    on<GetLessonsTableByIdSchool>(getLessonsTableByIdSchool,
+        transformer: droppable());
+    on<GetLessonsTableByDate>(getLessonsTableByDate, transformer: droppable());
+    on<GetLessonsTableWeek>(getLessonTableOnWeek, transformer: droppable());
+    on<GetLessonsTableByCalendarDateEvent>(_getLessonsByCalendarDate,
+        transformer: droppable());
+    on<GetMyLessonEvent>(getMyLesson, transformer: droppable());
+    on<EditStatusLessonEvent>(editLesson, transformer: droppable());
+    on<AddLessonEvent>(addNewLesson, transformer: droppable());
   }
 
   final _cubitTeacher = locator.get<TeacherCubit>();
-   final _teacherRepository = locator.get<TeacherRepository>();
+  final _teacherRepository = locator.get<TeacherRepository>();
 
+  void addNewLesson(AddLessonEvent event, emit) async {
+    try {
+      emit(state.copyWith(status: TableStatus.loading, error: ''));
+      await _teacherRepository.addLesson(lesson: event.lesson);
+      final phoneTeacher = _cubitTeacher.teacherEntity.phoneNum;
+      final teacher = await _teacherRepository.getTeacher(uid: phoneTeacher);
+      _cubitTeacher.setTeacher(teacher: teacher);
+      List<TodayLessons> todayLessons = [];
+      List<Lesson> lessons = [];
+      if (state.modeTable == ViewModeTable.my) {
+        lessons = teacher.lessons
+            .where((element) => element.idTeacher == teacher.id)
+            .toList();
+      } else {
+        lessons = teacher.lessons;
+      }
+      final lessonsByIdSchool = getLessons(state.currentIdSchool, lessons);
 
-   void editLesson(EditStatusLessonEvent event,emit) async {
-     try{
-       emit(state.copyWith(
-           status: TableStatus.loading, error: ''));
-       await _teacherRepository.editLesson(lesson: event.lesson);
-       final phoneTeacher = _cubitTeacher.teacherEntity.phoneNum;
-       final teacher =await _teacherRepository.getTeacher(uid: phoneTeacher);
-       _cubitTeacher.setTeacher(teacher: teacher);
-       List<TodayLessons> todayLessons = [];
-       List<Lesson> lessons = [];
-       if(state.modeTable == ViewModeTable.my){
-         lessons = teacher.lessons.where((element) => element.idTeacher == teacher.id).toList();
+      if (state.modeTable == ViewModeTable.week) {
+        todayLessons = getLessWeek(lessonsByIdSchool);
+      } else {
+        todayLessons = getDays(lessonsByIdSchool, false);
+      }
+      final lessonsById = getLessons(state.currentIdSchool, lessons);
+      final index = indexByDateNow(todayLessons, false);
+      final tasks = getTasks(
+          todayLesson: todayLessons, indexDate: index.$1, weekMode: false);
+      final headerTable = getHeaderTable(
+          weekMode: false, todayLesson: todayLessons, indexDate: index.$1);
 
-       }else{
-         lessons = teacher.lessons;
+      emit(state.copyWith(
+          titles: headerTable,
+          indexByDateNow: index.$1,
+          visibleTodayButton: index.$2,
+          lessons: lessonsById,
+          currentIdSchool: state.currentIdSchool,
+          status: TableStatus.loaded,
+          scheduleStatus: ScheduleStatus.loaded,
+          idsSchool: state.idsSchool,
+          tasks: tasks,
+          modeTable: ViewModeTable.day,
+          todayLessons: todayLessons));
+    } on Failure catch (e) {
+      emit(state.copyWith(status: TableStatus.error, error: e.message));
+    }
+  }
 
-       }
-       final lessonsByIdSchool = getLessons(state.currentIdSchool, lessons);
+  void editLesson(EditStatusLessonEvent event, emit) async {
+    try {
+      emit(state.copyWith(status: TableStatus.loading, error: ''));
+      await _teacherRepository.editLesson(lesson: event.lesson);
+      final phoneTeacher = _cubitTeacher.teacherEntity.phoneNum;
+      final teacher = await _teacherRepository.getTeacher(uid: phoneTeacher);
+      _cubitTeacher.setTeacher(teacher: teacher);
+      List<TodayLessons> todayLessons = [];
+      List<Lesson> lessons = [];
+      if (state.modeTable == ViewModeTable.my) {
+        lessons = teacher.lessons
+            .where((element) => element.idTeacher == teacher.id)
+            .toList();
+      } else {
+        lessons = teacher.lessons;
+      }
+      final lessonsByIdSchool = getLessons(state.currentIdSchool, lessons);
 
-       if(state.modeTable == ViewModeTable.week){
-         todayLessons = getLessWeek(lessonsByIdSchool);
-       }else{
-         todayLessons = getDays(lessonsByIdSchool, false);
-       }
-       final lessonsById = getLessons(
-           state.currentIdSchool, lessons);
-       final index = indexByDateNow(todayLessons,false);
-       final tasks = getTasks(todayLesson: todayLessons,indexDate: index.$1,weekMode: false);
-       final headerTable = getHeaderTable(weekMode: false,todayLesson: todayLessons, indexDate: index.$1);
-       print('Lessonn Edit ${lessons.firstWhere((element) => element.id == 24).status}');
-       emit(state.copyWith(
-           titles: headerTable,
-           indexByDateNow: index.$1,
-           visibleTodayButton: index.$2,
-           lessons: lessonsById,
-           currentIdSchool: state.currentIdSchool,
-           status: TableStatus.loaded,
-           scheduleStatus: ScheduleStatus.loaded,
-           idsSchool: state.idsSchool,
-           tasks: tasks,
-           modeTable: ViewModeTable.day,
-           todayLessons: todayLessons));
+      if (state.modeTable == ViewModeTable.week) {
+        todayLessons = getLessWeek(lessonsByIdSchool);
+      } else {
+        todayLessons = getDays(lessonsByIdSchool, false);
+      }
+      final lessonsById = getLessons(state.currentIdSchool, lessons);
+      final index = indexByDateNow(todayLessons, false);
+      final tasks = getTasks(
+          todayLesson: todayLessons, indexDate: index.$1, weekMode: false);
+      final headerTable = getHeaderTable(
+          weekMode: false, todayLesson: todayLessons, indexDate: index.$1);
 
-     }on Failure catch (e) {
-       emit(state.copyWith(status: TableStatus.error, error: e.message));
-     }
-
-
-   }
-
+      emit(state.copyWith(
+          titles: headerTable,
+          indexByDateNow: index.$1,
+          visibleTodayButton: index.$2,
+          lessons: lessonsById,
+          currentIdSchool: state.currentIdSchool,
+          status: TableStatus.loaded,
+          scheduleStatus: ScheduleStatus.loaded,
+          idsSchool: state.idsSchool,
+          tasks: tasks,
+          modeTable: ViewModeTable.day,
+          todayLessons: todayLessons));
+    } on Failure catch (e) {
+      emit(state.copyWith(status: TableStatus.error, error: e.message));
+    }
+  }
 
   //todo lessons all school
   void getLessonsTable(GetInitLessonsEvent event, emit) async {
     try {
-      emit(state.copyWith(
-          status: TableStatus.loading, error: ''));
+      emit(state.copyWith(status: TableStatus.loading, error: ''));
       await Future.delayed(const Duration(milliseconds: 300));
       final lessons = _cubitTeacher.teacherEntity.lessons;
       if (lessons.isEmpty) {
@@ -109,14 +144,15 @@ class TableBloc extends Bloc<TableEvent,TableState>{
       }
       final ids = getIds(lessons);
       final idSchool = ids.isEmpty ? '' : ids[0];
-      final lessonsById = getLessons(
-          idSchool, lessons);
+      final lessonsById = getLessons(idSchool, lessons);
       final todayLessons = getDays(lessonsById, false);
-      final index = indexByDateNow(todayLessons,false);
-      final tasks = getTasks(todayLesson: todayLessons,indexDate: index.$1,weekMode: false);
-      final headerTable = getHeaderTable(weekMode: false,todayLesson: todayLessons, indexDate: index.$1);
+      final index = indexByDateNow(todayLessons, false);
+      final tasks = getTasks(
+          todayLesson: todayLessons, indexDate: index.$1, weekMode: false);
+      final headerTable = getHeaderTable(
+          weekMode: false, todayLesson: todayLessons, indexDate: index.$1);
       emit(state.copyWith(
-        titles: headerTable,
+          titles: headerTable,
           indexByDateNow: index.$1,
           visibleTodayButton: index.$2,
           lessons: lessonsById,
@@ -132,81 +168,90 @@ class TableBloc extends Bloc<TableEvent,TableState>{
     }
   }
 
-
-
-
-  void _getLessonsByCalendarDate(GetLessonsTableByCalendarDateEvent event, emit) async {
+  void _getLessonsByCalendarDate(
+      GetLessonsTableByCalendarDateEvent event, emit) async {
     try {
       emit(state.copyWith(
-          status: TableStatus.loading, scheduleStatus:ScheduleStatus.loading, error: ''));
+          status: TableStatus.loading,
+          scheduleStatus: ScheduleStatus.loading,
+          error: ''));
       await Future.delayed(const Duration(milliseconds: 300));
       List<TodayLessons> todayLessons = [];
       List<Lesson> lessons = [];
-      if(event.viewMode == ViewModeTable.my){
+      if (event.viewMode == ViewModeTable.my) {
         final idTeacher = _cubitTeacher.teacherEntity.id;
-        lessons = _cubitTeacher.teacherEntity.lessons.where((element) => element.idTeacher == idTeacher).toList();
-
-      }else{
+        lessons = _cubitTeacher.teacherEntity.lessons
+            .where((element) => element.idTeacher == idTeacher)
+            .toList();
+      } else {
         lessons = _cubitTeacher.teacherEntity.lessons;
-
       }
       final lessonsByIdSchool = getLessons(state.currentIdSchool, lessons);
 
-      if(state.modeTable == ViewModeTable.week){
+      if (state.modeTable == ViewModeTable.week) {
         todayLessons = getLessWeek(lessonsByIdSchool);
-      }else{
+      } else {
         todayLessons = getDays(lessonsByIdSchool, false);
       }
-      final index = indexByDateSelect(todayLessons,event.date,state.modeTable == ViewModeTable.week);
-      final tasks = getTasks(todayLesson: todayLessons,indexDate: index,weekMode: state.modeTable == ViewModeTable.week);
-      final headerTable = getHeaderTable(weekMode: state.modeTable == ViewModeTable.week,todayLesson: todayLessons,indexDate: index);
+      final index = indexByDateSelect(
+          todayLessons, event.date, state.modeTable == ViewModeTable.week);
+      final tasks = getTasks(
+          todayLesson: todayLessons,
+          indexDate: index,
+          weekMode: state.modeTable == ViewModeTable.week);
+      final headerTable = getHeaderTable(
+          weekMode: state.modeTable == ViewModeTable.week,
+          todayLesson: todayLessons,
+          indexDate: index);
       emit(state.copyWith(
-        modeTable: state.modeTable,
+          modeTable: state.modeTable,
           indexByDateNow: index,
           lessons: lessonsByIdSchool,
           tasks: tasks,
           titles: headerTable,
           status: TableStatus.loaded,
-          scheduleStatus:ScheduleStatus.loaded,
+          scheduleStatus: ScheduleStatus.loaded,
           todayLessons: todayLessons));
     } on Failure catch (e) {
-      emit(state.copyWith(scheduleStatus: ScheduleStatus.error, error: e.message));
+      emit(state.copyWith(
+          scheduleStatus: ScheduleStatus.error, error: e.message));
     }
   }
 
-  int indexByDateSelect(List<TodayLessons> todayLessons,String dateSelect,bool weekMode) {
+  int indexByDateSelect(
+      List<TodayLessons> todayLessons, String dateSelect, bool weekMode) {
     int index = 0;
-    final dSel =  DateFormat('yyyy-MM-dd')
-        .parse(dateSelect)
-        .millisecondsSinceEpoch;
-    if(weekMode){
-      index = todayLessons.indexWhere((element){
+    final dSel =
+        DateFormat('yyyy-MM-dd').parse(dateSelect).millisecondsSinceEpoch;
+    if (weekMode) {
+      index = todayLessons.indexWhere((element) {
         return hasLessonInWeek(element.date, dSel);
       });
-    }else{
-      index = todayLessons.indexWhere((element){
-        return  element.date == dateSelect;
+    } else {
+      index = todayLessons.indexWhere((element) {
+        return element.date == dateSelect;
       });
     }
-
 
     return index;
   }
 
-
-  void getMyLesson(GetMyLessonEvent event,emit) async {
-
+  void getMyLesson(GetMyLessonEvent event, emit) async {
     try {
       emit(state.copyWith(status: TableStatus.loading, error: ''));
       await Future.delayed(const Duration(milliseconds: 300));
       final idTeacher = _cubitTeacher.teacherEntity.id;
-      final lessons = _cubitTeacher.teacherEntity.lessons.where((element) => element.idTeacher == idTeacher).toList();
+      final lessons = _cubitTeacher.teacherEntity.lessons
+          .where((element) => element.idTeacher == idTeacher)
+          .toList();
       final lessonsByIdSchool = getLessons(state.currentIdSchool, lessons);
       final weekLessons = getLessWeek(lessonsByIdSchool);
       final dateNow = DateTime.now().toString().split(' ')[0];
-      final index = indexByDateSelect(weekLessons,dateNow,true);
-      final tasks = getTasks(todayLesson: weekLessons,indexDate: index,weekMode: true);
-      final headerTable = getHeaderTable(weekMode: true,todayLesson: weekLessons,indexDate: index);
+      final index = indexByDateSelect(weekLessons, dateNow, true);
+      final tasks =
+          getTasks(todayLesson: weekLessons, indexDate: index, weekMode: true);
+      final headerTable = getHeaderTable(
+          weekMode: true, todayLesson: weekLessons, indexDate: index);
       emit(state.copyWith(
           titles: headerTable,
           indexByDateNow: index,
@@ -217,15 +262,12 @@ class TableBloc extends Bloc<TableEvent,TableState>{
           modeTable: ViewModeTable.my,
           todayLessons: weekLessons));
     } on Failure catch (e) {
-      emit(state.copyWith(scheduleStatus: ScheduleStatus.error, error: e.message));
+      emit(state.copyWith(
+          scheduleStatus: ScheduleStatus.error, error: e.message));
     }
-
-
   }
 
-
-
-  void getLessonTableOnWeek(GetLessonsTableWeek event,emit) async {
+  void getLessonTableOnWeek(GetLessonsTableWeek event, emit) async {
     try {
       emit(state.copyWith(status: TableStatus.loading, error: ''));
       await Future.delayed(const Duration(milliseconds: 300));
@@ -233,9 +275,11 @@ class TableBloc extends Bloc<TableEvent,TableState>{
       final lessonsByIdSchool = getLessons(state.currentIdSchool, lessons);
       final weekLessons = getLessWeek(lessonsByIdSchool);
       final dateNow = DateTime.now().toString().split(' ')[0];
-      final index = indexByDateSelect(weekLessons,dateNow,true);
-      final tasks = getTasks(todayLesson: weekLessons,indexDate: index,weekMode: true);
-      final headerTable = getHeaderTable(weekMode: true,todayLesson: weekLessons,indexDate: index);
+      final index = indexByDateSelect(weekLessons, dateNow, true);
+      final tasks =
+          getTasks(todayLesson: weekLessons, indexDate: index, weekMode: true);
+      final headerTable = getHeaderTable(
+          weekMode: true, todayLesson: weekLessons, indexDate: index);
       emit(state.copyWith(
           titles: headerTable,
           indexByDateNow: index,
@@ -246,11 +290,10 @@ class TableBloc extends Bloc<TableEvent,TableState>{
           modeTable: event.viewMode,
           todayLessons: weekLessons));
     } on Failure catch (e) {
-      emit(state.copyWith(scheduleStatus: ScheduleStatus.error, error: e.message));
+      emit(state.copyWith(
+          scheduleStatus: ScheduleStatus.error, error: e.message));
     }
   }
-
-
 
   void getLessonsTableByIdSchool(GetLessonsTableByIdSchool event, emit) async {
     try {
@@ -258,23 +301,31 @@ class TableBloc extends Bloc<TableEvent,TableState>{
       await Future.delayed(const Duration(milliseconds: 300));
       List<TodayLessons> todayLessons = [];
       List<Lesson> lessons = [];
-      if(state.modeTable == ViewModeTable.my){
+      if (state.modeTable == ViewModeTable.my) {
         final idTeacher = _cubitTeacher.teacherEntity.id;
-        lessons = _cubitTeacher.teacherEntity.lessons.where((element) => element.idTeacher == idTeacher).toList();
-      }else{
+        lessons = _cubitTeacher.teacherEntity.lessons
+            .where((element) => element.idTeacher == idTeacher)
+            .toList();
+      } else {
         lessons = _cubitTeacher.teacherEntity.lessons;
       }
       final ids = getIds(lessons);
-      final lessonsByIdSchool = getLessons(
-          event.id, lessons);
-      if(state.modeTable == ViewModeTable.week){
+      final lessonsByIdSchool = getLessons(event.id, lessons);
+      if (state.modeTable == ViewModeTable.week) {
         todayLessons = getLessWeek(lessonsByIdSchool);
-      }else{
+      } else {
         todayLessons = getDays(lessonsByIdSchool, false);
       }
-      final index = indexByDateNow(todayLessons,state.modeTable == ViewModeTable.week);
-      final tasks = getTasks(todayLesson: todayLessons,indexDate: index.$1,weekMode: state.modeTable == ViewModeTable.week);
-      final headerTable = getHeaderTable(weekMode: state.modeTable == ViewModeTable.week,todayLesson: todayLessons,indexDate: index.$1);
+      final index =
+          indexByDateNow(todayLessons, state.modeTable == ViewModeTable.week);
+      final tasks = getTasks(
+          todayLesson: todayLessons,
+          indexDate: index.$1,
+          weekMode: state.modeTable == ViewModeTable.week);
+      final headerTable = getHeaderTable(
+          weekMode: state.modeTable == ViewModeTable.week,
+          todayLesson: todayLessons,
+          indexDate: index.$1);
       emit(state.copyWith(
           titles: headerTable,
           indexByDateNow: index.$1,
@@ -287,37 +338,42 @@ class TableBloc extends Bloc<TableEvent,TableState>{
           tasks: tasks,
           todayLessons: todayLessons));
     } on Failure catch (e) {
-      emit(state.copyWith(scheduleStatus: ScheduleStatus.error, error: e.message));
+      emit(state.copyWith(
+          scheduleStatus: ScheduleStatus.error, error: e.message));
     }
   }
-
-
 
   void getLessonsTableByDate(GetLessonsTableByDate event, emit) async {
     try {
       emit(state.copyWith(
-          status: TableStatus.loading,tasks: [],titles: [], error: ''));
+          status: TableStatus.loading, tasks: [], titles: [], error: ''));
       await Future.delayed(const Duration(milliseconds: 300));
       List<TodayLessons> todayLessons = [];
       List<Lesson> lessons = [];
-      if(event.viewMode == ViewModeTable.my){
+      if (event.viewMode == ViewModeTable.my) {
         final idTeacher = _cubitTeacher.teacherEntity.id;
-         lessons = _cubitTeacher.teacherEntity.lessons.where((element) => element.idTeacher == idTeacher).toList();
-      }else{
+        lessons = _cubitTeacher.teacherEntity.lessons
+            .where((element) => element.idTeacher == idTeacher)
+            .toList();
+      } else {
         lessons = _cubitTeacher.teacherEntity.lessons;
-
       }
 
       final ids = getIds(lessons);
-      final lessonsByIdSchool = getLessons(
-          state.currentIdSchool, lessons);
-      if(event.viewMode == ViewModeTable.week){
+      final lessonsByIdSchool = getLessons(state.currentIdSchool, lessons);
+      if (event.viewMode == ViewModeTable.week) {
         todayLessons = getLessWeek(lessonsByIdSchool);
-      }else{
+      } else {
         todayLessons = getDays(lessonsByIdSchool, false);
       }
-      final tasks = getTasks(todayLesson: todayLessons,indexDate: event.indexDate,weekMode: event.viewMode == ViewModeTable.week);
-      final headerTable = getHeaderTable(weekMode: event.viewMode == ViewModeTable.week,todayLesson: todayLessons,indexDate: event.indexDate);
+      final tasks = getTasks(
+          todayLesson: todayLessons,
+          indexDate: event.indexDate,
+          weekMode: event.viewMode == ViewModeTable.week);
+      final headerTable = getHeaderTable(
+          weekMode: event.viewMode == ViewModeTable.week,
+          todayLesson: todayLessons,
+          indexDate: event.indexDate);
       emit(state.copyWith(
           titles: headerTable,
           indexByDateNow: event.indexDate,
@@ -334,95 +390,104 @@ class TableBloc extends Bloc<TableEvent,TableState>{
     }
   }
 
-
-
-  List<TitlesTable> getHeaderTable({required bool weekMode,required List<TodayLessons> todayLesson,required int indexDate}){
-    const listAuditory = ['Свинг','Авангард','Опера','Блюз','Эстрада'];
+  List<TitlesTable> getHeaderTable(
+      {required bool weekMode,
+      required List<TodayLessons> todayLesson,
+      required int indexDate}) {
+    const listAuditory = ['Свинг', 'Авангард', 'Опера', 'Блюз', 'Эстрада'];
     List<String> headers1 = [];
-    List<String> headers2 =[];
+    List<String> headers2 = [];
     List<String> dateChoice = [];
-    if(weekMode){
+    if (weekMode) {
       List<String> daysWeek = [];
-      final fDay =  DateFormat('yyyy-MM-dd').parse(todayLesson[indexDate].date.split('/')[0]);
-      final lDay = DateFormat('yyyy-MM-dd').parse(todayLesson[indexDate].date.split('/')[1]);
-      for (int i = 0; i <= lDay
-          .difference(fDay)
-          .inDays; i++) {
+      final fDay = DateFormat('yyyy-MM-dd')
+          .parse(todayLesson[indexDate].date.split('/')[0]);
+      final lDay = DateFormat('yyyy-MM-dd')
+          .parse(todayLesson[indexDate].date.split('/')[1]);
+      for (int i = 0; i <= lDay.difference(fDay).inDays; i++) {
         var d = fDay.add(Duration(days: i)).toString().split(' ')[0];
         daysWeek.add(d);
       }
-      headers1 = daysWeek.map((e) => DateFormat('yyyy-MM-dd').parse(e).day.toString()).toList();
-      headers2 = daysWeek.map((e) => DateTimeParser.getDayByNumber(DateFormat('yyyy-MM-dd').parse(e).weekday)).toList();
-      dateChoice = daysWeek.map((e) => DateFormat('yyyy-MM-dd').parse(e).toString().split(' ')[0]).toList();
-    }else{
+      headers1 = daysWeek
+          .map((e) => DateFormat('yyyy-MM-dd').parse(e).day.toString())
+          .toList();
+      headers2 = daysWeek
+          .map((e) => DateTimeParser.getDayByNumber(
+              DateFormat('yyyy-MM-dd').parse(e).weekday))
+          .toList();
+      dateChoice = daysWeek
+          .map(
+              (e) => DateFormat('yyyy-MM-dd').parse(e).toString().split(' ')[0])
+          .toList();
+    } else {
       headers1 = listAuditory;
-      dateChoice = List.generate(headers1.length, (index) => todayLesson[indexDate].date.split('/')[0]);
+      dateChoice = List.generate(headers1.length,
+          (index) => todayLesson[indexDate].date.split('/')[0]);
     }
     List<TitlesTable> titles = [];
-    for(var i = 0; headers1.length>i; i++){
-      titles.add( TitlesTable(
-        dateChoice: dateChoice[i],
-        date: weekMode?headers1[i]:'',
-        title: weekMode?headers2[i]:headers1[i],
-      ),);
+    for (var i = 0; headers1.length > i; i++) {
+      titles.add(
+        TitlesTable(
+          dateChoice: dateChoice[i],
+          date: weekMode ? headers1[i] : '',
+          title: weekMode ? headers2[i] : headers1[i],
+        ),
+      );
     }
 
     return titles;
   }
 
-  List<TableTask> getTasks({required List<TodayLessons> todayLesson, required int indexDate,required bool weekMode}){
+  List<TableTask> getTasks(
+      {required List<TodayLessons> todayLesson,
+      required int indexDate,
+      required bool weekMode}) {
     final lessons = todayLesson[indexDate].lessons;
-    const listAuditory = ['Свинг','Авангард','Опера','Блюз','Эстрада'];
+    const listAuditory = ['Свинг', 'Авангард', 'Опера', 'Блюз', 'Эстрада'];
     List<String> daysWeek = [];
-    if(weekMode) {
-      final fDay = DateFormat('yyyy-MM-dd').parse(
-          todayLesson[indexDate].date.split('/')[0]);
-      final lDay = DateFormat('yyyy-MM-dd').parse(
-          todayLesson[indexDate].date.split('/')[1]);
-      for (int i = 0; i <= lDay
-          .difference(fDay)
-          .inDays; i++) {
+    if (weekMode) {
+      final fDay = DateFormat('yyyy-MM-dd')
+          .parse(todayLesson[indexDate].date.split('/')[0]);
+      final lDay = DateFormat('yyyy-MM-dd')
+          .parse(todayLesson[indexDate].date.split('/')[1]);
+      for (int i = 0; i <= lDay.difference(fDay).inDays; i++) {
         var d = fDay.add(Duration(days: i)).toString().split(' ')[0];
         daysWeek.add(d);
       }
     }
     List<TableTask> tasks = [];
     int rowPosition = 0;
-    for(var t in lessons){
-      final hour = int.parse(t.timePeriod.split('-')[0].split(':')[0].toString());
-      if(weekMode){
+    for (var t in lessons) {
+      final hour =
+          int.parse(t.timePeriod.split('-')[0].split(':')[0].toString());
+      if (weekMode) {
         rowPosition = daysWeek.indexWhere((element) => t.date == element);
-      }else{
-        rowPosition = listAuditory.indexWhere((element) => t.idAuditory == element);
+      } else {
+        rowPosition =
+            listAuditory.indexWhere((element) => t.idAuditory == element);
       }
-       tasks.add(TableTask(
+      tasks.add(TableTask(
           lesson: t,
           timePlannerDateTime:
-              TimePlannerDateTime(
-                  day: rowPosition,
-                  hour: hour,
-                  minutes: 00)));
+              TimePlannerDateTime(day: rowPosition, hour: hour, minutes: 00)));
     }
     return tasks;
   }
 
-
-
-  (int,bool) indexByDateNow(List<TodayLessons> todayLessons,bool weekView) {
+  (int, bool) indexByDateNow(List<TodayLessons> todayLessons, bool weekView) {
     final dateNow = DateTime.now().toString().split(' ')[0];
-    final dateNowEpoch = DateTime
-        .now()
-        .millisecondsSinceEpoch;
+    final dateNowEpoch = DateTime.now().millisecondsSinceEpoch;
     int index = 0;
     bool visibleButtonToday = false;
-    if(!weekView){
+    if (!weekView) {
       final i = todayLessons.indexWhere((element) => element.date == dateNow);
       if (i < 0) {
         visibleButtonToday = true;
         final i1 = todayLessons.indexWhere((element) =>
-        DateFormat('yyyy-MM-dd')
-            .parse(element.date)
-            .millisecondsSinceEpoch > dateNowEpoch);
+            DateFormat('yyyy-MM-dd')
+                .parse(element.date)
+                .millisecondsSinceEpoch >
+            dateNowEpoch);
         if (i1 < 0) {
           index = todayLessons.length - 1;
         } else {
@@ -431,13 +496,15 @@ class TableBloc extends Bloc<TableEvent,TableState>{
       } else {
         index = i;
       }
-    }else{
-      final i = todayLessons.indexWhere((element) => hasLessonInWeek(element.date, dateNowEpoch));
+    } else {
+      final i = todayLessons
+          .indexWhere((element) => hasLessonInWeek(element.date, dateNowEpoch));
       if (i < 0) {
         final i1 = todayLessons.indexWhere((element) =>
-        DateFormat('yyyy-MM-dd')
-            .parse(element.date.split('/')[1])
-            .millisecondsSinceEpoch > dateNowEpoch);
+            DateFormat('yyyy-MM-dd')
+                .parse(element.date.split('/')[1])
+                .millisecondsSinceEpoch >
+            dateNowEpoch);
         if (i1 < 0) {
           index = todayLessons.length - 1;
         } else {
@@ -448,79 +515,73 @@ class TableBloc extends Bloc<TableEvent,TableState>{
       }
     }
 
-    return (index,visibleButtonToday);
+    return (index, visibleButtonToday);
   }
 
-  bool hasLessonInWeek(String week, int dateNowEpoch){
-    final d1 =  DateFormat('yyyy-MM-dd').parse(week.split('/')[0]).millisecondsSinceEpoch;
-    final d2  = DateFormat('yyyy-MM-dd').parse(week.split('/')[1]).millisecondsSinceEpoch;
-    return d1<= dateNowEpoch && dateNowEpoch <= d2;
+  bool hasLessonInWeek(String week, int dateNowEpoch) {
+    final d1 = DateFormat('yyyy-MM-dd')
+        .parse(week.split('/')[0])
+        .millisecondsSinceEpoch;
+    final d2 = DateFormat('yyyy-MM-dd')
+        .parse(week.split('/')[1])
+        .millisecondsSinceEpoch;
+    return d1 <= dateNowEpoch && dateNowEpoch <= d2;
   }
 
   List<TodayLessons> getLessWeek(List<Lesson> lessons) {
     List<TodayLessons> less = [];
-    lessons.sort((a, b) =>
-        DateFormat('yyyy-MM-dd')
-            .parse(a.date)
-            .millisecondsSinceEpoch
-            .compareTo(
-            DateFormat('yyyy-MM-dd')
-                .parse(b.date)
-                .millisecondsSinceEpoch
-        ));
-       int weekCount = 0;
-      final fDay = _getFirstDate(lessons: lessons);
-      final lDay = _getLastDate(lessons: lessons);
-      final daysCount = lDay.difference(fDay).inDays;
-      if(daysCount<=7){
-        weekCount = 1;
-      }else{
-        final i1 = (daysCount/7).round();
-        final i2 = daysCount/7;
-        if(i2>i1){
-          weekCount = i1+1;
-        }else{
-          weekCount = i1;
-        }
+    lessons.sort((a, b) => DateFormat('yyyy-MM-dd')
+        .parse(a.date)
+        .millisecondsSinceEpoch
+        .compareTo(
+            DateFormat('yyyy-MM-dd').parse(b.date).millisecondsSinceEpoch));
+    int weekCount = 0;
+    final fDay = _getFirstDate(lessons: lessons);
+    final lDay = _getLastDate(lessons: lessons);
+    final daysCount = lDay.difference(fDay).inDays;
+    if (daysCount <= 7) {
+      weekCount = 1;
+    } else {
+      final i1 = (daysCount / 7).round();
+      final i2 = daysCount / 7;
+      if (i2 > i1) {
+        weekCount = i1 + 1;
+      } else {
+        weekCount = i1;
       }
-      int initDay = fDay.millisecondsSinceEpoch;
-      int weekMsEpoch = 604800000;
-      for(var i=0; weekCount>i; i++){
-        final d1 = DateTime.fromMillisecondsSinceEpoch(initDay);
-        initDay += weekMsEpoch;
-        final d2 = DateTime.fromMillisecondsSinceEpoch(initDay);
-        less.add(TodayLessons(
-            date: '${d1.toString().split(' ')[0]}/'
-                '${d2.toString().split(' ')[0]}',
-            lessons: lessons.where((element) => addLesson(element, d1, d2)).toList()));
-
-      }
+    }
+    int initDay = fDay.millisecondsSinceEpoch;
+    int weekMsEpoch = 604800000;
+    for (var i = 0; weekCount > i; i++) {
+      final d1 = DateTime.fromMillisecondsSinceEpoch(initDay);
+      initDay += weekMsEpoch;
+      final d2 = DateTime.fromMillisecondsSinceEpoch(initDay);
+      less.add(TodayLessons(
+          date: '${d1.toString().split(' ')[0]}/'
+              '${d2.toString().split(' ')[0]}',
+          lessons:
+              lessons.where((element) => addLesson(element, d1, d2)).toList()));
+    }
 
     return less;
   }
 
-  bool addLesson(Lesson lesson,DateTime dt1,DateTime dt2){
-    final d3 = DateFormat('yyyy-MM-dd').parse(lesson.date).millisecondsSinceEpoch;
+  bool addLesson(Lesson lesson, DateTime dt1, DateTime dt2) {
+    final d3 =
+        DateFormat('yyyy-MM-dd').parse(lesson.date).millisecondsSinceEpoch;
     final d1 = dt1.millisecondsSinceEpoch;
     final d2 = dt2.millisecondsSinceEpoch;
-    return d1<=d3&&d3<=d2;
+    return d1 <= d3 && d3 <= d2;
   }
 
-
-
   List<TodayLessons> getDays(List<Lesson> lessons, bool daysOnlyLesson) {
-
     List<TodayLessons> less = [];
     List<String> dates = [];
-    lessons.sort((a, b) =>
-        DateFormat('yyyy-MM-dd')
-            .parse(a.date)
-            .millisecondsSinceEpoch
-            .compareTo(
-            DateFormat('yyyy-MM-dd')
-                .parse(b.date)
-                .millisecondsSinceEpoch
-        ));
+    lessons.sort((a, b) => DateFormat('yyyy-MM-dd')
+        .parse(a.date)
+        .millisecondsSinceEpoch
+        .compareTo(
+            DateFormat('yyyy-MM-dd').parse(b.date).millisecondsSinceEpoch));
     if (daysOnlyLesson) {
       for (var l in lessons) {
         if (!dates.contains(l.date)) {
@@ -530,9 +591,7 @@ class TableBloc extends Bloc<TableEvent,TableState>{
     } else {
       final fDay = _getFirstDate(lessons: lessons);
       final lDay = _getLastDate(lessons: lessons);
-      for (int i = 0; i <= lDay
-          .difference(fDay)
-          .inDays; i++) {
+      for (int i = 0; i <= lDay.difference(fDay).inDays; i++) {
         var d = fDay.add(Duration(days: i)).toString().split(' ')[0];
         dates.add(d);
       }
@@ -541,44 +600,34 @@ class TableBloc extends Bloc<TableEvent,TableState>{
     for (var d in dates) {
       less.add(TodayLessons(
           date: d,
-          lessons: lessons.where((element) => element.date == d).toList()
-      ));
+          lessons: lessons.where((element) => element.date == d).toList()));
     }
 
     return less;
   }
 
   DateTime _getLastDate({required List<Lesson> lessons}) {
-
-    final monthLast = DateTime
-        .now()
-        .month + 2;
-    final yearLast = DateTime
-        .now()
-        .year;
-    final dayLast = DateTime
-        .now()
-        .day;
+    final monthLast = DateTime.now().month + 2;
+    final yearLast = DateTime.now().year;
+    final dayLast = DateTime.now().day;
     final lastDay = DateTime.utc(yearLast, monthLast, dayLast);
     return lastDay;
   }
 
-
   DateTime _getFirstDate({required List<Lesson> lessons}) {
     final List<int> millisecondsSinceEpochList = [];
     for (var element in lessons) {
-      millisecondsSinceEpochList.add(DateFormat('yyyy-MM-dd')
-          .parse(element.date)
-          .millisecondsSinceEpoch);
+      millisecondsSinceEpochList.add(
+          DateFormat('yyyy-MM-dd').parse(element.date).millisecondsSinceEpoch);
     }
 
-    final indexFirst = millisecondsSinceEpochList.indexOf(
-        millisecondsSinceEpochList.reduce(min));
-    final monthFirst = DateTime
-        .fromMillisecondsSinceEpoch(millisecondsSinceEpochList[indexFirst])
+    final indexFirst = millisecondsSinceEpochList
+        .indexOf(millisecondsSinceEpochList.reduce(min));
+    final monthFirst = DateTime.fromMillisecondsSinceEpoch(
+            millisecondsSinceEpochList[indexFirst])
         .month;
-    final yearFirst = DateTime
-        .fromMillisecondsSinceEpoch(millisecondsSinceEpochList[indexFirst])
+    final yearFirst = DateTime.fromMillisecondsSinceEpoch(
+            millisecondsSinceEpochList[indexFirst])
         .year;
     // final dayFirst = DateTime
     //     .fromMillisecondsSinceEpoch(millisecondsSinceEpochList[indexFirst])
@@ -586,28 +635,18 @@ class TableBloc extends Bloc<TableEvent,TableState>{
     return DateTime.utc(yearFirst, monthFirst, 1);
   }
 
-
-
   List<Lesson> getLessons(String idSchool, List<Lesson> lessons) {
     if (idSchool.isEmpty) return lessons;
     return lessons.where((element) => element.idSchool == idSchool).toList();
   }
 
-
-  List<String> getIds(List<Lesson> lessons){
+  List<String> getIds(List<Lesson> lessons) {
     List<String> ids = [];
-    for(var l in lessons){
-      if(!ids.contains(l.idSchool)){
+    for (var l in lessons) {
+      if (!ids.contains(l.idSchool)) {
         ids.add(l.idSchool);
       }
     }
     return ids;
-
   }
-
-
-
-
-
-
 }

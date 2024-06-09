@@ -24,6 +24,30 @@ enum LessonType{
 
 }
 
+extension LessonTypeExt on LessonType{
+  bool get isTrial => this == LessonType.trial;
+  bool get isGroup => this == LessonType.group;
+  bool get isSingly => this == LessonType.singly;
+  bool get isUnknown => this == LessonType.unknown;
+}
+
+extension LessonStatusExt on LessonStatus{
+  bool get isPlanned => this == LessonStatus.planned;
+  bool get isComplete => this == LessonStatus.complete;
+  bool get isOut => this == LessonStatus.out;
+  bool get isCancel => this == LessonStatus.cancel;
+  bool get isTrial => this == LessonStatus.trial;
+  bool get isReservation => this == LessonStatus.reservation;
+  bool get isSingly => this == LessonStatus.singly;
+  bool get isAwaitAccept => this == LessonStatus.awaitAccept;
+  bool get isLayering => this == LessonStatus.layering;
+  bool get isFirstLesson => this == LessonStatus.firstLesson;
+  bool get isLastLesson => this == LessonStatus.lastLesson;
+  bool get isReschedule => this == LessonStatus.reschedule;
+  bool get isUnknown => this == LessonStatus.unknown;
+
+}
+
 
 class Lesson{
   final int id;

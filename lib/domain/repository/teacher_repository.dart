@@ -10,4 +10,5 @@ abstract class TeacherRepository{
 
    Future<TeacherEntity> getTeacher({required String uid});
     Future<void>  editLesson({required Lesson lesson});
- }
+   Future<void> addLesson({required Lesson lesson});
+}

@@ -26,4 +26,9 @@ class TeacherUtil{
      await _service.editLesson(lessonModel: LessonMapper.toApi(lesson));
   }
 
- }
+  Future<void> addLesson({required LessonModel lessonModel}) async {
+    await _service.addLesson(lessonModel: lessonModel);
+  }
+
+
+}

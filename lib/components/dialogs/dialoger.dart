@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:overlay_toast_message/overlay_toast_message.dart';
+import 'package:virtuozy/components/dialogs/contents/alert_dialog/edit_status_lesson_content.dart';
 import 'package:virtuozy/components/dialogs/sealeds.dart';
 import 'package:virtuozy/domain/entities/teacher_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
@@ -282,8 +283,8 @@ class Dialoger {
         AcceptDocuments().build(context: contextUp, args: args),
       DownloadDocument() =>
         DownloadDocument().build(context: contextUp, args: args),
-
       InfoDetailsLesson() => InfoDetailsLesson().build(context: contextUp),
+      EditStatusLesson() => EditStatusLesson().build(context: contextUp,args: args),
     };
     return showDialog<T>(
       context: contextUp,
