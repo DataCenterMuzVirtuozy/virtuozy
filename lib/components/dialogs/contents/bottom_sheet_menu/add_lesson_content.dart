@@ -1,9 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
+import 'package:virtuozy/components/dialogs/sealeds.dart';
 import 'package:virtuozy/components/drop_menu.dart';
 import 'package:virtuozy/utils/date_time_parser.dart';
 
@@ -15,12 +14,10 @@ import '../../dialoger.dart';
 
 String _selectedTypeLesson = '';
 
-
 PageController pageController = PageController();
 
 class AddLessonContent extends StatefulWidget {
   const AddLessonContent({super.key, required this.initLesson});
-
 
   final Lesson initLesson;
 
@@ -53,8 +50,8 @@ class _AddLessonContentState extends State<AddLessonContent> {
                   });
                 },
               ),
-               Step2(
-                 lesson: widget.initLesson,
+              Step2(
+                lesson: widget.initLesson,
                 key: ValueKey(_selectedTypeLesson),
               )
             ][index];
@@ -140,6 +137,7 @@ class _Step1State extends State<Step1> {
 
 class Step2 extends StatefulWidget {
   const Step2({super.key, required this.lesson});
+
   final Lesson lesson;
 
   @override
@@ -147,6 +145,9 @@ class Step2 extends StatefulWidget {
 }
 
 class _Step2State extends State<Step2> {
+
+  final TextEditingController _editingControllerReview = TextEditingController();
+
   final List<String> itemsStudyes = [
     'Индивидуальные',
     'Можно ПУ',
@@ -166,9 +167,6 @@ class _Step2State extends State<Step2> {
     '10',
     '5',
   ];
-
-
-
 
   final List<String> itemsTeacher = [
     'Кристина Евженко',
@@ -218,16 +216,17 @@ class _Step2State extends State<Step2> {
 
   final List<String> itemsAuditory = [
     'Не выбрано',
-    'Свинг','Авангард','Опера','Блюз','Эстрада'
+    'Свинг',
+    'Авангард',
+    'Опера',
+    'Блюз',
+    'Эстрада'
   ];
 
   final List<String> itemsClient = [
     'Мананкова Маргарита',
     'Иванов Богдан',
   ];
-
-
-
 
   String selectedValueLesson = '';
   String selectedValueSubs = 'Не выбрано';
@@ -248,17 +247,26 @@ class _Step2State extends State<Step2> {
 
   final double _h1 = 8.0;
   final double _h2 = 15.0;
+  late Lesson addedLesson;
 
   @override
   void initState() {
     super.initState();
+    addedLesson = widget.lesson;
     selectedValueLesson = _selectedTypeLesson;
     selectedValueTeacher = widget.lesson.nameTeacher;
     selectedValueLocation = widget.lesson.idSchool;
-    selectedValueAuditory = widget.lesson.idAuditory.isEmpty?itemsAuditory[0]:widget.lesson.idAuditory;
-    selectedValueDate = widget.lesson.date.isEmpty?DateTimeParser.getDateFromApi(date: DateTime.now().toString().split(' ')[0].tr()):
-    DateTimeParser.getDateFromApi(date: widget.lesson.date);
-    selectedValueTimeStart = widget.lesson.timePeriod.isNotEmpty?itemsTimesStart.firstWhere((element) => element == widget.lesson.timePeriod.split('-')[0]):'';
+    selectedValueAuditory = widget.lesson.idAuditory.isEmpty
+        ? itemsAuditory[0]
+        : widget.lesson.idAuditory;
+    selectedValueDate = widget.lesson.date.isEmpty
+        ?  DateTime.now().toString().split(' ')[0].tr()
+        :  widget.lesson.date;
+    selectedValueTimeStart = widget.lesson.timePeriod.isNotEmpty
+        ? itemsTimesStart.firstWhere(
+            (element) => element == widget.lesson.timePeriod.split('-')[0])
+        : '10:00';
+    addedLesson = addedLesson.copyWith(nameStudent: itemsClient[0],idStudent: 1);
   }
 
   @override
@@ -277,15 +285,23 @@ class _Step2State extends State<Step2> {
                       size: 16)),
             ),
           ),
-           Gap(_h1),
+          Gap(_h1),
           DropMenu(
             items: itemsStudyes,
             selectedValue: selectedValueLesson,
             onChange: (value) {
               selectedValueLesson = value;
+              addedLesson = addedLesson.copyWith(
+                  type: selectedValueLesson == itemsStudyes[0]
+                      ? LessonType.singly
+                      : selectedValueLesson == itemsStudyes[2]
+                          ? LessonType.group
+                          : selectedValueLesson == itemsStudyes[1]
+                              ? LessonType.trial
+                              : LessonType.unknown);
             },
           ),
-           Gap(_h2),
+          Gap(_h2),
           Align(
             alignment: Alignment.centerLeft,
             child: Padding(
@@ -295,11 +311,13 @@ class _Step2State extends State<Step2> {
                       size: 16)),
             ),
           ),
-           Gap(_h1),
+          Gap(_h1),
           DropMenu(
             items: itemsClient,
             onChange: (value) {
               selectedValueStudent = value;
+              addedLesson =
+                  addedLesson.copyWith(idStudent: addedLesson.idStudent,nameStudent: selectedValueStudent);
             },
           ),
           // InkWell(
@@ -321,7 +339,7 @@ class _Step2State extends State<Step2> {
           //             size: 14)),
           //   ),
           // ),
-           Gap(_h2),
+          Gap(_h2),
           Align(
             alignment: Alignment.centerLeft,
             child: Padding(
@@ -331,7 +349,7 @@ class _Step2State extends State<Step2> {
                       size: 16)),
             ),
           ),
-           Gap(_h1),
+          Gap(_h1),
           Row(
             children: [
               Expanded(
@@ -341,15 +359,17 @@ class _Step2State extends State<Step2> {
                     setState(() {
                       errorSubs = false;
                       selectedValueSubs = value;
+                      addedLesson = addedLesson.copyWith(
+                          idDir: 1, nameSub: selectedValueSubs);
                     });
                   },
                 ),
               ),
               Visibility(
-                visible: errorSubs,
+                  visible: errorSubs,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 10),
-                    child: Icon(Icons.error,color: colorRed),
+                    child: Icon(Icons.error, color: colorRed),
                   ))
             ],
           ),
@@ -368,8 +388,11 @@ class _Step2State extends State<Step2> {
                             style: TStyle.textStyleVelaSansBold(colorGrey,
                                 size: 12)),
                         const Gap(8),
-                        Text(itemsCountLess[itemsSubs.indexOf(selectedValueSubs)],
-                            style: TStyle.textStyleVelaSansBold(textColorBlack(context),
+                        Text(
+                            itemsCountLess[
+                                itemsSubs.indexOf(selectedValueSubs)],
+                            style: TStyle.textStyleVelaSansBold(
+                                textColorBlack(context),
                                 size: 12))
                       ],
                     ),
@@ -394,6 +417,8 @@ class _Step2State extends State<Step2> {
             items: itemsTeacher,
             onChange: (value) {
               selectedValueTeacher = value;
+              addedLesson = addedLesson.copyWith(
+                  idTeacher: 1, nameTeacher: selectedValueTeacher);
             },
           ),
           Gap(_h2),
@@ -416,8 +441,9 @@ class _Step2State extends State<Step2> {
                     setState(() {
                       errorDir = false;
                       selectedValueDir = value;
+                      addedLesson = addedLesson.copyWith(
+                          idDir: 1, nameDirection: selectedValueDir);
                     });
-
                   },
                 ),
               ),
@@ -425,9 +451,8 @@ class _Step2State extends State<Step2> {
                   visible: errorDir,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 10),
-                    child: Icon(Icons.error,color: colorRed),
+                    child: Icon(Icons.error, color: colorRed),
                   ))
-
             ],
           ),
           Gap(_h2),
@@ -450,6 +475,9 @@ class _Step2State extends State<Step2> {
                     setState(() {
                       errorDur = false;
                       selectedValueDur = value;
+                      addedLesson = addedLesson.copyWith(
+                          duration: int.parse(selectedValueDur),
+                          timePeriod: timeToLesson());
                     });
                   },
                 ),
@@ -458,7 +486,7 @@ class _Step2State extends State<Step2> {
                   visible: errorDur,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 10),
-                    child: Icon(Icons.error,color: colorRed),
+                    child: Icon(Icons.error, color: colorRed),
                   ))
             ],
           ),
@@ -477,24 +505,28 @@ class _Step2State extends State<Step2> {
             children: [
               Expanded(
                 child: InkWell(
-                  onTap: (){
-                    Dialoger.showSelectDate(context: context, lessons: [],
-                        onDate: (String date){
-                           setState(() {
-                              selectedValueDate = DateTimeParser.getDateFromApi(date: date);
-                           });
+                  onTap: () {
+                    Dialoger.showSelectDate(
+                        context: context,
+                        lessons: [],
+                        onDate: (String date) {
+                          setState(() {
+                            selectedValueDate = date;
+                            addedLesson = addedLesson.copyWith(date: date);
+                          });
                         });
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-                    decoration:  BoxDecoration(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
+                    decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(50),
                       border: Border.all(
                         color: colorGrey,
                         width: 1.0,
                       ),
                     ),
-                    child: Text(selectedValueDate,
+                    child: Text(DateTimeParser.getDateFromApi(date:selectedValueDate),
                         style: TStyle.textStyleOpenSansRegular(colorGrey,
                             size: 14)),
                   ),
@@ -506,15 +538,18 @@ class _Step2State extends State<Step2> {
                   children: [
                     Expanded(
                       child: DropMenu(
-                        widthDrop:100,
+                        widthDrop: 100,
                         selectedValue: selectedValueTimeStart,
                         items: itemsTimesStart,
                         onChange: (value) {
                           setState(() {
                             selectedValueTimeStart = value;
                             errorTimeStart = false;
+                            if (selectedValueDur.isNotEmpty) {
+                              addedLesson = addedLesson.copyWith(
+                                  timePeriod: timeToLesson());
+                            }
                           });
-                                      
                         },
                       ),
                     ),
@@ -522,7 +557,7 @@ class _Step2State extends State<Step2> {
                         visible: errorTimeStart,
                         child: Padding(
                           padding: const EdgeInsets.only(left: 10),
-                          child: Icon(Icons.error,color: colorRed),
+                          child: Icon(Icons.error, color: colorRed),
                         ))
                   ],
                 ),
@@ -546,6 +581,8 @@ class _Step2State extends State<Step2> {
             items: itemsRemote,
             onChange: (value) {
               selectedValueRemote = value;
+              addedLesson = addedLesson.copyWith(
+                  online: selectedValueRemote == 'online' ? true : false);
             },
           ),
 
@@ -565,6 +602,7 @@ class _Step2State extends State<Step2> {
             items: itemsLocation,
             onChange: (value) {
               selectedValueLocation = value;
+              addedLesson = addedLesson.copyWith(idSchool: selectedValueLocation);
             },
           ),
 
@@ -589,8 +627,8 @@ class _Step2State extends State<Step2> {
                     setState(() {
                       errorAuditory = false;
                       selectedValueAuditory = value;
+                      addedLesson = addedLesson.copyWith(idAuditory: selectedValueAuditory);
                     });
-
                   },
                 ),
               ),
@@ -598,12 +636,10 @@ class _Step2State extends State<Step2> {
                   visible: errorAuditory,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 10),
-                    child: Icon(Icons.error,color: colorRed),
+                    child: Icon(Icons.error, color: colorRed),
                   ))
-
             ],
           ),
-
 
           Gap(_h2),
           Align(
@@ -619,23 +655,22 @@ class _Step2State extends State<Step2> {
           TextField(
             maxLines: 3,
             textAlign: TextAlign.start,
-            //controller: _editingControllerReview,
+            controller: _editingControllerReview,
             style: TextStyle(
-                color:
-                Theme.of(context).textTheme.displayMedium!.color!),
+                color: Theme.of(context).textTheme.displayMedium!.color!),
             cursorColor: colorBeruza,
             decoration: InputDecoration(
                 filled: true,
                 fillColor: Theme.of(context).colorScheme.background,
                 hintText: 'Ваш комментарий'.tr(),
-                hintStyle: TStyle.textStyleVelaSansMedium(
-                    colorGrey.withOpacity(0.4)),
+                hintStyle:
+                    TStyle.textStyleVelaSansMedium(colorGrey.withOpacity(0.4)),
                 contentPadding: const EdgeInsets.only(
                     left: 20, right: 20, top: 12, bottom: 12),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide(
-                    color: colorGrey ,
+                    color: colorGrey,
                     width: 1.0,
                   ),
                 ),
@@ -651,15 +686,18 @@ class _Step2State extends State<Step2> {
           const Gap(30),
 
           SizedBox(
-            height: 40.0,
+            height: 35.0,
             child: SubmitButton(
               colorFill: colorGreen,
               onTap: () {
-                if(!_checkData()){
+                if (!_checkData()) {
                   return;
                 }
-                Dialoger.showToast('START ADD');
-
+                addedLesson = addedLesson.copyWith(status: LessonStatus.planned);
+                Dialoger.showCustomDialog(
+                    args: addedLesson,
+                    contextUp: context,
+                    content: AddNewLesson());
               },
               borderRadius: 10.0,
               textButton: 'Сохранить'.tr(),
@@ -674,52 +712,64 @@ class _Step2State extends State<Step2> {
                 'Закрыть'.tr(),
                 style: TStyle.textStyleVelaSansMedium(colorRed, size: 16),
               )),
-
-
         ],
       ),
     );
   }
 
-  bool _checkData(){
+  String timeToLesson() {
+    int duration = int.parse(selectedValueDur);
+    if (duration == 30) {
+      final h = selectedValueTimeStart.split(':')[0];
+      return '$selectedValueTimeStart-$h:${duration.toString()}';
+    } else {
+      final h = int.parse(selectedValueTimeStart.split(':')[0]);
+      return '$selectedValueTimeStart-${h + 1}:00';
+    }
+  }
+
+  bool _checkData() {
     bool res = true;
-    if(selectedValueSubs == 'Не выбрано'||selectedValueSubs.isEmpty){
+
+    if(_editingControllerReview.text.isNotEmpty){
+      addedLesson = addedLesson.copyWith(comments: _editingControllerReview.text);
+    }
+
+    if (selectedValueSubs == 'Не выбрано' || selectedValueSubs.isEmpty) {
       setState(() {
         errorSubs = true;
-        res =  false;
+        res = false;
       });
-
     }
 
-    if(selectedValueDir.isEmpty || selectedValueDir == 'Не выбрано'){
+    if (selectedValueDir.isEmpty || selectedValueDir == 'Не выбрано') {
       setState(() {
         errorDir = true;
-        res =  false;
+        res = false;
       });
     }
-    if(selectedValueDur.isEmpty){
+    if (selectedValueDur.isEmpty) {
       setState(() {
         errorDur = true;
-        res =  false;
+        res = false;
       });
-
     }
-    if(selectedValueTimeStart.isEmpty||selectedValueTimeStart == 'Не выбрано'){
+    if (selectedValueTimeStart.isEmpty ||
+        selectedValueTimeStart == 'Не выбрано') {
       setState(() {
         errorTimeStart = true;
-        res =  false;
+        res = false;
       });
-
     }
 
-    if(selectedValueAuditory.isEmpty){
+    if (selectedValueAuditory.isEmpty) {
       setState(() {
         errorAuditory = true;
-        res =  false;
+        res = false;
       });
     }
 
-    if(!res){
+    if (!res) {
       Dialoger.showToast('Не все данные заполненны'.tr());
     }
 

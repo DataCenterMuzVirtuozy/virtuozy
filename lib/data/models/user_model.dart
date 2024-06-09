@@ -189,6 +189,7 @@ class UserModel{
 
  class LessonModel{
   final int id;
+  final int idStudent;
   final int idSub;
   final int idDir;
   final String idSchool;
@@ -212,6 +213,7 @@ class UserModel{
 
 
    const LessonModel( {
+     required this.idStudent,
      required this.nameSub,
      required this.comments,
      required this.duration,
@@ -252,7 +254,9 @@ class UserModel{
     'idAuditory':lessonModel.idAuditory,
       'nameTeacher':lessonModel.nameTeacher,
       'nameDir':lessonModel.nameDirection,
-      'nameStudent':lessonModel.nameStudent
+      'nameStudent':lessonModel.nameStudent,
+       'idStudent': lessonModel.idStudent,
+      'status':lessonModel.status
     };
   }
 
@@ -260,8 +264,9 @@ class UserModel{
 
 
     //final date  = DateTimeParser.date();
-    final time = DateTimeParser.time();
+    //final time = DateTimeParser.time();
     return LessonModel(
+      idStudent: map['idStudent']??0,
       online: map['online']??false,
       comments: map['comments']??'...',
       nameSub: map['nameSub']??'...',
@@ -274,8 +279,8 @@ class UserModel{
       id: map['id']??0,
       timeAccept: map['timeAccept']??'',
       date: map['date']??'',
-      //timePeriod: map['timePeriod']??'',
-        timePeriod: time,
+      timePeriod: map['timePeriod']??'',
+       // timePeriod: time,
       idTeacher: map['idTeacher'],
       idAuditory: map['idAuditory']??'',
       nameTeacher: map['nameTeacher']??'',

@@ -154,6 +154,7 @@ class UserMapper{
 
   static Lesson _fromLessonModel(LessonModel lessonModel){
     return Lesson(
+      idStudent: lessonModel.idStudent,
       idDir: lessonModel.idDir,
       idTeacher: lessonModel.idTeacher,
       type: _lessonType(lessonModel.type),

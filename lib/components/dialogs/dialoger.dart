@@ -285,6 +285,7 @@ class Dialoger {
         DownloadDocument().build(context: contextUp, args: args),
       InfoDetailsLesson() => InfoDetailsLesson().build(context: contextUp),
       EditStatusLesson() => EditStatusLesson().build(context: contextUp,args: args),
+      AddNewLesson() => AddNewLesson().build(context: contextUp,args: args),
     };
     return showDialog<T>(
       context: contextUp,

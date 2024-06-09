@@ -53,6 +53,7 @@ class Lesson{
   final int id;
   final int idTeacher;
   final String idSchool;
+  final int idStudent;
   final String date; //2024-12-22
   final String timePeriod;
   final String timeAccept;
@@ -73,6 +74,7 @@ class Lesson{
   final int idDir;
 
   const Lesson({
+    required this.idStudent,
     required this.idDir,
     required this.nameSub,
     required this.comments,
@@ -99,6 +101,7 @@ class Lesson{
 
   factory Lesson.unknown(){
     return const Lesson(
+      idStudent: 0,
       idDir: 0,
       duration: 0,
       nameSub: '',
@@ -142,9 +145,11 @@ class Lesson{
     String? nameSub,
     String? comments,
     int? duration,
-    int? idDir
+    int? idDir,
+    int? idStudent
   }) {
     return Lesson(
+      idStudent: idStudent??this.idStudent,
       idDir: idDir??this.idDir,
       duration: duration??this.duration,
       nameSub: nameSub??this.nameSub,

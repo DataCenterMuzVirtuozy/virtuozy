@@ -16,6 +16,7 @@ import 'package:virtuozy/domain/entities/teacher_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 
 import '../../domain/entities/lesson_entity.dart';
+import 'contents/alert_dialog/add_new_lesson_content.dart';
 import 'contents/alert_dialog/edit_status_lesson_content.dart';
 import 'contents/bottom_sheet_menu/info_status_lesson_content.dart';
 import 'contents/bottom_sheet_menu/seach_location_cmplete_content.dart';
@@ -40,6 +41,14 @@ class EditStatusLesson extends AlertDialogContent{
   @override
   build({required BuildContext context, Object? args}) {
     return EditStatusLessonContent(lessonNew: args as Lesson, contextLast:context);
+  }
+
+}
+
+class AddNewLesson extends AlertDialogContent{
+  @override
+  build({required BuildContext context, Object? args}) {
+    return AddNewLessonContent(lessonNew: args as Lesson, contextLast:context);
   }
 
 }

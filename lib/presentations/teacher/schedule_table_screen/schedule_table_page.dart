@@ -368,6 +368,7 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
         required String nameTeacher,
       required String dateDay}) {
     return Lesson(
+      idStudent: 0,
       idDir: 0,
       comments: '',
          nameSub: '',
