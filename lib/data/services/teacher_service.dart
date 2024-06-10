@@ -50,12 +50,12 @@ class TeacherService{
 
     Future<void> editLesson({required LessonModel lessonModel}) async {
       try{
-       final r = await _dio.patch('${Endpoints.lessons}/${lessonModel.id}',
+        await _dio.patch('${Endpoints.lessons}/${lessonModel.id}',
           data: {
             'status': lessonModel.status
           }
         );
-     print('Response ${r.data}');
+
       } on Failure catch(e){
         throw  Failure(e.message);
       } on DioException catch(e){
@@ -66,10 +66,9 @@ class TeacherService{
 
     Future<void> addLesson({required LessonModel lessonModel}) async {
       try{
-        final r = await _dio.post(Endpoints.lessons,
+        await _dio.post(Endpoints.lessons,
             data: LessonModel.toMap(lessonModel)
         );
-        print('Response ${r.data}');
       } on Failure catch(e){
         throw  Failure(e.message);
       } on DioException catch(e){

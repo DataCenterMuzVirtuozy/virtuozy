@@ -27,7 +27,7 @@ class AddNewLessonContent extends StatelessWidget{
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(Icons.published_with_changes,color: Theme.of(context).textTheme.displayMedium!.color!,size: 40.0),
+          Icon(Icons.add_task_rounded,color: Theme.of(context).textTheme.displayMedium!.color!,size: 40.0),
           const SizedBox(height: 15.0),
           Text('Добавить новый урок?'.tr(),
               textAlign:TextAlign.center,
@@ -48,7 +48,6 @@ class AddNewLessonContent extends StatelessWidget{
               TextButton(
                   onPressed: () {
                     Navigator.pop(context);
-                    Navigator.pop(contextLast);
                   },
                   child: Text('Отмена'.tr(),
                       textAlign: TextAlign.center,

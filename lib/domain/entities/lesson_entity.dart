@@ -72,8 +72,10 @@ class Lesson{
   final String comments;
   final String nameSub;
   final int idDir;
+  final String nameGroup;
 
   const Lesson({
+    required this.nameGroup,
     required this.idStudent,
     required this.idDir,
     required this.nameSub,
@@ -101,6 +103,7 @@ class Lesson{
 
   factory Lesson.unknown(){
     return const Lesson(
+      nameGroup: '',
       idStudent: 0,
       idDir: 0,
       duration: 0,
@@ -146,9 +149,11 @@ class Lesson{
     String? comments,
     int? duration,
     int? idDir,
-    int? idStudent
+    int? idStudent,
+    String? nameGroup
   }) {
     return Lesson(
+      nameGroup: nameGroup??this.nameGroup,
       idStudent: idStudent??this.idStudent,
       idDir: idDir??this.idDir,
       duration: duration??this.duration,

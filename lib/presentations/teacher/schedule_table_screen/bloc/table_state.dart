@@ -22,6 +22,17 @@ enum ScheduleStatus{
   error,
   unknown
 }
+enum AddLessonStatus{
+  success,
+  error,
+  unknown
+}
+
+  enum EditLessonStatus{
+    success,
+    error,
+    unknown
+  }
 
 enum ViewModeTable{
   day,
@@ -33,6 +44,8 @@ enum ViewModeTable{
 class TableState extends Equatable{
 
   final String error;
+  final AddLessonStatus addLessonStatus;
+  final EditLessonStatus editLessonStatus;
   final TableStatus status;
   final ScheduleStatus scheduleStatus;
   final ViewModeTable modeTable;
@@ -61,6 +74,8 @@ class TableState extends Equatable{
         required this.tasks,
         required this.titles,
         required this.scheduleStatus,
+        required this.addLessonStatus,
+        required this.editLessonStatus,
       required this.modeTable});
 
   factory TableState.unknown(){
@@ -68,6 +83,8 @@ class TableState extends Equatable{
         status: TableStatus.unknown,
         lessons: [],
         idsSchool: [],
+        addLessonStatus: AddLessonStatus.unknown,
+        editLessonStatus: EditLessonStatus.unknown,
         scheduleStatus: ScheduleStatus.unknown,
         currentIdSchool: '',
         todayLessons: [],
@@ -92,9 +109,13 @@ class TableState extends Equatable{
     List<String>? idsAuditory,
     List<TableTask>? tasks,
     List<TitlesTable>? titles,
-    ScheduleStatus? scheduleStatus
+    ScheduleStatus? scheduleStatus,
+    AddLessonStatus? addLessonStatus,
+    EditLessonStatus? editLessonStatus
 }){
     return TableState(error: error??this.error,
+        addLessonStatus: addLessonStatus??this.addLessonStatus,
+        editLessonStatus: editLessonStatus??this.editLessonStatus,
         status: status??this.status,
         titles: titles??this.titles,
         tasks: tasks??this.tasks,

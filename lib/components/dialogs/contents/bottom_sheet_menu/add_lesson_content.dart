@@ -1,5 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 import 'package:virtuozy/components/dialogs/sealeds.dart';
@@ -28,6 +30,15 @@ class AddLessonContent extends StatefulWidget {
 class _AddLessonContentState extends State<AddLessonContent> {
   final List<double> _heightBody = [200.0, 800.0];
   int _stepIndex = 0;
+  Lesson lesson = Lesson.unknown();
+
+
+  @override
+  void initState() {
+    super.initState();
+  lesson = widget.initLesson;
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,11 +58,20 @@ class _AddLessonContentState extends State<AddLessonContent> {
                   setState(() {
                     _stepIndex = 1;
                     _selectedTypeLesson = selected;
+                  lesson =  lesson.copyWith(
+                        type: selected == 'Индивидуальные'
+                            ? LessonType.singly
+                            : selected == 'Групповой'
+                            ? LessonType.group
+                            : selected == 'Можно ПУ'
+                            ? LessonType.trial
+                            : LessonType.unknown);
+
                   });
                 },
               ),
               Step2(
-                lesson: widget.initLesson,
+                lesson: lesson,
                 key: ValueKey(_selectedTypeLesson),
               )
             ][index];
@@ -228,6 +248,13 @@ class _Step2State extends State<Step2> {
     'Иванов Богдан',
   ];
 
+  final List<String> itemsGroup = [
+     'Не выбрано',
+    'Группа 1',
+    'Группа 2',
+    'Группа 3'
+  ];
+
   String selectedValueLesson = '';
   String selectedValueSubs = 'Не выбрано';
   String selectedValueTeacher = '';
@@ -238,12 +265,14 @@ class _Step2State extends State<Step2> {
   String selectedValueLocation = '';
   String selectedValueAuditory = '';
   String selectedValueStudent = '';
+  String selectedValueGroup = '';
   String selectedValueDate = '';
   bool errorSubs = false;
   bool errorDir = false;
   bool errorDur = false;
   bool errorTimeStart = false;
   bool errorAuditory = false;
+  bool errorGroup = false;
 
   final double _h1 = 8.0;
   final double _h2 = 15.0;
@@ -266,7 +295,8 @@ class _Step2State extends State<Step2> {
         ? itemsTimesStart.firstWhere(
             (element) => element == widget.lesson.timePeriod.split('-')[0])
         : '10:00';
-    addedLesson = addedLesson.copyWith(nameStudent: itemsClient[0],idStudent: 1);
+    addedLesson = addedLesson.copyWith(nameStudent: itemsClient[0],idStudent: 1,
+        date: selectedValueDate);
   }
 
   @override
@@ -290,35 +320,45 @@ class _Step2State extends State<Step2> {
             items: itemsStudyes,
             selectedValue: selectedValueLesson,
             onChange: (value) {
-              selectedValueLesson = value;
-              addedLesson = addedLesson.copyWith(
-                  type: selectedValueLesson == itemsStudyes[0]
-                      ? LessonType.singly
-                      : selectedValueLesson == itemsStudyes[2]
-                          ? LessonType.group
-                          : selectedValueLesson == itemsStudyes[1]
-                              ? LessonType.trial
-                              : LessonType.unknown);
+              setState(() {
+                selectedValueLesson = value;
+                addedLesson = addedLesson.copyWith(
+                    type: selectedValueLesson == itemsStudyes[0]
+                        ? LessonType.singly
+                        : selectedValueLesson == itemsStudyes[2]
+                        ? LessonType.group
+                        : selectedValueLesson == itemsStudyes[1]
+                        ? LessonType.trial
+                        : LessonType.unknown);
+              });
             },
           ),
-          Gap(_h2),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Text('Клиент'.tr(),
-                  style: TStyle.textStyleVelaSansBold(textColorBlack(context),
-                      size: 16)),
+
+          Visibility(
+            visible: addedLesson.type.isSingly,
+            child: Column(
+              children: [
+                Gap(_h2),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Text('Клиент'.tr(),
+                        style: TStyle.textStyleVelaSansBold(textColorBlack(context),
+                            size: 16)),
+                  ),
+                ),
+                Gap(_h1),
+                DropMenu(
+                  items: itemsClient,
+                  onChange: (value) {
+                    selectedValueStudent = value;
+                    addedLesson =
+                        addedLesson.copyWith(idStudent: addedLesson.idStudent,nameStudent: selectedValueStudent);
+                  },
+                ),
+              ],
             ),
-          ),
-          Gap(_h1),
-          DropMenu(
-            items: itemsClient,
-            onChange: (value) {
-              selectedValueStudent = value;
-              addedLesson =
-                  addedLesson.copyWith(idStudent: addedLesson.idStudent,nameStudent: selectedValueStudent);
-            },
           ),
           // InkWell(
           //   onTap: (){
@@ -339,68 +379,75 @@ class _Step2State extends State<Step2> {
           //             size: 14)),
           //   ),
           // ),
-          Gap(_h2),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Text('Абонемент'.tr(),
-                  style: TStyle.textStyleVelaSansBold(textColorBlack(context),
-                      size: 16)),
-            ),
-          ),
-          Gap(_h1),
-          Row(
-            children: [
-              Expanded(
-                child: DropMenu(
-                  items: itemsSubs,
-                  onChange: (value) {
-                    setState(() {
-                      errorSubs = false;
-                      selectedValueSubs = value;
-                      addedLesson = addedLesson.copyWith(
-                          idDir: 1, nameSub: selectedValueSubs);
-                    });
-                  },
-                ),
-              ),
-              Visibility(
-                  visible: errorSubs,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: Icon(Icons.error, color: colorRed),
-                  ))
-            ],
-          ),
           Visibility(
-            visible: selectedValueSubs != 'Не выбрано',
+            visible: addedLesson.type.isSingly||addedLesson.type.isGroup,
             child: Column(
               children: [
-                const Gap(5),
+                Gap(_h2),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 20),
-                    child: Row(
-                      children: [
-                        Text('Осталось уроков:'.tr(),
-                            style: TStyle.textStyleVelaSansBold(colorGrey,
-                                size: 12)),
-                        const Gap(8),
-                        Text(
-                            itemsCountLess[
-                                itemsSubs.indexOf(selectedValueSubs)],
-                            style: TStyle.textStyleVelaSansBold(
-                                textColorBlack(context),
-                                size: 12))
-                      ],
-                    ),
+                    child: Text('Абонемент'.tr(),
+                        style: TStyle.textStyleVelaSansBold(textColorBlack(context),
+                            size: 16)),
                   ),
                 ),
+                Gap(_h1),
+                Row(
+                  children: [
+                    Expanded(
+                      child: DropMenu(
+                        items: itemsSubs,
+                        onChange: (value) {
+                          setState(() {
+                            errorSubs = false;
+                            selectedValueSubs = value;
+                            addedLesson = addedLesson.copyWith(
+                                idDir: 1, nameSub: selectedValueSubs);
+                          });
+                        },
+                      ),
+                    ),
+                    Visibility(
+                        visible: errorSubs,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Icon(Icons.error, color: colorRed),
+                        ))
+                  ],
+                ),
+                Visibility(
+                  visible: selectedValueSubs != 'Не выбрано',
+                  child: Column(
+                    children: [
+                      const Gap(5),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 20),
+                          child: Row(
+                            children: [
+                              Text('Осталось уроков:'.tr(),
+                                  style: TStyle.textStyleVelaSansBold(colorGrey,
+                                      size: 12)),
+                              const Gap(8),
+                              Text(
+                                  itemsCountLess[
+                                      itemsSubs.indexOf(selectedValueSubs)],
+                                  style: TStyle.textStyleVelaSansBold(
+                                      textColorBlack(context),
+                                      size: 12))
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ).animate().fade(duration: const Duration(milliseconds: 400)),
               ],
             ),
-          ).animate().fade(duration: const Duration(milliseconds: 400)),
+          ),
           Gap(_h2),
           Align(
             alignment: Alignment.centerLeft,
@@ -421,39 +468,88 @@ class _Step2State extends State<Step2> {
                   idTeacher: 1, nameTeacher: selectedValueTeacher);
             },
           ),
-          Gap(_h2),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Text('Направление'.tr(),
-                  style: TStyle.textStyleVelaSansBold(textColorBlack(context),
-                      size: 16)),
+          Visibility(
+            visible: addedLesson.type.isSingly||addedLesson.type.isGroup,
+            child: Column(
+              children: [
+                Gap(_h2),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Text('Направление'.tr(),
+                        style: TStyle.textStyleVelaSansBold(textColorBlack(context),
+                            size: 16)),
+                  ),
+                ),
+                Gap(_h1),
+                Row(
+                  children: [
+                    Expanded(
+                      child: DropMenu(
+                        items: itemsDir,
+                        onChange: (value) {
+                          setState(() {
+                            errorDir = false;
+                            selectedValueDir = value;
+                            addedLesson = addedLesson.copyWith(
+                                idDir: 1, nameDirection: selectedValueDir);
+                          });
+                        },
+                      ),
+                    ),
+                    Visibility(
+                        visible: errorDir,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Icon(Icons.error, color: colorRed),
+                        ))
+                  ],
+                ),
+              ],
             ),
           ),
-          Gap(_h1),
-          Row(
-            children: [
-              Expanded(
-                child: DropMenu(
-                  items: itemsDir,
-                  onChange: (value) {
-                    setState(() {
-                      errorDir = false;
-                      selectedValueDir = value;
-                      addedLesson = addedLesson.copyWith(
-                          idDir: 1, nameDirection: selectedValueDir);
-                    });
-                  },
-                ),
-              ),
-              Visibility(
-                  visible: errorDir,
+          Visibility(
+            visible: addedLesson.type.isGroup,
+            child: Column(
+              children: [
+                Gap(_h2),
+                Align(
+                  alignment: Alignment.centerLeft,
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: Icon(Icons.error, color: colorRed),
-                  ))
-            ],
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Text('Группа'.tr(),
+                        style: TStyle.textStyleVelaSansBold(textColorBlack(context),
+                            size: 16)),
+                  ),
+                ),
+                Gap(_h1),
+                Row(
+                  children: [
+                    Expanded(
+                      child: DropMenu(
+                        items: itemsGroup,
+                        onChange: (value) {
+                         setState(() {
+                           errorGroup = false;
+                           selectedValueGroup = value;
+                           addedLesson =
+                               addedLesson.copyWith(nameGroup: selectedValueGroup);
+                         });
+                        },
+                      ),
+                    ),
+                    Visibility(
+                        visible: errorGroup,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Icon(Icons.error, color: colorRed),
+                        ))
+
+                  ],
+                ),
+              ],
+            ),
           ),
           Gap(_h2),
           Align(
@@ -565,25 +661,32 @@ class _Step2State extends State<Step2> {
             ],
           ),
 
-          Gap(_h2),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Text('Тип проведения занятия'.tr(),
-                  style: TStyle.textStyleVelaSansBold(textColorBlack(context),
-                      size: 16)),
+          Visibility(
+            visible: addedLesson.type.isSingly,
+            child: Column(
+              children: [
+                Gap(_h2),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Text('Тип проведения занятия'.tr(),
+                        style: TStyle.textStyleVelaSansBold(textColorBlack(context),
+                            size: 16)),
+                  ),
+                ),
+                Gap(_h1),
+                DropMenu(
+                  selectedValue: itemsRemote[1],
+                  items: itemsRemote,
+                  onChange: (value) {
+                    selectedValueRemote = value;
+                    addedLesson = addedLesson.copyWith(
+                        online: selectedValueRemote == 'online' ? true : false);
+                  },
+                ),
+              ],
             ),
-          ),
-          Gap(_h1),
-          DropMenu(
-            selectedValue: itemsRemote[1],
-            items: itemsRemote,
-            onChange: (value) {
-              selectedValueRemote = value;
-              addedLesson = addedLesson.copyWith(
-                  online: selectedValueRemote == 'online' ? true : false);
-            },
           ),
 
           Gap(_h2),
@@ -728,6 +831,9 @@ class _Step2State extends State<Step2> {
     }
   }
 
+
+
+
   bool _checkData() {
     bool res = true;
 
@@ -735,17 +841,32 @@ class _Step2State extends State<Step2> {
       addedLesson = addedLesson.copyWith(comments: _editingControllerReview.text);
     }
 
+    if (addedLesson.type.isGroup) {
+      if (selectedValueGroup == 'Не выбрано' || selectedValueGroup.isEmpty) {
+            setState(() {
+              errorGroup = true;
+              res = false;
+            });
+          }
+    }
+
     if (selectedValueSubs == 'Не выбрано' || selectedValueSubs.isEmpty) {
-      setState(() {
-        errorSubs = true;
-        res = false;
-      });
+      if(addedLesson.type.isSingly||addedLesson.type.isGroup){
+        setState(() {
+          errorSubs = true;
+          res = false;
+        });
+      }
+
     }
 
     if (selectedValueDir.isEmpty || selectedValueDir == 'Не выбрано') {
       setState(() {
-        errorDir = true;
-        res = false;
+
+        if (addedLesson.type.isSingly||addedLesson.type.isGroup) {
+          errorDir = true;
+          res = false;
+        }
       });
     }
     if (selectedValueDur.isEmpty) {

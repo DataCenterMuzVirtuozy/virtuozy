@@ -49,7 +49,6 @@ class EditStatusLessonContent extends StatelessWidget{
               TextButton(
                   onPressed: () {
                     Navigator.pop(context);
-                    Navigator.pop(contextLast);
                   },
                   child: Text('Отмена'.tr(),
                       textAlign: TextAlign.center,

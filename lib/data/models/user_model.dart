@@ -188,6 +188,7 @@ class UserModel{
 
 
  class LessonModel{
+  final String nameGroup;
   final int id;
   final int idStudent;
   final int idSub;
@@ -213,6 +214,7 @@ class UserModel{
 
 
    const LessonModel( {
+     required this.nameGroup,
      required this.idStudent,
      required this.nameSub,
      required this.comments,
@@ -238,6 +240,7 @@ class UserModel{
 
  static Map<String,dynamic> toMap(LessonModel lessonModel){
     return {
+      'nameGroup':lessonModel.nameGroup,
       'online':lessonModel.online,
       'comments':lessonModel.comments,
       'nameSub':lessonModel.nameSub,
@@ -266,6 +269,7 @@ class UserModel{
     //final date  = DateTimeParser.date();
     //final time = DateTimeParser.time();
     return LessonModel(
+      nameGroup: map['nameGroup']??'',
       idStudent: map['idStudent']??0,
       online: map['online']??false,
       comments: map['comments']??'...',

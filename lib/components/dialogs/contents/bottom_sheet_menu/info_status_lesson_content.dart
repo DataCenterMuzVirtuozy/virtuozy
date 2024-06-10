@@ -34,7 +34,6 @@ class _InfoStatusLessonContentState extends State<InfoStatusLessonContent> {
   @override
   void initState() {
     super.initState();
-    print('Status ${widget.lesson.status}');
     _editedLesson = widget.lesson;
   }
 
@@ -123,14 +122,17 @@ class _InfoStatusLessonContentState extends State<InfoStatusLessonContent> {
                             size: 15.0)),
                   ],
                 ),
-                Row(
-                  children: [
-                    Icon(Icons.directions, color: colorGreen, size: 16.0),
-                    const Gap(5),
-                    Text(widget.lesson.nameDirection,
-                        style: TStyle.textStyleVelaSansMedium(colorGrey,
-                            size: 15.0)),
-                  ],
+                Visibility(
+                  visible: !widget.lesson.type.isTrial,
+                  child: Row(
+                    children: [
+                      Icon(Icons.directions, color: colorGreen, size: 16.0),
+                      const Gap(5),
+                      Text(widget.lesson.nameDirection,
+                          style: TStyle.textStyleVelaSansMedium(colorGrey,
+                              size: 15.0)),
+                    ],
+                  ),
                 )
               ],
             ),
@@ -145,6 +147,25 @@ class _InfoStatusLessonContentState extends State<InfoStatusLessonContent> {
                     style: TStyle.textStyleVelaSansBold(textColorBlack(context),
                         size: 16.0))
               ],
+            ),
+            Visibility(
+              visible: widget.lesson.type.isGroup,
+              child: Column(
+                children: [
+                  const Gap(5),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Группа:',
+                          style:
+                          TStyle.textStyleVelaSansMedium(colorGrey, size: 15.0)),
+                      Text(widget.lesson.nameGroup,
+                          style: TStyle.textStyleVelaSansBold(textColorBlack(context),
+                              size: 16.0))
+                    ],
+                  ),
+                ],
+              ),
             ),
             const Gap(5),
             Row(
@@ -245,7 +266,7 @@ class _InfoStatusLessonContentState extends State<InfoStatusLessonContent> {
                     style:
                         TStyle.textStyleVelaSansMedium(colorGrey, size: 15.0)),
                 Expanded(
-                  child: Text(widget.lesson.nameSub,
+                  child: Text(widget.lesson.nameSub.isEmpty?'...':widget.lesson.nameSub,
                       textAlign: TextAlign.end,
                       style: TStyle.textStyleVelaSansBold(
                           textColorBlack(context),
@@ -260,7 +281,7 @@ class _InfoStatusLessonContentState extends State<InfoStatusLessonContent> {
                 Text('Комментарий:',
                     style:
                         TStyle.textStyleVelaSansMedium(colorGrey, size: 15.0)),
-                Text(widget.lesson.comments,
+                Text(widget.lesson.comments.isEmpty?'...':widget.lesson.comments,
                     style: TStyle.textStyleVelaSansBold(textColorBlack(context),
                         size: 16.0))
               ],

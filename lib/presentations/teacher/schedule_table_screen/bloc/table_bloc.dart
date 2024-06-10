@@ -36,7 +36,11 @@ class TableBloc extends Bloc<TableEvent, TableState> {
 
   void addNewLesson(AddLessonEvent event, emit) async {
     try {
-      emit(state.copyWith(status: TableStatus.loading, error: ''));
+      emit(state.copyWith(
+          status: TableStatus.loading,
+          error: '',
+          addLessonStatus: AddLessonStatus.unknown,
+          editLessonStatus: EditLessonStatus.unknown));
       await _teacherRepository.addLesson(lesson: event.lesson);
       final phoneTeacher = _cubitTeacher.teacherEntity.phoneNum;
       final teacher = await _teacherRepository.getTeacher(uid: phoneTeacher);
@@ -72,18 +76,24 @@ class TableBloc extends Bloc<TableEvent, TableState> {
           currentIdSchool: state.currentIdSchool,
           status: TableStatus.loaded,
           scheduleStatus: ScheduleStatus.loaded,
+          addLessonStatus: AddLessonStatus.success,
           idsSchool: state.idsSchool,
           tasks: tasks,
           modeTable: ViewModeTable.day,
           todayLessons: todayLessons));
     } on Failure catch (e) {
-      emit(state.copyWith(status: TableStatus.error, error: e.message));
+      emit(state.copyWith(
+          status: TableStatus.loaded,
+          addLessonStatus: AddLessonStatus.error,
+          error: e.message));
     }
   }
 
   void editLesson(EditStatusLessonEvent event, emit) async {
     try {
-      emit(state.copyWith(status: TableStatus.loading, error: ''));
+      emit(state.copyWith(status: TableStatus.loading, error: '',
+          addLessonStatus: AddLessonStatus.unknown,
+          editLessonStatus: EditLessonStatus.unknown));
       await _teacherRepository.editLesson(lesson: event.lesson);
       final phoneTeacher = _cubitTeacher.teacherEntity.phoneNum;
       final teacher = await _teacherRepository.getTeacher(uid: phoneTeacher);
@@ -116,6 +126,7 @@ class TableBloc extends Bloc<TableEvent, TableState> {
           indexByDateNow: index.$1,
           visibleTodayButton: index.$2,
           lessons: lessonsById,
+          editLessonStatus: EditLessonStatus.success,
           currentIdSchool: state.currentIdSchool,
           status: TableStatus.loaded,
           scheduleStatus: ScheduleStatus.loaded,
@@ -124,14 +135,16 @@ class TableBloc extends Bloc<TableEvent, TableState> {
           modeTable: ViewModeTable.day,
           todayLessons: todayLessons));
     } on Failure catch (e) {
-      emit(state.copyWith(status: TableStatus.error, error: e.message));
+      emit(state.copyWith(status: TableStatus.loaded,editLessonStatus: EditLessonStatus.error, error: e.message));
     }
   }
 
   //todo lessons all school
   void getLessonsTable(GetInitLessonsEvent event, emit) async {
     try {
-      emit(state.copyWith(status: TableStatus.loading, error: ''));
+      emit(state.copyWith(status: TableStatus.loading, error: '',
+          addLessonStatus: AddLessonStatus.unknown,
+          editLessonStatus: EditLessonStatus.unknown));
       await Future.delayed(const Duration(milliseconds: 300));
       final lessons = _cubitTeacher.teacherEntity.lessons;
       if (lessons.isEmpty) {
@@ -174,6 +187,8 @@ class TableBloc extends Bloc<TableEvent, TableState> {
       emit(state.copyWith(
           status: TableStatus.loading,
           scheduleStatus: ScheduleStatus.loading,
+          addLessonStatus: AddLessonStatus.unknown,
+          editLessonStatus: EditLessonStatus.unknown,
           error: ''));
       await Future.delayed(const Duration(milliseconds: 300));
       List<TodayLessons> todayLessons = [];
@@ -238,7 +253,9 @@ class TableBloc extends Bloc<TableEvent, TableState> {
 
   void getMyLesson(GetMyLessonEvent event, emit) async {
     try {
-      emit(state.copyWith(status: TableStatus.loading, error: ''));
+      emit(state.copyWith(status: TableStatus.loading, error: '',
+          addLessonStatus: AddLessonStatus.unknown,
+          editLessonStatus: EditLessonStatus.unknown));
       await Future.delayed(const Duration(milliseconds: 300));
       final idTeacher = _cubitTeacher.teacherEntity.id;
       final lessons = _cubitTeacher.teacherEntity.lessons
@@ -269,7 +286,9 @@ class TableBloc extends Bloc<TableEvent, TableState> {
 
   void getLessonTableOnWeek(GetLessonsTableWeek event, emit) async {
     try {
-      emit(state.copyWith(status: TableStatus.loading, error: ''));
+      emit(state.copyWith(status: TableStatus.loading, error: '',
+          addLessonStatus: AddLessonStatus.unknown,
+          editLessonStatus: EditLessonStatus.unknown));
       await Future.delayed(const Duration(milliseconds: 300));
       final lessons = _cubitTeacher.teacherEntity.lessons;
       final lessonsByIdSchool = getLessons(state.currentIdSchool, lessons);
@@ -297,7 +316,9 @@ class TableBloc extends Bloc<TableEvent, TableState> {
 
   void getLessonsTableByIdSchool(GetLessonsTableByIdSchool event, emit) async {
     try {
-      emit(state.copyWith(status: TableStatus.loading, error: ''));
+      emit(state.copyWith(status: TableStatus.loading, error: '',
+          addLessonStatus: AddLessonStatus.unknown,
+          editLessonStatus: EditLessonStatus.unknown));
       await Future.delayed(const Duration(milliseconds: 300));
       List<TodayLessons> todayLessons = [];
       List<Lesson> lessons = [];
@@ -346,7 +367,9 @@ class TableBloc extends Bloc<TableEvent, TableState> {
   void getLessonsTableByDate(GetLessonsTableByDate event, emit) async {
     try {
       emit(state.copyWith(
-          status: TableStatus.loading, tasks: [], titles: [], error: ''));
+          status: TableStatus.loading, tasks: [], titles: [], error: '',
+          addLessonStatus: AddLessonStatus.unknown,
+          editLessonStatus: EditLessonStatus.unknown));
       await Future.delayed(const Duration(milliseconds: 300));
       List<TodayLessons> todayLessons = [];
       List<Lesson> lessons = [];

@@ -189,6 +189,9 @@ class _CalendarState extends State<Calendar> with AuthMixin{
               todayBuilder: (context, day, values) {
                 if(userType.isTeacher){
                   return _handleTodayTeacher(
+                    onLesson: (d){
+                      widget.onDate.call(d.toString().split(' ')[0]);
+                    },
                     lessons: widget.lessons,
                     today: day
                   );
@@ -263,6 +266,7 @@ class _CalendarState extends State<Calendar> with AuthMixin{
   _handleTodayTeacher({
     required List<Lesson> lessons,
     required DateTime today,
+    required Function onLesson
   }){
     return ValueListenableBuilder<int>(
         valueListenable: currentDayNotifi,
@@ -272,7 +276,8 @@ class _CalendarState extends State<Calendar> with AuthMixin{
             child: InkWell(
                 borderRadius: BorderRadius.circular(60.0),
                 onTap: () {
-                  currentDayNotifi.value = today.day;
+                  onLesson.call(today);
+                  //currentDayNotifi.value = today.day;
                   },
                 child: Container(
                   width: 45.0,

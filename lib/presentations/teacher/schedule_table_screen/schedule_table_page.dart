@@ -15,7 +15,6 @@ import 'package:virtuozy/domain/entities/table_tap_location_entity.dart';
 import 'package:virtuozy/presentations/teacher/schedule_table_screen/table/my_time_planner.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/utils/auth_mixin.dart';
-import 'package:virtuozy/utils/date_time_parser.dart';
 import 'package:virtuozy/utils/status_to_color.dart';
 
 import '../../../components/date_page_table.dart';
@@ -75,6 +74,24 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
           if(_changeIndexDate<0){
             _changeIndexDate = s.indexByDateNow;
           }
+
+           if(s.addLessonStatus == AddLessonStatus.error){
+             Dialoger.showToast('Ошибка добавления урока'.tr());
+           }
+
+          if(s.addLessonStatus == AddLessonStatus.success){
+            Dialoger.showToast('Урок успешно добавлен'.tr());
+          }
+
+          if(s.editLessonStatus == EditLessonStatus.error){
+            Dialoger.showToast('Ошибка редактирования урока'.tr());
+          }
+
+          if(s.editLessonStatus == EditLessonStatus.success){
+            Dialoger.showToast('Статус урока изменен'.tr());
+          }
+
+
 
 
         },
@@ -288,28 +305,31 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
                                             color: color(state, index,
                                                 context),
                                             size: 13)),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.directions,
-                                            color: color(state, index, context),
-                                            size: 10.0),
-                                        const Gap(3),
-                                        SizedBox(
-                                          width: 63,
-                                          child: Text(
-                                              state.tasks[index].lesson
-                                                  .nameDirection,
-                                              overflow:
-                                                  TextOverflow.ellipsis,
-                                              style: TStyle
-                                                  .textStyleVelaSansMedium(
-                                                      color(state, index,
-                                                          context),
-                                                      size: 12.0)),
-                                        ),
-                                      ],
+                                    Visibility(
+                                      visible:  !state.tasks[index].lesson.type.isTrial,
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.directions,
+                                              color: color(state, index, context),
+                                              size: 10.0),
+                                          const Gap(3),
+                                          SizedBox(
+                                            width: 63,
+                                            child: Text(
+                                                state.tasks[index].lesson
+                                                    .nameDirection,
+                                                overflow:
+                                                    TextOverflow.ellipsis,
+                                                style: TStyle
+                                                    .textStyleVelaSansMedium(
+                                                        color(state, index,
+                                                            context),
+                                                        size: 12.0)),
+                                          ),
+                                        ],
+                                      ),
                                     )
                                   ],
                                 ),
@@ -368,6 +388,7 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
         required String nameTeacher,
       required String dateDay}) {
     return Lesson(
+      nameGroup: '',
       idStudent: 0,
       idDir: 0,
       comments: '',
