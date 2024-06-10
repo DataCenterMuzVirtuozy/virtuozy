@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:filter_list/filter_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -273,6 +274,7 @@ class _Step2State extends State<Step2> {
   bool errorTimeStart = false;
   bool errorAuditory = false;
   bool errorGroup = false;
+  bool errorClient = false;
 
   final double _h1 = 8.0;
   final double _h2 = 15.0;
@@ -349,36 +351,52 @@ class _Step2State extends State<Step2> {
                   ),
                 ),
                 Gap(_h1),
-                DropMenu(
-                  items: itemsClient,
-                  onChange: (value) {
-                    selectedValueStudent = value;
-                    addedLesson =
-                        addedLesson.copyWith(idStudent: addedLesson.idStudent,nameStudent: selectedValueStudent);
+                InkWell(
+                  onTap: (){
+                    openFilterDialog();
                   },
-                ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+                          decoration:  BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            border: Border.all(
+                              color: colorGrey,
+                              width: 1.0,
+                            ),
+                          ),
+                          child: Text(selectedValueStudent.isEmpty?'Поиск...'.tr():
+                              selectedValueStudent,
+                              style: selectedValueStudent.isEmpty?TStyle.textStyleOpenSansRegular(colorGrey,
+                                  size: 14):TStyle.textStyleVelaSansBold(textColorBlack(context),size: 14)
+                        
+                          ),
+                        ),
+                      ),
+                      Visibility(
+                          visible: errorClient,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Icon(Icons.error, color: colorRed),
+                          ))
+
+                    ],
+                  ),
+                )
+                // DropMenu(
+                //   items: itemsClient,
+                //   onChange: (value) {
+                //     selectedValueStudent = value;
+                //     addedLesson =
+                //         addedLesson.copyWith(idStudent: addedLesson.idStudent,nameStudent: selectedValueStudent);
+                //   },
+                // ),
               ],
             ),
           ),
-          // InkWell(
-          //   onTap: (){
-          //     Dialoger.showToast('В разработке');
-          //   },
-          //   child: Container(
-          //     width: MediaQuery.of(context).size.width,
-          //     padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-          //     decoration:  BoxDecoration(
-          //       borderRadius: BorderRadius.circular(50),
-          //       border: Border.all(
-          //         color: colorGrey,
-          //         width: 1.0,
-          //       ),
-          //     ),
-          //     child: Text('Поиск...'.tr(),
-          //         style: TStyle.textStyleOpenSansRegular(colorGrey,
-          //             size: 14)),
-          //   ),
-          // ),
           Visibility(
             visible: addedLesson.type.isSingly||addedLesson.type.isGroup,
             child: Column(
@@ -860,6 +878,13 @@ class _Step2State extends State<Step2> {
 
     }
 
+    if(selectedValueStudent.isEmpty&&addedLesson.type.isSingly){
+      setState(() {
+        errorClient = true;
+        res = false;
+      });
+    }
+
     if (selectedValueDir.isEmpty || selectedValueDir == 'Не выбрано') {
       setState(() {
 
@@ -895,5 +920,51 @@ class _Step2State extends State<Step2> {
     }
 
     return res;
+  }
+
+  void openFilterDialog() async {
+    await FilterListDialog.display<String>(
+      context,
+      listData: [
+        'Мананкова Маргарита',
+        'Иванов Богдан',
+        'Ковтун Всеволод',
+        'Бердавцева Виктория',
+        'Мартынов Иван',
+        'Баева Мария',
+        'Трунова Василиса',
+        'Байчоров Амин Артурович',
+        'Эркенова Джамиля',
+      ],
+      selectedListData: [],
+      enableOnlySingleSelection: true,
+      hideSelectedTextCount: true,
+      hideCloseIcon: true,
+      applyButtonText: 'Выбрать',
+      resetButtonText: 'Сброс',
+      choiceChipLabel: (user) {
+        return user;
+      },
+      themeData: FilterListThemeData(context,headerTheme: HeaderThemeData(
+        searchFieldHintText: 'Имя клиента',
+        searchFieldBorderRadius: 20,
+        searchFieldTextStyle: TStyle.textStyleVelaSansRegular(colorGrey,size: 14)
+      )),
+      validateSelectedItem: (list, val) {
+        return list!.contains(val);
+      },
+      onItemSearch: (user, query) {
+        return user.toLowerCase().contains(query.toLowerCase());
+      },
+
+      onApplyButtonClick: (client) {
+        setState(() {
+          errorClient = false;
+          selectedValueStudent = List.from(client!).first;
+          addedLesson = addedLesson.copyWith(nameStudent: selectedValueStudent,idStudent: 1);
+        });
+        Navigator.pop(context);
+      },
+    );
   }
 }

@@ -215,7 +215,7 @@ class _InfoStatusLessonContentState extends State<InfoStatusLessonContent> {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TStyle.textStyleVelaSansBold(
-                          Theme.of(context).textTheme.displayMedium!.color!,
+                          color(widget.lesson.status, context),
                           size: 10.0)),
                 ),
               ],
@@ -276,14 +276,19 @@ class _InfoStatusLessonContentState extends State<InfoStatusLessonContent> {
             ),
             const Gap(5),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Комментарий:',
                     style:
                         TStyle.textStyleVelaSansMedium(colorGrey, size: 15.0)),
-                Text(widget.lesson.comments.isEmpty?'...':widget.lesson.comments,
-                    style: TStyle.textStyleVelaSansBold(textColorBlack(context),
-                        size: 16.0))
+                const Gap(20),
+                Expanded(
+                  child: Text(widget.lesson.comments.isEmpty?'...':widget.lesson.comments,
+                      textAlign: TextAlign.end,
+                      style: TStyle.textStyleVelaSansBold(textColorBlack(context),
+                          size: 16.0)),
+                )
               ],
             ),
             const Gap(30),
@@ -453,6 +458,14 @@ class _InfoStatusLessonContentState extends State<InfoStatusLessonContent> {
         ),
       ),
     );
+  }
+
+  Color color(LessonStatus status, BuildContext context) {
+    return status == LessonStatus.complete ||
+        status == LessonStatus.reservation ||
+        status == LessonStatus.planned
+        ? colorBlack
+        : Theme.of(context).textTheme.displayMedium!.color!;
   }
 
   String _getStatusTime(Lesson lesson) {
