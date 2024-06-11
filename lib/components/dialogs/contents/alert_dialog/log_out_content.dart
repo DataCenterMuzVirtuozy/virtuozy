@@ -11,7 +11,9 @@ import 'package:virtuozy/resourses/colors.dart';
 
 import '../../../../presentations/auth_screen/bloc/auth_bloc.dart';
 import '../../../../presentations/auth_screen/bloc/auth_event.dart';
+import '../../../../utils/preferences_util.dart';
 import '../../../../utils/text_style.dart';
+import '../../../../utils/theme_provider.dart';
 
 class LogOutContent extends StatelessWidget{
   const LogOutContent({super.key, required this.user});
@@ -63,5 +65,7 @@ class LogOutContent extends StatelessWidget{
       ),
     );
   }
+
+
 
 }

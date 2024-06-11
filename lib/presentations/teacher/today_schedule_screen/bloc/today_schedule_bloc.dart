@@ -6,6 +6,7 @@
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:virtuozy/components/date_page_view.dart';
 import 'package:virtuozy/di/locator.dart';
 import 'package:virtuozy/domain/teacher_cubit.dart';
 import 'package:virtuozy/presentations/teacher/today_schedule_screen/bloc/today_schedule_event.dart';
@@ -53,6 +54,7 @@ class TodayScheduleBloc extends Bloc<TodayScheduleEvent,TodayScheduleState> {
           idSchool, lessons);
       final todayLessons = getDays(lessonsById, onlyWithLesson);
       final index = indexByDateNow(todayLessons);
+      pageControllerDatesSchedule.jumpToPage(index.$1);
       emit(state.copyWith(
           indexByDateNow: index.$1,
           visibleTodayButton: index.$2,
@@ -196,11 +198,15 @@ class TodayScheduleBloc extends Bloc<TodayScheduleEvent,TodayScheduleState> {
       emit(state.copyWith(
           status: TodayScheduleStatus.loading, error: ''));
       await Future.delayed(const Duration(milliseconds: 300));
-      final lessons = _cubitTeacher.teacherEntity.lessons;
+      final idTeacher = _cubitTeacher.teacherEntity.id;
+      final lessons = _cubitTeacher.teacherEntity.lessons
+          .where((element) => element.idTeacher == idTeacher)
+          .toList();
       final lessonsByIdSchool = getLessons(
           event.id, lessons);
       final todayLessons = getDays(lessonsByIdSchool, onlyWithLesson);
       final index = indexByDateNow(todayLessons);
+      pageControllerDatesSchedule.jumpToPage(index.$1);
       emit(state.copyWith(
           indexByDateNow: index.$1,
           visibleTodayButton: index.$2,
@@ -225,10 +231,14 @@ class TodayScheduleBloc extends Bloc<TodayScheduleEvent,TodayScheduleState> {
       emit(state.copyWith(
           status: TodayScheduleStatus.loading, error: ''));
       await Future.delayed(const Duration(milliseconds: 300));
-      final lessons = _cubitTeacher.teacherEntity.lessons;
+      final idTeacher = _cubitTeacher.teacherEntity.id;
+      final lessons = _cubitTeacher.teacherEntity.lessons
+          .where((element) => element.idTeacher == idTeacher)
+          .toList();
       final lessonsByIdSchool = getLessons(state.currentIdSchool, lessons);
       final todayLessons = getDays(lessonsByIdSchool, false);
       final index = indexByDateSelect(todayLessons,event.date);
+      pageControllerDatesSchedule.jumpToPage(index.$1);
       emit(state.copyWith(
           indexByDateNow: index.$1,
           visibleTodayButton: index.$2,
@@ -245,12 +255,16 @@ class TodayScheduleBloc extends Bloc<TodayScheduleEvent,TodayScheduleState> {
       emit(state.copyWith(
           status: TodayScheduleStatus.loading, error: ''));
       await Future.delayed(const Duration(milliseconds: 300));
-      final lessons = _cubitTeacher.teacherEntity.lessons;
+      final idTeacher = _cubitTeacher.teacherEntity.id;
+      final lessons = _cubitTeacher.teacherEntity.lessons
+          .where((element) => element.idTeacher == idTeacher)
+          .toList();
       final lessonsByIdSchool = getLessons(
           state.currentIdSchool, lessons);
       onlyWithLesson =  event.onlyWithLesson;
       final todayLessons = getDays(lessonsByIdSchool, event.onlyWithLesson);
       final index = indexByDateNow(todayLessons);
+      pageControllerDatesSchedule.jumpToPage(index.$1);
       emit(state.copyWith(
           indexByDateNow: index.$1,
           visibleTodayButton: index.$2,

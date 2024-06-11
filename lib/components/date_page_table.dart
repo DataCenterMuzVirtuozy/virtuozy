@@ -1,7 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:virtuozy/domain/entities/today_lessons.dart';
+import 'package:virtuozy/presentations/teacher/schedule_table_screen/bloc/table_bloc.dart';
+import 'package:virtuozy/presentations/teacher/schedule_table_screen/bloc/table_state.dart';
 import 'package:virtuozy/presentations/teacher/schedule_table_screen/schedule_table_page.dart';
 
 import '../domain/entities/lesson_entity.dart';
@@ -39,29 +42,32 @@ class _DatePageTableState extends State<DatePageTable> {
   @override
   void initState() {
     super.initState();
-    if (widget.initIndex < 0) {
-      pageControllerDates = PageController();
-    } else {
-      pageControllerDates = PageController(initialPage: widget.initIndex);
-      page = widget.initIndex;
-    }
 
-    print('INIT l ${widget.lessonsToday.length} p ${page}');
-    // pageControllerDates.addListener(() {
-    //   widget.onChange.call(pageControllerDates.page!.toInt());
-    // });
   }
 
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+     final indexDate = context.watch<TableBloc>().state.indexByDateNow;
+     print('Index Pae $indexDate');
+    if (indexDate < 0) {
+      page = indexDate;
+      pageControllerDates = PageController();
+    } else {
+      pageControllerDates = PageController(initialPage: indexDate);
+      page = indexDate;
+    }
 
 
+    // pageControllerDates.addListener(() {
+    //   widget.onChange.call(pageControllerDates.page!.toInt());
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
+
 
 
     return Container(
@@ -107,30 +113,30 @@ class _DatePageTableState extends State<DatePageTable> {
                   controller: pageControllerDates,
                   children: [
                     ...List.generate(widget.lessonsToday.length, (index) {
-                        return InkWell(
-                          onTap: (){
-                            Dialoger.showSelectDate(
-                                context: context,
-                                lessons: widget.lessons,
-                                onDate: (String date) {
-                                  widget.dateSelect.call(date);
-                                });
-                          },
-                          child: Text(
-                              widget.lessonsToday[index].date.contains('/')
-                                  ? parseDateWeek(widget.lessonsToday[index].date)
-                                  : parseDate(widget.lessonsToday[index].date),
-                              textAlign: TextAlign.center,
-                              style: TStyle.textStyleVelaSansExtraBolt(
-                                  Theme.of(context)
-                                      .textTheme
-                                      .displayMedium!
-                                      .color!,
-                                  size: 12.0)),
-                        );
-                      })
+                      return InkWell(
+                        onTap: (){
+                          Dialoger.showSelectDate(
+                              context: context,
+                              lessons: widget.lessons,
+                              onDate: (String date) {
+                                widget.dateSelect.call(date);
+                              });
+                        },
+                        child: Text(
+                            widget.lessonsToday[index].date.contains('/')
+                                ? parseDateWeek(widget.lessonsToday[index].date)
+                                : parseDate(widget.lessonsToday[index].date),
+                            textAlign: TextAlign.center,
+                            style: TStyle.textStyleVelaSansExtraBolt(
+                                Theme.of(context)
+                                    .textTheme
+                                    .displayMedium!
+                                    .color!,
+                                size: 12.0)),
+                      );
+                    })
 
-                                      ],
+                  ],
                 ),
               ),
             ),
@@ -152,8 +158,7 @@ class _DatePageTableState extends State<DatePageTable> {
                       pageControllerDates.animateToPage(page,
                           duration: const Duration(milliseconds: 400),
                           curve: Curves.ease);
-                      print('Page ${page} ${widget.lessonsToday.length}');
-                     widget.onChange.call(page);
+                      widget.onChange.call(page);
                     },
                     icon: Icon(
                       Icons.arrow_forward_ios_rounded,

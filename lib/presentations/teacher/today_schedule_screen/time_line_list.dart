@@ -31,7 +31,7 @@ class _TimeLineListState extends State<TimeLineList> {
     super.initState();
     pageControllerTimeList =  PageController(initialPage: widget.initIndex);
    pageControllerTimeList.addListener(() {
-       pageControllerDates.animateToPage(pageControllerTimeList.page!.toInt(),
+     pageControllerDatesSchedule.animateToPage(pageControllerTimeList.page!.toInt(),
            duration: const Duration(milliseconds: 400), curve: Curves.ease);
 
    });

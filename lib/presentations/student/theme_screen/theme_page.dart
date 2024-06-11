@@ -60,7 +60,8 @@ class _ThemePageState extends State<ThemePage> {
   @override
   void initState() {
     super.initState();
-    _themeStatus=PreferencesUtil.getTheme;
+   //_themeStatus=PreferencesUtil.getTheme;
+    _themeStatus = _themeProvider.themeStatus;
     if(_themeStatus == ThemeStatus.dark){
       _selectColor = _colors[_colors.length-1];
     }else if(_themeStatus == ThemeStatus.first){

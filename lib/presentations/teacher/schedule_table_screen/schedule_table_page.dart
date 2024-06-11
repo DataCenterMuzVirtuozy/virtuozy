@@ -61,13 +61,14 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
   @override
   void initState() {
     super.initState();
-    _dateCurrent =  DateTime.now().toString().split(' ')[0];
+
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    context.read<TableBloc>().add( GetInitLessonsEvent(viewMode: ViewModeTable.day,date: _dateCurrent,scrollPage: false));
+    _dateCurrent =  DateTime.now().toString().split(' ')[0];
+    context.read<TableBloc>().add( GetInitLessonsEvent(viewMode: ViewModeTable.day,date: _dateCurrent,scrollPage: true));
   }
 
   @override
@@ -105,7 +106,6 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
             return const BoxInfo(
                 title: 'Ошибка получения данных', iconData: Icons.error);
           }
-         print('Index ${state.indexByDateNow}');
 
           return Scaffold(
             floatingActionButton: FloatingActionButton(
@@ -145,8 +145,8 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
                           },
                         ),
                         const Gap(10.0),
+
                         DatePageTable(
-                          key: ValueKey(_modeTable),
                           dateSelect: (date) {
                             if(_dateCurrent != date){
                               _dateCurrent = date;

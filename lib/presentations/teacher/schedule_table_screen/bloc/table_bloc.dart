@@ -294,7 +294,10 @@ class TableBloc extends Bloc<TableEvent, TableState> {
           addLessonStatus: AddLessonStatus.unknown,
           editLessonStatus: EditLessonStatus.unknown));
       await Future.delayed(const Duration(milliseconds: 300));
-      final lessons = _cubitTeacher.teacherEntity.lessons;
+      final idTeacher = _cubitTeacher.teacherEntity.id;
+      final lessons = _cubitTeacher.teacherEntity.lessons
+          .where((element) => element.idTeacher == idTeacher)
+          .toList();
       final lessonsByIdSchool = getLessons(state.currentIdSchool, lessons);
       final weekLessons = getLessWeek(lessonsByIdSchool);
       final index = indexByDateSelect(weekLessons, event.date, true);

@@ -1,8 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:virtuozy/domain/entities/lesson_entity.dart';
 import 'package:virtuozy/domain/entities/today_lessons.dart';
+import 'package:virtuozy/presentations/teacher/today_schedule_screen/bloc/today_schedule_bloc.dart';
 import 'package:virtuozy/presentations/teacher/today_schedule_screen/time_line_list.dart';
 import 'package:virtuozy/utils/date_time_parser.dart';
 
@@ -10,7 +12,7 @@ import '../presentations/teacher/today_schedule_screen/bloc/today_schedule_state
 import '../utils/text_style.dart';
 import 'dialogs/dialoger.dart';
 
-late PageController pageControllerDates;
+late PageController pageControllerDatesSchedule;
 
 class DatePageView extends StatefulWidget {
   const DatePageView(
@@ -39,19 +41,28 @@ class _DatePageViewState extends State<DatePageView> {
   @override
   void initState() {
     super.initState();
-    pageControllerDates = PageController(initialPage: widget.initIndex);
+
+  }
+
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final indexDate = context.watch<TodayScheduleBloc>().state.indexByDateNow;
+    pageControllerDatesSchedule = PageController(initialPage: indexDate);
     final dateNow = DateTime.now().toString().split(' ')[0];
-    pageControllerDates.addListener(() {
-      if (widget.lessonsToday[pageControllerDates.page!.toInt()].date ==
-          dateNow) {
-        widget.onVisibleTodayButton.call(false);
-      } else {
-        widget.onVisibleTodayButton.call(true);
-      }
-    });
-    page = widget.initIndex;
+    // pageControllerDatesSchedule.addListener(() {
+    //   if (widget.lessonsToday[pageControllerDatesSchedule.page!.toInt()].date ==
+    //       dateNow) {
+    //     widget.onVisibleTodayButton.call(false);
+    //   } else {
+    //     widget.onVisibleTodayButton.call(true);
+    //   }
+    // });
+    page = indexDate;
     countLessons = getCountLessons(
         lessonsToday: widget.lessonsToday, weekMode: widget.weekMode);
+
   }
 
   int getCountLessons(
@@ -77,15 +88,15 @@ class _DatePageViewState extends State<DatePageView> {
                 child: IconButton(
                     onPressed: () {
                       if (page > 0) {
-                        page = pageControllerDates.page!.toInt() - 1;
+                        page = pageControllerDatesSchedule.page!.toInt() - 1;
                       }
 
-                      if (pageControllerDates.page!.toInt() == 0) {
+                      if (pageControllerDatesSchedule.page!.toInt() == 0) {
                         Dialoger.showMessage('Нет записей'.tr(),
                             context: context);
                         return;
                       }
-                      pageControllerDates.animateToPage(page,
+                      pageControllerDatesSchedule.animateToPage(page,
                           duration: const Duration(milliseconds: 400),
                           curve: Curves.ease);
                       pageControllerTimeList.animateToPage(page,
@@ -103,7 +114,7 @@ class _DatePageViewState extends State<DatePageView> {
                 height: 20.0,
                 child: PageView(
                   physics: const NeverScrollableScrollPhysics(),
-                  controller: pageControllerDates,
+                  controller: pageControllerDatesSchedule,
                   children: [
                     if (widget.loading) ...{
                       Text('...',
@@ -132,17 +143,17 @@ class _DatePageViewState extends State<DatePageView> {
                 child: IconButton(
                     onPressed: () {
                       if (page < countLessons - 1) {
-                        page = pageControllerDates.page!.toInt() + 1;
+                        page = pageControllerDatesSchedule.page!.toInt() + 1;
                       }
 
-                      if (pageControllerDates.page!.toInt() ==
+                      if (pageControllerDatesSchedule.page!.toInt() ==
                           countLessons - 1) {
                         Dialoger.showMessage('Нет записей'.tr(),
                             context: context);
                         return;
                       }
 
-                      pageControllerDates.animateToPage(page,
+                      pageControllerDatesSchedule.animateToPage(page,
                           duration: const Duration(milliseconds: 400),
                           curve: Curves.ease);
                       pageControllerTimeList.animateToPage(page,

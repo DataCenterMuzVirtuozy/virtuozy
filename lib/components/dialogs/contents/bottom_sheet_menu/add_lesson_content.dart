@@ -397,7 +397,49 @@ class _Step2State extends State<Step2> {
             ),
           ),
           Visibility(
-            visible: addedLesson.type.isSingly||addedLesson.type.isGroup,
+            visible: addedLesson.type.isGroup,
+            child: Column(
+              children: [
+                Gap(_h2),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Text('Группа'.tr(),
+                        style: TStyle.textStyleVelaSansBold(textColorBlack(context),
+                            size: 16)),
+                  ),
+                ),
+                Gap(_h1),
+                Row(
+                  children: [
+                    Expanded(
+                      child: DropMenu(
+                        items: itemsGroup,
+                        onChange: (value) {
+                          setState(() {
+                            errorGroup = false;
+                            selectedValueGroup = value;
+                            addedLesson =
+                                addedLesson.copyWith(nameGroup: selectedValueGroup);
+                          });
+                        },
+                      ),
+                    ),
+                    Visibility(
+                        visible: errorGroup,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Icon(Icons.error, color: colorRed),
+                        ))
+
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Visibility(
+            visible: selectedValueStudent.isNotEmpty||selectedValueGroup.isNotEmpty,
             child: Column(
               children: [
                 Gap(_h2),
@@ -521,48 +563,6 @@ class _Step2State extends State<Step2> {
                           padding: const EdgeInsets.only(left: 10),
                           child: Icon(Icons.error, color: colorRed),
                         ))
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Visibility(
-            visible: addedLesson.type.isGroup,
-            child: Column(
-              children: [
-                Gap(_h2),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                    child: Text('Группа'.tr(),
-                        style: TStyle.textStyleVelaSansBold(textColorBlack(context),
-                            size: 16)),
-                  ),
-                ),
-                Gap(_h1),
-                Row(
-                  children: [
-                    Expanded(
-                      child: DropMenu(
-                        items: itemsGroup,
-                        onChange: (value) {
-                         setState(() {
-                           errorGroup = false;
-                           selectedValueGroup = value;
-                           addedLesson =
-                               addedLesson.copyWith(nameGroup: selectedValueGroup);
-                         });
-                        },
-                      ),
-                    ),
-                    Visibility(
-                        visible: errorGroup,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: Icon(Icons.error, color: colorRed),
-                        ))
-
                   ],
                 ),
               ],

@@ -537,11 +537,13 @@ class _DrawerItemSettingState extends State<DrawerItemSetting> {
                   const Gap(10),
                   InkWell(
                     onTap: (){
+
                       if (widget.user.userStatus.isNotAuth) {
                         GoRouter.of(context).push(pathLogIn);
                       } else {
                         Dialoger.showLogOut(context: context, user: widget.user);
                       }
+
                       Navigator.pop(context);
                     },
                     child: Row(

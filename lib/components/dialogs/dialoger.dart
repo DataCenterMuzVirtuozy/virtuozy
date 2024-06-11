@@ -252,8 +252,7 @@ class Dialoger {
     });
   }
 
-  static void showLogOut(
-      {required BuildContext context, required UserEntity user}) {
+  static void showLogOut({required BuildContext context, required UserEntity user}) {
     showCustomDialog(contextUp: context, args: user, content: LogOut());
   }
 
@@ -262,6 +261,8 @@ class Dialoger {
     showCustomDialog(
         contextUp: context, args: teacher, content: LogOutTeacher());
   }
+
+
 
   static void showSelectDate(
       {required BuildContext context,

@@ -64,27 +64,28 @@ class _SelectSchoolMenuState extends State<SelectSchoolMenu> {
 
 
     if(widget.idsSchool.length<=2){
-      return Container(
-        alignment: Alignment.center,
-        height: 35,
-        padding:const EdgeInsets.symmetric(horizontal: 20.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20.0),
-          color:Theme.of(context).colorScheme.surfaceVariant,
-        ),
-        child: InkWell(
-          onTap: (){
-            if(widget.idsSchool.length == 1){
-              return;
-            }
-            if(selectIndex == 0){
-              selectIndex = 1;
-            }else{
-              selectIndex = 0;
-            }
-            selectedValue = widget.idsSchool[selectIndex];
-            widget.onChange.call(selectedValue);
-          },
+      return InkWell(
+        borderRadius: BorderRadius.circular(20.0),
+        onTap: (){
+          if(widget.idsSchool.length == 1){
+            return;
+          }
+          if(selectIndex == 0){
+            selectIndex = 1;
+          }else{
+            selectIndex = 0;
+          }
+          selectedValue = widget.idsSchool[selectIndex];
+          widget.onChange.call(selectedValue);
+        },
+        child: Container(
+          alignment: Alignment.center,
+          height: 35,
+          padding:const EdgeInsets.symmetric(horizontal: 20.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20.0),
+            color:Theme.of(context).colorScheme.surfaceVariant,
+          ),
           child: Text(
             widget.idsSchool[selectIndex],
             style: TStyle.textStyleVelaSansExtraBolt(Theme.of(context)
@@ -92,7 +93,7 @@ class _SelectSchoolMenuState extends State<SelectSchoolMenu> {
             overflow: TextOverflow.ellipsis,
           ),
         ),
-      ).animate().fade(duration: const Duration(milliseconds: 400));
+      );
 
     }
 

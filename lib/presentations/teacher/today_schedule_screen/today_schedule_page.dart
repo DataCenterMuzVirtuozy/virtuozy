@@ -50,8 +50,6 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
     super.initState();
     context.read<TodayScheduleBloc>().add(GetTodayLessonsEvent());
 
-
-
   }
 
 
