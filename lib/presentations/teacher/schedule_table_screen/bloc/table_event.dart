@@ -12,7 +12,9 @@ class TableEvent extends Equatable{
 
 class GetInitLessonsEvent extends TableEvent{
   final ViewModeTable viewMode;
-  const GetInitLessonsEvent({required this.viewMode});
+  final String date;
+  final bool scrollPage;
+  const GetInitLessonsEvent({required this.viewMode,required this.date,required this.scrollPage});
 }
  class GetLessonsTableByIdSchool extends TableEvent{
    final String id;
@@ -26,7 +28,8 @@ class GetInitLessonsEvent extends TableEvent{
 
  class GetLessonsTableWeek extends TableEvent{
    final ViewModeTable viewMode;
-   const GetLessonsTableWeek({required this.viewMode});
+   final String date;
+   const GetLessonsTableWeek({required this.viewMode,required this.date});
  }
 
 

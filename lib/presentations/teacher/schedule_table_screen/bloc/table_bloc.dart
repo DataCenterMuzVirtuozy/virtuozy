@@ -9,6 +9,7 @@ import 'package:virtuozy/presentations/teacher/schedule_table_screen/bloc/table_
 import 'package:virtuozy/presentations/teacher/schedule_table_screen/bloc/table_state.dart';
 import 'package:virtuozy/utils/date_time_parser.dart';
 
+import '../../../../components/date_page_table.dart';
 import '../../../../di/locator.dart';
 import '../../../../domain/entities/lesson_entity.dart';
 import '../../../../domain/entities/table_task.dart';
@@ -159,15 +160,16 @@ class TableBloc extends Bloc<TableEvent, TableState> {
       final idSchool = ids.isEmpty ? '' : ids[0];
       final lessonsById = getLessons(idSchool, lessons);
       final todayLessons = getDays(lessonsById, false);
-      final index = indexByDateNow(todayLessons, false);
+      final index = indexByDateSelect(todayLessons, event.date,false);
       final tasks = getTasks(
-          todayLesson: todayLessons, indexDate: index.$1, weekMode: false);
+          todayLesson: todayLessons, indexDate: index, weekMode: false);
       final headerTable = getHeaderTable(
-          weekMode: false, todayLesson: todayLessons, indexDate: index.$1);
+          weekMode: false, todayLesson: todayLessons, indexDate: index);
+      if(event.scrollPage)pageControllerDates.jumpToPage(index);
       emit(state.copyWith(
           titles: headerTable,
-          indexByDateNow: index.$1,
-          visibleTodayButton: index.$2,
+          indexByDateNow: index,
+          visibleTodayButton: false,
           lessons: lessonsById,
           currentIdSchool: idSchool,
           status: TableStatus.loaded,
@@ -210,6 +212,7 @@ class TableBloc extends Bloc<TableEvent, TableState> {
       }
       final index = indexByDateSelect(
           todayLessons, event.date, state.modeTable == ViewModeTable.week);
+      pageControllerDates.jumpToPage(index);
       final tasks = getTasks(
           todayLesson: todayLessons,
           indexDate: index,
@@ -269,6 +272,7 @@ class TableBloc extends Bloc<TableEvent, TableState> {
           getTasks(todayLesson: weekLessons, indexDate: index, weekMode: true);
       final headerTable = getHeaderTable(
           weekMode: true, todayLesson: weekLessons, indexDate: index);
+      pageControllerDates.jumpToPage(index);
       emit(state.copyWith(
           titles: headerTable,
           indexByDateNow: index,
@@ -293,8 +297,7 @@ class TableBloc extends Bloc<TableEvent, TableState> {
       final lessons = _cubitTeacher.teacherEntity.lessons;
       final lessonsByIdSchool = getLessons(state.currentIdSchool, lessons);
       final weekLessons = getLessWeek(lessonsByIdSchool);
-      final dateNow = DateTime.now().toString().split(' ')[0];
-      final index = indexByDateSelect(weekLessons, dateNow, true);
+      final index = indexByDateSelect(weekLessons, event.date, true);
       final tasks =
           getTasks(todayLesson: weekLessons, indexDate: index, weekMode: true);
       final headerTable = getHeaderTable(
@@ -308,6 +311,8 @@ class TableBloc extends Bloc<TableEvent, TableState> {
           tasks: tasks,
           modeTable: event.viewMode,
           todayLessons: weekLessons));
+      pageControllerDates.jumpToPage(index);
+
     } on Failure catch (e) {
       emit(state.copyWith(
           scheduleStatus: ScheduleStatus.error, error: e.message));
@@ -339,6 +344,7 @@ class TableBloc extends Bloc<TableEvent, TableState> {
       }
       final index =
           indexByDateNow(todayLessons, state.modeTable == ViewModeTable.week);
+
       final tasks = getTasks(
           todayLesson: todayLessons,
           indexDate: index.$1,

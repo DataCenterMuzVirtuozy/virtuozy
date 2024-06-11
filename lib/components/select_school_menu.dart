@@ -3,6 +3,7 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:virtuozy/presentations/teacher/schedule_table_screen/schedule_table_page.dart';
 import 'package:virtuozy/presentations/teacher/today_schedule_screen/bloc/today_schedule_state.dart';
 
@@ -43,23 +44,23 @@ class _SelectSchoolMenuState extends State<SelectSchoolMenu> {
 
   @override
   Widget build(BuildContext context) {
-    if(widget.loading){
-      return Container(
-        alignment: Alignment.center,
-        height: 35,
-        padding:const EdgeInsets.symmetric(horizontal: 20.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20.0),
-          color:Theme.of(context).colorScheme.surfaceVariant,
-        ),
-        child: Text(
-          '....',
-          style: TStyle.textStyleVelaSansExtraBolt(Theme.of(context)
-              .textTheme.displayMedium!.color!,size: 20.0),
-          overflow: TextOverflow.ellipsis,
-        ),
-      );
-    }
+    // if(widget.loading){
+    //   return Container(
+    //     alignment: Alignment.center,
+    //     height: 35,
+    //     padding:const EdgeInsets.symmetric(horizontal: 20.0),
+    //     decoration: BoxDecoration(
+    //       borderRadius: BorderRadius.circular(20.0),
+    //       color:Theme.of(context).colorScheme.surfaceVariant,
+    //     ),
+    //     child: Text(
+    //       '....',
+    //       style: TStyle.textStyleVelaSansExtraBolt(Theme.of(context)
+    //           .textTheme.displayMedium!.color!,size: 20.0),
+    //       overflow: TextOverflow.ellipsis,
+    //     ),
+    //   );
+    // }
 
 
     if(widget.idsSchool.length<=2){
@@ -91,7 +92,7 @@ class _SelectSchoolMenuState extends State<SelectSchoolMenu> {
             overflow: TextOverflow.ellipsis,
           ),
         ),
-      );
+      ).animate().fade(duration: const Duration(milliseconds: 400));
 
     }
 

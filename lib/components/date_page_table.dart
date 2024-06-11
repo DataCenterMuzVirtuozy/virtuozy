@@ -9,6 +9,8 @@ import '../utils/date_time_parser.dart';
 import '../utils/text_style.dart';
 import 'dialogs/dialoger.dart';
 
+late PageController pageControllerDates;
+
 class DatePageTable extends StatefulWidget {
   const DatePageTable(
       {super.key,
@@ -32,25 +34,36 @@ class DatePageTable extends StatefulWidget {
 
 class _DatePageTableState extends State<DatePageTable> {
   int page = 0;
-  late PageController _pageControllerDates;
+
 
   @override
   void initState() {
     super.initState();
     if (widget.initIndex < 0) {
-      _pageControllerDates = PageController();
+      pageControllerDates = PageController();
     } else {
-      _pageControllerDates = PageController(initialPage: widget.initIndex);
+      pageControllerDates = PageController(initialPage: widget.initIndex);
       page = widget.initIndex;
     }
 
-    _pageControllerDates.addListener(() {
-      widget.onChange.call(_pageControllerDates.page!.toInt());
-    });
+    print('INIT l ${widget.lessonsToday.length} p ${page}');
+    // pageControllerDates.addListener(() {
+    //   widget.onChange.call(pageControllerDates.page!.toInt());
+    // });
+  }
+
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+
   }
 
   @override
   Widget build(BuildContext context) {
+
+
     return Container(
         alignment: Alignment.center,
         width: 230.0,
@@ -67,17 +80,18 @@ class _DatePageTableState extends State<DatePageTable> {
                 child: IconButton(
                     onPressed: () {
                       if (page > 0) {
-                        page = _pageControllerDates.page!.toInt() - 1;
+                        page = pageControllerDates.page!.toInt() - 1;
                       }
 
-                      if (_pageControllerDates.page!.toInt() == 0) {
+                      if (pageControllerDates.page!.toInt() == 0) {
                         Dialoger.showMessage('Нет записей'.tr(),
                             context: context);
                         return;
                       }
-                      _pageControllerDates.animateToPage(page,
+                      pageControllerDates.animateToPage(page,
                           duration: const Duration(milliseconds: 400),
                           curve: Curves.ease);
+                      widget.onChange.call(page);
                     },
                     icon: Icon(
                       Icons.arrow_back_ios_rounded,
@@ -90,7 +104,7 @@ class _DatePageTableState extends State<DatePageTable> {
                 height: 17.0,
                 child: PageView(
                   physics: const NeverScrollableScrollPhysics(),
-                  controller: _pageControllerDates,
+                  controller: pageControllerDates,
                   children: [
                     ...List.generate(widget.lessonsToday.length, (index) {
                         return InkWell(
@@ -125,19 +139,21 @@ class _DatePageTableState extends State<DatePageTable> {
                 child: IconButton(
                     onPressed: () {
                       if (page < widget.lessonsToday.length - 1) {
-                        page = _pageControllerDates.page!.toInt() + 1;
+                        page = pageControllerDates.page!.toInt() + 1;
                       }
 
-                      if (_pageControllerDates.page!.toInt() ==
+                      if (pageControllerDates.page!.toInt() ==
                           widget.lessonsToday.length - 1) {
                         Dialoger.showMessage('Нет записей'.tr(),
                             context: context);
                         return;
                       }
 
-                      _pageControllerDates.animateToPage(page,
+                      pageControllerDates.animateToPage(page,
                           duration: const Duration(milliseconds: 400),
                           curve: Curves.ease);
+                      print('Page ${page} ${widget.lessonsToday.length}');
+                     widget.onChange.call(page);
                     },
                     icon: Icon(
                       Icons.arrow_forward_ios_rounded,

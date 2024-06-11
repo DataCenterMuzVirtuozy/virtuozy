@@ -222,7 +222,6 @@ class _Step2State extends State<Step2> {
     '19:00',
     '20:00',
     '21:00',
-    '22:00'
   ];
 
   final List<String> itemsRemote = [

@@ -27,6 +27,11 @@ class DateTimeParser{
       return DateFormat.yMd().format(dt);
     }
 
+
+    static parseDateFromView(String date){
+      return DateFormat('dd.MM.yyyy').parse(date).toString().split(' ')[0];
+    }
+
     static getStringDateFromApi({required String date}){
       if(date.isEmpty){
         return '';

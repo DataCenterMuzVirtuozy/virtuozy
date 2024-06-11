@@ -15,6 +15,7 @@ import 'package:virtuozy/domain/entities/table_tap_location_entity.dart';
 import 'package:virtuozy/presentations/teacher/schedule_table_screen/table/my_time_planner.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/utils/auth_mixin.dart';
+import 'package:virtuozy/utils/date_time_parser.dart';
 import 'package:virtuozy/utils/status_to_color.dart';
 
 import '../../../components/date_page_table.dart';
@@ -55,16 +56,18 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
   ];
   String _dateCurrent = '';
   int _changeIndexDate = -1 ;
+  ViewModeTable _modeTable = ViewModeTable.day;
 
   @override
   void initState() {
     super.initState();
-    context.read<TableBloc>().add(const GetInitLessonsEvent(viewMode: ViewModeTable.day));
+    _dateCurrent =  DateTime.now().toString().split(' ')[0];
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    context.read<TableBloc>().add( GetInitLessonsEvent(viewMode: ViewModeTable.day,date: _dateCurrent,scrollPage: false));
   }
 
   @override
@@ -102,7 +105,7 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
             return const BoxInfo(
                 title: 'Ошибка получения данных', iconData: Icons.error);
           }
-
+         print('Index ${state.indexByDateNow}');
 
           return Scaffold(
             floatingActionButton: FloatingActionButton(
@@ -143,20 +146,28 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
                         ),
                         const Gap(10.0),
                         DatePageTable(
+                          key: ValueKey(_modeTable),
                           dateSelect: (date) {
-                            _dateCurrent = date;
-                            context.read<TableBloc>().add(
-                                GetLessonsTableByCalendarDateEvent(
-                                    date: date,
-                                    viewMode: state.modeTable));
+                            if(_dateCurrent != date){
+                              _dateCurrent = date;
+                              context.read<TableBloc>().add(
+                                  GetLessonsTableByCalendarDateEvent(
+                                      date: date,
+                                       viewMode: state.modeTable));
+                            }
+
                           },
                           lessons: state.lessons,
                           onChange: (int index) {
-                            _dateCurrent = _parseDate(state.todayLessons[index].date);
-                            _changeIndexDate = index;
-                            context.read<TableBloc>().add(GetLessonsTableByDate(
-                                indexDate: index,
-                                viewMode: state.modeTable));
+                            final date = _parseDate(state.todayLessons[index].date);
+                            if(_dateCurrent != date){
+                            _dateCurrent = date;
+                              _changeIndexDate = index;
+                              context.read<TableBloc>().add(GetLessonsTableByDate(
+                                  indexDate: index,
+                                  viewMode: _modeTable));
+                            }
+
                           },
                           initIndex: _changeIndexDate<0?state.indexByDateNow:_changeIndexDate,
                           lessonsToday: state.todayLessons,
@@ -164,12 +175,15 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
                         const Gap(10.0),
                         TableModeMenu(modeView: (ViewModeTable mode) {
                           if (mode == ViewModeTable.week) {
+                            _modeTable = ViewModeTable.week;
                             context
                                 .read<TableBloc>()
-                                .add( GetLessonsTableWeek(viewMode: mode));
+                                .add( GetLessonsTableWeek(viewMode: mode,
+                            date: _dateCurrent));
                           } else if (mode == ViewModeTable.day) {
+                            _modeTable = ViewModeTable.day;
                             context.read<TableBloc>().add(
-                                 GetInitLessonsEvent(viewMode: mode));
+                                 GetInitLessonsEvent(viewMode: mode,date: _dateCurrent,scrollPage: true));
                           } else {
                             context.read<TableBloc>().add(
                                  GetMyLessonEvent(weekMode: false,indexDate: state.indexByDateNow));
@@ -226,17 +240,6 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
                                 : Colors.black12,
                         colorDividerHorizontal: colorGrey,
                         modeView: (ViewModeTable mode) {
-                          if (mode == ViewModeTable.week) {
-                            context
-                                .read<TableBloc>()
-                                .add( GetLessonsTableWeek(viewMode: mode));
-                          } else if (mode == ViewModeTable.day) {
-                            context.read<TableBloc>().add(
-                                 GetInitLessonsEvent(viewMode: mode));
-                          } else {
-                            context.read<TableBloc>().add(
-                                 GetInitLessonsEvent(viewMode: mode));
-                          }
                         },
                         startHour: 10,
                         endHour: 21,
