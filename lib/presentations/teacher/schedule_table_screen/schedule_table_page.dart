@@ -114,13 +114,13 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
               onPressed: () {
                 Dialoger.showModalBottomMenu(
                     blurred: true,
-                    args: _addLesson(
+                    args: [_addLesson(
                       idSchool: state.currentIdSchool,
                         nameTeacher: '${teacher.firstName} ${teacher.lastName}',
                         idTeacher: teacher.id,
                         timePeriod: '',
                         dateDay: _dateCurrent,
-                        idAuditory:''),
+                        idAuditory:''),false],
                     title: 'Добавить урок'.tr(),
                     content: AddLesson());
               },
@@ -221,7 +221,7 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
                         onTapTable: (TableTapLocation locTap) {
                           Dialoger.showModalBottomMenu(
                               blurred: true,
-                              args: _addLesson(
+                              args: [_addLesson(
                                 idSchool: state.currentIdSchool,
                                 nameTeacher: '${teacher.firstName} ${teacher.lastName}',
                                 idTeacher: teacher.id,
@@ -230,7 +230,7 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
                                   idAuditory:
                                       state.modeTable == ViewModeTable.day
                                           ? state.titles[locTap.x].title
-                                          : ''),
+                                          : ''),false],
                               title: 'Добавить урок'.tr(),
                               content: AddLesson());
                         },

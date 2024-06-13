@@ -10,15 +10,18 @@ import 'package:virtuozy/utils/date_time_parser.dart';
 
 import '../../../../domain/entities/lesson_entity.dart';
 import '../../../../presentations/teacher/schedule_table_screen/bloc/table_bloc.dart';
+import '../../../../presentations/teacher/today_schedule_screen/bloc/today_schedule_bloc.dart';
+import '../../../../presentations/teacher/today_schedule_screen/bloc/today_schedule_event.dart';
 import '../../../../resourses/colors.dart';
 import '../../../../utils/status_to_color.dart';
 import '../../../../utils/text_style.dart';
 
 class AddNewLessonContent extends StatelessWidget{
-  const AddNewLessonContent({super.key, required this.lessonNew, required this.contextLast});
+  const AddNewLessonContent({super.key, required this.lessonNew, required this.contextLast, required this.callFromSchedule});
 
   final Lesson lessonNew;
   final BuildContext contextLast;
+  final bool callFromSchedule;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +63,11 @@ class AddNewLessonContent extends StatelessWidget{
               const Gap(5.0),
               TextButton(
                 onPressed: () {
-                  context.read<TableBloc>().add(AddLessonEvent(lesson: lessonNew));
+                  if(callFromSchedule){
+                    context.read<TodayScheduleBloc>().add( AddLessonFromScheduleEvent(lesson: lessonNew));
+                  }else{
+                    context.read<TableBloc>().add(AddLessonEvent(lesson: lessonNew));
+                  }
                   Navigator.pop(context);
                   Navigator.pop(contextLast);
                 },

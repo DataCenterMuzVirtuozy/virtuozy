@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
+import 'package:virtuozy/components/dialogs/chiose_list_dialog/choise_list_dialog.dart';
 import 'package:virtuozy/components/dialogs/sealeds.dart';
 import 'package:virtuozy/components/drop_menu.dart';
 import 'package:virtuozy/utils/auth_mixin.dart';
@@ -21,9 +22,10 @@ String _selectedTypeLesson = '';
 PageController pageController = PageController();
 
 class AddLessonContent extends StatefulWidget {
-  const AddLessonContent({super.key, required this.initLesson});
+  const AddLessonContent({super.key, required this.initLesson, required this.callFromTable});
 
   final Lesson initLesson;
+  final bool callFromTable;
 
   @override
   State<AddLessonContent> createState() => _AddLessonContentState();
@@ -73,6 +75,7 @@ class _AddLessonContentState extends State<AddLessonContent> {
                 },
               ),
               Step2(
+                callFromTable: widget.callFromTable,
                 lesson: lesson,
                 key: ValueKey(_selectedTypeLesson),
               )
@@ -158,9 +161,10 @@ class _Step1State extends State<Step1> {
 }
 
 class Step2 extends StatefulWidget {
-  const Step2({super.key, required this.lesson});
+  const Step2({super.key, required this.lesson, required this.callFromTable});
 
   final Lesson lesson;
+  final bool callFromTable;
 
   @override
   State<Step2> createState() => _Step2State();
@@ -486,7 +490,7 @@ class _Step2State extends State<Step2>  with AuthMixin{
                   ],
                 ),
                 Visibility(
-                  visible: selectedValueStudent != '',
+                  visible: selectedValueStudent != ''||selectedValueGroup!='',
                   child: Column(
                     children: [
                       const Gap(5),
@@ -831,7 +835,7 @@ class _Step2State extends State<Step2>  with AuthMixin{
                 }
                 addedLesson = addedLesson.copyWith(status: LessonStatus.planned);
                 Dialoger.showCustomDialog(
-                    args: addedLesson,
+                    args: [addedLesson, widget.callFromTable],
                     contextUp: context,
                     content: AddNewLesson());
               },
@@ -937,7 +941,7 @@ class _Step2State extends State<Step2>  with AuthMixin{
   }
 
   void openFilterDialog() async {
-    await FilterListDialog.display<String>(
+    await ChoiceListDialog.display<String>(
       context,
       listData: [
         'Мананкова Маргарита',

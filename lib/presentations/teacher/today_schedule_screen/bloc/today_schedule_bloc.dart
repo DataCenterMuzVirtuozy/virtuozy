@@ -15,6 +15,7 @@ import 'package:virtuozy/utils/failure.dart';
 
 import '../../../../domain/entities/lesson_entity.dart';
 import '../../../../domain/entities/today_lessons.dart';
+import '../../../../domain/repository/teacher_repository.dart';
 
 class TodayScheduleBloc extends Bloc<TodayScheduleEvent,TodayScheduleState> {
   TodayScheduleBloc() : super(TodayScheduleState.unknown()) {
@@ -22,10 +23,54 @@ class TodayScheduleBloc extends Bloc<TodayScheduleEvent,TodayScheduleState> {
     on<GetLessonsByIdSchoolEvent>(getLessonsByIdSchool,transformer: droppable());
     on<GetLessonsBySelDateEvent>(_getLessonsBySelDate,transformer: droppable());
     on<GetLessonsByModeViewEvent>(_getLessonsByModeView,transformer: droppable());
+    on<AddLessonFromScheduleEvent>(addNewLesson, transformer: droppable());
   }
 
   final _cubitTeacher = locator.get<TeacherCubit>();
+  final _teacherRepository = locator.get<TeacherRepository>();
   bool onlyWithLesson = false;
+
+
+  void addNewLesson(AddLessonFromScheduleEvent event, emit) async {
+    try {
+      emit(state.copyWith(
+        status: TodayScheduleStatus.loading, error: '',idsSchool: ['...'],));
+      await _teacherRepository.addLesson(lesson: event.lesson);
+      final phoneTeacher = _cubitTeacher.teacherEntity.phoneNum;
+      final teacher = await _teacherRepository.getTeacher(uid: phoneTeacher);
+      _cubitTeacher.setTeacher(teacher: teacher);
+      final lessons = _cubitTeacher.teacherEntity.lessons.where((element) => element.idTeacher == teacher.id).toList();
+      if(lessons.isEmpty){
+        emit(state.copyWith(
+            indexByDateNow: 0,
+            visibleTodayButton: false,
+            lessons: [],
+            currentIdSchool: '...',
+            status: TodayScheduleStatus.loaded,
+            idsSchool: ['...'],
+            todayLessons: []));
+        return;
+      }
+
+      final ids = getIds(lessons);
+      final idSchool = ids.isEmpty ? '...' : ids[0];
+      final lessonsById = getLessons(
+          idSchool, lessons);
+      final todayLessons = getDays(lessonsById, onlyWithLesson);
+      final index = indexByDateNow(todayLessons);
+      pageControllerDatesSchedule.jumpToPage(index.$1);
+      emit(state.copyWith(
+          indexByDateNow: index.$1,
+          visibleTodayButton: index.$2,
+          lessons: lessonsById,
+          currentIdSchool: idSchool.isEmpty?'...':idSchool,
+          status: TodayScheduleStatus.loaded,
+          idsSchool: ids,
+          todayLessons: todayLessons));
+    } on Failure catch (e) {
+      emit(state.copyWith(status: TodayScheduleStatus.error, error: e.message));
+    }
+  }
 
 
 

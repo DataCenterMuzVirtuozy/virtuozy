@@ -48,7 +48,7 @@ class EditStatusLesson extends AlertDialogContent{
 class AddNewLesson extends AlertDialogContent{
   @override
   build({required BuildContext context, Object? args}) {
-    return AddNewLessonContent(lessonNew: args as Lesson, contextLast:context);
+    return AddNewLessonContent(lessonNew: (args as List)[0] as Lesson, contextLast:context,callFromSchedule: args[1] as bool,);
   }
 
 }
@@ -170,7 +170,7 @@ class DetailsClient extends DialogsContent{
 class AddLesson extends DialogsContent{
   @override
   build({required BuildContext context, Object? args}) {
-    return  AddLessonContent(initLesson: args as Lesson,);
+    return  AddLessonContent(initLesson: (args as List)[0] as Lesson,callFromTable: args[1],);
   }
 
 }

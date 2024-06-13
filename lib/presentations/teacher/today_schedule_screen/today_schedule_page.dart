@@ -48,7 +48,7 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
   @override
   void initState() {
     super.initState();
-    context.read<TodayScheduleBloc>().add(GetTodayLessonsEvent());
+    context.read<TodayScheduleBloc>().add(const GetTodayLessonsEvent());
 
   }
 
@@ -73,7 +73,7 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
         // }
 
         if(state.todayLessons.isEmpty&&state.status  == TodayScheduleStatus.loaded){
-          return const BoxInfo(title: 'Empty', iconData: Icons.table_chart_outlined,);
+          return  BoxInfo(title: 'Нет данных'.tr(), iconData: Icons.table_chart_outlined,);
         }
 
           return Column(

@@ -2,7 +2,8 @@
 
 
 
- import 'package:flutter/cupertino.dart';
+ import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
@@ -11,6 +12,8 @@ import 'package:virtuozy/domain/entities/today_lessons.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/utils/status_to_color.dart';
 
+import '../../../components/dialogs/dialoger.dart';
+import '../../../components/dialogs/sealeds.dart';
 import '../../../utils/text_style.dart';
 
 class TimelineSchedule extends StatefulWidget{
@@ -56,8 +59,8 @@ class _TimelineScheduleState extends State<TimelineSchedule> {
      for(var i in less.lessons){
        if(time == i.timePeriod){
          view =  true;
-         lesson = i;
        }
+       lesson = i;
      }
      return (view,lesson);
   }
@@ -157,19 +160,74 @@ class _TimelineScheduleState extends State<TimelineSchedule> {
                     )
                 ),
               ),
-              Container(
-                alignment: Alignment.centerLeft,
-                margin: const EdgeInsets.symmetric(vertical: 5.0,horizontal: 20.0),
-                padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                child: Text(_times[index],
-                    style:data.$1?
-                    TStyle.textStyleVelaSansExtraBolt(Theme.of(context)
-                        .textTheme.displayMedium!.color!,size: 15.0):
-         TStyle.textStyleOpenSansRegular(Theme.of(context)
-             .textTheme.displayMedium!.color!,size: 15.0))),
+              InkWell(
+                onTap: (){
+                  if(data.$1){
+                    Dialoger.showModalBottomMenu(
+                        blurred: true,
+                        title: 'Информация об уроке'.tr(),
+                        args: data.$2,
+                        content: InfoStatusLesson());
+                    return;
+                  };
+                  Dialoger.showModalBottomMenu(
+                      blurred: true,
+                      args: [_addLesson(
+                          idSchool: data.$2.idSchool,
+                          nameTeacher: data.$2.nameTeacher,
+                          idTeacher: data.$2.idTeacher,
+                          timePeriod: _times[index],
+                          dateDay: data.$2.date),true],
+                      title: 'Добавить урок'.tr(),
+                      content: AddLesson());
+                },
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  margin: const EdgeInsets.symmetric(vertical: 5.0,horizontal: 20.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  child: Text(_times[index],
+                      style:data.$1?
+                      TStyle.textStyleVelaSansExtraBolt(Theme.of(context)
+                          .textTheme.displayMedium!.color!,size: 15.0):
+                         TStyle.textStyleOpenSansRegular(Theme.of(context)
+                             .textTheme.displayMedium!.color!,size: 15.0))),
+              ),
 
             ],
           );
        });
   }
+
+   Lesson _addLesson(
+       {required String timePeriod,
+         required int idTeacher,
+         required String idSchool,
+         required String nameTeacher,
+         required String dateDay}) {
+     return Lesson(
+         nameGroup: '',
+         idStudent: 0,
+         idDir: 0,
+         comments: '',
+         nameSub: '',
+         duration: 0,
+         idTeacher: idTeacher,
+         type: LessonType.unknown,
+         alien: false,
+         contactValues: [],
+         id: 0,
+         idSub: 0,
+         idSchool: idSchool,
+         bonus: false,
+         timeAccept: '',
+         date: dateDay,
+         timePeriod: timePeriod,
+         idAuditory: '',
+         nameTeacher: nameTeacher,
+         nameStudent: '',
+         status: LessonStatus.firstLesson,
+         nameDirection: '',
+         online: false);
+   }
+
 }

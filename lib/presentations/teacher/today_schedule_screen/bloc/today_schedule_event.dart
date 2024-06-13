@@ -2,6 +2,7 @@
 
 
   import 'package:equatable/equatable.dart';
+import 'package:virtuozy/domain/entities/lesson_entity.dart';
 
 class TodayScheduleEvent extends Equatable{
   @override
@@ -10,7 +11,16 @@ class TodayScheduleEvent extends Equatable{
   const TodayScheduleEvent();
 }
 
-class GetTodayLessonsEvent extends TodayScheduleEvent{}
+class GetTodayLessonsEvent extends TodayScheduleEvent{
+  const GetTodayLessonsEvent();
+}
+
+class AddLessonFromScheduleEvent extends TodayScheduleEvent{
+  final Lesson lesson;
+  const AddLessonFromScheduleEvent({required this.lesson});
+}
+
+
   class GetLessonsByIdSchoolEvent extends TodayScheduleEvent{
   final String id;
 
