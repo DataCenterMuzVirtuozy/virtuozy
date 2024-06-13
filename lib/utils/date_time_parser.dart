@@ -159,6 +159,32 @@ class DateTimeParser{
     }
 
 
+   static String parseDate(String date) {
+     final d = DateFormat('yyyy-MM-dd').parse(date);
+     final m = getMonth(d.month);
+     final nameDay = DateTimeParser.getDayByNumber(d.weekday);
+     return '$nameDay,  ${d.day} $m ${d.year}';
+    }
+
+   static String getMonth(int m) {
+      return switch (m) {
+        1 => 'янв.',
+        2 => 'фев.',
+        3 => 'мар.',
+        4 => 'апр.',
+        5 => 'май',
+        6 => 'июн.',
+        7 => 'июл.',
+        8 => 'авг.',
+        9 => 'сен.',
+        10 => 'окт..',
+        11 => 'ноя.',
+        12 => 'дек.',
+        int() => throw UnimplementedError(),
+      };
+    }
+
+
 
 
 

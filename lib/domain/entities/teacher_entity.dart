@@ -15,8 +15,10 @@ class TeacherEntity{
    final List<Lesson> lessons;
    final String urlAva;
    final UserStatus userStatus;
+   final List<dynamic> directions;
 
    const TeacherEntity( {
+     required this.directions,
      required this.userStatus,
      required this.urlAva,
     required this.id,
@@ -28,7 +30,9 @@ class TeacherEntity{
 
 
    factory TeacherEntity.unknown(){
-    return const TeacherEntity(urlAva:'',id: 0, lastName: '', firstName: '', phoneNum: '',lessons: [],userStatus: UserStatus.notAuth);
+    return const TeacherEntity(
+      directions: [],
+        urlAva:'',id: 0, lastName: '', firstName: '', phoneNum: '',lessons: [],userStatus: UserStatus.notAuth);
    }
 
 
@@ -40,8 +44,10 @@ class TeacherEntity{
      List<Lesson>? lessons,
      String? urlAva,
      UserStatus? userStatus,
+     List<String>? directions
   }) {
     return TeacherEntity(
+      directions: directions??this.directions,
       userStatus: userStatus??this.userStatus,
       urlAva: urlAva??this.urlAva,
       lessons: lessons??this.lessons,

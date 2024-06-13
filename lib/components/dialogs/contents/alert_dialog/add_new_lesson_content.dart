@@ -27,8 +27,8 @@ class AddNewLessonContent extends StatelessWidget{
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(Icons.add_task_rounded,color: Theme.of(context).textTheme.displayMedium!.color!,size: 40.0),
-          const SizedBox(height: 15.0),
+          // Icon(Icons.add_task_rounded,color: Theme.of(context).textTheme.displayMedium!.color!,size: 40.0),
+          // const SizedBox(height: 15.0),
           Text('Добавить новый урок?'.tr(),
               textAlign:TextAlign.center,
               style:TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18.0)),
@@ -37,10 +37,13 @@ class AddNewLessonContent extends StatelessWidget{
               textAlign:TextAlign.center,
               style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
           const Gap(5),
-          Text('${DateTimeParser.getDateFromApi(date: lessonNew.date)}/${lessonNew.timePeriod}'.toUpperCase(),
+          Text(DateTimeParser.parseDate(lessonNew.date),
+              textAlign:TextAlign.center,
+              style:TStyle.textStyleVelaSansMedium(textColorBlack(context),size: 16.0)),
+          const Gap(5),
+          Text(lessonNew.timePeriod.toUpperCase(),
               textAlign:TextAlign.center,
               style:TStyle.textStyleVelaSansRegularUnderline(textColorBlack(context),size: 16.0)),
-
           const SizedBox(height: 10.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,

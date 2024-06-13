@@ -7,6 +7,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 import 'package:virtuozy/components/dialogs/sealeds.dart';
 import 'package:virtuozy/components/drop_menu.dart';
+import 'package:virtuozy/utils/auth_mixin.dart';
 import 'package:virtuozy/utils/date_time_parser.dart';
 
 import '../../../../domain/entities/lesson_entity.dart';
@@ -165,7 +166,7 @@ class Step2 extends StatefulWidget {
   State<Step2> createState() => _Step2State();
 }
 
-class _Step2State extends State<Step2> {
+class _Step2State extends State<Step2>  with AuthMixin{
 
   final TextEditingController _editingControllerReview = TextEditingController();
 
@@ -176,14 +177,12 @@ class _Step2State extends State<Step2> {
   ];
 
   final List<String> itemsSubs = [
-    'Не выбрано',
     'Абик 1',
     'Абик 2',
     'Абик 3',
   ];
 
   final List<String> itemsCountLess = [
-    '',
     '3',
     '10',
     '5',
@@ -200,16 +199,22 @@ class _Step2State extends State<Step2> {
     'Вокал',
     'Хор',
     'Гитара',
+    'Скрипка',
+    'Аккордеон'
+  ];
+
+  final List<String> itemsDirTeachersFavorite = [
+    'Скрипка',
+    'Вокал',
+    'Аккордеон'
   ];
 
   final List<String> itemsDuration = [
-    'Не выбрано',
-    '30',
     '60',
+    '30',
   ];
 
   final List<String> itemsTimesStart = [
-    'Не выбрано',
     '10:00',
     '11:00',
     '12:00',
@@ -256,7 +261,7 @@ class _Step2State extends State<Step2> {
   ];
 
   String selectedValueLesson = '';
-  String selectedValueSubs = 'Не выбрано';
+  String selectedValueSubs = '';
   String selectedValueTeacher = '';
   String selectedValueDir = '';
   String selectedValueDur = '';
@@ -286,6 +291,9 @@ class _Step2State extends State<Step2> {
     selectedValueLesson = _selectedTypeLesson;
     selectedValueTeacher = widget.lesson.nameTeacher;
     selectedValueLocation = widget.lesson.idSchool;
+    selectedValueDir = teacher.directions[0];
+    selectedValueDur = itemsDuration[0];
+    selectedValueSubs = itemsSubs[0];
     selectedValueAuditory = widget.lesson.idAuditory.isEmpty
         ? itemsAuditory[0]
         : widget.lesson.idAuditory;
@@ -297,7 +305,8 @@ class _Step2State extends State<Step2> {
             (element) => element == widget.lesson.timePeriod.split('-')[0])
         : '10:00';
     addedLesson = addedLesson.copyWith(nameStudent: itemsClient[0],idStudent: 1,
-        date: selectedValueDate);
+        date: selectedValueDate,duration: int.parse(selectedValueDur),
+        timePeriod: timeToLesson());
   }
 
   @override
@@ -477,7 +486,7 @@ class _Step2State extends State<Step2> {
                   ],
                 ),
                 Visibility(
-                  visible: selectedValueSubs != 'Не выбрано',
+                  visible: selectedValueStudent != '',
                   child: Column(
                     children: [
                       const Gap(5),
@@ -492,8 +501,8 @@ class _Step2State extends State<Step2> {
                                       size: 12)),
                               const Gap(8),
                               Text(
-                                  itemsCountLess[
-                                      itemsSubs.indexOf(selectedValueSubs)],
+                                  selectedValueSubs.isNotEmpty?itemsCountLess[
+                                      itemsSubs.indexOf(selectedValueSubs)]:'...',
                                   style: TStyle.textStyleVelaSansBold(
                                       textColorBlack(context),
                                       size: 12))
@@ -522,9 +531,14 @@ class _Step2State extends State<Step2> {
             selectedValue: selectedValueTeacher,
             items: itemsTeacher,
             onChange: (value) {
-              selectedValueTeacher = value;
-              addedLesson = addedLesson.copyWith(
-                  idTeacher: 1, nameTeacher: selectedValueTeacher);
+              setState(() {
+                selectedValueTeacher = value;
+                selectedValueDir = itemsDirTeachersFavorite[
+                itemsTeacher.indexOf(selectedValueTeacher)
+                ];
+                addedLesson = addedLesson.copyWith(
+                    idTeacher: 1, nameTeacher: selectedValueTeacher);
+              });
             },
           ),
           Visibility(
@@ -546,7 +560,9 @@ class _Step2State extends State<Step2> {
                   children: [
                     Expanded(
                       child: DropMenu(
+                        key: ValueKey(selectedValueDir),
                         items: itemsDir,
+                        selectedValue: selectedValueDir,
                         onChange: (value) {
                           setState(() {
                             errorDir = false;
@@ -640,8 +656,7 @@ class _Step2State extends State<Step2> {
                       ),
                     ),
                     child: Text(DateTimeParser.getDateFromApi(date:selectedValueDate),
-                        style: TStyle.textStyleOpenSansRegular(colorGrey,
-                            size: 14)),
+                        style: TStyle.textStyleVelaSansBold(textColorBlack(context),size: 13)),
                   ),
                 ),
               ),
@@ -774,6 +789,7 @@ class _Step2State extends State<Step2> {
           Gap(_h1),
           TextField(
             maxLines: 3,
+            keyboardType: TextInputType.text,
             textAlign: TextAlign.start,
             controller: _editingControllerReview,
             style: TextStyle(
@@ -867,7 +883,7 @@ class _Step2State extends State<Step2> {
           }
     }
 
-    if (selectedValueSubs == 'Не выбрано' || selectedValueSubs.isEmpty) {
+    if (selectedValueSubs.isEmpty) {
       if(addedLesson.type.isSingly||addedLesson.type.isGroup){
         setState(() {
           errorSubs = true;
@@ -899,15 +915,14 @@ class _Step2State extends State<Step2> {
         res = false;
       });
     }
-    if (selectedValueTimeStart.isEmpty ||
-        selectedValueTimeStart == 'Не выбрано') {
+    if (selectedValueTimeStart.isEmpty) {
       setState(() {
         errorTimeStart = true;
         res = false;
       });
     }
 
-    if (selectedValueAuditory.isEmpty) {
+    if (selectedValueAuditory.isEmpty||selectedValueAuditory == 'Не выбрано') {
       setState(() {
         errorAuditory = true;
         res = false;
@@ -944,7 +959,8 @@ class _Step2State extends State<Step2> {
       choiceChipLabel: (user) {
         return user;
       },
-      themeData: FilterListThemeData(context,headerTheme: HeaderThemeData(
+      themeData: FilterListThemeData(context,
+          headerTheme: HeaderThemeData(
         searchFieldHintText: 'Имя клиента',
         searchFieldBorderRadius: 20,
         searchFieldTextStyle: TStyle.textStyleVelaSansRegular(colorGrey,size: 14)
@@ -960,6 +976,7 @@ class _Step2State extends State<Step2> {
         setState(() {
           errorClient = false;
           selectedValueStudent = List.from(client!).first;
+          selectedValueSubs = itemsSubs[0];
           addedLesson = addedLesson.copyWith(nameStudent: selectedValueStudent,idStudent: 1);
         });
         Navigator.pop(context);

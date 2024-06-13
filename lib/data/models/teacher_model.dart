@@ -7,10 +7,12 @@ class TeacherModel {
   final String phoneNum;
   final List<LessonModel> lessons;
   final String urlAva;
+  final List<dynamic> directions;
 
   const TeacherModel(
       {required this.urlAva,
       required this.id,
+        required this.directions,
       required this.lastName,
       required this.firstName,
       required this.phoneNum,
@@ -37,6 +39,7 @@ class TeacherModel {
       //   firstName: 'ff',
       // phoneNum: '9009'
       lessons: lessons,
+      directions: mapTeacher['directions'] as List<dynamic>,
       urlAva: mapTeacher['urlAva'] as String,
       id: mapTeacher['id'] as int,
       lastName: mapTeacher['lastName'] as String,

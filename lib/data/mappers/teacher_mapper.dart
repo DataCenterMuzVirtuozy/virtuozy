@@ -15,6 +15,7 @@ class TeacherMapper{
     static TeacherEntity fromApi({required TeacherModel teacherModel}){
       final lessons = teacherModel.lessons.map((e) => _fromLessonModel(e,teacherModel.id)).toList();
       return TeacherEntity(
+        directions: teacherModel.directions,
         lessons: lessons,
           userStatus: UserStatus.auth,
           id: teacherModel.id,

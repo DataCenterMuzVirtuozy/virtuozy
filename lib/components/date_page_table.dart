@@ -50,7 +50,6 @@ class _DatePageTableState extends State<DatePageTable> {
   void didChangeDependencies() {
     super.didChangeDependencies();
      final indexDate = context.watch<TableBloc>().state.indexByDateNow;
-     print('Index Pae $indexDate');
     if (indexDate < 0) {
       page = indexDate;
       pageControllerDates = PageController();
@@ -125,7 +124,7 @@ class _DatePageTableState extends State<DatePageTable> {
                         child: Text(
                             widget.lessonsToday[index].date.contains('/')
                                 ? parseDateWeek(widget.lessonsToday[index].date)
-                                : parseDate(widget.lessonsToday[index].date),
+                                : DateTimeParser.parseDate(widget.lessonsToday[index].date),
                             textAlign: TextAlign.center,
                             style: TStyle.textStyleVelaSansExtraBolt(
                                 Theme.of(context)
@@ -204,10 +203,5 @@ class _DatePageTableState extends State<DatePageTable> {
     };
   }
 
-  String parseDate(String date) {
-    final d = DateFormat('yyyy-MM-dd').parse(date);
-    final m = getMonth(d.month);
-    final nameDay = DateTimeParser.getDayByNumber(d.weekday);
-    return '$nameDay,  ${d.day} $m ${d.year}';
-  }
+
 }
