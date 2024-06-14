@@ -1,8 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:filter_list/filter_list.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 import 'package:virtuozy/components/dialogs/chiose_list_dialog/choise_list_dialog.dart';
@@ -22,7 +20,8 @@ String _selectedTypeLesson = '';
 PageController pageController = PageController();
 
 class AddLessonContent extends StatefulWidget {
-  const AddLessonContent({super.key, required this.initLesson, required this.callFromTable});
+  const AddLessonContent(
+      {super.key, required this.initLesson, required this.callFromTable});
 
   final Lesson initLesson;
   final bool callFromTable;
@@ -36,12 +35,10 @@ class _AddLessonContentState extends State<AddLessonContent> {
   int _stepIndex = 0;
   Lesson lesson = Lesson.unknown();
 
-
   @override
   void initState() {
     super.initState();
-  lesson = widget.initLesson;
-
+    lesson = widget.initLesson;
   }
 
   @override
@@ -62,15 +59,14 @@ class _AddLessonContentState extends State<AddLessonContent> {
                   setState(() {
                     _stepIndex = 1;
                     _selectedTypeLesson = selected;
-                  lesson =  lesson.copyWith(
+                    lesson = lesson.copyWith(
                         type: selected == 'Индивидуальные'
                             ? LessonType.singly
                             : selected == 'Групповой'
-                            ? LessonType.group
-                            : selected == 'Можно ПУ'
-                            ? LessonType.trial
-                            : LessonType.unknown);
-
+                                ? LessonType.group
+                                : selected == 'Можно ПУ'
+                                    ? LessonType.trial
+                                    : LessonType.unknown);
                   });
                 },
               ),
@@ -170,9 +166,9 @@ class Step2 extends StatefulWidget {
   State<Step2> createState() => _Step2State();
 }
 
-class _Step2State extends State<Step2>  with AuthMixin{
-
-  final TextEditingController _editingControllerReview = TextEditingController();
+class _Step2State extends State<Step2> with AuthMixin {
+  final TextEditingController _editingControllerReview =
+      TextEditingController();
 
   final List<String> itemsStudyes = [
     'Индивидуальные',
@@ -258,7 +254,7 @@ class _Step2State extends State<Step2>  with AuthMixin{
   ];
 
   final List<String> itemsGroup = [
-     'Не выбрано',
+    'Не выбрано',
     'Группа 1',
     'Группа 2',
     'Группа 3'
@@ -293,8 +289,9 @@ class _Step2State extends State<Step2>  with AuthMixin{
     super.initState();
     addedLesson = widget.lesson;
     selectedValueLesson = _selectedTypeLesson;
-    selectedValueTeacher = widget.lesson.nameTeacher;
+    selectedValueTeacher = '${teacher.firstName} ${teacher.lastName}';
     selectedValueLocation = widget.lesson.idSchool;
+    print('ID ${selectedValueLocation}');
     selectedValueDir = teacher.directions[0];
     selectedValueDur = itemsDuration[0];
     selectedValueSubs = itemsSubs[0];
@@ -302,14 +299,21 @@ class _Step2State extends State<Step2>  with AuthMixin{
         ? itemsAuditory[0]
         : widget.lesson.idAuditory;
     selectedValueDate = widget.lesson.date.isEmpty
-        ?  DateTime.now().toString().split(' ')[0].tr()
-        :  widget.lesson.date;
+        ? DateTime.now().toString().split(' ')[0].tr()
+        : widget.lesson.date;
     selectedValueTimeStart = widget.lesson.timePeriod.isNotEmpty
         ? itemsTimesStart.firstWhere(
             (element) => element == widget.lesson.timePeriod.split('-')[0])
         : '10:00';
-    addedLesson = addedLesson.copyWith(nameStudent: itemsClient[0],idStudent: 1,
-        date: selectedValueDate,duration: int.parse(selectedValueDur),
+    addedLesson = addedLesson.copyWith(
+        nameStudent: itemsClient[0],
+        idStudent: 1,
+        date: selectedValueDate,
+        duration: int.parse(selectedValueDur),
+        nameTeacher: selectedValueTeacher,
+        idTeacher: teacher.id,
+        idSchool: selectedValueLocation,
+        nameDirection: teacher.directions[0],
         timePeriod: timeToLesson());
   }
 
@@ -340,14 +344,13 @@ class _Step2State extends State<Step2>  with AuthMixin{
                     type: selectedValueLesson == itemsStudyes[0]
                         ? LessonType.singly
                         : selectedValueLesson == itemsStudyes[2]
-                        ? LessonType.group
-                        : selectedValueLesson == itemsStudyes[1]
-                        ? LessonType.trial
-                        : LessonType.unknown);
+                            ? LessonType.group
+                            : selectedValueLesson == itemsStudyes[1]
+                                ? LessonType.trial
+                                : LessonType.unknown);
               });
             },
           ),
-
           Visibility(
             visible: addedLesson.type.isSingly,
             child: Column(
@@ -358,13 +361,14 @@ class _Step2State extends State<Step2>  with AuthMixin{
                   child: Padding(
                     padding: const EdgeInsets.only(left: 20),
                     child: Text('Клиент'.tr(),
-                        style: TStyle.textStyleVelaSansBold(textColorBlack(context),
+                        style: TStyle.textStyleVelaSansBold(
+                            textColorBlack(context),
                             size: 16)),
                   ),
                 ),
                 Gap(_h1),
                 InkWell(
-                  onTap: (){
+                  onTap: () {
                     openFilterDialog();
                   },
                   child: Row(
@@ -372,20 +376,25 @@ class _Step2State extends State<Step2>  with AuthMixin{
                       Expanded(
                         child: Container(
                           width: MediaQuery.of(context).size.width,
-                          padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-                          decoration:  BoxDecoration(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(50),
                             border: Border.all(
                               color: colorGrey,
                               width: 1.0,
                             ),
                           ),
-                          child: Text(selectedValueStudent.isEmpty?'Поиск...'.tr():
-                              selectedValueStudent,
-                              style: selectedValueStudent.isEmpty?TStyle.textStyleOpenSansRegular(colorGrey,
-                                  size: 14):TStyle.textStyleVelaSansBold(textColorBlack(context),size: 14)
-                        
-                          ),
+                          child: Text(
+                              selectedValueStudent.isEmpty
+                                  ? 'Поиск...'.tr()
+                                  : selectedValueStudent,
+                              style: selectedValueStudent.isEmpty
+                                  ? TStyle.textStyleOpenSansRegular(colorGrey,
+                                      size: 14)
+                                  : TStyle.textStyleVelaSansBold(
+                                      textColorBlack(context),
+                                      size: 14)),
                         ),
                       ),
                       Visibility(
@@ -394,7 +403,6 @@ class _Step2State extends State<Step2>  with AuthMixin{
                             padding: const EdgeInsets.only(left: 10),
                             child: Icon(Icons.error, color: colorRed),
                           ))
-
                     ],
                   ),
                 )
@@ -419,7 +427,8 @@ class _Step2State extends State<Step2>  with AuthMixin{
                   child: Padding(
                     padding: const EdgeInsets.only(left: 20),
                     child: Text('Группа'.tr(),
-                        style: TStyle.textStyleVelaSansBold(textColorBlack(context),
+                        style: TStyle.textStyleVelaSansBold(
+                            textColorBlack(context),
                             size: 16)),
                   ),
                 ),
@@ -433,8 +442,8 @@ class _Step2State extends State<Step2>  with AuthMixin{
                           setState(() {
                             errorGroup = false;
                             selectedValueGroup = value;
-                            addedLesson =
-                                addedLesson.copyWith(nameGroup: selectedValueGroup);
+                            addedLesson = addedLesson.copyWith(
+                                nameGroup: selectedValueGroup);
                           });
                         },
                       ),
@@ -445,14 +454,14 @@ class _Step2State extends State<Step2>  with AuthMixin{
                           padding: const EdgeInsets.only(left: 10),
                           child: Icon(Icons.error, color: colorRed),
                         ))
-
                   ],
                 ),
               ],
             ),
           ),
           Visibility(
-            visible: selectedValueStudent.isNotEmpty||selectedValueGroup.isNotEmpty,
+            visible: selectedValueStudent.isNotEmpty ||
+                selectedValueGroup.isNotEmpty,
             child: Column(
               children: [
                 Gap(_h2),
@@ -461,7 +470,8 @@ class _Step2State extends State<Step2>  with AuthMixin{
                   child: Padding(
                     padding: const EdgeInsets.only(left: 20),
                     child: Text('Абонемент'.tr(),
-                        style: TStyle.textStyleVelaSansBold(textColorBlack(context),
+                        style: TStyle.textStyleVelaSansBold(
+                            textColorBlack(context),
                             size: 16)),
                   ),
                 ),
@@ -490,7 +500,8 @@ class _Step2State extends State<Step2>  with AuthMixin{
                   ],
                 ),
                 Visibility(
-                  visible: selectedValueStudent != ''||selectedValueGroup!='',
+                  visible:
+                      selectedValueStudent != '' || selectedValueGroup != '',
                   child: Column(
                     children: [
                       const Gap(5),
@@ -505,8 +516,10 @@ class _Step2State extends State<Step2>  with AuthMixin{
                                       size: 12)),
                               const Gap(8),
                               Text(
-                                  selectedValueSubs.isNotEmpty?itemsCountLess[
-                                      itemsSubs.indexOf(selectedValueSubs)]:'...',
+                                  selectedValueSubs.isNotEmpty
+                                      ? itemsCountLess[
+                                          itemsSubs.indexOf(selectedValueSubs)]
+                                      : '...',
                                   style: TStyle.textStyleVelaSansBold(
                                       textColorBlack(context),
                                       size: 12))
@@ -538,15 +551,14 @@ class _Step2State extends State<Step2>  with AuthMixin{
               setState(() {
                 selectedValueTeacher = value;
                 selectedValueDir = itemsDirTeachersFavorite[
-                itemsTeacher.indexOf(selectedValueTeacher)
-                ];
+                    itemsTeacher.indexOf(selectedValueTeacher)];
                 addedLesson = addedLesson.copyWith(
                     idTeacher: 1, nameTeacher: selectedValueTeacher);
               });
             },
           ),
           Visibility(
-            visible: addedLesson.type.isSingly||addedLesson.type.isGroup,
+            visible: addedLesson.type.isSingly || addedLesson.type.isGroup,
             child: Column(
               children: [
                 Gap(_h2),
@@ -555,7 +567,8 @@ class _Step2State extends State<Step2>  with AuthMixin{
                   child: Padding(
                     padding: const EdgeInsets.only(left: 20),
                     child: Text('Направление'.tr(),
-                        style: TStyle.textStyleVelaSansBold(textColorBlack(context),
+                        style: TStyle.textStyleVelaSansBold(
+                            textColorBlack(context),
                             size: 16)),
                   ),
                 ),
@@ -659,8 +672,11 @@ class _Step2State extends State<Step2>  with AuthMixin{
                         width: 1.0,
                       ),
                     ),
-                    child: Text(DateTimeParser.getDateFromApi(date:selectedValueDate),
-                        style: TStyle.textStyleVelaSansBold(textColorBlack(context),size: 13)),
+                    child: Text(
+                        DateTimeParser.getDateFromApi(date: selectedValueDate),
+                        style: TStyle.textStyleVelaSansBold(
+                            textColorBlack(context),
+                            size: 13)),
                   ),
                 ),
               ),
@@ -696,7 +712,6 @@ class _Step2State extends State<Step2>  with AuthMixin{
               ),
             ],
           ),
-
           Visibility(
             visible: addedLesson.type.isSingly,
             child: Column(
@@ -707,7 +722,8 @@ class _Step2State extends State<Step2>  with AuthMixin{
                   child: Padding(
                     padding: const EdgeInsets.only(left: 20),
                     child: Text('Тип проведения занятия'.tr(),
-                        style: TStyle.textStyleVelaSansBold(textColorBlack(context),
+                        style: TStyle.textStyleVelaSansBold(
+                            textColorBlack(context),
                             size: 16)),
                   ),
                 ),
@@ -724,7 +740,6 @@ class _Step2State extends State<Step2>  with AuthMixin{
               ],
             ),
           ),
-
           Gap(_h2),
           Align(
             alignment: Alignment.centerLeft,
@@ -741,10 +756,10 @@ class _Step2State extends State<Step2>  with AuthMixin{
             items: itemsLocation,
             onChange: (value) {
               selectedValueLocation = value;
-              addedLesson = addedLesson.copyWith(idSchool: selectedValueLocation);
+              addedLesson =
+                  addedLesson.copyWith(idSchool: selectedValueLocation);
             },
           ),
-
           Gap(_h2),
           Align(
             alignment: Alignment.centerLeft,
@@ -766,7 +781,8 @@ class _Step2State extends State<Step2>  with AuthMixin{
                     setState(() {
                       errorAuditory = false;
                       selectedValueAuditory = value;
-                      addedLesson = addedLesson.copyWith(idAuditory: selectedValueAuditory);
+                      addedLesson = addedLesson.copyWith(
+                          idAuditory: selectedValueAuditory);
                     });
                   },
                 ),
@@ -779,7 +795,6 @@ class _Step2State extends State<Step2>  with AuthMixin{
                   ))
             ],
           ),
-
           Gap(_h2),
           Align(
             alignment: Alignment.centerLeft,
@@ -822,9 +837,7 @@ class _Step2State extends State<Step2>  with AuthMixin{
                   ),
                 )),
           ),
-
           const Gap(30),
-
           SizedBox(
             height: 35.0,
             child: SubmitButton(
@@ -833,7 +846,9 @@ class _Step2State extends State<Step2>  with AuthMixin{
                 if (!_checkData()) {
                   return;
                 }
-                addedLesson = addedLesson.copyWith(status: LessonStatus.planned);
+                addedLesson =
+                    addedLesson.copyWith(status: LessonStatus.planned,
+                      nameStudent: addedLesson.type.isGroup?'':selectedValueStudent);
                 Dialoger.showCustomDialog(
                     args: [addedLesson, widget.callFromTable],
                     contextUp: context,
@@ -868,36 +883,33 @@ class _Step2State extends State<Step2>  with AuthMixin{
     }
   }
 
-
-
-
   bool _checkData() {
     bool res = true;
 
-    if(_editingControllerReview.text.isNotEmpty){
-      addedLesson = addedLesson.copyWith(comments: _editingControllerReview.text);
+    if (_editingControllerReview.text.isNotEmpty) {
+      addedLesson =
+          addedLesson.copyWith(comments: _editingControllerReview.text);
     }
 
     if (addedLesson.type.isGroup) {
       if (selectedValueGroup == 'Не выбрано' || selectedValueGroup.isEmpty) {
-            setState(() {
-              errorGroup = true;
-              res = false;
-            });
-          }
+        setState(() {
+          errorGroup = true;
+          res = false;
+        });
+      }
     }
 
     if (selectedValueSubs.isEmpty) {
-      if(addedLesson.type.isSingly||addedLesson.type.isGroup){
+      if (addedLesson.type.isSingly || addedLesson.type.isGroup) {
         setState(() {
           errorSubs = true;
           res = false;
         });
       }
-
     }
 
-    if(selectedValueStudent.isEmpty&&addedLesson.type.isSingly){
+    if (selectedValueStudent.isEmpty && addedLesson.type.isSingly) {
       setState(() {
         errorClient = true;
         res = false;
@@ -906,8 +918,7 @@ class _Step2State extends State<Step2>  with AuthMixin{
 
     if (selectedValueDir.isEmpty || selectedValueDir == 'Не выбрано') {
       setState(() {
-
-        if (addedLesson.type.isSingly||addedLesson.type.isGroup) {
+        if (addedLesson.type.isSingly || addedLesson.type.isGroup) {
           errorDir = true;
           res = false;
         }
@@ -926,7 +937,8 @@ class _Step2State extends State<Step2>  with AuthMixin{
       });
     }
 
-    if (selectedValueAuditory.isEmpty||selectedValueAuditory == 'Не выбрано') {
+    if (selectedValueAuditory.isEmpty ||
+        selectedValueAuditory == 'Не выбрано') {
       setState(() {
         errorAuditory = true;
         res = false;
@@ -965,23 +977,25 @@ class _Step2State extends State<Step2>  with AuthMixin{
       },
       themeData: FilterListThemeData(context,
           headerTheme: HeaderThemeData(
-        searchFieldHintText: 'Имя клиента',
-        searchFieldBorderRadius: 20,
-        searchFieldTextStyle: TStyle.textStyleVelaSansRegular(colorGrey,size: 14)
-      )),
+              searchFieldHintText: 'Имя клиента',
+              searchFieldBorderRadius: 20,
+              searchFieldTextStyle:
+                  TStyle.textStyleVelaSansRegular(colorGrey, size: 14))),
       validateSelectedItem: (list, val) {
         return list!.contains(val);
       },
       onItemSearch: (user, query) {
         return user.toLowerCase().contains(query.toLowerCase());
       },
-
       onApplyButtonClick: (client) {
         setState(() {
           errorClient = false;
           selectedValueStudent = List.from(client!).first;
           selectedValueSubs = itemsSubs[0];
-          addedLesson = addedLesson.copyWith(nameStudent: selectedValueStudent,idStudent: 1);
+          addedLesson = addedLesson.copyWith(
+              nameStudent: addedLesson.type.isGroup?'':selectedValueStudent,
+              idStudent: 1,
+              nameSub: selectedValueSubs);
         });
         Navigator.pop(context);
       },

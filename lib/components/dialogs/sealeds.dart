@@ -40,7 +40,7 @@ sealed class AlertDialogContent{
 class EditStatusLesson extends AlertDialogContent{
   @override
   build({required BuildContext context, Object? args}) {
-    return EditStatusLessonContent(lessonNew: args as Lesson, contextLast:context);
+    return EditStatusLessonContent(lessonNew: (args as List)[0] as Lesson, contextLast:context, callFromTable:args[1]);
   }
 
 }
@@ -177,7 +177,7 @@ class AddLesson extends DialogsContent{
 class InfoStatusLesson extends DialogsContent{
   @override
   build({required BuildContext context, Object? args}) {
-    return  InfoStatusLessonContent(lesson: args as Lesson);
+    return  InfoStatusLessonContent(lesson: (args as List)[0] as Lesson,callFromTable: args[1]);
   }
 
 }

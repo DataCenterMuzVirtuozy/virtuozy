@@ -6,10 +6,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:virtuozy/domain/entities/lesson_entity.dart';
 import 'package:virtuozy/domain/entities/today_lessons.dart';
+import 'package:virtuozy/presentations/teacher/today_schedule_screen/bloc/today_schedule_bloc.dart';
 import 'package:virtuozy/resourses/colors.dart';
+import 'package:virtuozy/utils/auth_mixin.dart';
 import 'package:virtuozy/utils/status_to_color.dart';
 
 import '../../../components/dialogs/dialoger.dart';
@@ -27,7 +30,7 @@ class TimelineSchedule extends StatefulWidget{
   State<TimelineSchedule> createState() => _TimelineScheduleState();
 }
 
-class _TimelineScheduleState extends State<TimelineSchedule> {
+class _TimelineScheduleState extends State<TimelineSchedule> with AuthMixin{
 
 
    final List<String> _times = [
@@ -45,6 +48,9 @@ class _TimelineScheduleState extends State<TimelineSchedule> {
     '21:00-22:00',
   ];
 
+   String idSchool = '';
+
+
 
    @override
   void initState() {
@@ -53,14 +59,21 @@ class _TimelineScheduleState extends State<TimelineSchedule> {
   }
 
 
-   (bool,Lesson) indexView(TodayLessons less,String time){
+   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    idSchool = context.watch<TodayScheduleBloc>().state.currentIdSchool;
+  }
+
+  (bool,Lesson) indexView(TodayLessons less,String time){
      bool view = false;
      Lesson lesson = Lesson.unknown();
      for(var i in less.lessons){
        if(time == i.timePeriod){
          view =  true;
+         lesson = i;
        }
-       lesson = i;
      }
      return (view,lesson);
   }
@@ -109,7 +122,9 @@ class _TimelineScheduleState extends State<TimelineSchedule> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Expanded(
-                                child: Text(data.$2.nameStudent, style:
+                                child: Text(data.$2.type.isGroup?
+                                data.$2.nameGroup:data.$2.nameStudent.isEmpty?'...':data.$2.nameStudent,
+                                    style:
                                 TStyle.textStyleVelaSansRegular(Theme.of(context)
                                       .textTheme.displayMedium!.color!,size: 14.0)),
                               ),
@@ -166,18 +181,19 @@ class _TimelineScheduleState extends State<TimelineSchedule> {
                     Dialoger.showModalBottomMenu(
                         blurred: true,
                         title: 'Информация об уроке'.tr(),
-                        args: data.$2,
+                        args: [data.$2,false],
                         content: InfoStatusLesson());
                     return;
                   };
+
                   Dialoger.showModalBottomMenu(
                       blurred: true,
                       args: [_addLesson(
-                          idSchool: data.$2.idSchool,
-                          nameTeacher: data.$2.nameTeacher,
-                          idTeacher: data.$2.idTeacher,
+                          idSchool: idSchool,
+                          nameTeacher: '${teacher.firstName} ${teacher.lastName}',
+                          idTeacher: teacher.id,
                           timePeriod: _times[index],
-                          dateDay: data.$2.date),true],
+                          dateDay: widget.todayLessons.date),true],
                       title: 'Добавить урок'.tr(),
                       content: AddLesson());
                 },

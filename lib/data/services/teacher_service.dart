@@ -69,6 +69,7 @@ class TeacherService{
         await _dio.post(Endpoints.lessons,
             data: LessonModel.toMap(lessonModel)
         );
+
       } on Failure catch(e){
         throw  Failure(e.message);
       } on DioException catch(e){

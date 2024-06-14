@@ -18,9 +18,10 @@ import '../../dialoger.dart';
 import '../../sealeds.dart';
 
 class InfoStatusLessonContent extends StatefulWidget {
-  const InfoStatusLessonContent({super.key, required this.lesson});
+  const InfoStatusLessonContent({super.key, required this.lesson, required this.callFromTable});
 
   final Lesson lesson;
+  final bool callFromTable;
 
   @override
   State<InfoStatusLessonContent> createState() =>
@@ -224,18 +225,25 @@ class _InfoStatusLessonContentState extends State<InfoStatusLessonContent> {
             Divider(
               color: colorGrey,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Клиент:',
-                    style:
-                        TStyle.textStyleVelaSansMedium(colorGrey, size: 15.0)),
-                Text(widget.lesson.nameStudent,
-                    style: TStyle.textStyleVelaSansBold(textColorBlack(context),
-                        size: 16.0))
-              ],
+            Visibility(
+              visible: !widget.lesson.type.isGroup,
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Клиент:',
+                          style:
+                              TStyle.textStyleVelaSansMedium(colorGrey, size: 15.0)),
+                      Text(widget.lesson.nameStudent.isEmpty?'...':widget.lesson.nameStudent,
+                          style: TStyle.textStyleVelaSansBold(textColorBlack(context),
+                              size: 16.0))
+                    ],
+                  ),
+                  const Gap(5),
+                ],
+              ),
             ),
-            const Gap(5),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -341,7 +349,7 @@ class _InfoStatusLessonContentState extends State<InfoStatusLessonContent> {
                               Dialoger.showCustomDialog(
                                   contextUp: context,
                                   content: EditStatusLesson(),
-                                args: _editedLesson);
+                                args: [_editedLesson,widget.callFromTable]);
 
                             },
                             borderRadius: 10.0,
@@ -365,7 +373,7 @@ class _InfoStatusLessonContentState extends State<InfoStatusLessonContent> {
                               Dialoger.showCustomDialog(
                                   contextUp: context,
                                   content: EditStatusLesson(),
-                                  args: _editedLesson);
+                                  args: [_editedLesson,widget.callFromTable]);
 
                             },
                             borderRadius: 10.0,
@@ -397,7 +405,7 @@ class _InfoStatusLessonContentState extends State<InfoStatusLessonContent> {
                               Dialoger.showCustomDialog(
                                   contextUp: context,
                                   content: EditStatusLesson(),
-                                  args: _editedLesson);
+                                  args: [_editedLesson,widget.callFromTable]);
 
                             },
                             borderRadius: 10.0,
@@ -423,7 +431,7 @@ class _InfoStatusLessonContentState extends State<InfoStatusLessonContent> {
                               Dialoger.showCustomDialog(
                                   contextUp: context,
                                   content: EditStatusLesson(),
-                                  args: _editedLesson);
+                                  args: [_editedLesson,widget.callFromTable]);
 
                             },
                             borderRadius: 10.0,

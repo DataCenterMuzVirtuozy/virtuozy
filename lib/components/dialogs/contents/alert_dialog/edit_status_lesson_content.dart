@@ -7,19 +7,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:virtuozy/domain/entities/lesson_entity.dart';
+import 'package:virtuozy/presentations/teacher/today_schedule_screen/bloc/today_schedule_bloc.dart';
 import 'package:virtuozy/utils/status_to_color.dart';
 
 import '../../../../presentations/teacher/schedule_table_screen/bloc/table_bloc.dart';
 import '../../../../presentations/teacher/schedule_table_screen/bloc/table_event.dart';
+import '../../../../presentations/teacher/today_schedule_screen/bloc/today_schedule_event.dart';
 import '../../../../resourses/colors.dart';
 import '../../../../utils/text_style.dart';
 
 class EditStatusLessonContent extends StatelessWidget{
-  const EditStatusLessonContent({super.key, required this.lessonNew, required this.contextLast});
+  const EditStatusLessonContent({super.key, required this.lessonNew, required this.contextLast, required this.callFromTable});
 
 
   final Lesson lessonNew;
   final BuildContext contextLast;
+  final bool callFromTable;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +61,11 @@ class EditStatusLessonContent extends StatelessWidget{
               const Gap(5.0),
               TextButton(
                 onPressed: () {
-                  context.read<TableBloc>().add(EditStatusLessonEvent(lesson: lessonNew));
+                  if(callFromTable){
+                    context.read<TableBloc>().add(EditStatusLessonEvent(lesson: lessonNew));
+                  }{
+                    context.read<TodayScheduleBloc>().add(EditLessonFromScheduleEvent(lesson: lessonNew));
+                  }
                   Navigator.pop(context);
                   Navigator.pop(contextLast);
                 },

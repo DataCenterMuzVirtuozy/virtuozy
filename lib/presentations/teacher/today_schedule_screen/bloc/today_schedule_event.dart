@@ -20,6 +20,11 @@ class AddLessonFromScheduleEvent extends TodayScheduleEvent{
   const AddLessonFromScheduleEvent({required this.lesson});
 }
 
+class EditLessonFromScheduleEvent extends TodayScheduleEvent{
+  final Lesson lesson;
+  const EditLessonFromScheduleEvent({required this.lesson});
+}
+
 
   class GetLessonsByIdSchoolEvent extends TodayScheduleEvent{
   final String id;

@@ -282,7 +282,7 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
                                 Dialoger.showModalBottomMenu(
                                     blurred: true,
                                     title: 'Информация об уроке'.tr(),
-                                    args: state.tasks[index].lesson,
+                                    args: [state.tasks[index].lesson,true],
                                     content: InfoStatusLesson());
                               },
                               child: Padding(
