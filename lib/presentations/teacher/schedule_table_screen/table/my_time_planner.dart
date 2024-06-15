@@ -1,28 +1,24 @@
-
-
+import 'dart:async';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:time_planner/time_planner.dart';
 import 'package:time_planner/src/config/global_config.dart' as config;
+import 'package:time_planner/time_planner.dart';
 import 'package:virtuozy/domain/entities/table_tap_location_entity.dart';
 
-
+import '../../../../components/dialogs/dialoger.dart';
 import '../../../../di/locator.dart';
 import '../../../../resourses/colors.dart';
 import '../../../../utils/text_style.dart';
 import '../../../../utils/theme_provider.dart';
 import '../bloc/table_state.dart';
 
-
 class MyTimePlanner extends StatefulWidget {
   /// Time start from this, it will start from 0
   final int startHour;
-   final Color colorDividerVertical;
-   final Color colorDividerHorizontal;
+  final Color colorDividerVertical;
+  final Color colorDividerHorizontal;
+
   /// Time end at this hour, max value is 23
   final int endHour;
 
@@ -43,9 +39,11 @@ class MyTimePlanner extends StatefulWidget {
   /// Whether time is displayed in 24 hour format or am/pm format in the time column on the left.
   final bool use24HourFormat;
   final Function onTapTable;
+
   //Whether the time is displayed on the axis of the tim or on the center of the timeblock. Default is false.
   final bool setTimeOnAxis;
   final Function modeView;
+
   /// Time planner widget
   const MyTimePlanner({
     Key? key,
@@ -62,6 +60,7 @@ class MyTimePlanner extends StatefulWidget {
     this.currentTimeAnimation,
     required this.modeView,
   }) : super(key: key);
+
   @override
   _MyTimePlannerState createState() => _MyTimePlannerState();
 }
@@ -77,6 +76,15 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
   bool? isAnimated = true;
   int yTap = 0;
   int xTap = 0;
+  double widthBorder = 0.0;
+  Color colorChoiceTable = Colors.transparent;
+  Timer? timer;
+  List<List<int>> listIndexByHour = [];
+  List<List<int>> listIndexByDays = [];
+  final listHourInt = [10,11,12,13,14,15,16,17,18,19,20,21];
+  List<int> daysListInt = [];
+
+
 
   /// check input value rules
   void _checkInputValue() {
@@ -120,6 +128,18 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
     config.borderRadius = style.borderRadius;
     isAnimated = widget.currentTimeAnimation;
     tasks = widget.tasks ?? [];
+    final days = widget.headers.length;
+     daysListInt = List.generate(days, (index) => index);
+    for (var i = 0; i < listHourInt.length; i++) {
+      listIndexByHour.add(List<int>.generate(days, (index) {
+        return (days * (i + 1)) - (days - index);
+      }));
+    }
+    for (var i = 0; i < days; i++) {
+      listIndexByDays.add(List<int>.generate(12, (index) {
+        return (days*index);
+      }));
+    }
   }
 
   @override
@@ -178,8 +198,8 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
               mainAxisAlignment: MainAxisAlignment.end,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                 const SizedBox(
-                   height: 60,
+                const SizedBox(
+                  height: 60,
                   width: 60,
                   // child: SelectModeCalendar(
                   //   modeView: (mode){
@@ -216,8 +236,8 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
                           children: <Widget>[
                             //first number is start hour and second number is end hour
                             for (int i = widget.startHour;
-                            i <= widget.endHour;
-                            i++)
+                                i <= widget.endHour;
+                                i++)
                               Padding(
                                 // we need some additional padding horizontally if we're showing in am/pm format
                                 padding: EdgeInsets.symmetric(
@@ -237,12 +257,11 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
                           ],
                         ),
                         Container(
-                          height:
-                          (config.totalHours * config.cellHeight!) +68,
-                              //+config.cellHeight!.toDouble()-1,
+                          height: (config.totalHours * config.cellHeight!) + 68,
+                          //+config.cellHeight!.toDouble()-1,
                           width: 1,
                           color: style.dividerColor ??
-                        Theme.of(context).primaryColor,
+                              Theme.of(context).primaryColor,
                         ),
                       ],
                     ),
@@ -254,13 +273,13 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
               ],
             ),
           ),
-
         ],
       ),
     );
   }
 
   Widget buildMainBody() {
+
     if (style.showScrollBar!) {
       return Scrollbar(
         controller: mainVerticalController,
@@ -284,19 +303,19 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
                   children: <Widget>[
                     SizedBox(
                       height: (config.totalHours * config.cellHeight!) + 80,
-                      width:
-                      (config.totalDays * config.cellWidth!).toDouble(),
+                      width: (config.totalDays * config.cellWidth!).toDouble(),
                       child: Stack(
                         children: <Widget>[
                           Column(
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
-                              for (var i = 0; i < 12; i++)...{
+                              for (var i = 0; i < 12; i++) ...{
                                 GestureDetector(
                                   behavior: HitTestBehavior.opaque,
-                                  onDoubleTap: (){
+                                  onDoubleTap: () {
                                     yTap = i;
-                                    tableTapLocation = tableTapLocation.copyWith(x: xTap,y: yTap);
+                                    tableTapLocation = tableTapLocation
+                                        .copyWith(x: xTap, y: yTap);
                                     widget.onTapTable.call(tableTapLocation);
                                   },
                                   child: Column(
@@ -306,28 +325,27 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
                                         color: i.isOdd
                                             ? style.interstitialOddColor
                                             : style.interstitialEvenColor,
-                                        height: (config.cellHeight! - 1).toDouble(),
+                                        height:
+                                            (config.cellHeight! - 1).toDouble(),
                                       ),
                                       // The horizontal lines tat divides the rows
                                       Divider(
                                         height: 1,
                                         color: widget.colorDividerHorizontal,
                                       ),
-
                                     ],
                                   ),
                                 )
                               },
                             ],
                           ),
-
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               for (var i = 0; i < config.totalDays; i++)
                                 GestureDetector(
                                   behavior: HitTestBehavior.translucent,
-                                  onPanDown: (d){
+                                  onPanDown: (d) {
                                     xTap = i;
                                   },
                                   child: Row(
@@ -335,13 +353,13 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
                                     children: <Widget>[
                                       SizedBox(
                                         width:
-                                        (config.cellWidth! - 1).toDouble(),
+                                            (config.cellWidth! - 1).toDouble(),
                                       ),
                                       // The vertical lines that divides the columns
                                       Container(
                                         width: 0.3,
                                         height: (config.totalHours *
-                                            config.cellHeight!) +
+                                                config.cellHeight!) +
                                             config.cellHeight!,
                                         color: widget.colorDividerVertical,
                                       )
@@ -350,8 +368,56 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
                                 )
                             ],
                           ),
-
                           for (int i = 0; i < tasks.length; i++) tasks[i],
+
+
+
+
+
+                          ///LONG PRESSED
+                          for (var i = 0; i < 84; i++) ...{
+                            Positioned(
+                              top: ((config.cellHeight! *
+                                          (yLocation(i) - config.startHour)) +
+                                      ((0 * config.cellHeight!) / 60))
+                                  .toDouble(),
+                              left: config.cellWidth! * xLocation(i).toDouble(),
+                              child: GestureDetector(
+                                onLongPress: (){
+                                  timer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
+                                    setState(() {
+                                      if(timer.tick>18){
+                                        Dialoger.showMessage('Satrt',context: context);
+                                        timer.cancel();
+                                      }
+                                      colorChoiceTable = colorBeruza;
+                                      widthBorder = 1.5;
+                                    });
+                                  });
+
+                                },
+                                onLongPressEnd: (d){
+                                  timer?.cancel();
+                                },
+
+                                onLongPressUp: (){
+                                  setState(() {
+                                    colorChoiceTable = Colors.transparent;
+                                    widthBorder = 0.0;
+
+                                  });
+                                },
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 400),
+                                  width: 89,
+                                  height: 80,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: colorChoiceTable,width: widthBorder)
+                                  ),
+                                ),
+                              ),
+                            )
+                          }
                         ],
                       ),
                     ),
@@ -370,9 +436,8 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
                           children: <Widget>[
                             Container(
                               height: 1,
-                              color:  widget.colorDividerHorizontal,
-                              width:
-                              (config.cellWidth! - 1).toDouble(),
+                              color: widget.colorDividerHorizontal,
+                              width: (config.cellWidth! - 1).toDouble(),
                             ),
                             Container(
                               width: 0.3,
@@ -384,13 +449,13 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
                     ],
                   ),
                 ),
-
               ],
             ),
           ),
         ),
       );
     }
+
     return SingleChildScrollView(
       controller: mainVerticalController,
       child: SingleChildScrollView(
@@ -407,7 +472,7 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 SizedBox(
-                  height: (config.totalHours * config.cellHeight!) +80,
+                  height: (config.totalHours * config.cellHeight!) + 80,
                   width: (config.totalDays * config.cellWidth!).toDouble(),
                   child: Stack(
                     children: <Widget>[
@@ -421,7 +486,7 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
                                 SizedBox(
                                   height: (config.cellHeight! - 1).toDouble(),
                                 ),
-                                 Divider(
+                                Divider(
                                   height: 0.3,
                                   color: widget.colorDividerHorizontal,
                                 ),
@@ -442,8 +507,8 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
                                 Container(
                                   width: 0.3,
                                   height:
-                                  (config.totalHours * config.cellHeight!) +
-                                      config.cellHeight!,
+                                      (config.totalHours * config.cellHeight!) +
+                                          config.cellHeight!,
                                   color: widget.colorDividerVertical,
                                 )
                               ],
@@ -462,12 +527,37 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
     );
   }
 
+  int yLocation(int index){
+    int y = 0;
+    for (var h in listIndexByHour) {
+      if (h.contains(index)) {
+        y = listIndexByHour.indexOf(h);
+      }
+    }
+    print('Y ${y}');
+   return y;
+  }
+
+  int xLocation(int index){
+    int x = 0;
+    for (var h in listIndexByDays) {
+      if (h.contains(index)) {
+        x = listIndexByDays.indexOf(h);
+      }
+    }
+    print('X ${x}');
+    return x;
+  }
+
+
+
+
   String formattedTime(int hour) {
     /// this method formats the input hour into a time string
     /// modifing it as necessary based on the use24HourFormat flag .
     if (config.use24HourFormat) {
       // we use the hour as-is
-      return '$hour:00 ${hour+1}:00';
+      return '$hour:00 ${hour + 1}:00';
     } else {
       // we format the time to use the am/pm scheme
       if (hour == 0) return "12:00 am";
@@ -477,7 +567,6 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
     }
   }
 }
-
 
 class MyTimePlannerTime extends StatelessWidget {
   /// Text it will be show as hour
@@ -498,17 +587,26 @@ class MyTimePlannerTime extends StatelessWidget {
       width: 60,
       child: Padding(
         padding: const EdgeInsets.only(left: 10.0),
-        child: setTimeOnAxis! ? Text(time!,
-        style: TStyle.textStyleVelaSansMedium(Theme.of(context)
-            .textTheme.displayMedium!.color!,size: 12.0),) : Center(child: Text(time!,
-        style: TStyle.textStyleVelaSansMedium(Theme.of(context)
-            .textTheme.displayMedium!.color!,size: 12.0),)),
+        child: setTimeOnAxis!
+            ? Text(
+                time!,
+                style: TStyle.textStyleVelaSansMedium(
+                    Theme.of(context).textTheme.displayMedium!.color!,
+                    size: 12.0),
+              )
+            : Center(
+                child: Text(
+                time!,
+                style: TStyle.textStyleVelaSansMedium(
+                    Theme.of(context).textTheme.displayMedium!.color!,
+                    size: 12.0),
+              )),
       ),
     );
   }
 }
 
-class SelectModeCalendar extends StatefulWidget{
+class SelectModeCalendar extends StatefulWidget {
   const SelectModeCalendar({super.key, required this.modeView});
 
   final Function modeView;
@@ -518,7 +616,6 @@ class SelectModeCalendar extends StatefulWidget{
 }
 
 class _SelectModeCalendarState extends State<SelectModeCalendar> {
-
   final themeProvider = locator.get<ThemeProvider>();
   final List<String> items = [
     'День',
@@ -528,13 +625,11 @@ class _SelectModeCalendarState extends State<SelectModeCalendar> {
 
   String? selectedValue;
 
-
   @override
   void initState() {
     super.initState();
     selectedValue = items[0];
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -549,31 +644,26 @@ class _SelectModeCalendarState extends State<SelectModeCalendar> {
         //         .displayMedium!
         //         .color!, size: 13.0)),
         items: items
-            .map((String item) =>
-            DropdownMenuItem<String>(
-              value: item,
-              child: Text(
-                item,
-                style: TStyle.textStyleVelaSansExtraBolt(Theme
-                    .of(context)
-                    .textTheme
-                    .displayMedium!
-                    .color!, size: 13.0),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ))
+            .map((String item) => DropdownMenuItem<String>(
+                  value: item,
+                  child: Text(
+                    item,
+                    style: TStyle.textStyleVelaSansExtraBolt(
+                        Theme.of(context).textTheme.displayMedium!.color!,
+                        size: 13.0),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ))
             .toList(),
         value: selectedValue,
         onChanged: (value) {
           setState(() {
             selectedValue = value;
-            widget.modeView.call(
-              selectedValue == 'День'?
-              ViewModeTable.day:
-                  selectedValue == 'Неделя'?
-                  ViewModeTable.week:
-                  ViewModeTable.my
-            );
+            widget.modeView.call(selectedValue == 'День'
+                ? ViewModeTable.day
+                : selectedValue == 'Неделя'
+                    ? ViewModeTable.week
+                    : ViewModeTable.my);
           });
         },
         buttonStyleData: ButtonStyleData(
@@ -593,11 +683,7 @@ class _SelectModeCalendarState extends State<SelectModeCalendar> {
             Icons.table_chart_outlined,
           ),
           iconSize: 18,
-          iconEnabledColor: Theme
-              .of(context)
-              .textTheme
-              .displayMedium!
-              .color!,
+          iconEnabledColor: Theme.of(context).textTheme.displayMedium!.color!,
           iconDisabledColor: colorGrey,
         ),
         dropdownStyleData: DropdownStyleData(
@@ -606,9 +692,11 @@ class _SelectModeCalendarState extends State<SelectModeCalendar> {
           elevation: 2,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20.0),
-            color:  themeProvider.themeStatus == ThemeStatus.dark?colorBlack:colorBeruza2,
+            color: themeProvider.themeStatus == ThemeStatus.dark
+                ? colorBlack
+                : colorBeruza2,
           ),
-          offset:  const Offset(20,-10),
+          offset: const Offset(20, -10),
           scrollbarTheme: ScrollbarThemeData(
             radius: const Radius.circular(40),
             thickness: MaterialStateProperty.all(6),
@@ -623,4 +711,3 @@ class _SelectModeCalendarState extends State<SelectModeCalendar> {
     );
   }
 }
-
