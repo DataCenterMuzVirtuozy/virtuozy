@@ -76,15 +76,11 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
   bool? isAnimated = true;
   int yTap = 0;
   int xTap = 0;
-  double widthBorder = 0.0;
-  Color colorChoiceTable = Colors.transparent;
-  Timer? timer;
   List<List<int>> listIndexByHour = [];
   List<List<int>> listIndexByDays = [];
-  final listHourInt = [10,11,12,13,14,15,16,17,18,19,20,21];
-  List<int> daysListInt = [];
-
-
+  final listHourInt = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
+  List<int> listDaysInt = [];
+  int countEmptyTask = 0;
 
   /// check input value rules
   void _checkInputValue() {
@@ -129,15 +125,17 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
     isAnimated = widget.currentTimeAnimation;
     tasks = widget.tasks ?? [];
     final days = widget.headers.length;
-     daysListInt = List.generate(days, (index) => index);
+    countEmptyTask = 12 * days;
+    listDaysInt = List.generate(days, (index) => index);
     for (var i = 0; i < listHourInt.length; i++) {
       listIndexByHour.add(List<int>.generate(days, (index) {
         return (days * (i + 1)) - (days - index);
       }));
     }
-    for (var i = 0; i < days; i++) {
-      listIndexByDays.add(List<int>.generate(12, (index) {
-        return (days*index);
+
+    for (var i = 0; i < listDaysInt.length; i++) {
+      listIndexByDays.add(List<int>.generate(listHourInt.length, (index) {
+        return (listDaysInt.length * index) + i;
       }));
     }
   }
@@ -279,7 +277,6 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
   }
 
   Widget buildMainBody() {
-
     if (style.showScrollBar!) {
       return Scrollbar(
         controller: mainVerticalController,
@@ -368,56 +365,23 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
                                 )
                             ],
                           ),
-                          for (int i = 0; i < tasks.length; i++) tasks[i],
-
-
-
-
 
                           ///LONG PRESSED
-                          for (var i = 0; i < 84; i++) ...{
-                            Positioned(
-                              top: ((config.cellHeight! *
-                                          (yLocation(i) - config.startHour)) +
-                                      ((0 * config.cellHeight!) / 60))
-                                  .toDouble(),
-                              left: config.cellWidth! * xLocation(i).toDouble(),
-                              child: GestureDetector(
-                                onLongPress: (){
-                                  timer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
-                                    setState(() {
-                                      if(timer.tick>18){
-                                        Dialoger.showMessage('Satrt',context: context);
-                                        timer.cancel();
-                                      }
-                                      colorChoiceTable = colorBeruza;
-                                      widthBorder = 1.5;
-                                    });
-                                  });
+                          ///
+                          ...List.generate(countEmptyTask, (i) {
+                            return TaskEmpty(
+                              onTableTapLocation:(TableTapLocation value){
+                                widget.onTapTable.call(value);
+                              },
+                              index: i,
+                              listIndexByHour: listIndexByHour,
+                              listHourInt: listHourInt,
+                              listDaysInt: listDaysInt,
+                              listIndexByDays: listIndexByDays,
+                            );
+                          }),
 
-                                },
-                                onLongPressEnd: (d){
-                                  timer?.cancel();
-                                },
-
-                                onLongPressUp: (){
-                                  setState(() {
-                                    colorChoiceTable = Colors.transparent;
-                                    widthBorder = 0.0;
-
-                                  });
-                                },
-                                child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 400),
-                                  width: 89,
-                                  height: 80,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: colorChoiceTable,width: widthBorder)
-                                  ),
-                                ),
-                              ),
-                            )
-                          }
+                          for (int i = 0; i < tasks.length; i++) tasks[i],
                         ],
                       ),
                     ),
@@ -527,31 +491,6 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
     );
   }
 
-  int yLocation(int index){
-    int y = 0;
-    for (var h in listIndexByHour) {
-      if (h.contains(index)) {
-        y = listIndexByHour.indexOf(h);
-      }
-    }
-    print('Y ${y}');
-   return y;
-  }
-
-  int xLocation(int index){
-    int x = 0;
-    for (var h in listIndexByDays) {
-      if (h.contains(index)) {
-        x = listIndexByDays.indexOf(h);
-      }
-    }
-    print('X ${x}');
-    return x;
-  }
-
-
-
-
   String formattedTime(int hour) {
     /// this method formats the input hour into a time string
     /// modifing it as necessary based on the use24HourFormat flag .
@@ -565,6 +504,121 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
       if (hour == 12) return "12:00 pm";
       return "${hour - 12}:00 pm";
     }
+  }
+}
+
+class TaskEmpty extends StatefulWidget {
+  const TaskEmpty(
+      {super.key,
+      required this.index,
+      required this.listIndexByHour,
+      required this.listHourInt,
+      required this.listIndexByDays,
+      required this.listDaysInt,
+        required this.onTableTapLocation});
+
+  final int index;
+  final Function onTableTapLocation;
+  final List<List<int>> listIndexByHour;
+  final List<int> listHourInt;
+  final List<List<int>> listIndexByDays;
+  final List<int> listDaysInt;
+
+  @override
+  State<TaskEmpty> createState() => _TaskEmptyState();
+}
+
+class _TaskEmptyState extends State<TaskEmpty> {
+  double widthBorder = 0.0;
+  Color colorChoiceTable = Colors.transparent;
+  Timer? timer;
+
+  int yLocation(int index) {
+    int y = 0;
+    for (var h in widget.listIndexByHour) {
+      if (h.contains(index)) {
+        y = widget.listHourInt[widget.listIndexByHour.indexOf(h)];
+      }
+    }
+    return y;
+  }
+
+  int xLocation(int index) {
+    int x = 0;
+    for (var h in widget.listIndexByDays) {
+      if (h.contains(index)) {
+        x = widget.listDaysInt[widget.listIndexByDays.indexOf(h)];
+      }
+    }
+
+    return x;
+  }
+
+  int indexX(int index){
+    for (var h in widget.listIndexByDays) {
+      if (h.contains(index)) {
+        return widget.listIndexByDays.indexOf(h);
+      }
+    }
+    return -1;
+  }
+
+  int indexY(int index){
+    for (var h in widget.listIndexByHour) {
+      if (h.contains(index)) {
+        return widget.listIndexByHour.indexOf(h);
+      }
+    }
+    return -1;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var x = xLocation(widget.index);
+    var y = yLocation(widget.index);
+
+    return Positioned(
+      top: ((config.cellHeight! * (y - config.startHour)) +
+              ((0 * config.cellHeight!) / 60))
+          .toDouble(),
+      left: config.cellWidth! * x.toDouble(),
+      child: GestureDetector(
+        onDoubleTap: () {
+          widget.onTableTapLocation.call(TableTapLocation(y: indexY(widget.index), x: indexX(widget.index)));
+        },
+        onLongPress: () {
+          timer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
+            setState(() {
+              if (timer.tick > 18) {
+                timer.cancel();
+              }else if(timer.tick<18){
+                colorChoiceTable = colorOrange;
+                widthBorder = 1.5;
+              }
+
+            });
+          });
+        },
+        onLongPressEnd: (d) {
+          timer?.cancel();
+        },
+        onLongPressUp: () {
+          setState(() {
+            widget.onTableTapLocation.call(TableTapLocation(y: indexY(widget.index), x: indexX(widget.index)));
+            colorChoiceTable = Colors.transparent;
+            widthBorder = 0.0;
+          });
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 400),
+          width: 89,
+          height: 80,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              border: Border.all(color: colorChoiceTable, width: widthBorder)),
+        ),
+      ),
+    );
   }
 }
 

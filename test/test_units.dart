@@ -22,10 +22,10 @@ void main(){
     }
     for (var i = 0; i < c; i++) {
       listX.add(List<int>.generate(f, (index) {
-        return (c*index);
+        return (c*index)+i;
       }));
     }
-    print('X ${listX[0]}');
+    print('X ${listX[1]}');
 
     //y
     for (var r = 0; r < 84; r++) {
