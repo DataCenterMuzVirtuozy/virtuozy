@@ -15,10 +15,27 @@ import '../../../../domain/entities/today_lessons.dart';
    unknown
  }
 
+
+ enum EditScheduleStatus{
+   error,
+   loaded,
+   loading,
+   unknown
+ }
+
+ enum AddScheduleStatus{
+   error,
+   loaded,
+   loading,
+   unknown
+ }
+
 class TodayScheduleState extends Equatable {
 
   final String error;
   final TodayScheduleStatus status;
+  final EditScheduleStatus editScheduleStatus;
+  final AddScheduleStatus addScheduleStatus;
   final List<Lesson> lessons;
   final List<String> idsSchool;
   final String currentIdSchool;
@@ -30,6 +47,8 @@ class TodayScheduleState extends Equatable {
   const TodayScheduleState({required this.error, required this.status,required this.lessons,
     required this.idsSchool,required this.currentIdSchool,
   required this.todayLessons,
+    required this.addScheduleStatus,
+    required this.editScheduleStatus,
     required  this.visibleTodayButton,
   required this.indexByDateNow});
 
@@ -37,6 +56,8 @@ class TodayScheduleState extends Equatable {
   factory TodayScheduleState.unknown(){
     return const TodayScheduleState(
       visibleTodayButton: false,
+        addScheduleStatus: AddScheduleStatus.unknown,
+        editScheduleStatus: EditScheduleStatus.unknown,
         error: '', status: TodayScheduleStatus.unknown,lessons: [],idsSchool: ['...'],currentIdSchool: '...', todayLessons: [], indexByDateNow: 0);
   }
 
@@ -48,9 +69,13 @@ class TodayScheduleState extends Equatable {
     String? currentIdSchool,
     List<TodayLessons>? todayLessons,
     int? indexByDateNow,
-    bool? visibleTodayButton
+    bool? visibleTodayButton,
+    EditScheduleStatus? editScheduleStatus,
+    AddScheduleStatus? addScheduleStatus
 }){
     return TodayScheduleState(
+      addScheduleStatus: addScheduleStatus??this.addScheduleStatus,
+        editScheduleStatus: editScheduleStatus??this.editScheduleStatus,
         visibleTodayButton: visibleTodayButton??this.visibleTodayButton,
       indexByDateNow: indexByDateNow??this.indexByDateNow,
       todayLessons: todayLessons??this.todayLessons,
@@ -63,7 +88,7 @@ class TodayScheduleState extends Equatable {
  }
 
   @override
-  List<Object?> get props => [error,status,lessons,idsSchool,currentIdSchool,todayLessons,visibleTodayButton];
+  List<Object?> get props => [error,status,lessons,idsSchool,currentIdSchool,todayLessons,visibleTodayButton,editScheduleStatus,addScheduleStatus];
 
 
 

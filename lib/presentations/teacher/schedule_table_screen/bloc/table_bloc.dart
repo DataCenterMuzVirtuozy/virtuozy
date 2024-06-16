@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:time_planner/time_planner.dart';
 import 'package:virtuozy/domain/repository/teacher_repository.dart';
@@ -63,11 +64,12 @@ class TableBloc extends Bloc<TableEvent, TableState> {
         todayLessons = getDays(lessonsByIdSchool, false);
       }
       final lessonsById = getLessons(state.currentIdSchool, lessons);
-      final index = indexByDateNow(todayLessons, false);
+      final index = indexByDateNow(todayLessons, state.modeTable == ViewModeTable.week,event.lesson.date);
       final tasks = getTasks(
-          todayLesson: todayLessons, indexDate: index.$1, weekMode: false);
+          todayLesson: todayLessons, indexDate: index.$1, weekMode: state.modeTable == ViewModeTable.week);
       final headerTable = getHeaderTable(
-          weekMode: false, todayLesson: todayLessons, indexDate: index.$1);
+          weekMode:  state.modeTable == ViewModeTable.week,
+          todayLesson: todayLessons, indexDate: index.$1);
 
       emit(state.copyWith(
           titles: headerTable,
@@ -80,7 +82,7 @@ class TableBloc extends Bloc<TableEvent, TableState> {
           addLessonStatus: AddLessonStatus.success,
           idsSchool: state.idsSchool,
           tasks: tasks,
-          modeTable: ViewModeTable.day,
+          modeTable: state.modeTable,
           todayLessons: todayLessons));
     } on Failure catch (e) {
       emit(state.copyWith(
@@ -116,11 +118,11 @@ class TableBloc extends Bloc<TableEvent, TableState> {
         todayLessons = getDays(lessonsByIdSchool, false);
       }
       final lessonsById = getLessons(state.currentIdSchool, lessons);
-      final index = indexByDateNow(todayLessons, false);
+      final index = indexByDateNow(todayLessons,  state.modeTable == ViewModeTable.week,event.lesson.date);
       final tasks = getTasks(
-          todayLesson: todayLessons, indexDate: index.$1, weekMode: false);
+          todayLesson: todayLessons, indexDate: index.$1, weekMode:  state.modeTable == ViewModeTable.week);
       final headerTable = getHeaderTable(
-          weekMode: false, todayLesson: todayLessons, indexDate: index.$1);
+          weekMode:  state.modeTable == ViewModeTable.week, todayLesson: todayLessons, indexDate: index.$1);
 
       emit(state.copyWith(
           titles: headerTable,
@@ -133,7 +135,7 @@ class TableBloc extends Bloc<TableEvent, TableState> {
           scheduleStatus: ScheduleStatus.loaded,
           idsSchool: state.idsSchool,
           tasks: tasks,
-          modeTable: ViewModeTable.day,
+          modeTable: state.modeTable,
           todayLessons: todayLessons));
     } on Failure catch (e) {
       emit(state.copyWith(status: TableStatus.loaded,editLessonStatus: EditLessonStatus.error, error: e.message));
@@ -506,13 +508,23 @@ class TableBloc extends Bloc<TableEvent, TableState> {
     return tasks;
   }
 
-  (int, bool) indexByDateNow(List<TodayLessons> todayLessons, bool weekView) {
+  (int, bool) indexByDateNow(List<TodayLessons> todayLessons, bool weekView,[String dateAdded = '']) {
     final dateNow = DateTime.now().toString().split(' ')[0];
     final dateNowEpoch = DateTime.now().millisecondsSinceEpoch;
+    print('Date ${dateAdded}');
+    final dateAddedEpoch = DateFormat('yyyy-MM-dd')
+        .parse(dateAdded)
+        .millisecondsSinceEpoch;
     int index = 0;
     bool visibleButtonToday = false;
+    int i = 0;
+
     if (!weekView) {
-      final i = todayLessons.indexWhere((element) => element.date == dateNow);
+      if (dateAdded.isNotEmpty) {
+        i = todayLessons.indexWhere((element) => element.date == dateAdded);
+      } else {
+        i = todayLessons.indexWhere((element) => element.date == dateNow);
+      }
       if (i < 0) {
         visibleButtonToday = true;
         final i1 = todayLessons.indexWhere((element) =>
@@ -529,8 +541,13 @@ class TableBloc extends Bloc<TableEvent, TableState> {
         index = i;
       }
     } else {
-      final i = todayLessons
-          .indexWhere((element) => hasLessonInWeek(element.date, dateNowEpoch));
+      if (dateAdded.isNotEmpty) {
+        i = todayLessons.indexWhere((element) => hasLessonInWeek(element.date, dateAddedEpoch));
+      } else {
+         i = todayLessons
+            .indexWhere((element) => hasLessonInWeek(element.date, dateNowEpoch));
+      }
+
       if (i < 0) {
         final i1 = todayLessons.indexWhere((element) =>
             DateFormat('yyyy-MM-dd')

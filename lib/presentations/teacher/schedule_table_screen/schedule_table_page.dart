@@ -249,7 +249,7 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
                           ...List.generate(state.titles.length, (index) {
                             return TimePlannerTitle(
                               date: state.titles[index].date.isEmpty
-                                  ? index.toString()
+                                  ? ''
                                   : state.titles[index].date,
                               title: state.titles[index].title,
                               titleStyle: TStyle.textStyleVelaSansBold(

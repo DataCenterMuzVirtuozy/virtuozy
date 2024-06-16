@@ -65,6 +65,23 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
     return BlocConsumer<TodayScheduleBloc,TodayScheduleState>(
       listener: (c,s){
          _visibleTodayButton = s.visibleTodayButton;
+
+         if(s.addScheduleStatus == AddScheduleStatus.error){
+           Dialoger.showToast('Ошибка добавления урока'.tr());
+         }
+
+         if(s.addScheduleStatus == AddScheduleStatus.loaded){
+           Dialoger.showToast('Урок успешно добавлен'.tr());
+         }
+
+         if(s.editScheduleStatus == EditScheduleStatus.error){
+           Dialoger.showToast('Ошибка редактирования урока'.tr());
+         }
+
+         if(s.editScheduleStatus == EditScheduleStatus.loaded){
+           Dialoger.showToast('Статус урока изменен'.tr());
+         }
+
       },
       builder: (context,state) {
 

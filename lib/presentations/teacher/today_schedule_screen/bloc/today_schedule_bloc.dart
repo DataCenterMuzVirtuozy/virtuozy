@@ -1,7 +1,4 @@
-
-
-
- import 'dart:math';
+import 'dart:math';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -17,34 +14,38 @@ import '../../../../domain/entities/lesson_entity.dart';
 import '../../../../domain/entities/today_lessons.dart';
 import '../../../../domain/repository/teacher_repository.dart';
 
-class TodayScheduleBloc extends Bloc<TodayScheduleEvent,TodayScheduleState> {
+class TodayScheduleBloc extends Bloc<TodayScheduleEvent, TodayScheduleState> {
   TodayScheduleBloc() : super(TodayScheduleState.unknown()) {
     on<GetTodayLessonsEvent>(getTodayLessons, transformer: droppable());
-    on<GetLessonsByIdSchoolEvent>(
-        getLessonsByIdSchool, transformer: droppable());
-    on<GetLessonsBySelDateEvent>(
-        _getLessonsBySelDate, transformer: droppable());
-    on<GetLessonsByModeViewEvent>(
-        _getLessonsByModeView, transformer: droppable());
+    on<GetLessonsByIdSchoolEvent>(getLessonsByIdSchool,
+        transformer: droppable());
+    on<GetLessonsBySelDateEvent>(_getLessonsBySelDate,
+        transformer: droppable());
+    on<GetLessonsByModeViewEvent>(_getLessonsByModeView,
+        transformer: droppable());
     on<AddLessonFromScheduleEvent>(addNewLesson, transformer: droppable());
-    on<EditLessonFromScheduleEvent>(editLesson,transformer: droppable());
+    on<EditLessonFromScheduleEvent>(editLesson, transformer: droppable());
   }
 
   final _cubitTeacher = locator.get<TeacherCubit>();
   final _teacherRepository = locator.get<TeacherRepository>();
   bool onlyWithLesson = false;
 
-
   void addNewLesson(AddLessonFromScheduleEvent event, emit) async {
     try {
       emit(state.copyWith(
-        status: TodayScheduleStatus.loading, error: '', idsSchool: ['...'],));
+          status: TodayScheduleStatus.loading,
+          error: '',
+          idsSchool: ['...'],
+          editScheduleStatus: EditScheduleStatus.unknown,
+          addScheduleStatus: AddScheduleStatus.unknown));
       await _teacherRepository.addLesson(lesson: event.lesson);
       final phoneTeacher = _cubitTeacher.teacherEntity.phoneNum;
       final teacher = await _teacherRepository.getTeacher(uid: phoneTeacher);
       _cubitTeacher.setTeacher(teacher: teacher);
-      final lessons = _cubitTeacher.teacherEntity.lessons.where((
-          element) => element.idTeacher == teacher.id).toList();
+      final lessons = _cubitTeacher.teacherEntity.lessons
+          .where((element) => element.idTeacher == teacher.id)
+          .toList();
       if (lessons.isEmpty) {
         emit(state.copyWith(
             indexByDateNow: 0,
@@ -59,10 +60,107 @@ class TodayScheduleBloc extends Bloc<TodayScheduleEvent,TodayScheduleState> {
 
       final ids = getIds(lessons);
       final idSchool = ids.isEmpty ? '...' : ids[0];
-      final lessonsById = getLessons(
-          idSchool, lessons);
+      final lessonsById = getLessons(idSchool, lessons);
       final todayLessons = getDays(lessonsById, onlyWithLesson);
       final index = indexByDateNow(todayLessons, event.lesson.date);
+      pageControllerDatesSchedule.jumpToPage(index.$1);
+      emit(state.copyWith(
+          indexByDateNow: index.$1,
+          visibleTodayButton: index.$2,
+          lessons: lessonsById,
+          currentIdSchool: idSchool.isEmpty ? '...' : idSchool,
+          status: TodayScheduleStatus.loaded,
+          addScheduleStatus: AddScheduleStatus.loaded,
+          idsSchool: ids,
+          todayLessons: todayLessons));
+    } on Failure catch (e) {
+      emit(state.copyWith(
+          status: TodayScheduleStatus.loaded,
+          addScheduleStatus: AddScheduleStatus.error,
+          error: e.message));
+    }
+  }
+
+  void editLesson(EditLessonFromScheduleEvent event, emit) async {
+    try {
+      emit(state.copyWith(
+          status: TodayScheduleStatus.loading,
+          error: '',
+          idsSchool: ['...'],
+          editScheduleStatus: EditScheduleStatus.unknown,
+          addScheduleStatus: AddScheduleStatus.unknown));
+      await _teacherRepository.editLesson(lesson: event.lesson);
+      final phoneTeacher = _cubitTeacher.teacherEntity.phoneNum;
+      final teacher = await _teacherRepository.getTeacher(uid: phoneTeacher);
+      _cubitTeacher.setTeacher(teacher: teacher);
+      final lessons = _cubitTeacher.teacherEntity.lessons
+          .where((element) => element.idTeacher == teacher.id)
+          .toList();
+      if (lessons.isEmpty) {
+        emit(state.copyWith(
+            indexByDateNow: 0,
+            visibleTodayButton: false,
+            lessons: [],
+            currentIdSchool: '...',
+            status: TodayScheduleStatus.loaded,
+            editScheduleStatus: EditScheduleStatus.loaded,
+            idsSchool: ['...'],
+            todayLessons: []));
+        return;
+      }
+
+      final ids = getIds(lessons);
+      final idSchool = ids.isEmpty ? '...' : ids[0];
+      final lessonsById = getLessons(idSchool, lessons);
+      final todayLessons = getDays(lessonsById, onlyWithLesson);
+      final index = indexByDateNow(todayLessons, event.lesson.date);
+      pageControllerDatesSchedule.jumpToPage(index.$1);
+      emit(state.copyWith(
+          indexByDateNow: index.$1,
+          visibleTodayButton: index.$2,
+          lessons: lessonsById,
+          currentIdSchool: idSchool.isEmpty ? '...' : idSchool,
+          status: TodayScheduleStatus.loaded,
+          editScheduleStatus: EditScheduleStatus.loaded,
+          idsSchool: ids,
+          todayLessons: todayLessons));
+    } on Failure catch (e) {
+      emit(state.copyWith(
+          status: TodayScheduleStatus.loaded,
+          editScheduleStatus: EditScheduleStatus.error,
+          error: e.message));
+    }
+  }
+
+  void getTodayLessons(GetTodayLessonsEvent event, emit) async {
+    try {
+      emit(state.copyWith(
+        status: TodayScheduleStatus.loading,
+        error: '',
+        idsSchool: ['...'],
+      ));
+      final idTeacher = _cubitTeacher.teacherEntity.id;
+      final lessons = _cubitTeacher.teacherEntity.lessons
+          .where((element) => element.idTeacher == idTeacher)
+          .toList();
+      await Future.delayed(const Duration(milliseconds: 300));
+      if (lessons.isEmpty) {
+        emit(state.copyWith(
+            indexByDateNow: 0,
+            visibleTodayButton: false,
+            lessons: [],
+            currentIdSchool: '...',
+            status: TodayScheduleStatus.loaded,
+            idsSchool: ['...'],
+            todayLessons: []));
+        return;
+      }
+
+      final ids = getIds(lessons);
+      final idSchool = ids.isEmpty ? '...' : ids[0];
+      final lessonsById = getLessons(idSchool, lessons);
+      final todayLessons = getDays(lessonsById, onlyWithLesson);
+      final index = indexByDateNow(todayLessons);
       pageControllerDatesSchedule.jumpToPage(index.$1);
       emit(state.copyWith(
           indexByDateNow: index.$1,
@@ -77,117 +175,24 @@ class TodayScheduleBloc extends Bloc<TodayScheduleEvent,TodayScheduleState> {
     }
   }
 
-  void editLesson(EditLessonFromScheduleEvent event, emit) async {
-   try{ emit(state.copyWith(
-      status: TodayScheduleStatus.loading, error: '', idsSchool: ['...'],));
-    await _teacherRepository.editLesson(lesson: event.lesson);
-    final phoneTeacher = _cubitTeacher.teacherEntity.phoneNum;
-    final teacher = await _teacherRepository.getTeacher(uid: phoneTeacher);
-    _cubitTeacher.setTeacher(teacher: teacher);
-    final lessons = _cubitTeacher.teacherEntity.lessons.where((
-        element) => element.idTeacher == teacher.id).toList();
-    if (lessons.isEmpty) {
-      emit(state.copyWith(
-          indexByDateNow: 0,
-          visibleTodayButton: false,
-          lessons: [],
-          currentIdSchool: '...',
-          status: TodayScheduleStatus.loaded,
-          idsSchool: ['...'],
-          todayLessons: []));
-      return;
-    }
-
-    final ids = getIds(lessons);
-    final idSchool = ids.isEmpty ? '...' : ids[0];
-    final lessonsById = getLessons(
-        idSchool, lessons);
-    final todayLessons = getDays(lessonsById, onlyWithLesson);
-    final index = indexByDateNow(todayLessons, event.lesson.date);
-    pageControllerDatesSchedule.jumpToPage(index.$1);
-    emit(state.copyWith(
-        indexByDateNow: index.$1,
-        visibleTodayButton: index.$2,
-        lessons: lessonsById,
-        currentIdSchool: idSchool.isEmpty ? '...' : idSchool,
-        status: TodayScheduleStatus.loaded,
-        idsSchool: ids,
-        todayLessons: todayLessons));
-  }
-
-  on Failure
-
-  catch
-
-  (
-
-  e) {
-  emit(state.copyWith(status: TodayScheduleStatus.error, error: e.message));
-  }
-}
-
-
-
-
-  void getTodayLessons(GetTodayLessonsEvent event, emit) async {
-    try {
-      emit(state.copyWith(
-          status: TodayScheduleStatus.loading, error: '',idsSchool: ['...'],));
-      final idTeacher = _cubitTeacher.teacherEntity.id;
-      final lessons = _cubitTeacher.teacherEntity.lessons.where((element) => element.idTeacher == idTeacher).toList();
-      await Future.delayed(const Duration(milliseconds: 300));
-      if(lessons.isEmpty){
-        emit(state.copyWith(
-            indexByDateNow: 0,
-            visibleTodayButton: false,
-            lessons: [],
-            currentIdSchool: '...',
-            status: TodayScheduleStatus.loaded,
-            idsSchool: ['...'],
-            todayLessons: []));
-        return;
-      }
-
-      final ids = getIds(lessons);
-      final idSchool = ids.isEmpty ? '...' : ids[0];
-      final lessonsById = getLessons(
-          idSchool, lessons);
-      final todayLessons = getDays(lessonsById, onlyWithLesson);
-      final index = indexByDateNow(todayLessons);
-      pageControllerDatesSchedule.jumpToPage(index.$1);
-      emit(state.copyWith(
-          indexByDateNow: index.$1,
-          visibleTodayButton: index.$2,
-          lessons: lessonsById,
-          currentIdSchool: idSchool.isEmpty?'...':idSchool,
-          status: TodayScheduleStatus.loaded,
-          idsSchool: ids,
-          todayLessons: todayLessons));
-    } on Failure catch (e) {
-      emit(state.copyWith(status: TodayScheduleStatus.error, error: e.message));
-    }
-  }
-
-  (int,bool) indexByDateNow(List<TodayLessons> todayLessons,[String dateAdded = '']) {
+  (int, bool) indexByDateNow(List<TodayLessons> todayLessons,
+      [String dateAdded = '']) {
     final dateNow = DateTime.now().toString().split(' ')[0];
     int i = 0;
-    final dateNowEpoch = DateTime
-        .now()
-        .millisecondsSinceEpoch;
+    final dateNowEpoch = DateTime.now().millisecondsSinceEpoch;
     int index = 0;
     bool visibleButtonToday = false;
-    if(dateAdded.isNotEmpty){
+    if (dateAdded.isNotEmpty) {
       i = todayLessons.indexWhere((element) => element.date == dateAdded);
-    }else{
-    i = todayLessons.indexWhere((element) => element.date == dateNow);
+    } else {
+      i = todayLessons.indexWhere((element) => element.date == dateNow);
     }
 
     if (i < 0) {
       visibleButtonToday = true;
       final i1 = todayLessons.indexWhere((element) =>
-      DateFormat('yyyy-MM-dd')
-          .parse(element.date)
-          .millisecondsSinceEpoch > dateNowEpoch);
+          DateFormat('yyyy-MM-dd').parse(element.date).millisecondsSinceEpoch >
+          dateNowEpoch);
       if (i1 < 0) {
         index = todayLessons.length - 1;
       } else {
@@ -196,38 +201,32 @@ class TodayScheduleBloc extends Bloc<TodayScheduleEvent,TodayScheduleState> {
     } else {
       index = i;
     }
-    return (index,visibleButtonToday);
+    return (index, visibleButtonToday);
   }
 
-
-
-
-  (int,bool) indexByDateSelect(List<TodayLessons> todayLessons,String dateSelect) {
+  (int, bool) indexByDateSelect(
+      List<TodayLessons> todayLessons, String dateSelect) {
     int index = 0;
     bool visibleButtonToday = false;
     final now = DateTime.now().toString().split(' ')[0];
-    if(now != dateSelect){
+    if (now != dateSelect) {
       visibleButtonToday = true;
     }
-    index = todayLessons.indexWhere((element){
-      return  element.date == dateSelect;
+    index = todayLessons.indexWhere((element) {
+      return element.date == dateSelect;
     });
 
-    return (index,visibleButtonToday);
+    return (index, visibleButtonToday);
   }
 
   List<TodayLessons> getDays(List<Lesson> lessons, bool daysOnlyLesson) {
     List<TodayLessons> less = [];
     List<String> dates = [];
-    lessons.sort((a, b) =>
-        DateFormat('yyyy-MM-dd')
-            .parse(a.date)
-            .millisecondsSinceEpoch
-            .compareTo(
-            DateFormat('yyyy-MM-dd')
-                .parse(b.date)
-                .millisecondsSinceEpoch
-        ));
+    lessons.sort((a, b) => DateFormat('yyyy-MM-dd')
+        .parse(a.date)
+        .millisecondsSinceEpoch
+        .compareTo(
+            DateFormat('yyyy-MM-dd').parse(b.date).millisecondsSinceEpoch));
     if (daysOnlyLesson) {
       for (var l in lessons) {
         if (!dates.contains(l.date)) {
@@ -237,9 +236,7 @@ class TodayScheduleBloc extends Bloc<TodayScheduleEvent,TodayScheduleState> {
     } else {
       final fDay = _getFirstDate(lessons: lessons);
       final lDay = _getLastDate(lessons: lessons);
-      for (int i = 0; i <= lDay
-          .difference(fDay)
-          .inDays; i++) {
+      for (int i = 0; i <= lDay.difference(fDay).inDays; i++) {
         var d = fDay.add(Duration(days: i)).toString().split(' ')[0];
         dates.add(d);
       }
@@ -248,8 +245,7 @@ class TodayScheduleBloc extends Bloc<TodayScheduleEvent,TodayScheduleState> {
     for (var d in dates) {
       less.add(TodayLessons(
           date: d,
-          lessons: lessons.where((element) => element.date == d).toList()
-      ));
+          lessons: lessons.where((element) => element.date == d).toList()));
     }
 
     return less;
@@ -258,18 +254,17 @@ class TodayScheduleBloc extends Bloc<TodayScheduleEvent,TodayScheduleState> {
   DateTime _getFirstDate({required List<Lesson> lessons}) {
     final List<int> millisecondsSinceEpochList = [];
     for (var element in lessons) {
-      millisecondsSinceEpochList.add(DateFormat('yyyy-MM-dd')
-          .parse(element.date)
-          .millisecondsSinceEpoch);
+      millisecondsSinceEpochList.add(
+          DateFormat('yyyy-MM-dd').parse(element.date).millisecondsSinceEpoch);
     }
 
-    final indexFirst = millisecondsSinceEpochList.indexOf(
-        millisecondsSinceEpochList.reduce(min));
-    final monthFirst = DateTime
-        .fromMillisecondsSinceEpoch(millisecondsSinceEpochList[indexFirst])
+    final indexFirst = millisecondsSinceEpochList
+        .indexOf(millisecondsSinceEpochList.reduce(min));
+    final monthFirst = DateTime.fromMillisecondsSinceEpoch(
+            millisecondsSinceEpochList[indexFirst])
         .month;
-    final yearFirst = DateTime
-        .fromMillisecondsSinceEpoch(millisecondsSinceEpochList[indexFirst])
+    final yearFirst = DateTime.fromMillisecondsSinceEpoch(
+            millisecondsSinceEpochList[indexFirst])
         .year;
     // final dayFirst = DateTime
     //     .fromMillisecondsSinceEpoch(millisecondsSinceEpochList[indexFirst])
@@ -285,31 +280,22 @@ class TodayScheduleBloc extends Bloc<TodayScheduleEvent,TodayScheduleState> {
     //
     // }
     // final indexLast = millisecondsSinceEpochList.indexOf(millisecondsSinceEpochList.reduce(max));
-    final monthLast = DateTime
-        .now()
-        .month + 2;
-    final yearLast = DateTime
-        .now()
-        .year;
-    final dayLast = DateTime
-        .now()
-        .day;
+    final monthLast = DateTime.now().month + 2;
+    final yearLast = DateTime.now().year;
+    final dayLast = DateTime.now().day;
     final lastDay = DateTime.utc(yearLast, monthLast, dayLast);
     return lastDay;
   }
 
-
   void getLessonsByIdSchool(GetLessonsByIdSchoolEvent event, emit) async {
     try {
-      emit(state.copyWith(
-          status: TodayScheduleStatus.loading, error: ''));
+      emit(state.copyWith(status: TodayScheduleStatus.loading, error: ''));
       await Future.delayed(const Duration(milliseconds: 300));
       final idTeacher = _cubitTeacher.teacherEntity.id;
       final lessons = _cubitTeacher.teacherEntity.lessons
           .where((element) => element.idTeacher == idTeacher)
           .toList();
-      final lessonsByIdSchool = getLessons(
-          event.id, lessons);
+      final lessonsByIdSchool = getLessons(event.id, lessons);
       final todayLessons = getDays(lessonsByIdSchool, onlyWithLesson);
       final index = indexByDateNow(todayLessons);
       pageControllerDatesSchedule.jumpToPage(index.$1);
@@ -330,12 +316,9 @@ class TodayScheduleBloc extends Bloc<TodayScheduleEvent,TodayScheduleState> {
     return lessons.where((element) => element.idSchool == idSchool).toList();
   }
 
-
-
   void _getLessonsBySelDate(GetLessonsBySelDateEvent event, emit) async {
     try {
-      emit(state.copyWith(
-          status: TodayScheduleStatus.loading, error: ''));
+      emit(state.copyWith(status: TodayScheduleStatus.loading, error: ''));
       await Future.delayed(const Duration(milliseconds: 300));
       final idTeacher = _cubitTeacher.teacherEntity.id;
       final lessons = _cubitTeacher.teacherEntity.lessons
@@ -343,7 +326,7 @@ class TodayScheduleBloc extends Bloc<TodayScheduleEvent,TodayScheduleState> {
           .toList();
       final lessonsByIdSchool = getLessons(state.currentIdSchool, lessons);
       final todayLessons = getDays(lessonsByIdSchool, false);
-      final index = indexByDateSelect(todayLessons,event.date);
+      final index = indexByDateSelect(todayLessons, event.date);
       pageControllerDatesSchedule.jumpToPage(index.$1);
       emit(state.copyWith(
           indexByDateNow: index.$1,
@@ -358,16 +341,14 @@ class TodayScheduleBloc extends Bloc<TodayScheduleEvent,TodayScheduleState> {
 
   void _getLessonsByModeView(GetLessonsByModeViewEvent event, emit) async {
     try {
-      emit(state.copyWith(
-          status: TodayScheduleStatus.loading, error: ''));
+      emit(state.copyWith(status: TodayScheduleStatus.loading, error: ''));
       await Future.delayed(const Duration(milliseconds: 300));
       final idTeacher = _cubitTeacher.teacherEntity.id;
       final lessons = _cubitTeacher.teacherEntity.lessons
           .where((element) => element.idTeacher == idTeacher)
           .toList();
-      final lessonsByIdSchool = getLessons(
-          state.currentIdSchool, lessons);
-      onlyWithLesson =  event.onlyWithLesson;
+      final lessonsByIdSchool = getLessons(state.currentIdSchool, lessons);
+      onlyWithLesson = event.onlyWithLesson;
       final todayLessons = getDays(lessonsByIdSchool, event.onlyWithLesson);
       final index = indexByDateNow(todayLessons);
       pageControllerDatesSchedule.jumpToPage(index.$1);
@@ -382,26 +363,13 @@ class TodayScheduleBloc extends Bloc<TodayScheduleEvent,TodayScheduleState> {
     }
   }
 
-
-  List<String> getIds(List<Lesson> lessons){
+  List<String> getIds(List<Lesson> lessons) {
     List<String> ids = [];
-    for(var l in lessons){
-      if(!ids.contains(l.idSchool)){
+    for (var l in lessons) {
+      if (!ids.contains(l.idSchool)) {
         ids.add(l.idSchool);
       }
     }
     return ids;
-
   }
 }
-
-
-
-
-
-
-
-
-
-
-
