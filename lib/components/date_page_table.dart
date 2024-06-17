@@ -170,18 +170,20 @@ class _DatePageTableState extends State<DatePageTable> {
 
   String parseDateWeek(String date) {
     final d1 = DateFormat('yyyy-MM-dd').parse(date.split('/')[0]);
+
     final d2 = DateFormat('yyyy-MM-dd').parse(date.split('/')[1]);
-    if (d1.month == d2.month && d1.year == d2.year) {
+    final d3 = DateTime.fromMillisecondsSinceEpoch(d2.millisecondsSinceEpoch - 86400000);
+    if (d1.month == d3.month && d1.year == d3.year) {
       final m = getMonth(d1.month);
-      return '${d1.day}-${d2.day} $m ${d1.year}';
-    } else if (d1.month != d2.month && d1.year == d2.year) {
+      return '${d1.day}-${d3.day} $m ${d1.year}';
+    } else if (d1.month != d3.month && d1.year == d3.year) {
       final m1 = getMonth(d1.month);
-      final m2 = getMonth(d2.month);
-      return '${d1.day} $m1 - ${d2.day} $m2 ${d1.year}';
+      final m2 = getMonth(d3.month);
+      return '${d1.day} $m1 - ${d3.day} $m2 ${d1.year}';
     } else {
       final m1 = getMonth(d1.month);
-      final m2 = getMonth(d2.month);
-      return '${d1.day} $m1 ${d1.year} - ${d2.day} $m2 ${d2.year}';
+      final m2 = getMonth(d3.month);
+      return '${d1.day} $m1 ${d1.year} - ${d3.day} $m2 ${d3.year}';
     }
   }
 

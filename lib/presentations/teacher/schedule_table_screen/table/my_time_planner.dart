@@ -589,9 +589,9 @@ class _TaskEmptyState extends State<TaskEmpty> {
         onLongPress: () {
           timer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
             setState(() {
-              if (timer.tick > 18) {
+              if (timer.tick > 5) {
                 timer.cancel();
-              }else if(timer.tick<18){
+              } else if(timer.tick<5){
                 colorChoiceTable = colorOrange;
                 widthBorder = 1.5;
               }
@@ -610,7 +610,7 @@ class _TaskEmptyState extends State<TaskEmpty> {
           });
         },
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 400),
+          duration: const Duration(milliseconds: 200),
           width: 89,
           height: 80,
           decoration: BoxDecoration(

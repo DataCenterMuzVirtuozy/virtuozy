@@ -142,7 +142,7 @@ class TableBloc extends Bloc<TableEvent, TableState> {
     }
   }
 
-  //todo lessons all school
+
   void getLessonsTable(GetInitLessonsEvent event, emit) async {
     try {
       emit(state.copyWith(status: TableStatus.loading, error: '',
@@ -303,8 +303,7 @@ class TableBloc extends Bloc<TableEvent, TableState> {
       final lessonsByIdSchool = getLessons(state.currentIdSchool, lessons);
       final weekLessons = getLessWeek(lessonsByIdSchool);
       final index = indexByDateSelect(weekLessons, event.date, true);
-      final tasks =
-          getTasks(todayLesson: weekLessons, indexDate: index, weekMode: true);
+      final tasks = getTasks(todayLesson: weekLessons, indexDate: index, weekMode: true);
       final headerTable = getHeaderTable(
           weekMode: true, todayLesson: weekLessons, indexDate: index);
       emit(state.copyWith(
@@ -348,7 +347,7 @@ class TableBloc extends Bloc<TableEvent, TableState> {
         todayLessons = getDays(lessonsByIdSchool, false);
       }
       final index =
-          indexByDateNow(todayLessons, state.modeTable == ViewModeTable.week);
+          indexByDateNow(todayLessons, state.modeTable == ViewModeTable.week,todayLessons[0].date);
 
       final tasks = getTasks(
           todayLesson: todayLessons,
@@ -438,7 +437,7 @@ class TableBloc extends Bloc<TableEvent, TableState> {
           .parse(todayLesson[indexDate].date.split('/')[0]);
       final lDay = DateFormat('yyyy-MM-dd')
           .parse(todayLesson[indexDate].date.split('/')[1]);
-      for (int i = 0; i <= lDay.difference(fDay).inDays; i++) {
+      for (int i = 0; i <= lDay.difference(fDay).inDays-1; i++) {
         var d = fDay.add(Duration(days: i)).toString().split(' ')[0];
         daysWeek.add(d);
       }
@@ -587,6 +586,7 @@ class TableBloc extends Bloc<TableEvent, TableState> {
     int weekCount = 0;
     final fDay = _getFirstDate(lessons: lessons);
     final lDay = _getLastDate(lessons: lessons);
+
     final daysCount = lDay.difference(fDay).inDays;
     if (daysCount <= 7) {
       weekCount = 1;
@@ -665,6 +665,7 @@ class TableBloc extends Bloc<TableEvent, TableState> {
 
   DateTime _getFirstDate({required List<Lesson> lessons}) {
     final List<int> millisecondsSinceEpochList = [];
+    late DateTime  dateFirst;
     for (var element in lessons) {
       millisecondsSinceEpochList.add(
           DateFormat('yyyy-MM-dd').parse(element.date).millisecondsSinceEpoch);
@@ -681,7 +682,15 @@ class TableBloc extends Bloc<TableEvent, TableState> {
     // final dayFirst = DateTime
     //     .fromMillisecondsSinceEpoch(millisecondsSinceEpochList[indexFirst])
     //     .day;
-    return DateTime.utc(yearFirst, monthFirst, 1);
+    dateFirst = DateTime.utc(yearFirst, monthFirst, 1);
+    if(dateFirst.weekday>1){
+      final dt = dateFirst.weekday-1;
+      final dt1 = dt*86400000;
+      final d1 = dateFirst.millisecondsSinceEpoch - dt1;
+     dateFirst = DateTime.fromMillisecondsSinceEpoch(d1);
+      return dateFirst;
+    }
+    return dateFirst;
   }
 
   List<Lesson> getLessons(String idSchool, List<Lesson> lessons) {
