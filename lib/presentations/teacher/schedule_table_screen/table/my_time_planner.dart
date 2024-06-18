@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:time_planner/src/config/global_config.dart' as config;
 import 'package:time_planner/time_planner.dart';
 import 'package:virtuozy/domain/entities/table_tap_location_entity.dart';
+import 'package:virtuozy/presentations/teacher/schedule_table_screen/table/task_lesson.dart';
+import 'package:virtuozy/presentations/teacher/schedule_table_screen/table/titles_table_planner.dart';
 
-import '../../../../components/dialogs/dialoger.dart';
 import '../../../../di/locator.dart';
 import '../../../../resourses/colors.dart';
 import '../../../../utils/text_style.dart';
@@ -25,10 +26,10 @@ class MyTimePlanner extends StatefulWidget {
   /// Create days from here, each day is a TimePlannerTitle.
   ///
   /// you should create at least one day
-  final List<TimePlannerTitle> headers;
+  final List<TitlesTablePlanner> headers;
 
   /// List of widgets on time planner
-  final List<TimePlannerTask>? tasks;
+  final List<TaskLesson>? tasks;
 
   /// Style of time planner
   final TimePlannerStyle? style;
@@ -71,7 +72,7 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
   ScrollController dayHorizontalController = ScrollController();
   ScrollController timeVerticalController = ScrollController();
   TimePlannerStyle style = TimePlannerStyle();
-  List<TimePlannerTask> tasks = [];
+  List<TaskLesson> tasks = [];
   TableTapLocation tableTapLocation = TableTapLocation.unknown();
   bool? isAnimated = true;
   int yTap = 0;
@@ -196,8 +197,8 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
               mainAxisAlignment: MainAxisAlignment.end,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                const SizedBox(
-                  height: 60,
+                SizedBox(
+                  height: widget.headers[0].date!.isEmpty ? 30 : 50,
                   width: 60,
                   // child: SelectModeCalendar(
                   //   modeView: (mode){
@@ -370,7 +371,7 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
                           ///
                           ...List.generate(countEmptyTask, (i) {
                             return TaskEmpty(
-                              onTableTapLocation:(TableTapLocation value){
+                              onTableTapLocation: (TableTapLocation value) {
                                 widget.onTapTable.call(value);
                               },
                               index: i,
@@ -378,6 +379,7 @@ class _MyTimePlannerState extends State<MyTimePlanner> {
                               listHourInt: listHourInt,
                               listDaysInt: listDaysInt,
                               listIndexByDays: listIndexByDays,
+                              mainVerticalController: mainVerticalController,
                             );
                           }),
 
@@ -515,9 +517,11 @@ class TaskEmpty extends StatefulWidget {
       required this.listHourInt,
       required this.listIndexByDays,
       required this.listDaysInt,
-        required this.onTableTapLocation});
+      required this.onTableTapLocation,
+      required this.mainVerticalController});
 
   final int index;
+  final ScrollController mainVerticalController;
   final Function onTableTapLocation;
   final List<List<int>> listIndexByHour;
   final List<int> listHourInt;
@@ -554,7 +558,7 @@ class _TaskEmptyState extends State<TaskEmpty> {
     return x;
   }
 
-  int indexX(int index){
+  int indexX(int index) {
     for (var h in widget.listIndexByDays) {
       if (h.contains(index)) {
         return widget.listIndexByDays.indexOf(h);
@@ -563,13 +567,26 @@ class _TaskEmptyState extends State<TaskEmpty> {
     return -1;
   }
 
-  int indexY(int index){
+  int indexY(int index) {
     for (var h in widget.listIndexByHour) {
       if (h.contains(index)) {
         return widget.listIndexByHour.indexOf(h);
       }
     }
     return -1;
+  }
+
+  bool longPress = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    timer!.cancel();
+    super.dispose();
   }
 
   @override
@@ -584,29 +601,58 @@ class _TaskEmptyState extends State<TaskEmpty> {
       left: config.cellWidth! * x.toDouble(),
       child: GestureDetector(
         onDoubleTap: () {
-          widget.onTableTapLocation.call(TableTapLocation(y: indexY(widget.index), x: indexX(widget.index)));
+          widget.onTableTapLocation.call(TableTapLocation(
+              y: indexY(widget.index), x: indexX(widget.index)));
         },
-        onLongPress: () {
-          timer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
-            setState(() {
-              if (timer.tick > 5) {
-                timer.cancel();
-              } else if(timer.tick<5){
-                colorChoiceTable = colorOrange;
-                widthBorder = 1.5;
-              }
 
-            });
-          });
+        // onPanDown: (d) {
+        //   timer = Timer(const Duration(milliseconds: 400), () {
+        //     print('TAPPP TIME');
+        //     longPress = true;
+        //     timer!.cancel();
+        //   });
+        //   setState(() {
+        //     colorChoiceTable = colorOrange;
+        //     widthBorder = 1.5;
+        //   });
+        // },
+        //
+        // onPanCancel: () {
+        //   if (!longPress) {
+        //     setState(() {
+        //       colorChoiceTable = Colors.transparent;
+        //       widthBorder = 0.0;
+        //       timer!.cancel();
+        //     });
+        //   }
+        // },
+        // //
+        // onTapUp: (d) {
+        //   setState(() {
+        //     colorChoiceTable = Colors.transparent;
+        //     widthBorder = 0.0;
+        //     timer!.cancel();
+        //   });
+        // },
+        onLongPress: (){
+    setState(() {
+        colorChoiceTable = colorOrange;
+        widthBorder = 1.5;
+      });
         },
         onLongPressEnd: (d) {
-          timer?.cancel();
+          setState(() {
+            colorChoiceTable = Colors.transparent;
+            widthBorder = 0.0;
+          });
         },
         onLongPressUp: () {
           setState(() {
-            widget.onTableTapLocation.call(TableTapLocation(y: indexY(widget.index), x: indexX(widget.index)));
+            widget.onTableTapLocation.call(TableTapLocation(
+                y: indexY(widget.index), x: indexX(widget.index)));
             colorChoiceTable = Colors.transparent;
             widthBorder = 0.0;
+            timer!.cancel();
           });
         },
         child: AnimatedContainer(

@@ -175,38 +175,45 @@ class _TimelineScheduleState extends State<TimelineSchedule> with AuthMixin{
                     )
                 ),
               ),
-              InkWell(
-                onTap: (){
-                  if(data.$1){
-                    Dialoger.showModalBottomMenu(
-                        blurred: true,
-                        title: 'Информация об уроке'.tr(),
-                        args: [data.$2,false],
-                        content: InfoStatusLesson());
-                    return;
-                  };
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: SizedBox(
+                  height:  data.$1?64:30,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(5),
+                    onLongPress: (){
+                      if(data.$1){
+                        Dialoger.showModalBottomMenu(
+                            blurred: true,
+                            title: 'Информация об уроке'.tr(),
+                            args: [data.$2,false],
+                            content: InfoStatusLesson());
+                        return;
+                      };
 
-                  Dialoger.showModalBottomMenu(
-                      blurred: true,
-                      args: [_addLesson(
-                          idSchool: idSchool,
-                          nameTeacher: '${teacher.firstName} ${teacher.lastName}',
-                          idTeacher: teacher.id,
-                          timePeriod: _times[index],
-                          dateDay: widget.todayLessons.date),true],
-                      title: 'Добавить урок'.tr(),
-                      content: AddLesson());
-                },
-                child: Container(
-                  alignment: Alignment.centerLeft,
-                  margin: const EdgeInsets.symmetric(vertical: 5.0,horizontal: 20.0),
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: Text(_times[index],
-                      style:data.$1?
-                      TStyle.textStyleVelaSansExtraBolt(Theme.of(context)
-                          .textTheme.displayMedium!.color!,size: 15.0):
-                         TStyle.textStyleOpenSansRegular(Theme.of(context)
-                             .textTheme.displayMedium!.color!,size: 15.0))),
+                      Dialoger.showModalBottomMenu(
+                          blurred: true,
+                          args: [_addLesson(
+                              idSchool: idSchool,
+                              nameTeacher: '${teacher.firstName} ${teacher.lastName}',
+                              idTeacher: teacher.id,
+                              timePeriod: _times[index],
+                              dateDay: widget.todayLessons.date),true],
+                          title: 'Добавить урок'.tr(),
+                          content: AddLesson());
+                    },
+                    child: Container(
+                      alignment: Alignment.centerLeft,
+                      margin: const EdgeInsets.symmetric(vertical: 5.0,horizontal: 20.0),
+                      //padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                      child: Text(_times[index],
+                          style:data.$1?
+                          TStyle.textStyleVelaSansExtraBolt(Theme.of(context)
+                              .textTheme.displayMedium!.color!,size: 15.0):
+                             TStyle.textStyleOpenSansRegular(Theme.of(context)
+                                 .textTheme.displayMedium!.color!,size: 15.0))),
+                  ),
+                ),
               ),
 
             ],

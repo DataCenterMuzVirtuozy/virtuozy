@@ -399,6 +399,7 @@ class TableBloc extends Bloc<TableEvent, TableState> {
       } else {
         todayLessons = getDays(lessonsByIdSchool, false);
       }
+
       final tasks = getTasks(
           todayLesson: todayLessons,
           indexDate: event.indexDate,
@@ -510,7 +511,6 @@ class TableBloc extends Bloc<TableEvent, TableState> {
   (int, bool) indexByDateNow(List<TodayLessons> todayLessons, bool weekView,[String dateAdded = '']) {
     final dateNow = DateTime.now().toString().split(' ')[0];
     final dateNowEpoch = DateTime.now().millisecondsSinceEpoch;
-    print('Date ${dateAdded}');
     final dateAddedEpoch = DateFormat('yyyy-MM-dd')
         .parse(dateAdded)
         .millisecondsSinceEpoch;

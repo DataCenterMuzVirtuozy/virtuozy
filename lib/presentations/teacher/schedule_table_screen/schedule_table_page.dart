@@ -13,6 +13,8 @@ import 'package:virtuozy/components/table_mode_menu.dart';
 import 'package:virtuozy/domain/entities/lesson_entity.dart';
 import 'package:virtuozy/domain/entities/table_tap_location_entity.dart';
 import 'package:virtuozy/presentations/teacher/schedule_table_screen/table/my_time_planner.dart';
+import 'package:virtuozy/presentations/teacher/schedule_table_screen/table/task_lesson.dart';
+import 'package:virtuozy/presentations/teacher/schedule_table_screen/table/titles_table_planner.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/utils/auth_mixin.dart';
 import 'package:virtuozy/utils/date_time_parser.dart';
@@ -22,6 +24,7 @@ import '../../../components/date_page_table.dart';
 import '../../../components/dialogs/dialoger.dart';
 import '../../../components/select_school_menu.dart';
 import '../../../di/locator.dart';
+import '../../../domain/entities/titles_table.dart';
 import '../../../utils/text_style.dart';
 import '../../../utils/theme_provider.dart';
 import 'bloc/table_bloc.dart';
@@ -199,7 +202,7 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
                     Visibility(visible: false, child: SelectAuditoryMenu()),
                   ],
                 ),
-                const Gap(10.0),
+                const Gap(8),
                 if (state.status == TableStatus.loading) ...{
                   Expanded(
                     child: Center(
@@ -247,7 +250,7 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
                         setTimeOnAxis: false,
                         headers: [
                           ...List.generate(state.titles.length, (index) {
-                            return TimePlannerTitle(
+                            return TitlesTablePlanner(
                               date: state.titles[index].date.isEmpty
                                   ? ''
                                   : state.titles[index].date,
@@ -264,7 +267,7 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
                         // List of task will be show on the time planner
                         tasks: [
                           ...List.generate(state.tasks.length, (index) {
-                            return TimePlannerTask(
+                            return TaskLesson(
                               color: state.tasks[index].lesson.alien
                                   ? Colors.grey
                                   : StatusToColor.getColor(
@@ -286,7 +289,7 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
                                     content: InfoStatusLesson());
                               },
                               child: Padding(
-                                padding: const EdgeInsets.all(7.0),
+                                padding: const EdgeInsets.all(5.0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,
