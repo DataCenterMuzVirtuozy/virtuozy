@@ -51,14 +51,14 @@ class _DatePageViewState extends State<DatePageView> {
     final indexDate = context.watch<TodayScheduleBloc>().state.indexByDateNow;
     pageControllerDatesSchedule = PageController(initialPage: indexDate);
     final dateNow = DateTime.now().toString().split(' ')[0];
-    // pageControllerDatesSchedule.addListener(() {
-    //   if (widget.lessonsToday[pageControllerDatesSchedule.page!.toInt()].date ==
-    //       dateNow) {
-    //     widget.onVisibleTodayButton.call(false);
-    //   } else {
-    //     widget.onVisibleTodayButton.call(true);
-    //   }
-    // });
+    pageControllerDatesSchedule.addListener(() {
+      if (widget.lessonsToday[pageControllerDatesSchedule.page!.toInt()].date ==
+          dateNow) {
+        widget.onVisibleTodayButton.call(false);
+      } else {
+        widget.onVisibleTodayButton.call(true);
+      }
+    });
     page = indexDate;
     countLessons = getCountLessons(
         lessonsToday: widget.lessonsToday, weekMode: widget.weekMode);

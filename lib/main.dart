@@ -14,6 +14,7 @@ import 'package:virtuozy/presentations/student/profile_screen/bloc/profile_bloc.
 import 'package:virtuozy/presentations/student/schedule_screen/bloc/schedule_bloc.dart';
 import 'package:virtuozy/presentations/student/splash_screen/splash_page.dart';
 import 'package:virtuozy/presentations/student/subscription_screen/bloc/sub_bloc.dart';
+import 'package:virtuozy/presentations/teacher/clients_screen/bloc/clients_bloc.dart';
 import 'package:virtuozy/presentations/teacher/clients_screen/clients_page.dart';
 import 'package:virtuozy/presentations/teacher/schedule_table_screen/bloc/table_bloc.dart';
 import 'package:virtuozy/presentations/teacher/today_schedule_screen/bloc/today_schedule_bloc.dart';
@@ -26,6 +27,7 @@ import 'package:virtuozy/utils/theme_provider.dart';
 
 import 'components/dialogs/dialoger.dart';
 import 'di/locator.dart';
+import 'presentations/teacher/lids_screen/bloc/lids_bloc.dart';
 
 
 void main() async {
@@ -87,7 +89,9 @@ class _MyAppState extends State<MyApp> {
               BlocProvider<DocsBloc>(create: (_)=>DocsBloc()),
               BlocProvider<ProfileBloc>(create: (_)=> ProfileBloc()),
               BlocProvider<TodayScheduleBloc>(create: (_)=>TodayScheduleBloc()),
-              BlocProvider<TableBloc>(create: (_)=>TableBloc())
+              BlocProvider<TableBloc>(create: (_)=>TableBloc()),
+              BlocProvider<ClientsBloc>(create: (_)=>ClientsBloc()),
+              BlocProvider<LidsBloc>(create: (_)=> LidsBloc())
             ],
             child: MaterialApp.router(
               title: 'Flutter Demo',

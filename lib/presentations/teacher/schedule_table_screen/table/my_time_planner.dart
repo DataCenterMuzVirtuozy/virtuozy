@@ -535,7 +535,7 @@ class TaskEmpty extends StatefulWidget {
 class _TaskEmptyState extends State<TaskEmpty> {
   double widthBorder = 0.0;
   Color colorChoiceTable = Colors.transparent;
-  Timer? timer;
+
 
   int yLocation(int index) {
     int y = 0;
@@ -585,7 +585,6 @@ class _TaskEmptyState extends State<TaskEmpty> {
 
   @override
   void dispose() {
-    timer!.cancel();
     super.dispose();
   }
 
@@ -605,35 +604,28 @@ class _TaskEmptyState extends State<TaskEmpty> {
               y: indexY(widget.index), x: indexX(widget.index)));
         },
 
-        // onPanDown: (d) {
-        //   timer = Timer(const Duration(milliseconds: 400), () {
-        //     print('TAPPP TIME');
-        //     longPress = true;
-        //     timer!.cancel();
-        //   });
-        //   setState(() {
-        //     colorChoiceTable = colorOrange;
-        //     widthBorder = 1.5;
-        //   });
-        // },
-        //
-        // onPanCancel: () {
-        //   if (!longPress) {
-        //     setState(() {
-        //       colorChoiceTable = Colors.transparent;
-        //       widthBorder = 0.0;
-        //       timer!.cancel();
-        //     });
-        //   }
-        // },
-        // //
-        // onTapUp: (d) {
-        //   setState(() {
-        //     colorChoiceTable = Colors.transparent;
-        //     widthBorder = 0.0;
-        //     timer!.cancel();
-        //   });
-        // },
+        onTapDown: (f){
+          setState(() {
+            colorChoiceTable = colorOrange;
+            widthBorder = 1.5;
+          });
+        },
+        onPanCancel: () {
+          if (!longPress) {
+            setState(() {
+              colorChoiceTable = Colors.transparent;
+              widthBorder = 0.0;
+            });
+          }
+        },
+
+        onTapUp: (d) {
+          setState(() {
+            colorChoiceTable = Colors.transparent;
+            widthBorder = 0.0;
+
+          });
+        },
         onLongPress: (){
     setState(() {
         colorChoiceTable = colorOrange;
@@ -652,7 +644,7 @@ class _TaskEmptyState extends State<TaskEmpty> {
                 y: indexY(widget.index), x: indexX(widget.index)));
             colorChoiceTable = Colors.transparent;
             widthBorder = 0.0;
-            timer!.cancel();
+
           });
         },
         child: AnimatedContainer(

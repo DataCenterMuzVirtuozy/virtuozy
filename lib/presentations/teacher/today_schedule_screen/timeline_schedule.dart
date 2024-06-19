@@ -180,6 +180,9 @@ class _TimelineScheduleState extends State<TimelineSchedule> with AuthMixin{
                 child: SizedBox(
                   height:  data.$1?64:30,
                   child: InkWell(
+                    onTap: (){
+                      Dialoger.showToast('Нажми и держи'.tr());
+                    },
                     borderRadius: BorderRadius.circular(5),
                     onLongPress: (){
                       if(data.$1){

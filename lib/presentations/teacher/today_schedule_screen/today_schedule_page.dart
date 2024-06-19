@@ -112,6 +112,7 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
                         loading: state.status == TodayScheduleStatus.loading,
                         onVisibleTodayButton: (visible){
                           setState(() {
+                            print('Visble today');
                             _visibleTodayButton = visible;
                           });
 
