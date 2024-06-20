@@ -4,6 +4,7 @@
 
   import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:virtuozy/data/models/lids_model.dart';
 import 'package:virtuozy/data/models/teacher_model.dart';
 import 'package:virtuozy/data/models/user_model.dart';
 import 'package:virtuozy/domain/entities/lesson_entity.dart';
@@ -76,6 +77,21 @@ class TeacherService{
         throw  Failure(e.message!);
       }
 
+    }
+
+    Future<List<dynamic>> getLids({required int idTeacher}) async {
+      try{
+        final res = await _dio.get(Endpoints.lids,
+            queryParameters: {
+              'idTeacher': idTeacher
+            });
+
+        return res.data;
+      } on Failure catch(e){
+        throw  Failure(e.message);
+      } on DioException catch(e){
+        throw  Failure(e.message!);
+      }
     }
 
 

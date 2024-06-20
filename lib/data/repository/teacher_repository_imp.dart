@@ -8,8 +8,10 @@ import 'package:virtuozy/domain/entities/teacher_entity.dart';
 import 'package:virtuozy/domain/repository/teacher_repository.dart';
 
 import '../../di/locator.dart';
+import '../../domain/entities/lids_entity.dart';
 
 class TeacherRepositoryImpl extends TeacherRepository{
+
 
   final _util = locator.get<TeacherUtil>();
 
@@ -26,6 +28,11 @@ class TeacherRepositoryImpl extends TeacherRepository{
   @override
   Future<void> addLesson({required Lesson lesson}) async {
     await _util.addLesson(lessonModel: LessonMapper.toApi(lesson));
+  }
+
+  @override
+  Future<List<LidsEntity>> getLids({required int idTeacher}) async {
+   return await _util.getLids(idTeacher:idTeacher);
   }
 
 }

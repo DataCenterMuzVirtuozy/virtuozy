@@ -8,5 +8,12 @@ class LidsEvent extends Equatable{
   // TODO: implement props
   List<Object?> get props => [];
 
+  const LidsEvent();
+}
 
+
+ class GetListEvent extends LidsEvent{
+  final int idTeacher;
+
+  const GetListEvent({required this.idTeacher});
 }

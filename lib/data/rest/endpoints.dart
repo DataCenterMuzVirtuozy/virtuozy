@@ -5,6 +5,7 @@ class Endpoints{
   static const String teacher = '/teachers';
   static const String lessons = '/lessons';
   static const String subsUser = '/subsUser';
+  static const String lids = '/lids';
   static const String subscriptions = '/subscriptions';
   static const String transactions = '/transactions';
   static const String uploads = '/uploads';
