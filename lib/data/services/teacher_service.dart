@@ -95,7 +95,21 @@ class TeacherService{
     }
 
 
+  Future<List<dynamic>> getClients({required int idTeacher}) async{
+    try{
+      final res = await _dio.get(Endpoints.clients,
+          queryParameters: {
+            'idTeacher': idTeacher
+          });
 
+      return res.data;
+    } on Failure catch(e){
+      throw  Failure(e.message);
+    } on DioException catch(e){
+      throw  Failure(e.message!);
+    }
+
+  }
 
 
 

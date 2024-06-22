@@ -3,6 +3,7 @@
 
   import 'package:virtuozy/data/mappers/lesson_mapper.dart';
 import 'package:virtuozy/data/utils/teacher_util.dart';
+import 'package:virtuozy/domain/entities/client_entity.dart';
 import 'package:virtuozy/domain/entities/lesson_entity.dart';
 import 'package:virtuozy/domain/entities/teacher_entity.dart';
 import 'package:virtuozy/domain/repository/teacher_repository.dart';
@@ -33,6 +34,11 @@ class TeacherRepositoryImpl extends TeacherRepository{
   @override
   Future<List<LidsEntity>> getLids({required int idTeacher}) async {
    return await _util.getLids(idTeacher:idTeacher);
+  }
+
+  @override
+  Future<List<ClientEntity>> getClients({required int idTeacher}) async {
+    return await _util.getClients(idTeacher: idTeacher);
   }
 
 }

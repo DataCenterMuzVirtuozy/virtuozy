@@ -8,4 +8,9 @@ class ClientsEvent extends Equatable{
   List<Object?> get props => [];
 
 }
+class GetClientsEvent extends ClientsEvent{
+
+}
+
+
 

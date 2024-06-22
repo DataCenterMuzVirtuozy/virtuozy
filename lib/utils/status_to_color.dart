@@ -7,6 +7,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 
+import '../domain/entities/client_entity.dart';
 import '../domain/entities/lesson_entity.dart';
 
 class StatusToColor{
@@ -127,6 +128,17 @@ class StatusToColor{
     }
 
     return LessonType.unknown;
+  }
+
+  static ClientStatus clientStatusFromApi(int status){
+    switch(status){
+      case 1: return ClientStatus.action;
+      case 2: return ClientStatus.archive;
+      case 3: return ClientStatus.replacement;
+   }
+
+   return ClientStatus.unknown;
+
   }
 
 
