@@ -16,6 +16,7 @@ class ClientEntity{
      final int idStudent;
      final String dateLestLesson;
      final LessonStatus statusLastLesson;
+     final LessonStatus statusNearLesson;
      final String phoneNum;
      final int countAllLesson;
      final int countBalanceLesson;
@@ -29,9 +30,16 @@ class ClientEntity{
      final String nameSub;
      final String dOa;
      final ClientStatus  status;
+     final int outL;
+     final int cancelL;
+     final int plannedL;
 
      ClientEntity(
       {
+        required this.outL,
+        required this.plannedL,
+        required this.cancelL,
+        required this.statusNearLesson,
         required this.timeNearLesson,
         required this.status,
         required this.name,

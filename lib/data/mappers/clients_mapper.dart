@@ -9,7 +9,9 @@ class ClientsMapper{
 
 
     static ClientEntity fromApi({required ClientModel model}){
-      return ClientEntity(name: model.name,
+      return ClientEntity(
+        statusNearLesson: StatusToColor.lessonStatusFromApi(model.statusNearLesson),
+          name: model.name,
           idStudent: model.idStudent,
           dateLestLesson: model.dateLestLesson,
           statusLastLesson: StatusToColor.lessonStatusFromApi(model.statusLastLesson),
@@ -23,8 +25,12 @@ class ClientsMapper{
           idSchool: model.idSchool,
           nameTeacher:model. nameTeacher,
           nameSub: model.nameSub,
-          dOa: model.dOa, status: StatusToColor.clientStatusFromApi(model.status),
-          timeNearLesson: model.timeNearLesson);
+          dOa: model.dOa,
+          status: StatusToColor.clientStatusFromApi(model.status),
+          timeNearLesson: model.timeNearLesson,
+          outL: model.outL,
+          plannedL: model.plannedL,
+          cancelL: model.cancelL);
     }
 
 

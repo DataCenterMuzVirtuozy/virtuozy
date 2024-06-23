@@ -7,6 +7,7 @@
    final int idStudent;
    final String dateLestLesson;
    final int statusLastLesson;
+   final int statusNearLesson;
    final String phoneNum;
    final int countAllLesson;
    final int countBalanceLesson;
@@ -20,9 +21,16 @@
    final String dOa;
    final int status;
    final String timeNearLesson;
+   final int outL;
+   final int cancelL;
+   final int plannedL;
 
    ClientModel(
       {
+        required this.outL,
+        required this.plannedL,
+        required this.cancelL,
+        required this.statusNearLesson,
         required this.timeNearLesson,
         required this.status,
         required this.name,
@@ -44,11 +52,15 @@
 
    factory ClientModel.fromApi({required Map<String,dynamic> map}){
      return ClientModel(
+         outL: map['outL'],
+         plannedL: map['plannedL'],
+         cancelL: map['cancelL'],
+       statusNearLesson: map['statusNearLesson'],
        timeNearLesson: map['timeNearLesson'],
        status: map['status'],
          name: map['name'],
          idStudent: map['idStudent'],
-         dateLestLesson: map['dateLestLesson'],
+         dateLestLesson: map['dateLastLesson'],
          statusLastLesson: map['statusLastLesson'],
          phoneNum: map['phoneNum'],
          countAllLesson: map['countAllLesson'],

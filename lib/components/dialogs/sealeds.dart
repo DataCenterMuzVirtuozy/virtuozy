@@ -15,6 +15,7 @@ import 'package:virtuozy/domain/entities/document_entity.dart';
 import 'package:virtuozy/domain/entities/teacher_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 
+import '../../domain/entities/client_entity.dart';
 import '../../domain/entities/lesson_entity.dart';
 import 'contents/alert_dialog/add_new_lesson_content.dart';
 import 'contents/alert_dialog/edit_status_lesson_content.dart';
@@ -162,7 +163,7 @@ class FindSubways extends DialogsContent{
 class DetailsClient extends DialogsContent{
   @override
   build({required BuildContext context, Object? args}) {
-    return const DetailsClientContent();
+    return  DetailsClientContent(client: args as ClientEntity);
   }
 
 }

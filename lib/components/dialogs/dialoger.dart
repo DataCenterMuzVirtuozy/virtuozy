@@ -102,7 +102,7 @@ class Dialoger {
             ListBonuses() => ListBonuses().build(context: _, args: args),
             ListSupport() => ListSupport().build(context: _, args: args),
             FindSubways() => FindSubways().build(context: _),
-            DetailsClient() => DetailsClient().build(context: _),
+            DetailsClient() => DetailsClient().build(context: _,args: args),
             AddLesson() => AddLesson().build(context: _,args: args),
             InfoStatusLesson() => InfoStatusLesson().build(context: _,args: args),
           };

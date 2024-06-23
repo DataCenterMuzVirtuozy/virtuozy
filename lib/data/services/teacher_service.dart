@@ -101,7 +101,7 @@ class TeacherService{
           queryParameters: {
             'idTeacher': idTeacher
           });
-
+       print('DAte ${res.data}');
       return res.data;
     } on Failure catch(e){
       throw  Failure(e.message);
