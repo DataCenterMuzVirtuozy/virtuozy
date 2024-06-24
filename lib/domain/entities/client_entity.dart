@@ -7,6 +7,8 @@
    action,
    archive,
    replacement,
+   trial,
+   empty,
    unknown
  }
 

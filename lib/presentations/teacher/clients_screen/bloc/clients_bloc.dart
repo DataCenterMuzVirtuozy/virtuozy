@@ -29,7 +29,8 @@ class ClientsBloc extends Bloc<ClientsEvent,ClientsState>{
       final clientsFromApi = await _teacherRepository.getClients(idTeacher: idT);
       final action = clientsFromApi.where((element) => element.status == ClientStatus.action).toList();
       final archive = clientsFromApi.where((element) => element.status == ClientStatus.archive).toList();
-      final today = clientsFromApi.where((element) => element.dateNearLesson == dateNow).toList();
+      final today = clientsFromApi.where((element) => element.dateNearLesson == dateNow&&element.status!=ClientStatus.trial||
+      element.status!=ClientStatus.empty).toList();
       final replacement = clientsFromApi.where((element) => element.status == ClientStatus.replacement).toList();
       final clients = clientsFromApi.where((element) => element.status != ClientStatus.archive).toList();
       await emit(state.copyWith(status: ClientsStatus.loaded,all: clients,action: action,archive: archive,today: today,

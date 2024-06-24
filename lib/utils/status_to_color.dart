@@ -132,9 +132,11 @@ class StatusToColor{
 
   static ClientStatus clientStatusFromApi(int status){
     switch(status){
+      case 0: return ClientStatus.empty;
       case 1: return ClientStatus.action;
       case 2: return ClientStatus.archive;
       case 3: return ClientStatus.replacement;
+      case 4: return ClientStatus.trial;
    }
 
    return ClientStatus.unknown;

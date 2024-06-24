@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:virtuozy/components/box_info.dart';
+import 'package:virtuozy/domain/entities/client_entity.dart';
 import 'package:virtuozy/domain/entities/lids_entity.dart';
 import 'package:virtuozy/presentations/teacher/lids_screen/bloc/lids_bloc.dart';
 import 'package:virtuozy/presentations/teacher/lids_screen/bloc/lids_event.dart';
@@ -15,6 +16,7 @@ import 'package:virtuozy/utils/auth_mixin.dart';
 import 'package:virtuozy/utils/date_time_parser.dart';
 
 import '../../../components/dialogs/dialoger.dart';
+import '../../../components/dialogs/sealeds.dart';
 import '../../../domain/entities/lesson_entity.dart';
 import '../../../resourses/colors.dart';
 import '../../../utils/status_to_color.dart';
@@ -123,17 +125,22 @@ class _LidsPageState extends State<LidsPage> with TickerProviderStateMixin,AuthM
 class ItemMyLids extends StatelessWidget{
   const ItemMyLids({super.key, required this.lid});
 
-  final LidsEntity lid;
+  final ClientEntity lid;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap:(){
-        Dialoger.showToast('В карту клиента');
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(10),
+        onTap:(){
+          Dialoger.showModalBottomMenu(
+              title: lid.name,
+              args: lid,
+              blurred: true,
+              content: DetailsClient());
 
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        },
         child: Column(
           children: [
             Row(
@@ -159,7 +166,7 @@ class ItemMyLids extends StatelessWidget{
               children: [
                 Text('Дата создания: ',
                     style:TStyle.textStyleOpenSansRegular(colorGrey,size: 12.0)),
-                Text('${DateTimeParser.getDateFromApi(date: lid.dateCreated.split('/')[0])}/${lid.dateCreated.split('/')[1]}',
+                Text('${DateTimeParser.getDateFromApi(date: lid.dateCreate)}',
                     style:TStyle.textStyleVelaSansBold(colorGrey,size: 12.0)),
               ],
             ),
@@ -176,15 +183,20 @@ class ItemMyLids extends StatelessWidget{
 
   class ItemTrialLids extends StatelessWidget{
     const ItemTrialLids({super.key, required this.lid});
-    final LidsEntity lid;
+    final ClientEntity lid;
     @override
     Widget build(BuildContext context) {
-      return InkWell(
-        onTap:(){
-
-        },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(10),
+          onTap:(){
+            Dialoger.showModalBottomMenu(
+                title: lid.name,
+                args: lid,
+                blurred: true,
+                content: DetailsClient());
+          },
           child: Column(
             children: [
               Row(
@@ -211,7 +223,7 @@ class ItemMyLids extends StatelessWidget{
                 children: [
                   Text('Дата создания: ',
                       style:TStyle.textStyleOpenSansRegular(colorGrey,size: 12.0)),
-                  Text('${DateTimeParser.getDateFromApi(date: lid.dateCreated.split('/')[0])}/${lid.dateCreated.split('/')[1]}',
+                  Text('${DateTimeParser.getDateFromApi(date: lid.dateCreate)}',
                       style:TStyle.textStyleVelaSansBold(colorGrey,size: 12.0)),
                 ],
               ),
@@ -221,7 +233,7 @@ class ItemMyLids extends StatelessWidget{
                 children: [
                   Text('Дата ПУ: ',
                       style:TStyle.textStyleOpenSansRegular(colorGrey,size: 12.0)),
-                  Text('${DateTimeParser.getDateFromApi(date: lid.dateTrial.split('/')[0])}/${lid.dateTrial.split('/')[1]}',
+                  Text('${DateTimeParser.getDateFromApi(date: lid.dateNearLesson)}/${lid.timeNearLesson}',
                       style:TStyle.textStyleVelaSansBold(colorGrey,size: 12.0)),
                 ],
               ),
@@ -238,28 +250,43 @@ class ItemMyLids extends StatelessWidget{
 
   class ItemLids extends StatelessWidget{
     const ItemLids({super.key, required this.lid});
-    final LidsEntity lid;
+    final ClientEntity lid;
     @override
     Widget build(BuildContext context) {
-      return InkWell(
-        onTap:(){
-
-        },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(10),
+          onTap:(){
+            Dialoger.showModalBottomMenu(
+                title: lid.name,
+                args: lid,
+                blurred: true,
+                content: DetailsClient());
+          },
           child: Column(
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.person,color: colorGreen,size: 18.0),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 3),
+                        child: Icon(Icons.person,color: colorGreen,size: 18.0),
+                      ),
                       const Gap(3.0),
-                      Text(lid.name,
-                          style:TStyle.textStyleVelaSansBold(colorGrey,size: 16.0)),
+                      SizedBox(
+                        width: 210,
+                        child: Text(lid.name,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style:TStyle.textStyleVelaSansBold(colorGrey,size: 16.0)),
+                      ),
                     ],
                   ),
+                  const Gap(15),
                   Row(
                     children: [
                       Container(
@@ -294,20 +321,20 @@ class ItemMyLids extends StatelessWidget{
                 children: [
                   Text('Дата создания: ',
                       style:TStyle.textStyleOpenSansRegular(colorGrey,size: 12.0)),
-                  Text('${DateTimeParser.getDateFromApi(date: lid.dateCreated.split('/')[0])}/${lid.dateCreated.split('/')[1]}',
+                  Text('${DateTimeParser.getDateFromApi(date: lid.dateCreate)}',
                       style:TStyle.textStyleVelaSansBold(colorGrey,size: 12.0)),
                 ],
               ),
               Visibility(
-                visible: lid.dateTrial.isNotEmpty,
+                visible: lid.status == ClientStatus.trial,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text('Дата ПУ: ',
                         style:TStyle.textStyleOpenSansRegular(colorGrey,size: 12.0)),
-                    Text('${DateTimeParser.getDateFromApi(date: lid.dateTrial.isEmpty?'':
-                    lid.dateTrial.split('/')[0])}/${lid.dateTrial.isEmpty?'':lid.dateTrial.split('/')[1]}',
+                    Text('${DateTimeParser.getDateFromApi(date:
+                   lid.dateNearLesson)}/${lid.timeNearLesson}',
                         style:TStyle.textStyleVelaSansBold(colorGrey,size: 12.0)),
                   ],
                 ),
@@ -320,9 +347,10 @@ class ItemMyLids extends StatelessWidget{
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Дата последнего урока: ',
+                      Text(lid.dateLestLesson.isNotEmpty?'Дата последнего урока: ':'Дата ближ. урока: ',
                           style:TStyle.textStyleOpenSansRegular(colorGrey,size: 12.0)),
-                      Text('${DateTimeParser.getDateFromApi(date: lid.dateLastLesson.split('/')[0])}/${lid.dateLastLesson.split('/')[1]}',
+                      Text('${DateTimeParser.getDateFromApi(date: //todo time last lesson
+                      lid.dateLestLesson.isNotEmpty?lid.dateLestLesson:lid.dateNearLesson)}/${lid.timeNearLesson}',
                           style:TStyle.textStyleVelaSansBold(textColorBlack(context),size: 12.0)),
                     ],
                   ),
@@ -330,11 +358,15 @@ class ItemMyLids extends StatelessWidget{
                     padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 2),
                     decoration:  BoxDecoration(
                         color:  StatusToColor.getColor(
-                            lessonStatus: LessonStatus.cancel),
-                        borderRadius: BorderRadius.circular(5)
+                            lessonStatus: lid.dateLestLesson.isNotEmpty?lid.statusLastLesson:lid.statusNearLesson),
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(
+                            color:  lid.dateLestLesson.isNotEmpty&&lid.statusLastLesson.isComplete||lid.statusLastLesson.isPlanned
+                                ? textColorBlack(context)
+                                : Colors.transparent)
                     ),
                     child: Text(
-                        StatusToColor.getNameStatus(lid.lessonLastStatus),
+                        StatusToColor.getNameStatus(lid.dateLestLesson.isNotEmpty?lid.statusLastLesson:lid.statusNearLesson),
                         textAlign: TextAlign.center,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,

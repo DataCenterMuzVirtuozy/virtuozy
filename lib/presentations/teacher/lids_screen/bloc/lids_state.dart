@@ -1,6 +1,7 @@
 
 
   import 'package:equatable/equatable.dart';
+import 'package:virtuozy/domain/entities/client_entity.dart';
 
 import '../../../../domain/entities/lids_entity.dart';
 
@@ -23,18 +24,18 @@ class LidsState extends Equatable{
 
   final String error;
   final LidsStatus status;
-  final List<LidsEntity> lids;
-  final List<LidsEntity> lidsMy;
-  final List<LidsEntity> lidsTrial;
+  final List<ClientEntity> lids;
+  final List<ClientEntity> lidsMy;
+  final List<ClientEntity> lidsTrial;
 
   const LidsState( {required this.error, required this.status,required this.lids,required this.lidsMy,required this.lidsTrial});
   factory LidsState.unknown(){
     return const LidsState(error: '', status: LidsStatus.unknown,lids: [],lidsMy: [],lidsTrial: []);
   }
 
-  LidsState copyWith({String? error,LidsStatus? status,List<LidsEntity>? lids,
-  List<LidsEntity>? lidsMy,
-  List<LidsEntity>? lidsTrial}){
+  LidsState copyWith({String? error,LidsStatus? status,List<ClientEntity>? lids,
+  List<ClientEntity>? lidsMy,
+  List<ClientEntity>? lidsTrial}){
     return LidsState(error: error??this.error, status: status??this.status,lids: lids??this.lids,
     lidsTrial: lidsTrial??this.lidsTrial,
     lidsMy: lidsMy??this.lidsMy);
