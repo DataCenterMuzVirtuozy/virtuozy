@@ -79,20 +79,20 @@ class TeacherService{
 
     }
 
-    Future<List<dynamic>> getLids({required int idTeacher}) async {
-      try{
-        final res = await _dio.get(Endpoints.lids,
-            queryParameters: {
-              'idTeacher': idTeacher
-            });
-
-        return res.data;
-      } on Failure catch(e){
-        throw  Failure(e.message);
-      } on DioException catch(e){
-        throw  Failure(e.message!);
-      }
-    }
+    // Future<List<dynamic>> getLids({required int idTeacher}) async {
+    //   try{
+    //     final res = await _dio.get(Endpoints.lids,
+    //         queryParameters: {
+    //           'idTeacher': idTeacher
+    //         });
+    //
+    //     return res.data;
+    //   } on Failure catch(e){
+    //     throw  Failure(e.message);
+    //   } on DioException catch(e){
+    //     throw  Failure(e.message!);
+    //   }
+    // }
 
 
   Future<List<dynamic>> getClients({required int idTeacher}) async{

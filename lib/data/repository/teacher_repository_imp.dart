@@ -31,10 +31,10 @@ class TeacherRepositoryImpl extends TeacherRepository{
     await _util.addLesson(lessonModel: LessonMapper.toApi(lesson));
   }
 
-  @override
-  Future<List<LidsEntity>> getLids({required int idTeacher}) async {
-   return await _util.getLids(idTeacher:idTeacher);
-  }
+  // @override
+  // Future<List<LidsEntity>> getLids({required int idTeacher}) async {
+  //  return await _util.getLids(idTeacher:idTeacher);
+  // }
 
   @override
   Future<List<ClientEntity>> getClients({required int idTeacher}) async {

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:virtuozy/utils/date_time_parser.dart';
 
 import '../../../../domain/entities/client_entity.dart';
@@ -18,10 +19,20 @@ class DetailsClientContent extends StatelessWidget {
 
   final ClientEntity client;
 
+
+  Future<void> _launchUrlTel({required String tel}) async {
+    final Uri url = Uri(
+        scheme:'tel',
+        path: tel);
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
 
-    print('Status ${client.status}');
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15).copyWith(bottom: 15),
       child: Column(
@@ -30,53 +41,52 @@ class DetailsClientContent extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Дата создания: ',
-                      style: TStyle.textStyleOpenSansRegular(colorGrey,
-                          size: 14.0)),
-                  Text(DateTimeParser.getDateFromApi(date: client.dateCreate),
-                      style: TStyle.textStyleVelaSansBold(
-                          Theme.of(context).textTheme.displayMedium!.color!,
-                          size: 12.0))
-                ],
+              // Column(
+              //   crossAxisAlignment: CrossAxisAlignment.start,
+              //   children: [
+              //     Text('Дата создания: ',
+              //         style: TStyle.textStyleOpenSansRegular(colorGrey,
+              //             size: 14.0)),
+              //     Text(DateTimeParser.getDateFromApi(date: client.dateCreate),
+              //         style: TStyle.textStyleVelaSansBold(
+              //             Theme.of(context).textTheme.displayMedium!.color!,
+              //             size: 12.0))
+              //   ],
+              // ),
+              GestureDetector(
+                onTap: (){
+                  _launchUrlTel(tel: client.phoneNum);
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.phone, color: colorGreen, size: 15.0),
+                    const Gap(5),
+                    Text(client.phoneNum,
+                        style: TStyle.textStyleVelaSansMedium(colorGrey,
+                            size: 15.0)),
+                  ],
+                ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.phone, color: colorGreen, size: 14.0),
-                      const Gap(5),
-                      Text(client.phoneNum,
-                          style: TStyle.textStyleVelaSansMedium(colorGrey,
-                              size: 13.0)),
-                    ],
-                  ),
-                  const Gap(5),
-                  Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: colorGreyLight
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 4,vertical: 2),
-                    child: Row(
-                      children: [
-                        Icon(Icons.location_on_outlined,size: 9,color:
-                        Theme.of(context).textTheme.displayMedium!.color!),
-                        const Gap(2),
-                        Text(client.idSchool,
-                            style:TStyle.textStyleVelaSansMedium(Theme.of(context).textTheme.displayMedium!.color!,
-                                size: 8.0)),
-                      ],
-                    ),
-                  )
-
-                ],
+              Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: colorGreyLight
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 4,vertical: 2),
+                child: Row(
+                  children: [
+                    Icon(Icons.location_on_outlined,size: 9,color:
+                    Theme.of(context).textTheme.displayMedium!.color!),
+                    const Gap(2),
+                    Text(client.idSchool,
+                        style:TStyle.textStyleVelaSansMedium(Theme.of(context).textTheme.displayMedium!.color!,
+                            size: 10.0)),
+                  ],
+                ),
               ),
             ],
           ),
+          const Gap(10),
           Divider(color: colorGrey),
           Visibility(
             visible: client.status==ClientStatus.archive||

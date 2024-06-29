@@ -29,22 +29,56 @@ class LidsPage extends StatefulWidget{
   State<LidsPage> createState() => _LidsPageState();
 }
 
-class _LidsPageState extends State<LidsPage> with TickerProviderStateMixin,AuthMixin{
+class _LidsPageState extends State<LidsPage> with AuthMixin{
 
-  late TabController _tabController;
+
+  final List<ClientEntity> _myLidsResult = [];
+  List<ClientEntity> _myLids = [];
+  List<ClientEntity> _trialLids = [];
+  List<ClientEntity> _allLids = [];
+  final List<ClientEntity> _puLidsResult = [];
+  final List<ClientEntity> _allLidsResult = [];
+
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 5, vsync: this);
+
     context.read<LidsBloc>().add(GetListEvent(idTeacher: teacher.id));
 
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
+
     super.dispose();
+  }
+
+  void _handleSearchMyLids(String input) {
+    _myLidsResult.clear();
+    _puLidsResult.clear();
+    _allLidsResult.clear();
+    for (var str in _trialLids) {
+      if (str.name.toLowerCase().contains(input.toLowerCase())) {
+        setState(() {
+          _puLidsResult.add(str);
+        });
+      }
+    }
+    for (var str in _allLids) {
+      if (str.name.toLowerCase().contains(input.toLowerCase())) {
+        setState(() {
+          _allLidsResult.add(str);
+        });
+      }
+    }
+    for (var str in _myLids) {
+      if (str.name.toLowerCase().contains(input.toLowerCase())) {
+        setState(() {
+          _myLidsResult.add(str);
+        });
+      }
+    }
   }
 
   @override
@@ -53,6 +87,10 @@ class _LidsPageState extends State<LidsPage> with TickerProviderStateMixin,AuthM
       body: BlocConsumer<LidsBloc,LidsState>(
         listener: (c,s){},
         builder: (context,state) {
+
+           _myLids = state.lidsMy;
+           _allLids = state.lids;
+           _trialLids = state.lidsTrial;
 
           if(state.status.isError){
             return Center(
@@ -67,50 +105,83 @@ class _LidsPageState extends State<LidsPage> with TickerProviderStateMixin,AuthM
           }
           return DefaultTabController(
               length: 3,
-              child: Column(
-                children: [
-                  TabBar(
-                    isScrollable: true,
-                    tabs: [
-                      Text('Мои Лиды'.tr(),style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
-                      Text('ПУ - Назначен'.tr(),style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
-                      Text('Все'.tr(),style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height-150,
-                      child: TabBarView(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SearchClients(
+                      onChange: (d){
+                          setState(() {
+                            _handleSearchMyLids(d);
+                          });
+                      },
+                    ),
+                    TabBar(
+                      //controller: _tabController,
+                      isScrollable: true,
+                      tabs: [
+                        Text('Мои Лиды'.tr(),style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
+                        Text('ПУ - Назначен'.tr(),style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
+                        Text('Все'.tr(),style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: SizedBox(
+                        height: MediaQuery.of(context).size.height-200,
+                        child: TabBarView(
+                          children: [
+                        ListView(
                         children: [
-                      ListView(
-                      children: [
-                      ...List.generate(state.lidsMy.length, (index) {
-                        return ItemMyLids(lid: state.lidsMy[index]);
-                      })
-                      ],
-                    ),
-                    ListView(
-                      children: [
-                        ...List.generate(state.lidsTrial.length, (index) {
-                          return ItemTrialLids(lid: state.lidsTrial[index]);
-                        })
-                      ],
-                    ),
-                    ListView(
-                      children: [
-                        ...List.generate(state.lids.length, (index) {
-                          return ItemLids(lid: state.lids[index]);
-                        })
-                      ],
-                    )
+                          if(_myLidsResult.isEmpty)...{
+                            ...List.generate(_myLids.length, (index) {
+                              return ItemMyLids(lid: _myLids[index]);
+                            })
+                          }else...{
+                            ...List.generate(_myLidsResult.length, (index) {
+                              return ItemMyLids(lid: _myLidsResult[index]);
+                            })
+                          }
+
+
 
                         ],
+                      ),
+                      ListView(
+                        children: [
 
+                          if(_puLidsResult.isEmpty)...{
+                            ...List.generate(_trialLids.length, (index) {
+                              return ItemMyLids(lid: _trialLids[index]);
+                            })
+                          }else...{
+                            ...List.generate(_puLidsResult.length, (index) {
+                              return ItemTrialLids(lid: _puLidsResult[index]);
+                            })
+                          }
+                        ],
+                      ),
+                      ListView(
+                        children: [
+                          if(_allLidsResult.isEmpty)...{
+                            ...List.generate(_allLids.length, (index) {
+                              return ItemMyLids(lid: _allLids[index]);
+                            })
+                          }else...{
+                            ...List.generate(_allLidsResult.length, (index) {
+                              return ItemLids(lid: _allLidsResult[index]);
+                            })
+                          }
+
+                        ],
+                      )
+
+                          ],
+
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               )
 
 
@@ -120,6 +191,53 @@ class _LidsPageState extends State<LidsPage> with TickerProviderStateMixin,AuthM
     );
 
   }
+}
+
+class SearchClients extends StatelessWidget{
+  const SearchClients({super.key, required this.onChange});
+
+  final Function onChange;
+
+  @override
+  Widget build(BuildContext context) {
+   return           Padding(
+     padding: const EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 15),
+     child: TextField(
+       keyboardType: TextInputType.text,
+       textAlign: TextAlign.start,
+       onChanged: (d){
+         onChange.call(d);
+       },
+       style: TextStyle(
+           color: Theme.of(context).textTheme.displayMedium!.color!),
+       cursorColor: colorBeruza,
+       decoration: InputDecoration(
+           filled: true,
+           fillColor: Theme.of(context).colorScheme.background,
+           hintText: 'Поиск'.tr(),
+           prefixIcon: const Icon(Icons.search),
+           hintStyle:
+           TStyle.textStyleVelaSansMedium(colorGrey.withOpacity(0.4),size: 16),
+           contentPadding: const EdgeInsets.only(
+               left: 20, right: 20, top: 12, bottom: 12),
+           enabledBorder: OutlineInputBorder(
+             borderRadius: BorderRadius.circular(10.0),
+             borderSide: BorderSide(
+               color: colorGrey,
+               width: 1.0,
+             ),
+           ),
+           focusedBorder: OutlineInputBorder(
+             borderRadius: BorderRadius.circular(10.0),
+             borderSide: BorderSide(
+               color: colorBeruza,
+               width: 1.0,
+             ),
+           )),
+     ),
+   );
+  }
+
 }
 
 class ItemMyLids extends StatelessWidget{

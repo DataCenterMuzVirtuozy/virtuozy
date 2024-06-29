@@ -37,11 +37,11 @@ class TeacherUtil{
     await _service.addLesson(lessonModel: lessonModel);
   }
 
-  Future<List<LidsEntity>> getLids({required int idTeacher}) async {
-   final maps =  await _service.getLids(idTeacher:idTeacher);
-   final lidsModel =  maps.map((e) => LidsModel.fromApi(map: e)).toList();
-   return lidsModel.map((e) => LidsMapper.fromApi(model: e)).toList();
-  }
+  // Future<List<LidsEntity>> getLids({required int idTeacher}) async {
+  //  final maps =  await _service.getLids(idTeacher:idTeacher);
+  //  final lidsModel =  maps.map((e) => LidsModel.fromApi(map: e)).toList();
+  //  return lidsModel.map((e) => LidsMapper.fromApi(model: e)).toList();
+  // }
 
   Future<List<ClientEntity>> getClients({required int idTeacher}) async {
     final map = await _service.getClients(idTeacher:idTeacher);

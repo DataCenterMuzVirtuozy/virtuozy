@@ -13,6 +13,6 @@ abstract class TeacherRepository{
    Future<TeacherEntity> getTeacher({required String uid});
     Future<void>  editLesson({required Lesson lesson});
    Future<void> addLesson({required Lesson lesson});
-   Future<List<LidsEntity>> getLids({required int idTeacher});
+   //Future<List<LidsEntity>> getLids({required int idTeacher});
    Future<List<ClientEntity>> getClients({required int idTeacher});
 }
