@@ -10,6 +10,7 @@ class ClientsMapper{
 
     static ClientEntity fromApi({required ClientModel model}){
       return ClientEntity(
+         unallocatedL: model.unallocatedL,
         statusNearLesson: StatusToColor.lessonStatusFromApi(model.statusNearLesson),
           name: model.name,
           idStudent: model.idStudent,
@@ -30,7 +31,9 @@ class ClientsMapper{
           timeNearLesson: model.timeNearLesson,
           outL: model.outL,
           plannedL: model.plannedL,
-          cancelL: model.cancelL);
+          cancelL: model.cancelL,
+          login: model.login,
+          platform: model.platform);
     }
 
 

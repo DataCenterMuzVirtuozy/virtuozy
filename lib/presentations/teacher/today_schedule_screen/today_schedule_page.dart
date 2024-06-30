@@ -109,16 +109,20 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       DatePageView(
+                        lessons: state.lessons,
                         loading: state.status == TodayScheduleStatus.loading,
                         onVisibleTodayButton: (visible){
                           setState(() {
-                            print('Visble today');
                             _visibleTodayButton = visible;
                           });
 
                         },
                         initIndex: state.indexByDateNow,
                         lessonsToday: state.todayLessons,
+                        dateSelect: (date){
+                          _onlyWithLesson = false;
+                          context.read<TodayScheduleBloc>().add(GetLessonsBySelDateEvent(date: date));
+                        },
                       ),
                     ],
                   ),

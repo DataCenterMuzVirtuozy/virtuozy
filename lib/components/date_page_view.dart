@@ -22,10 +22,14 @@ class DatePageView extends StatefulWidget {
       required this.initIndex,
       required this.onVisibleTodayButton,
       this.weekMode = false,
-      required this.loading});
+      required this.loading,
+  required this.lessons,
+  required this.dateSelect});
 
   final List<TodayLessons> lessonsToday;
   final int initIndex;
+final List<Lesson> lessons;
+final Function dateSelect;
   final Function onVisibleTodayButton;
   final bool weekMode;
   final bool loading;
@@ -124,14 +128,24 @@ class _DatePageViewState extends State<DatePageView> {
                               size: 13.0))
                     } else ...{
                       ...List.generate(widget.lessonsToday.length, (index) {
-                        return Text(parseDate(widget.lessonsToday[index].date),
-                            textAlign: TextAlign.center,
-                            style: TStyle.textStyleVelaSansExtraBolt(
-                                Theme.of(context)
-                                    .textTheme
-                                    .displayMedium!
-                                    .color!,
-                                size: 13.0));
+                        return InkWell(
+                          onTap: (){
+                            Dialoger.showSelectDate(
+                                context: context,
+                                lessons: widget.lessons,
+                                onDate: (String date) {
+                                  widget.dateSelect.call(date);
+                                });
+                          },
+                          child: Text(parseDate(widget.lessonsToday[index].date),
+                              textAlign: TextAlign.center,
+                              style: TStyle.textStyleVelaSansExtraBolt(
+                                  Theme.of(context)
+                                      .textTheme
+                                      .displayMedium!
+                                      .color!,
+                                  size: 13.0)),
+                        );
                       })
                     }
                   ],

@@ -181,10 +181,6 @@ class _TimelineScheduleState extends State<TimelineSchedule> with AuthMixin{
                   height:  data.$1?64:30,
                   child: InkWell(
                     onTap: (){
-                      Dialoger.showToast('Нажми и держи'.tr());
-                    },
-                    borderRadius: BorderRadius.circular(5),
-                    onLongPress: (){
                       if(data.$1){
                         Dialoger.showModalBottomMenu(
                             blurred: true,
@@ -192,8 +188,15 @@ class _TimelineScheduleState extends State<TimelineSchedule> with AuthMixin{
                             args: [data.$2,false],
                             content: InfoStatusLesson());
                         return;
-                      };
-
+                      }else{
+                        Dialoger.showToast('Нажми и держи для добавления урока'.tr());
+                      }
+                    },
+                    borderRadius: BorderRadius.circular(5),
+                    onLongPress: (){
+                     if(data.$1){
+                       return;
+                     }
                       Dialoger.showModalBottomMenu(
                           blurred: true,
                           args: [_addLesson(

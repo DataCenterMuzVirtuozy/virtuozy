@@ -35,9 +35,15 @@ class ClientEntity{
      final int outL;
      final int cancelL;
      final int plannedL;
+     final int unallocatedL;
+     final String platform;
+     final String login;
 
      ClientEntity(
       {
+        required this.login,
+        required this.platform,
+        required this.unallocatedL,
         required this.outL,
         required this.plannedL,
         required this.cancelL,

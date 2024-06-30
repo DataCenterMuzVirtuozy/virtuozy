@@ -24,9 +24,15 @@
    final int outL;
    final int cancelL;
    final int plannedL;
+   final int unallocatedL;
+   final String platform;
+   final String login;
 
    ClientModel(
       {
+        required this.login,
+        required this.platform,
+        required this.unallocatedL,
         required this.outL,
         required this.plannedL,
         required this.cancelL,
@@ -52,6 +58,9 @@
 
    factory ClientModel.fromApi({required Map<String,dynamic> map}){
      return ClientModel(
+       login: map['login']??'@kjkdkfsdf',// add mokyy
+       platform: map['platform']??'Telegram',// add mokyy
+       unallocatedL: map['unallocatedL']??0, // add mokyy
          outL: map['outL'],
          plannedL: map['plannedL'],
          cancelL: map['cancelL'],

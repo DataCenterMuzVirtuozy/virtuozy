@@ -41,31 +41,73 @@ class DetailsClientContent extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Column(
-              //   crossAxisAlignment: CrossAxisAlignment.start,
-              //   children: [
-              //     Text('Дата создания: ',
-              //         style: TStyle.textStyleOpenSansRegular(colorGrey,
-              //             size: 14.0)),
-              //     Text(DateTimeParser.getDateFromApi(date: client.dateCreate),
-              //         style: TStyle.textStyleVelaSansBold(
-              //             Theme.of(context).textTheme.displayMedium!.color!,
-              //             size: 12.0))
-              //   ],
-              // ),
-              GestureDetector(
-                onTap: (){
-                  _launchUrlTel(tel: client.phoneNum);
-                },
-                child: Row(
-                  children: [
-                    Icon(Icons.phone, color: colorGreen, size: 15.0),
-                    const Gap(5),
-                    Text(client.phoneNum,
-                        style: TStyle.textStyleVelaSansMedium(colorGrey,
-                            size: 15.0)),
-                  ],
-                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  GestureDetector(
+                    onTap: (){
+                      _launchUrlTel(tel: client.phoneNum);
+                    },
+                    child: Row(
+                      children: [
+                        Icon(Icons.phone, color: colorGreen, size: 15.0),
+                        const Gap(5),
+                        Text(client.phoneNum,
+                            style: TStyle.textStyleVelaSansMedium(colorGrey,
+                                size: 15.0)),
+                      ],
+                    ),
+                  ),
+
+                  Visibility(
+                    visible: client.platform.isNotEmpty,
+                    child: Column(
+                      children: [
+                        const Gap(8),
+                        Row(
+                          children: [
+                            Container(
+                              width: 5,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                color: colorOrange,
+                                borderRadius: BorderRadius.circular(10)
+                              ),
+                            ),
+                            const Gap(5),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text('Платформа: ',
+                                        style: TStyle.textStyleOpenSansRegular(colorGrey,
+                                            size: 12.0)),
+                                    Text(client.platform,
+                                        style: TStyle.textStyleVelaSansBold(
+                                            Theme.of(context).textTheme.displayMedium!.color!,
+                                            size: 12.0)),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text('Логин/ссылка: ',
+                                        style: TStyle.textStyleOpenSansRegular(colorGrey,
+                                            size: 12.0)),
+                                    Text(client.login,
+                                        style: TStyle.textStyleVelaSansBold(
+                                            Theme.of(context).textTheme.displayMedium!.color!,
+                                            size: 12.0)),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
               Container(
                 decoration: BoxDecoration(
@@ -149,34 +191,7 @@ class DetailsClientContent extends StatelessWidget {
               ),
             ],
           ),
-          const Gap(5),
-          Visibility(
-            visible: client.status==ClientStatus.archive||
-                client.status == ClientStatus.replacement||client.status == ClientStatus.action,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.play_lesson_outlined,
-                      color: colorGreen,
-                      size: 16,
-                    ),
-                    const Gap(5),
-                    Text('Осталось уроков: ',
-                        style: TStyle.textStyleVelaSansMedium(colorGrey,
-                            size: 15.0)),
-                  ],
-                ),
-                Text('${client.countBalanceLesson} из ${client.countAllLesson}',
-                    style: TStyle.textStyleVelaSansBold(
-                        Theme.of(context).textTheme.displayMedium!.color!,
-                        size: 16.0))
-              ],
-            ),
-          ),
+
           const Gap(5),
           Visibility(
             visible: client.status==ClientStatus.archive||
@@ -209,50 +224,6 @@ class DetailsClientContent extends StatelessWidget {
                 const Gap(8),
               ],
             ),
-          ),
-
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(client.status != ClientStatus.archive
-                      ?'Дата ближ. урока: '.tr():
-                  'Дата посл. урока: '.tr(),
-                      style: TStyle.textStyleVelaSansBold(
-                          Theme.of(context).textTheme.displayMedium!.color!,
-                          size: 14.0)),
-                  Text(client.status != ClientStatus.archive?DateTimeParser.getDateFromApi(date: client.dateNearLesson):
-                      DateTimeParser.getDateFromApi(date: client.dateLestLesson),
-                      style: TStyle.textStyleVelaSansMedium(colorGrey,
-                          size: 12.0))
-                ],
-              ),
-              const Gap(20),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                decoration: BoxDecoration(
-                    color: StatusToColor.getColor(
-                        lessonStatus: client.status != ClientStatus.archive?
-                    client.statusNearLesson:client.statusLastLesson),
-                    border: Border.all(
-                        color: client.statusNearLesson.isComplete||client.statusNearLesson.isPlanned||
-                        client.statusLastLesson.isComplete||client.statusLastLesson.isPlanned
-                            ? textColorBlack(context)
-                            : Colors.transparent),
-                    borderRadius: BorderRadius.circular(5)),
-                child: Text(StatusToColor.getNameStatus(client.status != ClientStatus.archive?
-                client.statusNearLesson:client.statusLastLesson),
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TStyle.textStyleVelaSansBold(
-                        Theme.of(context).textTheme.displayMedium!.color!,
-                        size: 10.0)),
-              )
-            ],
           ),
           Visibility(
             visible: client.status==ClientStatus.archive||
@@ -330,6 +301,110 @@ class DetailsClientContent extends StatelessWidget {
                     )
                   ],
                 ),
+                const Gap(5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Нераспределено:',
+                        style: TStyle.textStyleVelaSansMedium(colorGrey,
+                            size: 15.0)),
+                    Container(
+                      alignment: Alignment.center,
+                      width: 20,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        //color: StatusToColor.getColor(lessonStatus: LessonStatus.out),
+                          border: Border.all(color: textColorBlack(context),width: 1.5),
+                          borderRadius: BorderRadius.circular(5)
+                      ),
+                      child: Text(client.unallocatedL.toString(),
+                          style: TStyle.textStyleVelaSansMedium(
+                              Theme.of(context).textTheme.displayMedium!.color!,
+                              size: 12.0)),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+
+          Visibility(
+            visible: client.status==ClientStatus.archive||
+                client.status == ClientStatus.replacement||client.status == ClientStatus.action,
+            child: Column(
+              children: [
+                const Gap(10),
+                Divider(color: colorGrey),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.play_lesson_outlined,
+                          color: colorGreen,
+                          size: 16,
+                        ),
+                        const Gap(5),
+                        Text('Осталось уроков: ',
+                            style: TStyle.textStyleVelaSansMedium(colorGrey,
+                                size: 15.0)),
+                      ],
+                    ),
+                    Text('${client.countBalanceLesson} из ${client.countAllLesson}',
+                        style: TStyle.textStyleVelaSansBold(
+                            Theme.of(context).textTheme.displayMedium!.color!,
+                            size: 16.0))
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const Gap(5),
+          Visibility(
+            visible: client.dateLestLesson.isNotEmpty||client.dateNearLesson.isNotEmpty,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(client.status != ClientStatus.archive
+                        ?'Дата ближ. урока: '.tr():
+                    'Дата посл. урока: '.tr(),
+                        style: TStyle.textStyleVelaSansBold(
+                            Theme.of(context).textTheme.displayMedium!.color!,
+                            size: 14.0)),
+                    Text(client.dateNearLesson.isNotEmpty?DateTimeParser.getDateFromApi(date: client.dateNearLesson):
+                    DateTimeParser.getDateFromApi(date: client.dateLestLesson),
+                        style: TStyle.textStyleVelaSansMedium(colorGrey,
+                            size: 12.0))
+                  ],
+                ),
+                const Gap(20),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  decoration: BoxDecoration(
+                      color: StatusToColor.getColor(
+                          lessonStatus: client.status != ClientStatus.archive?
+                          client.statusNearLesson:client.statusLastLesson),
+                      border: Border.all(
+                          color: client.statusNearLesson.isComplete||client.statusNearLesson.isPlanned||
+                              client.statusLastLesson.isComplete||client.statusLastLesson.isPlanned
+                              ? textColorBlack(context)
+                              : Colors.transparent),
+                      borderRadius: BorderRadius.circular(5)),
+                  child: Text(StatusToColor.getNameStatus(client.status != ClientStatus.archive?
+                  client.statusNearLesson:client.statusLastLesson),
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TStyle.textStyleVelaSansBold(
+                          Theme.of(context).textTheme.displayMedium!.color!,
+                          size: 10.0)),
+                )
               ],
             ),
           ),
