@@ -413,7 +413,7 @@ class ItemAll extends StatelessWidget {
         },
         child: Column(
           children: [
-            const Gap(10),
+            const Gap(7),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -426,10 +426,17 @@ class ItemAll extends StatelessWidget {
                             size: 16.0)),
                   ],
                 ),
-                Text('${client.countBalanceLesson} из ${client.countAllLesson}',
-                    style: TStyle.textStyleVelaSansExtraBolt(
-                        Theme.of(context).textTheme.displayMedium!.color!,
-                        size: 12.0))
+                Container(
+                  padding: const EdgeInsets.only(left: 5,right: 5),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: client.countAllLesson-client.countBalanceLesson == 1?colorOrange:null
+                  ),
+                  child: Text('${client.countBalanceLesson} из ${client.countAllLesson}',
+                      style: TStyle.textStyleVelaSansExtraBolt(
+                          Theme.of(context).textTheme.displayMedium!.color!,
+                          size: 12.0)),
+                )
               ],
             ),
             const Gap(3),
@@ -479,18 +486,80 @@ class ItemAll extends StatelessWidget {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TStyle.textStyleVelaSansBold(
-                          Theme.of(context).textTheme.displayMedium!.color!,
+                          client.statusNearLesson.isComplete||client.statusNearLesson.isPlanned? colorBlack
+                              : textColorBlack(context),
                           size: 10.0)),
                 )
               ],
             ),
             const Gap(10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.access_time_rounded,
+                      color: colorGreen,
+                      size: 14,
+                    ),
+                    const Gap(5),
+                    Text('ДоА:',
+                        style: TStyle.textStyleVelaSansMedium(colorGrey,
+                            size: 13.0)),
+                  ],
+                ),
+                Visibility(
+                  visible: _dateDoa(client.dOa),
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 5,right: 5,bottom: 3),
+                    decoration:  BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(color: colorOrange,width: 1)
+                    ),
+                    child:Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2.5),
+                          child: Icon(Icons.info_outline,color: colorOrange,size: 10),
+                        ),
+                        const Gap(3),
+                        Text('oсталось менее недели'.tr(),
+                            style: TStyle.textStyleVelaSansBold(
+                                colorOrange,
+                                size: 10.0)),
+                      ],
+                    )
+                    ,
+                  ),
+                ),
+                Text(DateTimeParser.getDateFromApi(date: client.dOa),
+                    style: TStyle.textStyleVelaSansBold(
+                        Theme.of(context).textTheme.displayMedium!.color!,
+                        size: 14.0))
+              ],
+            ),
+            const Gap(7),
             Divider(color: colorGrey),
           ],
         ),
       ),
     );
   }
+
+  bool _dateDoa(String date){
+  final d1 = DateFormat('yyyy-MM-dd').parse(date).millisecondsSinceEpoch;
+  final d2 = DateTime.now().millisecondsSinceEpoch;
+  if(d2<d1){
+    final res = d1-d2;
+    if(res<=604800000){
+      return true;
+    }
+  }
+   return false;
+  }
+
 }
 
 class ItemAction extends StatelessWidget {
@@ -577,7 +646,8 @@ class ItemAction extends StatelessWidget {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TStyle.textStyleVelaSansBold(
-                          Theme.of(context).textTheme.displayMedium!.color!,
+                          client.statusNearLesson.isComplete||client.statusNearLesson.isPlanned? colorBlack
+                              : textColorBlack(context),
                           size: 10.0)),
                 )
               ],

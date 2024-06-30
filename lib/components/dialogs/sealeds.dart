@@ -88,7 +88,7 @@ class SelectDate extends AlertDialogContent {
 class LogOut extends AlertDialogContent{
   @override
   build({required BuildContext context, Object? args}) {
-    return  LogOutContent(user: (args as UserEntity),);
+    return  LogOutContent(user: (args as UserEntity));
   }
 
 }

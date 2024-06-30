@@ -253,7 +253,11 @@ class Dialoger {
   }
 
   static void showLogOut({required BuildContext context, required UserEntity user}) {
-    showCustomDialog(contextUp: context, args: user, content: LogOut());
+    showCustomDialog(
+        contextUp: context,
+        args: user,
+        content: LogOut()
+        );
   }
 
   static void showLogOutTeacher(
@@ -276,14 +280,14 @@ class Dialoger {
       {required BuildContext contextUp,
       required AlertDialogContent content,
       Object? args}) async {
+
     final Widget body = switch (content) {
       LogOut() => LogOut().build(context: contextUp, args: args),
       LogOutTeacher() => LogOutTeacher().build(context: contextUp, args: args),
       SelectDate() => SelectDate().build(context: contextUp, args: args),
       AcceptDocuments() =>
         AcceptDocuments().build(context: contextUp, args: args),
-      DownloadDocument() =>
-        DownloadDocument().build(context: contextUp, args: args),
+      DownloadDocument() => DownloadDocument().build(context: contextUp, args: args),
       InfoDetailsLesson() => InfoDetailsLesson().build(context: contextUp),
       EditStatusLesson() => EditStatusLesson().build(context: contextUp,args: args),
       AddNewLesson() => AddNewLesson().build(context: contextUp,args: args),

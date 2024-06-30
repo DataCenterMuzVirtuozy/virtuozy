@@ -191,20 +191,15 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                         args: [lessons,state.userEntity.directions],
                         content: DetailsLesson());
                   },),
-               const Gap(10.0),
-               BoxSubscription(
-                 key: ValueKey(state.directions),
-                 namesDir: _titlesDirections,
-                   directions: state.directions,
-                   allViewDirection: _allViewDirection),
-               const Gap(10.0),
-               Padding(
-                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                 child: Column(
-                   children: [
-                     Visibility(
-                       visible: state.listNotAcceptLesson.isNotEmpty,
-                       child: badges.Badge(
+
+               Visibility(
+                 visible: state.listNotAcceptLesson.isNotEmpty,
+                 child: Padding(
+                   padding: const EdgeInsets.symmetric(horizontal: 10),
+                   child: Column(
+                     children: [
+                       const Gap(20.0),
+                       badges.Badge(
                          position: badges.BadgePosition.topEnd(end: -5.0,top: -8.0),
                          showBadge: state.listNotAcceptLesson.length>1,
                          badgeContent: Text('${state.listNotAcceptLesson.length}',
@@ -215,22 +210,36 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                              onTap: (){
 
                                Dialoger.showModalBottomMenu(
-                                 blurred: false,
-                                 args:[state.firstNotAcceptLesson,
-                                   state.directions, state.listNotAcceptLesson,
-                                    _allViewDirection],
+                                   blurred: false,
+                                   args:[state.firstNotAcceptLesson,
+                                     state.directions, state.listNotAcceptLesson,
+                                     _allViewDirection],
                                    title:'Подтверждение урока'.tr(),
-                               content: ConfirmLesson());
+                                   content: ConfirmLesson());
                              },
                              //colorFill: Theme.of(context).colorScheme.tertiary,
-                                colorFill: colorGreen,
-                                borderRadius: 10.0,
-                                textButton:
-                                    'Подтвердите прохождение урока'.tr(),
-                              ),
+                             colorFill: colorGreen,
+                             borderRadius: 10.0,
+                             textButton:
+                             'Подтвердите прохождение урока'.tr(),
+                           ),
                          ),
                        ),
-                     ),
+                     ],
+                   ),
+                 ),
+               ),
+               const Gap(10),
+               BoxSubscription(
+                 key: ValueKey(state.directions),
+                 namesDir: _titlesDirections,
+                   directions: state.directions,
+                   allViewDirection: _allViewDirection),
+               const Gap(10.0),
+               Padding(
+                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                 child: Column(
+                   children: [
                      const Gap(10.0),
                      if(_visibleButtonBonus(bonuses: state.bonuses))...{
                        Padding(

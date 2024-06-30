@@ -18,7 +18,7 @@
     final i4 = int.parse(i3.toString().split('.')[1]);
     final i5 = int.parse(i3.toString().split('.')[0]);
     if(i4>0){
-     return '$i1 $i5.$i4';
+     return '$i1$i5.$i4';
     }else{
      return '$i1 $i5';
     }

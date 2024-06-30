@@ -539,12 +539,13 @@ class _DrawerItemSettingState extends State<DrawerItemSetting> {
                     onTap: (){
 
                       if (widget.user.userStatus.isNotAuth) {
+                        Navigator.pop(context);
                         GoRouter.of(context).push(pathLogIn);
                       } else {
+                        Navigator.pop(context);
                         Dialoger.showLogOut(context: context, user: widget.user);
                       }
 
-                      Navigator.pop(context);
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,

@@ -61,50 +61,54 @@ class DetailsClientContent extends StatelessWidget {
 
                   Visibility(
                     visible: client.platform.isNotEmpty,
-                    child: Column(
-                      children: [
-                        const Gap(8),
-                        Row(
-                          children: [
-                            Container(
-                              width: 5,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                color: colorOrange,
-                                borderRadius: BorderRadius.circular(10)
-                              ),
-                            ),
-                            const Gap(5),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text('Платформа: ',
-                                        style: TStyle.textStyleOpenSansRegular(colorGrey,
-                                            size: 12.0)),
-                                    Text(client.platform,
-                                        style: TStyle.textStyleVelaSansBold(
-                                            Theme.of(context).textTheme.displayMedium!.color!,
-                                            size: 12.0)),
-                                  ],
+                    child: Padding(
+
+                      padding: const EdgeInsets.only(left: 5),
+                      child: Column(
+                        children: [
+                          const Gap(8),
+                          Row(
+                            children: [
+                              Container(
+                                width: 5,
+                                height: 30,
+                                decoration: BoxDecoration(
+                                  color: colorOrange,
+                                  borderRadius: BorderRadius.circular(10)
                                 ),
-                                Row(
-                                  children: [
-                                    Text('Логин/ссылка: ',
-                                        style: TStyle.textStyleOpenSansRegular(colorGrey,
-                                            size: 12.0)),
-                                    Text(client.login,
-                                        style: TStyle.textStyleVelaSansBold(
-                                            Theme.of(context).textTheme.displayMedium!.color!,
-                                            size: 12.0)),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
+                              ),
+                              const Gap(5),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text('Платформа: ',
+                                          style: TStyle.textStyleOpenSansRegular(colorGrey,
+                                              size: 12.0)),
+                                      Text(client.platform,
+                                          style: TStyle.textStyleVelaSansBold(
+                                              Theme.of(context).textTheme.displayMedium!.color!,
+                                              size: 12.0)),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text('Логин/ссылка: ',
+                                          style: TStyle.textStyleOpenSansRegular(colorGrey,
+                                              size: 12.0)),
+                                      Text(client.login,
+                                          style: TStyle.textStyleVelaSansBold(
+                                              Theme.of(context).textTheme.displayMedium!.color!,
+                                              size: 12.0)),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],

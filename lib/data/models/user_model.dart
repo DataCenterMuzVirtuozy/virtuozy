@@ -246,7 +246,7 @@ class UserModel{
       'nameSub':lessonModel.nameSub,
       'duration':lessonModel.duration,
       'type':lessonModel.type,
-      'contactValues':lessonModel.contactValues,
+      'contactValues': lessonModel.contactValues,
       'idDir':lessonModel.idDir,
       'idSchool':lessonModel.idSchool,
       'idSub':lessonModel.idSub,

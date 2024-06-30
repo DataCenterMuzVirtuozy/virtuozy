@@ -158,6 +158,11 @@ class DirectionLesson{
   });
 
 
+  factory DirectionLesson.unknown(){
+    return const DirectionLesson(id: 0, lastSubscriptions: [], bonus: [], subscriptionsAll: [], name: '', lessons: []);
+  }
+
+
 
 
   DirectionLesson copyWith({

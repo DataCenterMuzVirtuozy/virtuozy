@@ -384,13 +384,15 @@ class _CalendarState extends State<Calendar> with AuthMixin{
                               ),
                             ),
                             Visibility(
-                              visible: lessonsDay.length>1,
+                                visible: lessonsDay.length > 1,
                                 child: RotationTransition(
-                                  turns:  const AlwaysStoppedAnimation(135 / 360),
+                                  turns:
+                                      const AlwaysStoppedAnimation(135 / 360),
                                   child: Container(
-                                                                 height: valueDay == day ? 3.0 : 1.0,
+                                    margin: const EdgeInsets.all(5),
+                                    height: valueDay == day ? 3.0 : 1.0,
                                     color: colorOrange,
-                                                              ),
+                                  ),
                                 )),
                             Center(
                               child: Text(

@@ -32,8 +32,13 @@ class _DetailsLessonContentState extends State<DetailsLessonContent> {
   late final PageController _pageController;
 
   DirectionLesson _getDirectionByLesson({required Lesson lessonEntity}) {
-    return widget.directions
-        .firstWhere((element) => element.name == lessonEntity.nameDirection);
+    try{
+      return widget.directions.firstWhere((element) => element.name == lessonEntity.nameDirection);
+    }catch (e){
+      return DirectionLesson.unknown();
+    }
+
+
   }
 
   @override
