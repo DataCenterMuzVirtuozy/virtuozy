@@ -11,6 +11,7 @@ import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/add_lesso
 import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/bonuses_list_content.dart';
 import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/details_client_content.dart';
 import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/details_lesson_content.dart';
+import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/phone_caller_content.dart';
 import 'package:virtuozy/domain/entities/document_entity.dart';
 import 'package:virtuozy/domain/entities/teacher_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
@@ -179,6 +180,14 @@ class InfoStatusLesson extends DialogsContent{
   @override
   build({required BuildContext context, Object? args}) {
     return  InfoStatusLessonContent(lesson: (args as List)[0] as Lesson,callFromTable: args[1]);
+  }
+
+}
+
+class PhoneCaller extends DialogsContent{
+  @override
+  build({required BuildContext context, Object? args}) {
+   return PhoneCallerContent(phone: args as String);
   }
 
 }

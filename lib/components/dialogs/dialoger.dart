@@ -105,6 +105,8 @@ class Dialoger {
             DetailsClient() => DetailsClient().build(context: _,args: args),
             AddLesson() => AddLesson().build(context: _,args: args),
             InfoStatusLesson() => InfoStatusLesson().build(context: _,args: args),
+
+            PhoneCaller() => PhoneCaller().build(context: _,args: args),
           };
           return BackdropFilter(
             filter: blurred
@@ -185,6 +187,7 @@ class Dialoger {
       DetailsClient() => DetailsClient().build(context: context),
       AddLesson() => throw AddLesson().build(context: context),
       InfoStatusLesson() => InfoStatusLesson().build(context:context),
+      PhoneCaller() => PhoneCaller().build(context: context,args: args),
     };
 
     showModalBottomSheet(
@@ -239,7 +242,7 @@ class Dialoger {
                           ],
                         ),
                       ),
-                      const Gap(20.0),
+                      const Gap(10.0),
                       body
                     ],
                   ),

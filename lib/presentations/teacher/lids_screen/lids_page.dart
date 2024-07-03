@@ -3,6 +3,7 @@
   import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -21,6 +22,7 @@ import '../../../domain/entities/lesson_entity.dart';
 import '../../../resourses/colors.dart';
 import '../../../utils/status_to_color.dart';
 import '../../../utils/text_style.dart';
+import '../clients_screen/clients_page.dart';
 
 class LidsPage extends StatefulWidget{
   const LidsPage({super.key});
@@ -29,28 +31,46 @@ class LidsPage extends StatefulWidget{
   State<LidsPage> createState() => _LidsPageState();
 }
 
-class _LidsPageState extends State<LidsPage> with AuthMixin{
+class _LidsPageState extends State<LidsPage> with AuthMixin,TickerProviderStateMixin{
 
 
-  final List<ClientEntity> _myLidsResult = [];
+   List<ClientEntity> _myLidsResult = [];
   List<ClientEntity> _myLids = [];
   List<ClientEntity> _trialLids = [];
   List<ClientEntity> _allLids = [];
-  final List<ClientEntity> _puLidsResult = [];
-  final List<ClientEntity> _allLidsResult = [];
+   List<ClientEntity> _puLidsResult = [];
+   List<ClientEntity> _allLidsResult = [];
+   late ScrollController _controller;
+   late Animation<double> _animation;
+   late AnimationController _controllerAnim;
 
 
   @override
   void initState() {
     super.initState();
-
+    _controllerAnim = AnimationController(
+      duration: const Duration(milliseconds:300),
+      vsync: this,
+    );
+    _animation = Tween<double>(begin: 60, end: 0).animate(_controllerAnim);
+    super.initState();
+    _controller = ScrollController();
+    _controller.addListener(() {
+      if (_controller.position.userScrollDirection == ScrollDirection.forward) {
+        _controllerAnim.reverse();
+      } else if (_controller.position.userScrollDirection ==
+          ScrollDirection.reverse) {
+        _controllerAnim.forward();
+      }
+    });
     context.read<LidsBloc>().add(GetListEvent(idTeacher: teacher.id));
 
   }
 
   @override
   void dispose() {
-
+    _controllerAnim.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -85,12 +105,25 @@ class _LidsPageState extends State<LidsPage> with AuthMixin{
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocConsumer<LidsBloc,LidsState>(
-        listener: (c,s){},
-        builder: (context,state) {
+        listener: (c,s){
+          _myLids = s.lidsMy;
+          _allLids = s.lids;
+          _trialLids = s.lidsTrial;
 
-           _myLids = state.lidsMy;
-           _allLids = state.lids;
-           _trialLids = state.lidsTrial;
+
+          if(_myLidsResult.isEmpty){
+            _myLidsResult = _myLids;
+          }
+
+          if(_allLidsResult.isEmpty){
+            _allLidsResult = _allLids;
+          }
+
+          if(_puLidsResult.isEmpty){
+            _puLidsResult = _trialLids;
+          }
+        },
+        builder: (context,state) {
 
           if(state.status.isError){
             return Center(
@@ -108,15 +141,24 @@ class _LidsPageState extends State<LidsPage> with AuthMixin{
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    SearchClients(
-                      onChange: (d){
-                          setState(() {
-                            _handleSearchMyLids(d);
-                          });
+                    AnimatedBuilder(
+                      animation: _animation,
+                      builder: (BuildContext context, Widget? child) {
+                        return SizedBox(
+                          height: _animation.value,
+                          child: SearchClients(
+                            open: _animation.value>40.0,
+                            onChange: (d) {
+                              setState(() {
+                                _handleSearchMyLids(d);
+                              });
+                            },
+                          ),
+                        );
                       },
+
                     ),
                     TabBar(
-                      //controller: _tabController,
                       isScrollable: true,
                       tabs: [
                         Text('Мои Лиды'.tr(),style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
@@ -124,60 +166,117 @@ class _LidsPageState extends State<LidsPage> with AuthMixin{
                         Text('Все'.tr(),style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
                       ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      child: SizedBox(
-                        height: MediaQuery.of(context).size.height-200,
-                        child: TabBarView(
-                          children: [
-                        ListView(
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height,
+                      child: TabBarView(
                         children: [
-                          if(_myLidsResult.isEmpty)...{
-                            ...List.generate(_myLids.length, (index) {
-                              return ItemMyLids(lid: _myLids[index]);
-                            })
-                          }else...{
+                      ListView(
+                        controller: _controller,
+                        padding: const EdgeInsets.only(bottom: 90,top: 10),
+                      children: [
+                        if(_myLids.isEmpty)...{
+
+                          Padding(
+                            padding:  EdgeInsets.only(top:
+                            MediaQuery.of(context).size.height/4),
+                            child:                                   BoxInfo(
+                                title: 'Список лидов пуст'.tr(),
+                                iconData: Icons.list_rounded)
+                            ,
+                          )
+
+                        }else...{
+                          if(_myLidsResult.isNotEmpty)...{
                             ...List.generate(_myLidsResult.length, (index) {
                               return ItemMyLids(lid: _myLidsResult[index]);
                             })
+                          }else...{
+                            Padding(
+                              padding:  EdgeInsets.only(top:
+                              MediaQuery.of(context).size.height/4),
+                              child:                                   BoxInfo(
+                                  title: 'Нет подходящих результатов'.tr(),
+                                  iconData: Icons.list_rounded)
+                              ,
+                            )
                           }
 
+                        }
 
 
-                        ],
-                      ),
-                      ListView(
-                        children: [
 
-                          if(_puLidsResult.isEmpty)...{
-                            ...List.generate(_trialLids.length, (index) {
-                              return ItemMyLids(lid: _trialLids[index]);
-                            })
-                          }else...{
+                      ],
+                    ),
+                    ListView(
+                      controller: _controller,
+                      padding: const EdgeInsets.only(bottom: 90,top: 10),
+                      children: [
+                        if(_trialLids.isEmpty)...{
+                          Padding(
+                            padding:  EdgeInsets.only(top:
+                            MediaQuery.of(context).size.height/4),
+                            child:                                   BoxInfo(
+                                title: 'Список лидов пуст'.tr(),
+                                iconData: Icons.list_rounded)
+                            ,
+                          )
+                        }else...{
+
+                          if(_puLidsResult.isNotEmpty)...{
                             ...List.generate(_puLidsResult.length, (index) {
                               return ItemTrialLids(lid: _puLidsResult[index]);
                             })
-                          }
-                        ],
-                      ),
-                      ListView(
-                        children: [
-                          if(_allLidsResult.isEmpty)...{
-                            ...List.generate(_allLids.length, (index) {
-                              return ItemMyLids(lid: _allLids[index]);
-                            })
                           }else...{
+                            Padding(
+                              padding:  EdgeInsets.only(top:
+                              MediaQuery.of(context).size.height/4),
+                              child:                                   BoxInfo(
+                                  title: 'Нет подходящих результатов'.tr(),
+                                  iconData: Icons.list_rounded)
+                              ,
+                            )
+                          }
+
+                        }
+                      ],
+                    ),
+                    ListView(
+                      controller: _controller,
+                      padding: const EdgeInsets.only(bottom: 90,top: 10),
+                      children: [
+                        if(_allLids.isEmpty)...{
+                          Padding(
+                            padding:  EdgeInsets.only(top:
+                            MediaQuery.of(context).size.height/4),
+                            child:                                   BoxInfo(
+                                title: 'Список лидов пуст'.tr(),
+                                iconData: Icons.list_rounded)
+                            ,
+                          )
+                        }else...{
+
+                          if(_allLidsResult.isNotEmpty)...{
                             ...List.generate(_allLidsResult.length, (index) {
                               return ItemLids(lid: _allLidsResult[index]);
                             })
+                          }else...{
+                            Padding(
+                              padding:  EdgeInsets.only(top:
+                              MediaQuery.of(context).size.height/4),
+                              child:                                   BoxInfo(
+                                  title: 'Нет подходящих результатов'.tr(),
+                                  iconData: Icons.list_rounded)
+                              ,
+                            )
                           }
 
+                        }
+
+                      ],
+                    )
+
                         ],
-                      )
 
-                          ],
-
-                        ),
                       ),
                     ),
                   ],
@@ -193,52 +292,52 @@ class _LidsPageState extends State<LidsPage> with AuthMixin{
   }
 }
 
-class SearchClients extends StatelessWidget{
-  const SearchClients({super.key, required this.onChange});
-
-  final Function onChange;
-
-  @override
-  Widget build(BuildContext context) {
-   return           Padding(
-     padding: const EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 15),
-     child: TextField(
-       keyboardType: TextInputType.text,
-       textAlign: TextAlign.start,
-       onChanged: (d){
-         onChange.call(d);
-       },
-       style: TextStyle(
-           color: Theme.of(context).textTheme.displayMedium!.color!),
-       cursorColor: colorBeruza,
-       decoration: InputDecoration(
-           filled: true,
-           fillColor: Theme.of(context).colorScheme.background,
-           hintText: 'Поиск'.tr(),
-           prefixIcon: const Icon(Icons.search),
-           hintStyle:
-           TStyle.textStyleVelaSansMedium(colorGrey.withOpacity(0.4),size: 16),
-           contentPadding: const EdgeInsets.only(
-               left: 20, right: 20, top: 12, bottom: 12),
-           enabledBorder: OutlineInputBorder(
-             borderRadius: BorderRadius.circular(10.0),
-             borderSide: BorderSide(
-               color: colorGrey,
-               width: 1.0,
-             ),
-           ),
-           focusedBorder: OutlineInputBorder(
-             borderRadius: BorderRadius.circular(10.0),
-             borderSide: BorderSide(
-               color: colorBeruza,
-               width: 1.0,
-             ),
-           )),
-     ),
-   );
-  }
-
-}
+// class SearchClients extends StatelessWidget{
+//   const SearchClients({super.key, required this.onChange});
+//
+//   final Function onChange;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//    return           Padding(
+//      padding: const EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 15),
+//      child: TextField(
+//        keyboardType: TextInputType.text,
+//        textAlign: TextAlign.start,
+//        onChanged: (d){
+//          onChange.call(d);
+//        },
+//        style: TextStyle(
+//            color: Theme.of(context).textTheme.displayMedium!.color!),
+//        cursorColor: colorBeruza,
+//        decoration: InputDecoration(
+//            filled: true,
+//            fillColor: Theme.of(context).colorScheme.background,
+//            hintText: 'Поиск'.tr(),
+//            //prefixIcon: const Icon(Icons.search),
+//            hintStyle:
+//            TStyle.textStyleVelaSansMedium(colorGrey.withOpacity(0.4),size: 16),
+//            contentPadding: const EdgeInsets.only(
+//                left: 20, right: 20, top: 12, bottom: 12),
+//            enabledBorder: OutlineInputBorder(
+//              borderRadius: BorderRadius.circular(10.0),
+//              borderSide: BorderSide(
+//                color: colorGrey,
+//                width: 1.0,
+//              ),
+//            ),
+//            focusedBorder: OutlineInputBorder(
+//              borderRadius: BorderRadius.circular(10.0),
+//              borderSide: BorderSide(
+//                color: colorBeruza,
+//                width: 1.0,
+//              ),
+//            )),
+//      ),
+//    );
+//   }
+//
+// }
 
 class ItemMyLids extends StatelessWidget{
   const ItemMyLids({super.key, required this.lid});

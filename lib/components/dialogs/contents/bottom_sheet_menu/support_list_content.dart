@@ -54,7 +54,7 @@ class _SupportListContentState extends State<SupportListContent>
       }
     } else {
       if (TypeMessager.telegram == typeMessager) {
-        return listSupportTelegramNSK[index];
+        return listSupportUrlTelegramNSK[index];
       } else {
         return listSupportWhatsappNSK[index];
       }
