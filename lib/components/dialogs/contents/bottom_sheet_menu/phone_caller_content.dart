@@ -1,6 +1,7 @@
 
 
-  import 'package:flutter/cupertino.dart';
+  import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -8,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../resourses/colors.dart';
 import '../../../../resourses/images.dart';
 import '../../../../utils/text_style.dart';
+import '../../dialoger.dart';
 
 class PhoneCallerContent extends StatefulWidget{
   const PhoneCallerContent({super.key, required this.phone});
@@ -33,11 +35,11 @@ class _PhoneCallerContentState extends State<PhoneCallerContent> {
                 return InkWell(
                   onTap: () async {
                     if(index==2){
-                      await _launchUrlTel(tel: widget.phone);
+                      await _launchUrlTel(tel: _getUrl(index,widget.phone));
                       return;
                     }
                     await _launchUrl(
-                        _getUrl(index,'+375295787315'));
+                        _getUrl(index,widget.phone));
                   },
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 10),
@@ -94,7 +96,7 @@ class _PhoneCallerContentState extends State<PhoneCallerContent> {
         scheme:'tel',
         path: tel);
     if (!await launchUrl(url)) {
-      throw Exception('Could not launch $url');
+      Dialoger.showToast('Ошибка вызова'.tr());
     }
   }
 
