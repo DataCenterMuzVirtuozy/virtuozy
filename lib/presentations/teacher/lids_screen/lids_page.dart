@@ -353,7 +353,7 @@ class ItemMyLids extends StatelessWidget{
         onTap:(){
           Dialoger.showModalBottomMenu(
               title: lid.name,
-              args: lid,
+              args: [lid,true],
               blurred: true,
               content: DetailsClient());
 
@@ -410,7 +410,7 @@ class ItemMyLids extends StatelessWidget{
           onTap:(){
             Dialoger.showModalBottomMenu(
                 title: lid.name,
-                args: lid,
+                args:   [lid,true],
                 blurred: true,
                 content: DetailsClient());
           },
@@ -477,7 +477,7 @@ class ItemMyLids extends StatelessWidget{
           onTap:(){
             Dialoger.showModalBottomMenu(
                 title: lid.name,
-                args: lid,
+                args: [lid,true],
                 blurred: true,
                 content: DetailsClient());
           },

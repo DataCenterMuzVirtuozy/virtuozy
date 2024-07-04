@@ -164,7 +164,7 @@ class FindSubways extends DialogsContent{
 class DetailsClient extends DialogsContent{
   @override
   build({required BuildContext context, Object? args}) {
-    return  DetailsClientContent(client: args as ClientEntity);
+    return  DetailsClientContent(client: (args as List)[0] as ClientEntity, isLid: args[1] as bool,);
   }
 
 }

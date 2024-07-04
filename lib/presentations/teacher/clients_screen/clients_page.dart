@@ -480,7 +480,7 @@ class ItemAll extends StatelessWidget {
         onTap: () {
           Dialoger.showModalBottomMenu(
               title: client.name,
-              args: client,
+              args: [client,false],
               blurred: true,
               content: DetailsClient());
         },
@@ -650,7 +650,7 @@ class ItemAction extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         onTap: () {
           Dialoger.showModalBottomMenu(
-              args: client,
+              args: [client,false],
               title: client.name,
               blurred: true,
               content: DetailsClient());
@@ -752,7 +752,7 @@ class ItemArchive extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         onTap: () {
           Dialoger.showModalBottomMenu(
-              args: client,
+              args: [client,false],
               title: client.name,
               blurred: true,
               content: DetailsClient());
@@ -862,7 +862,7 @@ class ItemToday extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         onTap: () {
           Dialoger.showModalBottomMenu(
-              args: client,
+              args: [client,false],
               title: client.name,
               blurred: true,
               content: DetailsClient());
@@ -961,7 +961,7 @@ class ItemReplacemant extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         onTap: () {
           Dialoger.showModalBottomMenu(
-              args: client,
+              args: [client,false],
               title: client.name,
               blurred: true,
               content: DetailsClient());

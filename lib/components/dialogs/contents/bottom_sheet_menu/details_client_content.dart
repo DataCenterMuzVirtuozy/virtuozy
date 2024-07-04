@@ -1,9 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:virtuozy/components/phone_number.dart';
 import 'package:virtuozy/utils/date_time_parser.dart';
 
 import '../../../../domain/entities/client_entity.dart';
@@ -11,28 +9,15 @@ import '../../../../domain/entities/lesson_entity.dart';
 import '../../../../resourses/colors.dart';
 import '../../../../utils/status_to_color.dart';
 import '../../../../utils/text_style.dart';
-import '../../../buttons.dart';
 
 class DetailsClientContent extends StatelessWidget {
-  const DetailsClientContent({super.key, required this.client});
-
+  const DetailsClientContent({super.key, required this.client, required this.isLid});
 
   final ClientEntity client;
-
-
-  Future<void> _launchUrlTel({required String tel}) async {
-    final Uri url = Uri(
-        scheme:'tel',
-        path: tel);
-    if (!await launchUrl(url)) {
-      throw Exception('Could not launch $url');
-    }
-  }
-
+  final bool isLid;
 
   @override
   Widget build(BuildContext context) {
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15).copyWith(bottom: 15),
       child: Column(
@@ -44,25 +29,16 @@ class DetailsClientContent extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  GestureDetector(
-                    onTap: (){
-                      _launchUrlTel(tel: client.phoneNum);
-                    },
-                    child: Row(
-                      children: [
-                        Icon(Icons.phone, color: colorGreen, size: 15.0),
-                        const Gap(5),
-                        Text(client.phoneNum,
-                            style: TStyle.textStyleVelaSansMedium(colorGrey,
-                                size: 15.0)),
-                      ],
-                    ),
+                  Row(
+                    children: [
+                      Icon(Icons.phone, color: colorGreen, size: 15.0),
+                      const Gap(5),
+                      PhoneNum(phone: client.phoneNum)
+                    ],
                   ),
-
                   Visibility(
                     visible: client.platform.isNotEmpty,
                     child: Padding(
-
                       padding: const EdgeInsets.only(left: 5),
                       child: Column(
                         children: [
@@ -73,9 +49,8 @@ class DetailsClientContent extends StatelessWidget {
                                 width: 5,
                                 height: 30,
                                 decoration: BoxDecoration(
-                                  color: colorOrange,
-                                  borderRadius: BorderRadius.circular(10)
-                                ),
+                                    color: colorOrange,
+                                    borderRadius: BorderRadius.circular(10)),
                               ),
                               const Gap(5),
                               Column(
@@ -84,22 +59,32 @@ class DetailsClientContent extends StatelessWidget {
                                   Row(
                                     children: [
                                       Text('Платформа: ',
-                                          style: TStyle.textStyleOpenSansRegular(colorGrey,
-                                              size: 12.0)),
+                                          style:
+                                              TStyle.textStyleOpenSansRegular(
+                                                  colorGrey,
+                                                  size: 12.0)),
                                       Text(client.platform,
                                           style: TStyle.textStyleVelaSansBold(
-                                              Theme.of(context).textTheme.displayMedium!.color!,
+                                              Theme.of(context)
+                                                  .textTheme
+                                                  .displayMedium!
+                                                  .color!,
                                               size: 12.0)),
                                     ],
                                   ),
                                   Row(
                                     children: [
                                       Text('Логин/ссылка: ',
-                                          style: TStyle.textStyleOpenSansRegular(colorGrey,
-                                              size: 12.0)),
+                                          style:
+                                              TStyle.textStyleOpenSansRegular(
+                                                  colorGrey,
+                                                  size: 12.0)),
                                       Text(client.login,
                                           style: TStyle.textStyleVelaSansBold(
-                                              Theme.of(context).textTheme.displayMedium!.color!,
+                                              Theme.of(context)
+                                                  .textTheme
+                                                  .displayMedium!
+                                                  .color!,
                                               size: 12.0)),
                                     ],
                                   )
@@ -116,37 +101,41 @@ class DetailsClientContent extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5),
-                    color: colorGreyLight
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 4,vertical: 2),
+                    color: colorGreyLight),
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                 child: Row(
                   children: [
-                    Icon(Icons.location_on_outlined,size: 9,color:
-                    Theme.of(context).textTheme.displayMedium!.color!),
+                    Icon(Icons.location_on_outlined,
+                        size: 9,
+                        color:
+                            Theme.of(context).textTheme.displayMedium!.color!),
                     const Gap(2),
                     Text(client.idSchool,
-                        style:TStyle.textStyleVelaSansMedium(Theme.of(context).textTheme.displayMedium!.color!,
+                        style: TStyle.textStyleVelaSansMedium(
+                            Theme.of(context).textTheme.displayMedium!.color!,
                             size: 10.0)),
                   ],
                 ),
               ),
             ],
           ),
-          const Gap(10),
+          const Gap(6),
           Divider(color: colorGrey),
           Visibility(
-            visible: client.status==ClientStatus.archive||
-            client.status == ClientStatus.replacement||client.status == ClientStatus.action,
+            visible: client.status == ClientStatus.archive ||
+                client.status == ClientStatus.replacement ||
+                client.status == ClientStatus.action,
             child: Column(
               children: [
-                const Gap(8),
+                const Gap(6),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Icon(Icons.subscriptions, color: colorGreen, size: 16.0),
+                        Icon(Icons.subscriptions,
+                            color: colorGreen, size: 16.0),
                         const Gap(5),
                         Text('Абонемент:'.tr(),
                             style: TStyle.textStyleVelaSansMedium(colorGrey,
@@ -154,21 +143,27 @@ class DetailsClientContent extends StatelessWidget {
                         const Gap(10),
                         Text(client.nameSub,
                             style: TStyle.textStyleVelaSansBold(
-                                Theme.of(context).textTheme.displayMedium!.color!,
+                                Theme.of(context)
+                                    .textTheme
+                                    .displayMedium!
+                                    .color!,
                                 size: 16.0))
                       ],
                     ),
                     Container(
                         alignment: Alignment.center,
-                        padding:
-                        const EdgeInsets.only(right: 8.0, left: 8.0, bottom: 2.0),
+                        padding: const EdgeInsets.only(
+                            right: 8.0, left: 8.0, bottom: 2.0),
                         decoration: BoxDecoration(
-                            color: client.actionSub?colorGreen:colorRed,
+                            color: client.actionSub ? colorGreen : colorRed,
                             borderRadius: BorderRadius.circular(10.0)),
                         //todo status unactiv, planned, unactive
-                        child: Text(client.actionSub?'активный'.tr():'неактивный'.tr(),
-                            style:
-                            TStyle.textStyleVelaSansBold(colorWhite, size: 10.0)))
+                        child: Text(
+                            client.actionSub
+                                ? 'активный'.tr()
+                                : 'неактивный'.tr(),
+                            style: TStyle.textStyleVelaSansBold(colorWhite,
+                                size: 10.0)))
                   ],
                 ),
               ],
@@ -198,8 +193,9 @@ class DetailsClientContent extends StatelessWidget {
 
           const Gap(5),
           Visibility(
-            visible: client.status==ClientStatus.archive||
-                client.status == ClientStatus.replacement||client.status == ClientStatus.action,
+            visible: client.status == ClientStatus.archive ||
+                client.status == ClientStatus.replacement ||
+                client.status == ClientStatus.action,
             child: Column(
               children: [
                 Row(
@@ -225,18 +221,114 @@ class DetailsClientContent extends StatelessWidget {
                             size: 16.0))
                   ],
                 ),
-                const Gap(8),
               ],
             ),
           ),
           Visibility(
-            visible: client.status==ClientStatus.archive||
-                client.status == ClientStatus.replacement||client.status == ClientStatus.action,
+            visible: client.status == ClientStatus.archive ||
+                client.status == ClientStatus.replacement ||
+                client.status == ClientStatus.action,
             child: Column(
               children: [
-                const Gap(5),
+                const Gap(6),
                 Divider(color: colorGrey),
-                const Gap(8),
+                const Gap(6),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.play_lesson_outlined,
+                          color: colorGreen,
+                          size: 16,
+                        ),
+                        const Gap(5),
+                        Text('Осталось уроков: ',
+                            style: TStyle.textStyleVelaSansMedium(colorGrey,
+                                size: 15.0)),
+                      ],
+                    ),
+                    Text(
+                        '${client.countBalanceLesson} из ${client.countAllLesson}',
+                        style: TStyle.textStyleVelaSansBold(
+                            Theme.of(context).textTheme.displayMedium!.color!,
+                            size: 16.0))
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const Gap(5),
+          Visibility(
+            visible: client.dateLestLesson.isNotEmpty ||
+                client.dateNearLesson.isNotEmpty,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        client.status != ClientStatus.archive
+                            ? 'Дата ближ. урока: '.tr()
+                            : 'Дата посл. урока: '.tr(),
+                        style: TStyle.textStyleVelaSansBold(
+                            Theme.of(context).textTheme.displayMedium!.color!,
+                            size: 14.0)),
+                    Text(
+                        client.dateNearLesson.isNotEmpty
+                            ? DateTimeParser.getDateFromApi(
+                                date: client.dateNearLesson)
+                            : DateTimeParser.getDateFromApi(
+                                date: client.dateLestLesson),
+                        style: TStyle.textStyleVelaSansMedium(colorGrey,
+                            size: 12.0))
+                  ],
+                ),
+                const Gap(20),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  decoration: BoxDecoration(
+                      color: StatusToColor.getColor(
+                          lessonStatus: client.status != ClientStatus.archive
+                              ? client.statusNearLesson
+                              : client.statusLastLesson),
+                      border: Border.all(
+                          color: client.statusNearLesson.isComplete ||
+                                  client.statusNearLesson.isPlanned ||
+                                  client.statusLastLesson.isComplete ||
+                                  client.statusLastLesson.isPlanned
+                              ? textColorBlack(context)
+                              : Colors.transparent),
+                      borderRadius: BorderRadius.circular(5)),
+                  child: Text(
+                      StatusToColor.getNameStatus(
+                          client.status != ClientStatus.archive
+                              ? client.statusNearLesson
+                              : client.statusLastLesson),
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TStyle.textStyleVelaSansBold(
+                          Theme.of(context).textTheme.displayMedium!.color!,
+                          size: 10.0)),
+                )
+              ],
+            ),
+          ),
+          Visibility(
+            visible: client.status == ClientStatus.archive ||
+                client.status == ClientStatus.replacement ||
+                client.status == ClientStatus.action,
+            child: Column(
+              children: [
+                const Gap(6),
+                Divider(color: colorGrey),
+                const Gap(6),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -248,10 +340,10 @@ class DetailsClientContent extends StatelessWidget {
                       width: 20,
                       height: 20,
                       decoration: BoxDecoration(
-                        //color: StatusToColor.getColor(lessonStatus: LessonStatus.complete),
-                        border: Border.all(color: textColorBlack(context),width: 1.5),
-                        borderRadius: BorderRadius.circular(5)
-                      ),
+                          //color: StatusToColor.getColor(lessonStatus: LessonStatus.complete),
+                          border: Border.all(
+                              color: textColorBlack(context), width: 1.5),
+                          borderRadius: BorderRadius.circular(5)),
                       child: Text(client.cancelL.toString(),
                           style: TStyle.textStyleVelaSansMedium(
                               Theme.of(context).textTheme.displayMedium!.color!,
@@ -272,9 +364,9 @@ class DetailsClientContent extends StatelessWidget {
                       height: 20,
                       decoration: BoxDecoration(
                           //color: StatusToColor.getColor(lessonStatus: LessonStatus.out),
-                          border: Border.all(color: textColorBlack(context),width: 1.5),
-                          borderRadius: BorderRadius.circular(5)
-                      ),
+                          border: Border.all(
+                              color: textColorBlack(context), width: 1.5),
+                          borderRadius: BorderRadius.circular(5)),
                       child: Text(client.outL.toString(),
                           style: TStyle.textStyleVelaSansMedium(
                               Theme.of(context).textTheme.displayMedium!.color!,
@@ -294,10 +386,10 @@ class DetailsClientContent extends StatelessWidget {
                       width: 20,
                       height: 20,
                       decoration: BoxDecoration(
-                         // color: StatusToColor.getColor(lessonStatus: LessonStatus.planned),
-                          border: Border.all(color: textColorBlack(context),width: 1.5),
-                          borderRadius: BorderRadius.circular(5)
-                      ),
+                          // color: StatusToColor.getColor(lessonStatus: LessonStatus.planned),
+                          border: Border.all(
+                              color: textColorBlack(context), width: 1.5),
+                          borderRadius: BorderRadius.circular(5)),
                       child: Text(client.plannedL.toString(),
                           style: TStyle.textStyleVelaSansMedium(
                               Theme.of(context).textTheme.displayMedium!.color!,
@@ -317,10 +409,10 @@ class DetailsClientContent extends StatelessWidget {
                       width: 20,
                       height: 20,
                       decoration: BoxDecoration(
-                        //color: StatusToColor.getColor(lessonStatus: LessonStatus.out),
-                          border: Border.all(color: textColorBlack(context),width: 1.5),
-                          borderRadius: BorderRadius.circular(5)
-                      ),
+                          //color: StatusToColor.getColor(lessonStatus: LessonStatus.out),
+                          border: Border.all(
+                              color: textColorBlack(context), width: 1.5),
+                          borderRadius: BorderRadius.circular(5)),
                       child: Text(client.unallocatedL.toString(),
                           style: TStyle.textStyleVelaSansMedium(
                               Theme.of(context).textTheme.displayMedium!.color!,
@@ -333,85 +425,41 @@ class DetailsClientContent extends StatelessWidget {
           ),
 
           Visibility(
-            visible: client.status==ClientStatus.archive||
-                client.status == ClientStatus.replacement||client.status == ClientStatus.action,
-            child: Column(
-              children: [
-                const Gap(10),
-                Divider(color: colorGrey),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.play_lesson_outlined,
-                          color: colorGreen,
-                          size: 16,
-                        ),
-                        const Gap(5),
-                        Text('Осталось уроков: ',
-                            style: TStyle.textStyleVelaSansMedium(colorGrey,
-                                size: 15.0)),
-                      ],
-                    ),
-                    Text('${client.countBalanceLesson} из ${client.countAllLesson}',
-                        style: TStyle.textStyleVelaSansBold(
-                            Theme.of(context).textTheme.displayMedium!.color!,
-                            size: 16.0))
-                  ],
-                ),
-              ],
-            ),
-          ),
-          const Gap(5),
-          Visibility(
-            visible: client.dateLestLesson.isNotEmpty||client.dateNearLesson.isNotEmpty,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(client.status != ClientStatus.archive
-                        ?'Дата ближ. урока: '.tr():
-                    'Дата посл. урока: '.tr(),
-                        style: TStyle.textStyleVelaSansBold(
-                            Theme.of(context).textTheme.displayMedium!.color!,
-                            size: 14.0)),
-                    Text(client.dateNearLesson.isNotEmpty?DateTimeParser.getDateFromApi(date: client.dateNearLesson):
-                    DateTimeParser.getDateFromApi(date: client.dateLestLesson),
-                        style: TStyle.textStyleVelaSansMedium(colorGrey,
-                            size: 12.0))
-                  ],
-                ),
-                const Gap(20),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                  decoration: BoxDecoration(
-                      color: StatusToColor.getColor(
-                          lessonStatus: client.status != ClientStatus.archive?
-                          client.statusNearLesson:client.statusLastLesson),
-                      border: Border.all(
-                          color: client.statusNearLesson.isComplete||client.statusNearLesson.isPlanned||
-                              client.statusLastLesson.isComplete||client.statusLastLesson.isPlanned
-                              ? textColorBlack(context)
-                              : Colors.transparent),
-                      borderRadius: BorderRadius.circular(5)),
-                  child: Text(StatusToColor.getNameStatus(client.status != ClientStatus.archive?
-                  client.statusNearLesson:client.statusLastLesson),
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TStyle.textStyleVelaSansBold(
-                          Theme.of(context).textTheme.displayMedium!.color!,
-                          size: 10.0)),
-                )
-              ],
-            ),
-          ),
+              visible: client.cancelL+client.outL > 0&&!isLid,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Gap(6),
+                  Divider(color: colorGrey),
+                  const Gap(6),
+                  Text('История посещений:',
+                      style: TStyle.textStyleVelaSansMedium(colorGrey,
+                          size: 15.0)),
+                  const Gap(5),
+                  Wrap(
+                    direction: Axis.horizontal,
+                    children: [
+                      ...List.generate(client.cancelL+client.outL, (index) {
+                        return Container(
+                          alignment: Alignment.center,
+                          margin: const EdgeInsets.all(5),
+                          width: 40,
+                          height: 40,
+                         decoration: BoxDecoration(
+                           borderRadius: BorderRadius.circular(5),
+                           border: Border.all(color: textColorBlack(context),width: 1),
+                           color: StatusToColor.statusColors[index]
+                         ),
+                         child:  Text('Cб\n2$index.07',
+                             style: TStyle.textStyleVelaSansBold(textColorBlack(context),
+                                 size: 10.0)),
+                        );
+                      })
+                    ],
+                  ),
+                ],
+              )),
+
           const Gap(50.0),
           // SizedBox(
           //   height: 40.0,

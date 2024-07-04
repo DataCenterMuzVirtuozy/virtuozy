@@ -32,8 +32,12 @@ class _PhoneCallerContentState extends State<PhoneCallerContent> {
           ...List.generate(3, (index) {
                 return InkWell(
                   onTap: () async {
+                    if(index==2){
+                      await _launchUrlTel(tel: widget.phone);
+                      return;
+                    }
                     await _launchUrl(
-                        _getUrl(index, widget.phone));
+                        _getUrl(index,'+375295787315'));
                   },
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 10),
@@ -61,6 +65,7 @@ class _PhoneCallerContentState extends State<PhoneCallerContent> {
                   ),
                 );
               }),
+          const Gap(30)
         ],
       ),
     );
@@ -69,11 +74,28 @@ class _PhoneCallerContentState extends State<PhoneCallerContent> {
 
   String _getUrl( int index, String phone) {
     final p = phone.split('+')[1];
-    print(p);
+
+    if(index==2){
+      return phone;
+    }
+
+    if(index == 1){
+      return  'https://wa.me/${phone}?call';
+    }
+
     if(index==0){
-      return  'https://t.me//$p';
+      return  'https://t.me/$phone';
     }
    return '';
+  }
+
+  Future<void> _launchUrlTel({required String tel}) async {
+    final Uri url = Uri(
+        scheme:'tel',
+        path: tel);
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    }
   }
 
   Future<void> _launchUrl(String url) async {
