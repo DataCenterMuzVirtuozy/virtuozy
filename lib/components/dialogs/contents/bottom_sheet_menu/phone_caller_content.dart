@@ -22,8 +22,8 @@ class PhoneCallerContent extends StatefulWidget{
 
 class _PhoneCallerContentState extends State<PhoneCallerContent> {
 
-  final List<String> _pathsIcon = [telegram, whatsapp];
-  final List<String> _titles = ['Telegram','WhatsApp','Позвонить'];
+  final List<String> _pathsIcon = [whatsapp,telegram];
+  final List<String> _titles = ['WhatsApp','Telegram','Позвонить'];
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +48,8 @@ class _PhoneCallerContentState extends State<PhoneCallerContent> {
                       children: [
                         index==2?const Icon(Icons.phone):Image.asset(
                           _pathsIcon[index],
-                          width: 30,
-                          height: 30,
+                          width: index==0?30:25,
+                          height:index==0?30:25,
                         ),
                         const Gap(10),
                         Expanded(
@@ -81,11 +81,11 @@ class _PhoneCallerContentState extends State<PhoneCallerContent> {
       return phone;
     }
 
-    if(index == 1){
+    if(index == 0){
       return  'https://wa.me/${phone}?call';
     }
 
-    if(index==0){
+    if(index==1){
       return  'https://t.me/$phone';
     }
    return '';

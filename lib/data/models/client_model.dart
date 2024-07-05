@@ -58,6 +58,7 @@
 
    factory ClientModel.fromApi({required Map<String,dynamic> map}){
      return ClientModel(
+       //todo add history visit lesson list
        login: map['login']??'@kjkdkfsdf',// add mokyy
        platform: map['platform']??'Telegram',// add mokyy
        unallocatedL: map['unallocatedL']??0, // add mokyy

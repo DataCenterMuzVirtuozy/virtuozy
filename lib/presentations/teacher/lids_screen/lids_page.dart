@@ -78,27 +78,11 @@ class _LidsPageState extends State<LidsPage> with AuthMixin,TickerProviderStateM
     _myLidsResult.clear();
     _puLidsResult.clear();
     _allLidsResult.clear();
-    for (var str in _trialLids) {
-      if (str.name.toLowerCase().contains(input.toLowerCase())) {
-        setState(() {
-          _puLidsResult.add(str);
-        });
-      }
-    }
-    for (var str in _allLids) {
-      if (str.name.toLowerCase().contains(input.toLowerCase())) {
-        setState(() {
-          _allLidsResult.add(str);
-        });
-      }
-    }
-    for (var str in _myLids) {
-      if (str.name.toLowerCase().contains(input.toLowerCase())) {
-        setState(() {
-          _myLidsResult.add(str);
-        });
-      }
-    }
+
+    _puLidsResult = _trialLids.where((element) => element.name.toLowerCase().contains(input.toLowerCase())).toList();
+     _allLidsResult = _allLids.where((element) => element.name.toLowerCase().contains(input.toLowerCase())).toList();
+   _myLidsResult = _myLids.where((element) => element.name.toLowerCase().contains(input.toLowerCase())).toList();
+
   }
 
   @override
@@ -112,15 +96,23 @@ class _LidsPageState extends State<LidsPage> with AuthMixin,TickerProviderStateM
 
 
           if(_myLidsResult.isEmpty){
-            _myLidsResult = _myLids;
+            for(var e in _myLids){
+              _myLidsResult.add(e);
+            }
+
           }
 
           if(_allLidsResult.isEmpty){
-            _allLidsResult = _allLids;
+            for(var e in _allLids){
+              _allLidsResult.add(e);
+            }
+
           }
 
           if(_puLidsResult.isEmpty){
-            _puLidsResult = _trialLids;
+            for(var e in _trialLids){
+              _puLidsResult.add(e);
+            }
           }
         },
         builder: (context,state) {

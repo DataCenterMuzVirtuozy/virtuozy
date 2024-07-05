@@ -35,6 +35,7 @@ class ClientsBloc extends Bloc<ClientsEvent,ClientsState>{
       final clients = clientsFromApi.where((element) => element.status != ClientStatus.archive).toList();
       await emit(state.copyWith(status: ClientsStatus.loaded,all: clients,action: action,archive: archive,today: today,
       replacement: replacement));
+      print('CLienst ${clients.length}');
     }on Failure catch (e) {
       await emit(state.copyWith(status: ClientsStatus.error,error: e.message));
     }

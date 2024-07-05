@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:virtuozy/components/phone_number.dart';
@@ -27,14 +28,21 @@ class DetailsClientContent extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Icon(Icons.phone, color: colorGreen, size: 15.0),
-                      const Gap(5),
-                      PhoneNum(phone: client.phoneNum)
-                    ],
+                  Visibility(
+                    visible: !isLid,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Row(
+                        children: [
+                          Icon(Icons.phone, color: colorGreen, size: 15.0),
+                          const Gap(5),
+                          PhoneNum(phone: client.phoneNum)
+                        ],
+                      ),
+                    ),
                   ),
                   Visibility(
                     visible: client.platform.isNotEmpty,
@@ -42,7 +50,6 @@ class DetailsClientContent extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 5),
                       child: Column(
                         children: [
-                          const Gap(8),
                           Row(
                             children: [
                               Container(

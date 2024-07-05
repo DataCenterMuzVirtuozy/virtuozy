@@ -42,6 +42,7 @@ class _ClientsPageState extends State<ClientsPage> with TickerProviderStateMixin
   late Animation<double> _animation;
   late AnimationController _controllerAnim;
 
+
   @override
   void initState() {
     _controllerAnim = AnimationController(
@@ -70,67 +71,66 @@ class _ClientsPageState extends State<ClientsPage> with TickerProviderStateMixin
     super.dispose();
   }
 
-  void _handleSearchMyLids(String input) {
+   _handleSearchMyLids(String input)  {
     _allClResult.clear();
     _todayClResult.clear();
     _activeClResult.clear();
     _replacementClResult.clear();
     _archiveClResult.clear();
 
-    for (var str in _allCl) {
-      if (str.name.toLowerCase().contains(input.toLowerCase())) {
-        _allClResult.add(str);
-      }
-    }
-    for (var str in _todayCl) {
-      if (str.name.toLowerCase().contains(input.toLowerCase())) {
-        _todayClResult.add(str);
-      }
-    }
-    for (var str in _archiveCl) {
-      if (str.name.toLowerCase().contains(input.toLowerCase())) {
-        _archiveClResult.add(str);
-      }
-    }
+setState(() {
+  _allClResult = _allCl.where((element) => element.name.toLowerCase().contains(input.toLowerCase())).toList();
+  _todayClResult = _todayCl.where((element) => element.name.toLowerCase().contains(input.toLowerCase())).toList();
+  _activeClResult = _activeCl.where((element) => element.name.toLowerCase().contains(input.toLowerCase())).toList();
+  _replacementClResult = _replacementCl.where((element) => element.name.toLowerCase().contains(input.toLowerCase())).toList();
+  _archiveClResult = _archiveCl.where((element) => element.name.toLowerCase().contains(input.toLowerCase())).toList();
+});
 
-    for (var str in _replacementCl) {
-      if (str.name.toLowerCase().contains(input.toLowerCase())) {
-        _replacementClResult.add(str);
-      }
-    }
-
-    for (var str in _activeCl) {
-      if (str.name.toLowerCase().contains(input.toLowerCase())) {
-        _activeClResult.add(str);
-      }
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocConsumer<ClientsBloc, ClientsState>(listener: (c, s) {
-        _allCl = s.all;
-        _todayCl = s.today;
-        _activeCl = s.action;
-        _replacementCl = s.replacement;
-        _archiveCl = s.archive;
+      body: BlocConsumer<ClientsBloc, ClientsState>(
+          listener: (c, s) {
 
-        if (_allClResult.isEmpty) {
-          _allClResult = _allCl;
-        }
-        if (_todayClResult.isEmpty) {
-          _todayClResult = _todayCl;
-        }
-        if (_activeClResult.isEmpty) {
-          _activeClResult = _activeCl;
-        }
-        if (_archiveClResult.isEmpty) {
-          _archiveClResult = _archiveCl;
-        }
-        if (_replacementClResult.isEmpty) {
-          _replacementClResult = _replacementCl;
-        }
+            if(s.status.isLoaded){
+              _allCl = s.all;
+              _todayCl = s.today;
+              _activeCl = s.action;
+              _replacementCl = s.replacement;
+              _archiveCl = s.archive;
+              if (_allClResult.isEmpty) {
+                for(var e in _allCl){
+                  _allClResult.add(e);
+                }
+              }
+              if (_todayClResult.isEmpty) {
+                for(var e in _todayCl){
+                  _todayClResult.add(e);
+                }
+              }
+              if (_activeClResult.isEmpty) {
+                for(var e in _activeCl){
+                  _activeClResult.add(e);
+                }
+
+              }
+              if (_archiveClResult.isEmpty) {
+                for(var e in _archiveCl){
+                  _archiveClResult.add(e);
+                }
+              }
+              if (_replacementClResult.isEmpty) {
+                for(var e in _replacementCl){
+                  _replacementClResult.add(e);
+                }
+
+              }
+
+
+            }
+
       }, builder: (context, state) {
         if (state.status.isError) {
           return Center(
@@ -145,6 +145,7 @@ class _ClientsPageState extends State<ClientsPage> with TickerProviderStateMixin
           );
         }
 
+
         return DefaultTabController(
             length: 5,
             child: SingleChildScrollView(
@@ -158,10 +159,8 @@ class _ClientsPageState extends State<ClientsPage> with TickerProviderStateMixin
                       height: _animation.value,
                       child: SearchClients(
                         open: _animation.value>40.0,
-                        onChange: (d) {
-                          setState(() {
-                            _handleSearchMyLids(d);
-                          });
+                        onChange: (d)  {
+                           _handleSearchMyLids(d);
                         },
                       ),
                     );
@@ -196,7 +195,7 @@ class _ClientsPageState extends State<ClientsPage> with TickerProviderStateMixin
                               size: 14.0))
                     ],
                   ),
-                  SizedBox(
+                 SizedBox(
                     height: MediaQuery.of(context).size.height,
                     child: TabBarView(
                       children: [
