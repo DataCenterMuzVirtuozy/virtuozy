@@ -419,7 +419,6 @@ class _SearchClientsState extends State<SearchClients> {
   Widget build(BuildContext context) {
 
     if(!widget.open){
-      print('Clera');
       _editingController.clear();
     }
 

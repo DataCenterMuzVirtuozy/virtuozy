@@ -187,9 +187,14 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
                             _modeTable = ViewModeTable.day;
                             context.read<TableBloc>().add(
                                  GetInitLessonsEvent(viewMode: mode,date: _dateCurrent,scrollPage: true));
-                          } else {
+                          } else if(mode == ViewModeTable.my){
+                            _modeTable = ViewModeTable.week;
                             context.read<TableBloc>().add(
-                                 GetMyLessonEvent(weekMode: false,indexDate: state.indexByDateNow));
+                                GetMyLessonEvent(weekMode: true,indexDate: state.indexByDateNow));
+
+                          }else{
+                            context.read<TableBloc>().add(
+                                GetMyLessonEvent(weekMode: false,indexDate: state.indexByDateNow));
                           }
                         })
                       ],

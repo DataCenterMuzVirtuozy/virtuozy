@@ -477,13 +477,33 @@ class _InfoStatusLessonContentState extends State<InfoStatusLessonContent> {
   }
 
   String _getStatusTime(Lesson lesson) {
-    final intToDay = DateTime.now().millisecondsSinceEpoch;
+    final daysStatus = ['вчера','сегодня','завтра','прошлое','будущее'];
+    final dNow = DateTime.now();
+    const d = 86400000;
+
+    final dateStringNow = DateFormat('yyyy-MM-dd').format(dNow);
+    final intToDay = DateTimeParser.getTimeMillisecondEpochByDate(date: dateStringNow);
     final intTimeLesson =
-        DateTimeParser.getTimeMillisecondEpochByDate(date: lesson.date);
-    return intToDay > intTimeLesson
-        ? 'вчера'
-        : intToDay == intTimeLesson
-            ? 'сегодня'
-            : 'завтра';
+    DateTimeParser.getTimeMillisecondEpochByDate(date: lesson.date);
+    if(lesson.date==dateStringNow){
+      return daysStatus[1];
+    }
+
+    if(intToDay>intTimeLesson){
+      final d1 = intToDay - intTimeLesson;
+      if(d1<=d){
+        return daysStatus[0];
+      }else if(d1>d){
+        return daysStatus[3];
+      }
+    }else if(intToDay<intTimeLesson){
+      final d2 = intTimeLesson - intToDay;
+      if(d2<=d){
+        return daysStatus[2];
+      }else if(d2>d){
+        return daysStatus[4];
+      }
+    }
+   return '...';
   }
 }
