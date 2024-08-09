@@ -13,5 +13,12 @@ class Endpoints{
   static const String urlNSK = 'https://virtuozy-nsk.ru';
   static const String urlMSK = 'https://virtuozy-msk.ru';
   static const String subways = 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/metro';
+
+
+
+  //api crm
+  static const String baseApi = 'https://crm-muz.ru/api';
+  static const String subs = '/subsUser';
+
 }
 

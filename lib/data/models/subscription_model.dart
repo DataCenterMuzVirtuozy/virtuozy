@@ -56,7 +56,7 @@ class SubscriptionModel{
       'status': subscriptionEntity.status == StatusSub.active?1:
       subscriptionEntity.status == StatusSub.planned?2:0,
       'nameDir': subscriptionEntity.nameDir,
-      'dateBay':subscriptionEntity.dateBay,
+      'dateBay':subscriptionEntity.dateBay, //
       'nameTeacher':subscriptionEntity.nameTeacher,
       'options':{}
     };

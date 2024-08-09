@@ -30,7 +30,7 @@ class UserService{
     try{
        final res = await _dio.get(Endpoints.user,
        queryParameters: {
-          'phoneNumber': uid.replaceAll(' ', '')
+          'phoneNumber':uid.replaceAll(' ', '')
        });
 
        if((res.data as List<dynamic>).isEmpty){
