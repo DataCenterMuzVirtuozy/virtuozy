@@ -24,6 +24,7 @@ class UserService{
 
 
    final _dio = locator.get<DioClient>().init();
+   final _dioApi = locator.get<DioClient>().initApi();
 
 
    Future<UserModel> getUser({required String uid}) async {
@@ -37,15 +38,17 @@ class UserService{
         return throw   Failure('Пользователь не найден'.tr());
        }
        final idUser = res.data[0]['id'] as int;
-       final resSubs = await _dio.get(Endpoints.subsUser,
+       //api crm
+       final resSubs = await _dioApi.get(Endpoints.subsUser,
            queryParameters: {
-            'idUser': idUser
+            'idUser': 9827
            });
+       print('Response ${resSubs.data['data']}');
        final resLessons = await _dio.get(Endpoints.lessons,
            queryParameters: {
              'idStudent': idUser
            });
-       return UserModel.fromMap(mapUser: res.data[0],mapSubsAll: resSubs.data,lessons: resLessons.data);
+       return UserModel.fromMap(mapUser: res.data[0],mapSubsAll: resSubs.data['data'],lessons: resLessons.data);
     } on Failure catch(e){
        throw  Failure(e.message);
     } on DioException catch(e){

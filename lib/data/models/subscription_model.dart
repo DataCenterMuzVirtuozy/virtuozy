@@ -65,21 +65,28 @@ class SubscriptionModel{
 
   factory SubscriptionModel.fromMap(Map<String, dynamic> map,String nameDirection) {
 
-   final option = OptionModel.fromMap(map['options']);
+   final option = OptionModel.fromMap(map['options'][0]); //todo принимать список
+   final idDir = int.parse(map['idDir']);
+   final idUser = int.parse(map['idUser']);
+   final balanceSub = (map['balanceSub'] as String).isEmpty?0.0:double.parse(map['balanceSub']);
+   final balanceLesson = (map['balanceLesson'] as String).isEmpty?0:int.parse( map['balanceLesson']);
+   final status = int.parse(map['status']);
+
+
     return SubscriptionModel(
-        contactValues: map['contactValues']??['8 (499) 322-71-04','https://wa.clck.bar/79231114616','https://t.me/@VirtuozyNskMs2'],
-      idDir: map['idDir'] as int,
-      idUser: map['idUser'] as int,
+        contactValues: map['contactValues']??[],
+      idDir: idDir,  // todo need int from api
+      idUser: idUser,  // todo need int from api
       id: map['id'] as int,
       name: map['name'] as String,
       price: (map['price'] as dynamic).toDouble(),
       priceOneLesson: (map['priceOneLesson'] as dynamic).toDouble(),
-      balanceSub: (map['balanceSub'] as dynamic).toDouble(),
-      balanceLesson: map['balanceLesson'] as int,
+      balanceSub: balanceSub, // todo need double from api
+      balanceLesson: balanceLesson, // todo need int from api
       dateStart: map['dateStart'] as String,
       dateEnd: map['dateEnd'] as String,
       commentary: map['commentary'] as String,
-      status: map['status'] as int,
+      status: status,  // todo need int from api
       dateBay: map['dateBay'] as String,
       nameDir: nameDirection,
       nameTeacher: map['nameTeacher'] as String,

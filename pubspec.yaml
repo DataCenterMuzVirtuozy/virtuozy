@@ -55,7 +55,7 @@ dependencies:
   shared_preferences: ^2.2.2
   onboarding: ^3.1.0
   lottie: ^3.0.0
-  persistent_bottom_nav_bar: ^5.0.2
+  ##persistent_bottom_nav_bar: ^5.0.2
   webview_flutter: ^4.4.4
   table_calendar: ^3.0.9
   badges: ^3.1.2

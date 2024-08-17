@@ -4,12 +4,8 @@
  import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
-import 'package:virtuozy/components/calendar/calendar.dart';
 import 'package:virtuozy/components/dialogs/dialoger.dart';
 import 'package:virtuozy/components/home_drawer_menu.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
@@ -18,13 +14,11 @@ import 'package:virtuozy/presentations/teacher/clients_screen/clients_page.dart'
 import 'package:virtuozy/presentations/teacher/lids_screen/lids_page.dart';
 
 import 'package:virtuozy/resourses/colors.dart';
-import 'package:virtuozy/resourses/images.dart';
  import 'package:badges/badges.dart' as badges;
 import 'package:virtuozy/resourses/strings.dart';
 import 'package:virtuozy/router/paths.dart';
 import 'package:virtuozy/utils/auth_mixin.dart';
 import '../../../utils/text_style.dart';
-import '../../../utils/theme_provider.dart';
 import '../../components/title_page.dart';
 import '../auth_screen/bloc/auth_bloc.dart';
 import '../student/finance_screen/finance_page.dart';
