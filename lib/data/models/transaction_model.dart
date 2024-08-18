@@ -31,13 +31,19 @@ class TransactionModel{
   }
 
     factory TransactionModel.fromMap(Map<String, dynamic> map) {
+      final idUser = int.parse(map['idUser']);
+      final typeTransaction = int.parse(map['typeTransaction']);
+      final quantity = double.parse(map['quantity']);
+      //final idDir = int.parse( map['idDir']);
+
+
       return TransactionModel(
-        idUser: map['idUser'] as int,
+        idUser: idUser,
         date: map['date'] as String,
-        typeTransaction: map['typeTransaction'] as int,
+        typeTransaction: typeTransaction,
         time: map['time'] as String,
-        quantity: (map['quantity'] as dynamic).toDouble(),
-        idDir: map['idDir'] as int,
+        quantity: quantity,
+        idDir: 1, //todo empty from api
       );
     }
 }

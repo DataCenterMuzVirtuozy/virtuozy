@@ -19,7 +19,7 @@ class FinanceService{
 
 
   final _dio = locator.get<DioClient>().init();
-
+  final _dioApi = locator.get<DioClient>().initApi();
    Future<PricesDirectionModel> getSubscriptionsByDirection({required String nameDirection}) async {
      try{
        final listSub = _listPriceDirection.map((e) => PricesDirectionModel.fromMap(e)).toList();
@@ -64,11 +64,14 @@ class FinanceService{
            };
          }else{
            data = {
-             "idUser": idUser,
+             "idUser": 9827,
            };
          }
-         final res = await _dio.get(Endpoints.transactions,queryParameters: data);
-         final trans = (res.data as List<dynamic>).map((e)=> TransactionModel.fromMap(e)).toList();
+
+         //api crm
+         final res = await _dioApi.get(Endpoints.transactions,queryParameters: data);
+         print('Transactions ${res.data}');
+         final trans = (res.data['data'] as List<dynamic>).map((e)=> TransactionModel.fromMap(e)).toList();
          return trans;
        }on Failure catch(e){
          throw Failure(e.message);

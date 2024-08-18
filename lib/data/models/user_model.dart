@@ -265,32 +265,37 @@ class UserModel{
 
   factory LessonModel.fromMap(Map<String, dynamic> map,String nameDirection) {
 
+    //todo edit on crm
+    final idStudent = int.parse(map['idStudent']);
+    final idSub = int.parse(map['idSub']);
+    final idTeacher = int.parse(map['idTeacher']);
+    final status = int.parse(map['status']);
+    final bonus =( map['bonus'] as String).isEmpty?false:bool.parse(map['bonus'] as String);
+    final date = (map['date'] as String).split(' ')[0];
 
-    //final date  = DateTimeParser.date();
-    //final time = DateTimeParser.time();
+
     return LessonModel(
-      nameGroup: map['nameGroup']??'',
-      idStudent: map['idStudent']??0,
-      online: map['online']??false,
-      comments: map['comments']??'...',
-      nameSub: map['nameSub']??'...',
-      duration: map['duration']??60,
-      type: map['type']??10,
-      contactValues: map['contactValues']??['8 (499) 322-71-04','https://wa.clck.bar/79231114616','https://t.me/@VirtuozyNskMs2'],
-      idDir: map['idDir']??0,
+      nameGroup: map['nameGroup']??'', //absent  from api
+      idStudent: idStudent,
+      online: map['online']??false, //absent from api
+      comments: map['comments']??'...', //absent from api
+      nameSub: map['nameSub']??'...', //absent from api
+      duration: map['duration']??60, //absent from api
+      type: map['type']??10,  //absent
+      contactValues: map['contactValues']??[], //absent from api
+      idDir: map['idDir']??1, //absent from api
       idSchool: map['idSchool']??'',
-      idSub: map['idSub']??0,
+      idSub: idSub,
       id: map['id']??0,
       timeAccept: map['timeAccept']??'',
-      date: map['date']??'',
+      date: date,
       timePeriod: map['timePeriod']??'',
-       // timePeriod: time,
-      idTeacher: map['idTeacher'],
+      idTeacher: idTeacher,
       idAuditory: map['idAuditory']??'',
       nameTeacher: map['nameTeacher']??'',
-      status: map['status']??0,
-      nameDirection: map['nameDir']??'',
-      bonus: map['bonus']??false,
+      status: status,
+      nameDirection: map['nameDir']??'', //absent from api
+      bonus: bonus,
         nameStudent: map['nameStudent']??''
     );
   }
