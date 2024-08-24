@@ -117,6 +117,7 @@ class UserModel{
   factory DirectionModel.fromMap({required Map<String, dynamic> mapDirection,required List<dynamic> mapSubs,required List<dynamic> lessons}) {
 
     //final lessons =  mapDirection['lessons'] as List<dynamic>;
+
     final nameDirection = mapDirection['name'] as String;
     final subs = mapSubs.map((e) => SubscriptionModel.fromMap(e,nameDirection)).toList();
     final subsDir = subs.where((element) => element.idDir == (mapDirection['id'] as int)).toList();
@@ -157,6 +158,7 @@ class UserModel{
     List<SubscriptionModel> listSubsAllPlaned = [];
      SubscriptionModel? subAwait;
     List<SubscriptionModel> listSubs = [];
+
    if(subs.isEmpty){
      return [];
    }

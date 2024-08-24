@@ -104,5 +104,7 @@ enum StatusSub{
 enum OptionStatus{
   freezing,
   holiday,
+  prolongation,
+  vacation,
   unknown
 }

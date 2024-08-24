@@ -339,6 +339,7 @@ class _BoxSubscriptionState extends State<BoxSubscription> {
   void initState() {
     super.initState();
     subs = _getSubs(directions: widget.directions, allViewDirection: widget.allViewDirection);
+
   }
 
   @override
@@ -587,7 +588,8 @@ class _ItemSubState extends State<ItemSub> {
                     ),
 
                     Visibility(
-                      visible: widget.subscription.option.status!=OptionStatus.unknown,
+                      visible: widget.subscription.option.status!=OptionStatus.unknown
+                        &&widget.subscription.option.dateEnd.isNotEmpty,
                       child: Row(
                         children: [
                           Icon(widget.subscription.option.status == OptionStatus.freezing?Icons.icecream:

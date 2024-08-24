@@ -47,7 +47,8 @@ class UserMapper{
   static Option fromOptionApi({required OptionModel optionModel}){
     return Option(status: optionModel.status.isEmpty?OptionStatus.unknown:
     optionModel.status == 'freezing'?
-    OptionStatus.freezing:OptionStatus.holiday,
+    OptionStatus.freezing:optionModel.status == 'prolongation'?
+    OptionStatus.prolongation:optionModel.status == 'vacation'?OptionStatus.vacation:OptionStatus.holiday,
         dateEnd: optionModel.dateEnd);
   }
 

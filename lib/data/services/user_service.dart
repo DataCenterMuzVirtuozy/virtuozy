@@ -43,13 +43,13 @@ class UserService{
            queryParameters: {
             'idUser': 9827
            });
-       print('Response Subs ${resSubs.data['data']}');
+      // print('Response Subs ${resSubs.data['data']}');
        // api crm
        final resLessons = await _dioApi.get(Endpoints.lessons,
            queryParameters: {
              'idStudent': 9827
            });
-       //print('Response Lesons ${resLessons.data['data'][0]}');
+       print('Response Lesons ${resLessons.data['data']}');
        return UserModel.fromMap(mapUser: res.data[0],mapSubsAll: resSubs.data['data'],lessons: resLessons.data['data']);
     } on Failure catch(e){
        throw  Failure(e.message);

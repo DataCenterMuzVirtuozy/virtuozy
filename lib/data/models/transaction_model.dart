@@ -34,7 +34,7 @@ class TransactionModel{
       final idUser = int.parse(map['idUser']);
       final typeTransaction = int.parse(map['typeTransaction']);
       final quantity = double.parse(map['quantity']);
-      //final idDir = int.parse( map['idDir']);
+      final idDir = int.parse( map['idDir']);
 
 
       return TransactionModel(
@@ -43,7 +43,7 @@ class TransactionModel{
         typeTransaction: typeTransaction,
         time: map['time'] as String,
         quantity: quantity,
-        idDir: 1, //todo empty from api
+        idDir: idDir, //todo empty from api
       );
     }
 }

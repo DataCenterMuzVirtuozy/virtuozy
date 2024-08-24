@@ -17,7 +17,7 @@ class TeacherContacts extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    print('Contacl ${contacts.length}');
+
    return                  SizedBox(
      height: size,
      child: Row(
@@ -34,7 +34,7 @@ class TeacherContacts extends StatelessWidget{
              )),
          const Gap(5.0),
          Visibility(
-             visible: contacts.isNotEmpty&& (contacts[1] as String).isNotEmpty,
+             visible: contacts.length>1&&(contacts[1] as String).isNotEmpty,
              child: InkWell(
                child: Image.asset(whatsapp),
                onTap: () async {
@@ -43,7 +43,7 @@ class TeacherContacts extends StatelessWidget{
              )),
          const Gap(5.0),
          Visibility(
-             visible: contacts.isNotEmpty&&  (contacts[2] as String).isNotEmpty,
+             visible: contacts.length>2&&  (contacts[2] as String).isNotEmpty,
              child: InkWell(
                child: Padding(
                  padding: const EdgeInsets.all(2.0),

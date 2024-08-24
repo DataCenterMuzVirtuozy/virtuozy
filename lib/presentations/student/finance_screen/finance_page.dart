@@ -524,6 +524,7 @@ class _FinancePageState extends State<FinancePage> {
    List<SubscriptionEntity> _getSubs({required List<DirectionLesson> directions, required bool allViewDirection}){
      List<SubscriptionEntity> list = [];
      for(var dir in directions){
+
        for(var s in dir.lastSubscriptions){
          list.add(s);
        }
@@ -536,6 +537,7 @@ class _FinancePageState extends State<FinancePage> {
    void initState() {
      super.initState();
      subs = _getSubs(directions: widget.directions, allViewDirection: widget.allViewDirection);
+
    }
 
    @override
@@ -773,7 +775,8 @@ class _FinancePageState extends State<FinancePage> {
                  ),
 
                  Visibility(
-                   visible: widget.subscription.option.status!=OptionStatus.unknown,
+                   visible: widget.subscription.option.status!=OptionStatus.unknown&&
+                       widget.subscription.option.dateEnd.isNotEmpty,
                    child: Row(
                      children: [
                        Icon(widget.subscription.option.status == OptionStatus.freezing?Icons.icecream:
