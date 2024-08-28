@@ -57,20 +57,21 @@ class FinanceService{
    Future<List<TransactionModel>> getTransactions({required int idUser,required int idDirections}) async {
      try{
          Map<String,dynamic> data = {};
-         if(idDirections>0){
-           data = {
-             "idUser": idUser,
-             "idDir": idDirections,
-           };
-         }else{
-           data = {
-             "idUser": 9827,
-           };
-         }
+         // change list trans by idDir
+         // if(idDirections>0){
+         //   data = {
+         //     "idUser": idUser,
+         //     "idDir": idDirections,
+         //   };
+         // }else{
+         //   data = {
+         //     "idUser": 9827,
+         //   };
+         // }
 
          //api crm
-         final res = await _dioApi.get(Endpoints.transactions,queryParameters: data);
-         print('Transactions ${res.data}');
+         final res = await _dioApi.get(Endpoints.transactions,queryParameters: {"idUser": 9827});
+
          final trans = (res.data['data'] as List<dynamic>).map((e)=> TransactionModel.fromMap(e)).toList();
          return trans;
        }on Failure catch(e){

@@ -268,13 +268,13 @@ class UserModel{
   factory LessonModel.fromMap(Map<String, dynamic> map,String nameDirection) {
 
     //todo edit on crm
-    final idStudent = int.parse(map['idStudent']);
-    final idSub = int.parse(map['idSub']);
-    final idTeacher = int.parse(map['idTeacher']);
-    final status = int.parse(map['status']);
-    final bonus =( map['bonus'] as String).isEmpty?false:bool.parse(map['bonus'] as String);
+    final idStudent = map['idStudent'];
+    final idSub = map['idSub'];
+    final idTeacher = map['idTeacher'];
+    final status = map['status'];
+    final bonus =map['bonus'];
     final date = (map['date'] as String).split(' ')[0];
-
+    final idSchool =  map['idSchool'].toString();
 
     return LessonModel(
       nameGroup: map['nameGroup']??'', //absent  from api
@@ -286,7 +286,7 @@ class UserModel{
       type: map['type']??10,  //absent
       contactValues: map['contactValues']??[], //absent from api
       idDir: map['idDir']??1, //absent from api
-      idSchool: map['idSchool']??'',
+      idSchool: idSchool,
       idSub: idSub,
       id: map['id']??0,
       timeAccept: map['timeAccept']??'',

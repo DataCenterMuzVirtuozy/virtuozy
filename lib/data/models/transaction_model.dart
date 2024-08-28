@@ -31,10 +31,10 @@ class TransactionModel{
   }
 
     factory TransactionModel.fromMap(Map<String, dynamic> map) {
-      final idUser = int.parse(map['idUser']);
-      final typeTransaction = int.parse(map['typeTransaction']);
-      final quantity = double.parse(map['quantity']);
-      final idDir = int.parse( map['idDir']);
+      final idUser = map['idUser'];
+      final typeTransaction = map['typeTransaction'];
+      final quantity = double.parse(map['quantity'].toString());
+      final idDir =  map['idDir'];
 
 
       return TransactionModel(

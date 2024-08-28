@@ -29,6 +29,8 @@ class UserService{
 
    Future<UserModel> getUser({required String uid}) async {
     try{
+
+      //todo get user from crm _dioApi
        final res = await _dio.get(Endpoints.user,
        queryParameters: {
           'phoneNumber':uid.replaceAll(' ', '')
@@ -43,7 +45,7 @@ class UserService{
            queryParameters: {
             'idUser': 9827
            });
-       print('Response Subs ${resSubs.data['data']}');
+      // print('Response Subs ${resSubs.data['data']}');
        // api crm
        final resLessons = await _dioApi.get(Endpoints.lessons,
            queryParameters: {
