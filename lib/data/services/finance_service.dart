@@ -70,10 +70,23 @@ class FinanceService{
          // }
 
          //api crm
-         final res = await _dioApi.get(Endpoints.transactions,queryParameters: {"idUser": 9827});
+         var dio = Dio();
+         List<TransactionModel> transactions = [];
+         if(idUser==1){
+           dio = _dio;
 
-         final trans = (res.data['data'] as List<dynamic>).map((e)=> TransactionModel.fromMap(e)).toList();
-         return trans;
+         }else{
+           dio = _dioApi;
+
+         }
+         final res = await dio.get(Endpoints.transactions,queryParameters: {"idUser": idUser});
+         if(idUser==1){
+           transactions = (res.data as List<dynamic>).map((e)=> TransactionModel.fromMap(e)).toList();
+         }else{
+           transactions = (res.data['data'] as List<dynamic>).map((e)=> TransactionModel.fromMap(e)).toList();
+         }
+
+         return transactions;
        }on Failure catch(e){
          throw Failure(e.message);
        }on DioException catch(e){

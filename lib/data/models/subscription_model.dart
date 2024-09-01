@@ -18,7 +18,7 @@ class SubscriptionModel{
   final String nameDir;
   final String dateBay;
   final String nameTeacher;
-  final OptionModel optionModel;
+  final List<OptionModel> options;
   final List<dynamic> contactValues;
 
   const SubscriptionModel( {
@@ -38,7 +38,7 @@ class SubscriptionModel{
     required this.status,
     required this.dateBay,
     required this.nameTeacher,
-    required this.optionModel
+    required this.options
   });
 
  static Map<String, dynamic> toMap({required SubscriptionEntity subscriptionEntity}) {
@@ -65,7 +65,8 @@ class SubscriptionModel{
 
   factory SubscriptionModel.fromMap(Map<String, dynamic> map,String nameDirection) {
 
-   final option = OptionModel.fromMap(map['options'][0]); //todo принимать список
+   final options = (map['options'] as List).map((m) => OptionModel.fromMap(m)).toList();
+   //OptionModel.fromMap((map['options'] as List).isEmpty?[]:map['options']); //todo принимать список
    final idDir = map['idDir'];
    final idUser = map['idUser'];
    int balanceSub = map['balanceSub'];
@@ -86,11 +87,11 @@ class SubscriptionModel{
       dateStart: map['dateStart'] as String,
       dateEnd: map['dateEnd'] as String,
       commentary: map['commentary'] as String,
-      status: 1, //todo status
+      status: status, //todo status
       dateBay: map['dateBay'] as String,
       nameDir: nameDirection,
       nameTeacher: map['nameTeacher'] as String,
-      optionModel: option
+        options: options
     );
   }
 }

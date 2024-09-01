@@ -204,12 +204,15 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                       context: context,
                       user: user,
                       //currentIndexItemMenu: _currentIndexItemMenu,
-                      docsAccept: docsAccept,
+                      docsAccept: user.documents.isEmpty?true:docsAccept,
                       onSelectedPage:(item){
                         setState(() {
-                          //_currentIndexItemMenu = item;
+                         if(user.documents.isEmpty){
+                           Dialoger.showToast('Нет документов для согласования'.tr());
+                           return;
+                         }
                           currentItemNotifier.value = item;
-                          //widget.onSelectedPage.call(item);
+
                         });
 
                       }, teacher: teacher),

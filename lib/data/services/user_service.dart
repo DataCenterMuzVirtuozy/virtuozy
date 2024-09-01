@@ -11,6 +11,7 @@ import 'package:virtuozy/domain/entities/edit_profile_entity.dart';
 import 'package:virtuozy/domain/entities/notifi_setting_entity.dart';
 import 'package:virtuozy/utils/failure.dart';
  import 'package:http/http.dart' as http;
+import 'package:virtuozy/utils/preferences_util.dart';
  import 'dart:convert' as convert;
  import 'dart:io';
 import '../../di/locator.dart';
@@ -26,39 +27,60 @@ class UserService{
    final _dio = locator.get<DioClient>().init();
    final _dioApi = locator.get<DioClient>().initApi();
 
-
+  //todo get data crm - in working
    Future<UserModel> getUser({required String uid}) async {
     try{
-
-      //todo get user from crm _dioApi
-       final res = await _dio.get(Endpoints.user,
+      var dio = Dio();
+      if(!uid.contains('111')){
+        dio = _dioApi;
+      }else{
+        dio = _dio;
+      }
+       final res = await dio.get(Endpoints.user,
        queryParameters: {
           'phoneNumber':uid.replaceAll(' ', '')
        });
 
+
        if((res.data as List<dynamic>).isEmpty){
+        await PreferencesUtil.clear();
         return throw   Failure('Пользователь не найден'.tr());
        }
        final idUser = res.data[0]['id'] as int;
+       // idUser = 9827;
        //api crm
-       final resSubs = await _dioApi.get(Endpoints.subsUser,
+       final resSubs = await dio.get(Endpoints.subsUser,
            queryParameters: {
-            'idUser': 9827
+            'idUser': idUser
            });
       // print('Response Subs ${resSubs.data['data']}');
        // api crm
-       final resLessons = await _dioApi.get(Endpoints.lessons,
+       final resLessons = await dio.get(Endpoints.lessons,
            queryParameters: {
-             'idStudent': 9827
+             'idStudent': idUser
            });
       // print('Response Lesons ${resLessons.data['data']}');
-       return UserModel.fromMap(mapUser: res.data[0],mapSubsAll: resSubs.data['data'],lessons: resLessons.data['data']);
+
+      var listLess = [];
+      var listSubs = [];
+
+      if(uid.contains('111')){
+        listLess = resLessons.data;
+        listSubs  = resSubs.data;
+      }else{
+        listSubs = resSubs.data['data'];
+        listLess = resLessons.data['data'];
+      }
+       return UserModel.fromMap(mapUser: res.data[0],mapSubsAll: listSubs,lessons: listLess);
     } on Failure catch(e){
        throw  Failure(e.message);
     } on DioException catch(e){
      throw  Failure(e.message!);
     }
    }
+
+
+
 
    Future<void> saveSettingNotifi({required int uid,required List<NotifiSettingsEntity> settingEntity}) async{
     try{
@@ -77,10 +99,8 @@ class UserService{
          });
 
     } on Failure catch(e){
-     print('Error 1 ${e.message}');
      throw  Failure(e.message);
     } on DioException catch(e){
-     print('Error 2 ${e.toString()}');
      throw  Failure(e.toString());
     }
    }

@@ -1,9 +1,8 @@
 
 import 'package:filter_list/filter_list.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:virtuozy/components/dialogs/chiose_list_dialog/choice_list_widget.dart';
-import 'choice_list_widget.dart';
+
 
 class ChoiceListDialog {
   static Future display<T extends Object>(

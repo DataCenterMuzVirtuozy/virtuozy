@@ -105,6 +105,7 @@ class _LogInPageState extends State<LogInPage> {
 
             },
             builder: (context,state) {
+              print('STATUS ${state.authStatus}');
               if(state.authStatus == AuthStatus.processLogIn||
                   state.authStatus == AuthStatus.authenticated){
                 return SizedBox(

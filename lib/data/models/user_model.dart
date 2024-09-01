@@ -61,19 +61,18 @@ class UserModel{
   factory UserModel.fromMap({required Map<String, dynamic> mapUser,required List<dynamic> mapSubsAll,required List<dynamic> lessons}) {
 
     final directions = mapUser['directions'] as List<dynamic>;
-    final settingsMap = mapUser['settingNotifi'] as List<dynamic>;
-    final docs =  mapUser['documents'] as List<dynamic>;
-    final subways  = (mapUser['subways'] as List<dynamic>).map((e) =>SubwayModel.fromMap(e)).toList();
+   final settingsMap = mapUser['settingNotifi'] as List<dynamic>; //todo type 'String' is not a subtype of type 'List<dynamic>' in type cast
+    final docs =  mapUser['documents'] as List<dynamic>;//todo type 'String' is not a subtype of type 'List<dynamic>' in type cast
+    final subways  = (mapUser['subways'] as List<dynamic>).map((e) =>SubwayModel.fromMap(e)).toList();//todo type 'String' is not a subtype of type 'List<dynamic>' in type cast
     return UserModel(
-      notifiSttings:
-          settingsMap.map((e) => NotifiSettingModel.fromMap(e)).toList(),
+      notifiSttings: settingsMap.map((e) => NotifiSettingModel.fromMap(e)).toList(),
       documents: docs.map((e) => DocumentModel.fromMap(e)).toList(),
-      id: mapUser['id'] as int,
+      id: mapUser['id'] as int, //todo from crm null
       lastName: mapUser['lastName'] as String,
       firstName: mapUser['firstName'] as String,
       branchName: mapUser['branchName'] as String,
       phoneNumber: mapUser['phoneNumber'] as String,
-      userStatus: mapUser['userStatus'] as int,
+      userStatus: mapUser['userStatus'] as int, //todo from crm null 1- auth 2 - mod 0 - not auth
       userType: mapUser['userType'] as int,
       directions: directions
           .map((e) =>
@@ -83,7 +82,7 @@ class UserModel{
       about_me: mapUser['about_me'] as String,
       date_birth: mapUser['date_birth'] as String,
       registration_date: mapUser['registration_date'] as String,
-      has_kids: mapUser['has_kids'] as bool,
+      has_kids: mapUser['has_kids'] as bool, //todo  type 'String' is not a subtype of type 'bool' in type cast
       subways: subways,
       who_find: mapUser['who_find'] as String,
       avaUrl: mapUser['avaUrl'] as String,
@@ -139,12 +138,12 @@ class UserModel{
     static List<LessonModel> _getLessons({required List<LessonModel> lessons,required int idDir}){
     List<LessonModel> lessonsResult = [];
     //List<int> ids = subsDir.map((e) => e.id).toList();
+
     for(var l in lessons){
       if(idDir == l.idDir){
         lessonsResult.add(l);
       }
     }
-
     return lessonsResult;
     }
 
@@ -162,7 +161,8 @@ class UserModel{
    if(subs.isEmpty){
      return [];
    }
-    for(var element in subs){
+
+   for(var element in subs){
       if(element.dateStart.isNotEmpty&&element.status == 1){
           listSubsAllActive.add(element);
         millisecondsSinceEpochListActiveSub.add(DateFormat('yyyy-MM-dd').parse(element.dateStart).millisecondsSinceEpoch);
@@ -170,13 +170,18 @@ class UserModel{
 
       if(element.status == 2&&element.dateStart.isNotEmpty){
         // print('Dir ${element.name} ${element.dateStart} - ${element.dateEnd} Status ${element.status}');
-         //millisecondsSinceEpochListPlanedSub.add(DateFormat('yyyy-MM-dd').parse(element.dateStart).millisecondsSinceEpoch);
+        // millisecondsSinceEpochListPlanedSub.add(DateFormat('yyyy-MM-dd').parse(element.dateStart).millisecondsSinceEpoch);
         subAwait = element;
       }
+
+
     }
 
-    final indexLastActiveSub = millisecondsSinceEpochListActiveSub.indexOf(millisecondsSinceEpochListActiveSub.reduce(max));
-    listSubs.add(listSubsAllActive[indexLastActiveSub]);
+    if(millisecondsSinceEpochListActiveSub.isNotEmpty){
+      final indexLastActiveSub = millisecondsSinceEpochListActiveSub.indexOf(millisecondsSinceEpochListActiveSub.reduce(max));
+      listSubs.add(listSubsAllActive[indexLastActiveSub]);
+    }
+
     //final indexLastPlanedSub = millisecondsSinceEpochListPlanedSub.indexOf(millisecondsSinceEpochListPlanedSub.reduce(max));
     if(subAwait!=null){
       listSubs.add(subAwait);
@@ -272,7 +277,7 @@ class UserModel{
     final idSub = map['idSub'];
     final idTeacher = map['idTeacher'];
     final status = map['status'];
-    final bonus =map['bonus'];
+    final bonus =map['bonus']??false;
     final date = (map['date'] as String).split(' ')[0];
     final idSchool =  map['idSchool'].toString();
 

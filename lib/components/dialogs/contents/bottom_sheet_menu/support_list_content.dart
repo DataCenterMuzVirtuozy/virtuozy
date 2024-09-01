@@ -75,7 +75,7 @@ class _SupportListContentState extends State<SupportListContent>
         return listSupportWhatsappNSK.length;
       }
     }
-    return 0;
+
   }
 
   @override
