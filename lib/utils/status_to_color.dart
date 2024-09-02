@@ -39,6 +39,7 @@ class StatusToColor{
     'Первый урок',
     'Последний урок',
     'Перенесен',
+    'Заморозка'
 
 
   ];
@@ -76,6 +77,8 @@ class StatusToColor{
 
      case LessonStatus.reschedule:
        return StatusToColor.namesStatus[11];
+     case LessonStatus.freezing: return  StatusToColor.namesStatus[12];
+
    }
  }
 
@@ -99,32 +102,35 @@ class StatusToColor{
       case LessonStatus.firstLesson: return _colors[9];
       case LessonStatus.lastLesson: return _colors[10];
       case LessonStatus.reschedule:return _colors[2];
+      case LessonStatus.freezing: return _colors[5];
+
     }
 
    }
 
   static LessonStatus lessonStatusFromApi(int status){
     switch(status){
-      case 1: return LessonStatus.planned;
-      case 2: return LessonStatus.complete;
-      case 3: return LessonStatus.cancel;
-      case 4: return LessonStatus.out;
-      case 5: return LessonStatus.reservation;
-      case 6: return LessonStatus.singly;
-      case 7: return LessonStatus.trial;
-      case 8 :return LessonStatus.awaitAccept;
-      case 9: return LessonStatus.firstLesson;
-      case 10: return LessonStatus.lastLesson;
-      case 11: return LessonStatus.reschedule;
+      case 1: return LessonStatus.planned; // !
+      case 2: return LessonStatus.complete; // !
+      case 3: return LessonStatus.cancel; // !
+      case 6: return LessonStatus.out; // !
+      case 7: return LessonStatus.reservation; // !
+      case 6222: return LessonStatus.singly; // not work
+      case 7222: return LessonStatus.trial;  //not work
+      case 11 :return LessonStatus.awaitAccept;
+      case 8 : return LessonStatus.freezing; // !
+      case 9: return LessonStatus.firstLesson; // not work
+      case 10: return LessonStatus.lastLesson; // not work
+      case 4222: return LessonStatus.reschedule; // not work
     }
     return LessonStatus.unknown;
   }
 
   static LessonType lessonType(int status){
     switch(status){
-      case 1: return LessonType.trial;
-      case 2: return LessonType.group;
-      case 3: return LessonType.singly;
+      case 3: return LessonType.trial;
+      case 5: return LessonType.group;
+      case 1: return LessonType.singly;
     }
 
     return LessonType.unknown;

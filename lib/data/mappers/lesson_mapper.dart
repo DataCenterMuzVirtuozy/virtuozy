@@ -36,20 +36,20 @@ class LessonMapper{
 
    static int _lessonStatus(LessonStatus status){
      switch(status){
-       case LessonStatus.planned: return 1;
-       case LessonStatus.complete: return 2;
-       case LessonStatus.cancel: return 3;
-       case LessonStatus.out: return 4;
-       case LessonStatus.reservation: return 5;
-       case LessonStatus.singly: return 6;
-       case LessonStatus.trial: return 7;
-       case LessonStatus.awaitAccept:return 8;
-       case LessonStatus.firstLesson: return 9;
-       case LessonStatus.lastLesson: return 10;
+       case LessonStatus.planned: return 1; //
+       case LessonStatus.complete: return 2; //
+       case LessonStatus.cancel: return 3; //
+       case LessonStatus.out: return 6; //
+       case LessonStatus.reservation: return 7; //
+       case LessonStatus.singly: return 6343; //not work
+       case LessonStatus.trial: return 73453; //not work
+       case LessonStatus.awaitAccept:return 834; //not work
+       case LessonStatus.firstLesson: return 9345; //not work
+       case LessonStatus.lastLesson: return 10345; //not work
        case LessonStatus.unknown: return 0;
        case LessonStatus.layering: return 12;
-       case LessonStatus.reschedule: return 11;
-
+       case LessonStatus.reschedule: return 4; //not work
+       case LessonStatus.freezing: return 8; //
      }
 
    }

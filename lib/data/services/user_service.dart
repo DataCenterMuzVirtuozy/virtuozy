@@ -41,7 +41,7 @@ class UserService{
           'phoneNumber':uid.replaceAll(' ', '')
        });
 
-
+       print('USER ${res.data}');
        if((res.data as List<dynamic>).isEmpty){
         await PreferencesUtil.clear();
         return throw   Failure('Пользователь не найден'.tr());

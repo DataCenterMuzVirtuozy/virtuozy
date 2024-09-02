@@ -12,6 +12,7 @@ enum LessonStatus{
   firstLesson,
   lastLesson,
   reschedule,
+  freezing,
   unknown,
 
 }
