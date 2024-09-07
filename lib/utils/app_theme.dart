@@ -43,7 +43,8 @@ class AppTheme{
     ),
     colorScheme: ColorScheme(
       tertiary: colorGreen,  // фон кнопки в параметрах
-      surfaceVariant: colorBeruzaLight, // фон карточек
+      //surfaceVariant: colorBeruzaLight, // фон карточек
+      surfaceContainerHighest: colorBeruzaLight,// фон карточек
       secondary: colorOrange, // фон кнопок
       primary: colorOrange,
       brightness: Brightness.light,
@@ -51,10 +52,10 @@ class AppTheme{
       onSecondary: colorBeruza,
       error: colorRed,
       onError: colorRed,
-      background: colorWhite, // фон экранов
-      onBackground: colorWhite,
-      surface: colorBlack,
-      onSurface: colorBlack,
+      //background: colorWhite, // фон экранов
+      //onBackground: colorWhite,
+      surface: colorWhite, // фон экранов
+      onSurface: colorWhite,
 
 
     ),
@@ -84,7 +85,8 @@ class AppTheme{
     iconTheme: IconThemeData(color:colorWhite),
     colorScheme: ColorScheme(
       tertiary: colorGreen,
-      surfaceVariant: const Color(0xFF202122),
+      surfaceContainerHighest:  const Color(0xFF202122),// фон карточек
+      //surfaceVariant: const Color(0xFF202122),
       secondary: colorOrange,
       primary: colorOrange,
       brightness: Brightness.light,
@@ -92,10 +94,10 @@ class AppTheme{
       onSecondary: colorBeruza,
       error: colorRed,
       onError: colorRed,
-      background: const Color(0xFF181819),
-      onBackground: colorBlack,
-      surface: colorWhite,
-      onSurface: colorWhite,
+      //background: const Color(0xFF181819),
+      //onBackground: colorBlack,
+      surface: const Color(0xFF181819),
+      onSurface: colorBlack,
 
     ),
   );

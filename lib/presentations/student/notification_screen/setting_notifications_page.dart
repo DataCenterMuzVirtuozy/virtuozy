@@ -62,7 +62,7 @@ class _SettingNotificationsPageState extends State<SettingNotificationsPage> {
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    color: Theme.of(context).colorScheme.surfaceVariant
+                    color:Theme.of(context).colorScheme.surfaceContainerHighest
                   ),
                   child: Column(
                     children: [

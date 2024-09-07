@@ -138,7 +138,7 @@ class _SchedulePageState extends State<SchedulePage> with AuthMixin{
                 const Gap(10.0),
                  Calendar(
                    onDate: (date){},
-                   colorFill: Theme.of(context).colorScheme.surfaceVariant,
+                   colorFill: Theme.of(context).colorScheme.surfaceContainerHighest,
                    clickableDay: true,
                      lessons: state.lessons,
                      onMonth: (month){

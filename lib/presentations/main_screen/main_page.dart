@@ -119,8 +119,9 @@ class _MainPageState extends State<MainPage> with AuthMixin{
           },
           child: Scaffold(
             key: scaffoldKey,
+            //backgroundColor: Theme.of(context).colorScheme.surface,
             appBar: AppBar(
-              backgroundColor: Theme.of(context).colorScheme.background,
+              backgroundColor: Theme.of(context).colorScheme.surface,
               automaticallyImplyLeading: false,
               actions: [
                 Expanded(

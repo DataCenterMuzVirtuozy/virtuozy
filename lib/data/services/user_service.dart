@@ -31,6 +31,7 @@ class UserService{
    Future<UserModel> getUser({required String uid}) async {
     try{
       var dio = Dio();
+      var idUser = 0;
       if(!uid.contains('111')){
         dio = _dioApi;
       }else{
@@ -46,8 +47,13 @@ class UserService{
         await PreferencesUtil.clear();
         return throw   Failure('Пользователь не найден'.tr());
        }
-       final idUser = res.data[0]['id'] as int;
-       // idUser = 9827;
+      if(uid.contains('111')){
+         idUser = res.data[0]['id'] as int;
+      }else{
+        //final idUser = res.data[0]['id'] as int;
+       idUser = 9827;
+      }
+
        //api crm
        final resSubs = await dio.get(Endpoints.subsUser,
            queryParameters: {
@@ -59,7 +65,7 @@ class UserService{
            queryParameters: {
              'idStudent': idUser
            });
-      // print('Response Lesons ${resLessons.data['data']}');
+      print('Response Lesons ${resLessons.data}');
 
       var listLess = [];
       var listSubs = [];

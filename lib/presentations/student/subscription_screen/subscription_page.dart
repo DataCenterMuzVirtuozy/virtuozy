@@ -177,7 +177,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                const Gap(10.0),
                 Calendar(
                   onDate: (date){},
-                  colorFill: Theme.of(context).colorScheme.surfaceVariant,
+                  colorFill: Theme.of(context).colorScheme.surfaceContainerHighest,
                   resetFocusDay: _resetFocus,
                   lessons: state.lessons,
                   onMonth: (month){
@@ -349,7 +349,7 @@ class _BoxSubscriptionState extends State<BoxSubscription> {
       padding: const EdgeInsets.all(20.0),
       width: MediaQuery.sizeOf(context).width,
       decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceVariant,
+          color: Theme.of(context).colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(20.0)
       ),
       child: Column(

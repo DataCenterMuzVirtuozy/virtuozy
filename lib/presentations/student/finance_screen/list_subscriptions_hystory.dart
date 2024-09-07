@@ -129,7 +129,7 @@ class ItemSubHistory extends StatelessWidget{
       padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 15.0),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15.0),
-          color: Theme.of(context).colorScheme.surfaceVariant
+          color: Theme.of(context).colorScheme.surfaceContainerHighest
       ),
       child: Column(
         children: [

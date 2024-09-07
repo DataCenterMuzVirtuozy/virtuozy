@@ -82,7 +82,8 @@ class _CalendarState extends State<Calendar> with AuthMixin{
 
     return Container(
       decoration: BoxDecoration(
-          color: widget.colorFill, borderRadius: BorderRadius.circular(20.0)),
+          color: widget.colorFill,
+          borderRadius: BorderRadius.circular(20.0)),
       child: Column(
         children: [
           CustomTableCalendar(

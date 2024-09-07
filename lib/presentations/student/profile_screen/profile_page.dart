@@ -342,7 +342,7 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
               padding: const EdgeInsets.only(right: 20,left: 20,top: 70,bottom: 20),
               width: MediaQuery.sizeOf(context).width,
               decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surfaceVariant,
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(20.0)
               ),
               child: Column(
@@ -668,7 +668,7 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
                 padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 15.0),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15.0),
-                    color: Theme.of(context).colorScheme.surfaceVariant
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -770,7 +770,7 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
            padding:const EdgeInsets.symmetric(horizontal: 13.0),
            decoration: BoxDecoration(
              borderRadius: BorderRadius.circular(20.0),
-             color:Theme.of(context).colorScheme.surfaceVariant,
+             color:Theme.of(context).colorScheme.surfaceContainerHighest,
            ),
            //elevation: 2,
          ),
@@ -867,7 +867,7 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
            padding:const EdgeInsets.symmetric(horizontal: 13.0),
            decoration: BoxDecoration(
              borderRadius: BorderRadius.circular(20.0),
-             color:Theme.of(context).colorScheme.surfaceVariant,
+             color:Theme.of(context).colorScheme.surfaceContainerHighest,
            ),
            //elevation: 2,
          ),

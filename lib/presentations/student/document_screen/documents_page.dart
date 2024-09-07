@@ -97,7 +97,7 @@ class _DocumentsPageState extends State<DocumentsPage> with AuthMixin, TickerPro
                         margin: const EdgeInsets.symmetric(vertical: 5.0),
                         padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 15.0),
                         decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.surfaceVariant,
+                          color: Theme.of(context).colorScheme.surfaceContainerHighest,
                           borderRadius: BorderRadius.circular(10)
                         ),
                         child: Row(

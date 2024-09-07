@@ -122,7 +122,6 @@ class _FinancePageState extends State<FinancePage> {
 
        },
        builder: (context,state) {
-
          if(state.status == FinanceStatus.loading){
            return const Center(child: CircularProgressIndicator());
          }
@@ -168,7 +167,7 @@ class _FinancePageState extends State<FinancePage> {
                  Container(
                    padding: const EdgeInsets.symmetric(vertical: 20.0),
                    decoration: BoxDecoration(
-                     color: Theme.of(context).colorScheme.surfaceVariant,
+                     color: Theme.of(context).colorScheme.surfaceContainerHighest,
                      borderRadius: BorderRadius.circular(20.0)
                    ),
                    child: Column(
@@ -206,11 +205,14 @@ class _FinancePageState extends State<FinancePage> {
                    ),
                  ),
                  const Gap(10.0),
-                 BoxSubs(
-                     key: ValueKey(state.directions),
-                     namesDir: _titlesDirections,
-                     directions: state.directions,
-                     allViewDirection: _allViewDirection),
+                 Visibility(
+                   visible: ParserPrice.getBalance(_summaBalance(directions: state.directions))!='0.00',
+                   child: BoxSubs(
+                       key: ValueKey(state.directions),
+                       namesDir: _titlesDirections,
+                       directions: state.directions,
+                       allViewDirection: _allViewDirection),
+                 ),
                  // ...List.generate(state.expiredSubscriptions.length, (index) {
                  //   return Container(
                  //     margin: const EdgeInsets.all(5.0),
@@ -417,7 +419,7 @@ class _FinancePageState extends State<FinancePage> {
                    child: Container(
                      padding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 20.0),
                      decoration: BoxDecoration(
-                         color: Theme.of(context).colorScheme.surfaceVariant,
+                         color: Theme.of(context).colorScheme.surfaceContainerHighest,
                          borderRadius: BorderRadius.circular(20.0)
                      ),
                      child: Row(
@@ -438,7 +440,7 @@ class _FinancePageState extends State<FinancePage> {
                    child: Container(
                      padding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 20.0),
                      decoration: BoxDecoration(
-                         color: Theme.of(context).colorScheme.surfaceVariant,
+                         color: Theme.of(context).colorScheme.surfaceContainerHighest,
                          borderRadius: BorderRadius.circular(20.0)
                      ),
                      child: Row(
@@ -458,7 +460,7 @@ class _FinancePageState extends State<FinancePage> {
                    child: Container(
                      padding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 20.0),
                      decoration: BoxDecoration(
-                         color: Theme.of(context).colorScheme.surfaceVariant,
+                         color: Theme.of(context).colorScheme.surfaceContainerHighest,
                          borderRadius: BorderRadius.circular(20.0)
                      ),
                      child: Row(
@@ -524,7 +526,6 @@ class _FinancePageState extends State<FinancePage> {
    List<SubscriptionEntity> _getSubs({required List<DirectionLesson> directions, required bool allViewDirection}){
      List<SubscriptionEntity> list = [];
      for(var dir in directions){
-
        for(var s in dir.lastSubscriptions){
          list.add(s);
        }
@@ -547,7 +548,7 @@ class _FinancePageState extends State<FinancePage> {
        padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 20),
        width: MediaQuery.sizeOf(context).width,
        decoration: BoxDecoration(
-           color: Theme.of(context).colorScheme.surfaceVariant,
+           color: Theme.of(context).colorScheme.surfaceContainerHighest,
            borderRadius: BorderRadius.circular(20.0)
        ),
        child: Column(
