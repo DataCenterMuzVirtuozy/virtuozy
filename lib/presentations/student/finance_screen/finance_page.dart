@@ -87,14 +87,18 @@ class _FinancePageState extends State<FinancePage> {
     return sum;
   }
 
+  Future<void> _refreshData() async {
+    context.read<BlocFinance>().add(GetBalanceSubscriptionEvent(
+        refreshDirection: true,
+        indexDirection: _selIndexDirection,
+        allViewDir: widget.selIndexDirection<0?true:false));
+  }
+
 
 
 
   @override
   Widget build(BuildContext context) {
-
-
-
 
    return Scaffold(
        appBar: widget.selIndexDirection<0?null:const AppBarCustom(title: ''),
@@ -144,344 +148,350 @@ class _FinancePageState extends State<FinancePage> {
 
          return Padding(
            padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 20.0),
-           child: SingleChildScrollView(
-             child: Column(
-               children: [
-                 DrawingMenuSelected(
-                   initTitle: _titlesDirections.isNotEmpty?_titlesDirections[_selIndexDirection]:'',
-                   items: _titlesDirections,
-                   onSelected: (index){
-                     _selIndexDirection = index;
-                     if(index == _titlesDirections.length-1){
-                       _allViewDirection = true;
-                     }else{
-                       _allViewDirection = false;
-                     }
+           child: RefreshIndicator(
+             onRefresh: (){
+               return _refreshData();
+             },
+             child: SingleChildScrollView(
+               physics: const AlwaysScrollableScrollPhysics(),
+               child: Column(
+                 children: [
+                   DrawingMenuSelected(
+                     initTitle: _titlesDirections.isNotEmpty?_titlesDirections[_selIndexDirection]:'',
+                     items: _titlesDirections,
+                     onSelected: (index){
+                       _selIndexDirection = index;
+                       if(index == _titlesDirections.length-1){
+                         _allViewDirection = true;
+                       }else{
+                         _allViewDirection = false;
+                       }
 
-                     context.read<BlocFinance>().add(GetBalanceSubscriptionEvent(
-                         indexDirection: _selIndexDirection,
-                         refreshDirection: false,
-                         allViewDir: _allViewDirection));
-                 },),
-                 const Gap(20.0),
-                 Container(
-                   padding: const EdgeInsets.symmetric(vertical: 20.0),
-                   decoration: BoxDecoration(
-                     color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                     borderRadius: BorderRadius.circular(20.0)
-                   ),
-                   child: Column(
-                     crossAxisAlignment: CrossAxisAlignment.center,
-                     children: [
-                       Text('Баланс счета'.tr(),style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 16.0)),
-                       Row(
-                         crossAxisAlignment: CrossAxisAlignment.center,
-                         mainAxisAlignment: MainAxisAlignment.center,
-                         children: [
-                           Text(ParserPrice.getBalance(_summaBalance(directions: state.directions)),
-                               style: TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,size: 30.0)),
-                           Padding(
-                             padding: const EdgeInsets.only(top: 5.0),
-                             child: Icon(CupertinoIcons.money_rubl,color: Theme.of(context).textTheme.displayMedium!.color!,size: 35.0),
-                           )
-                         ],
-                       ),
-                       const Gap(10.0),
-                       Padding(
-                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                         child: SizedBox(
-                           height: 40.0,
-                           child: SubmitButton(
-                             borderRadius: 20.0,
-                              colorFill: colorBeruza,
-                               textButton: 'Пополнить'.tr(),
-                               onTap: () {
-                                 GoRouter.of(context).push(pathPay,extra:state.directions);
-                               }
+                       context.read<BlocFinance>().add(GetBalanceSubscriptionEvent(
+                           indexDirection: _selIndexDirection,
+                           refreshDirection: false,
+                           allViewDir: _allViewDirection));
+                   },),
+                   const Gap(20.0),
+                   Container(
+                     padding: const EdgeInsets.symmetric(vertical: 20.0),
+                     decoration: BoxDecoration(
+                       color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                       borderRadius: BorderRadius.circular(20.0)
+                     ),
+                     child: Column(
+                       crossAxisAlignment: CrossAxisAlignment.center,
+                       children: [
+                         Text('Баланс счета'.tr(),style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 16.0)),
+                         Row(
+                           crossAxisAlignment: CrossAxisAlignment.center,
+                           mainAxisAlignment: MainAxisAlignment.center,
+                           children: [
+                             Text(ParserPrice.getBalance(_summaBalance(directions: state.directions)),
+                                 style: TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,size: 30.0)),
+                             Padding(
+                               padding: const EdgeInsets.only(top: 5.0),
+                               child: Icon(CupertinoIcons.money_rubl,color: Theme.of(context).textTheme.displayMedium!.color!,size: 35.0),
+                             )
+                           ],
+                         ),
+                         const Gap(10.0),
+                         Padding(
+                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                           child: SizedBox(
+                             height: 40.0,
+                             child: SubmitButton(
+                               borderRadius: 20.0,
+                                colorFill: colorBeruza,
+                                 textButton: 'Пополнить'.tr(),
+                                 onTap: () {
+                                   GoRouter.of(context).push(pathPay,extra:state.directions);
+                                 }
+                             ),
                            ),
                          ),
+                       ],
+                     ),
+                   ),
+                   const Gap(10.0),
+                   Visibility(
+                     visible: ParserPrice.getBalance(_summaBalance(directions: state.directions))!='0.00',
+                     child: BoxSubs(
+                         key: ValueKey(state.directions),
+                         namesDir: _titlesDirections,
+                         directions: state.directions,
+                         allViewDirection: _allViewDirection),
+                   ),
+                   // ...List.generate(state.expiredSubscriptions.length, (index) {
+                   //   return Container(
+                   //     margin: const EdgeInsets.all(5.0),
+                   //     decoration: BoxDecoration(
+                   //         color: colorBeruza.withOpacity(0.3),
+                   //         borderRadius: const BorderRadius.only(
+                   //             topLeft: Radius.circular(10.0),
+                   //             topRight: Radius.circular(20.0),
+                   //             bottomRight: Radius.circular(20.0),
+                   //             bottomLeft: Radius.circular(20.0))),
+                   //     child: Column(
+                   //       children: [
+                   //         Padding(
+                   //           padding: const EdgeInsets.only(left: 20.0,right: 15.0,top: 10.0),
+                   //           child: Row(
+                   //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   //             children: [
+                   //               Expanded(
+                   //                 child: Text(
+                   //                     state.expiredSubscriptions[index].name,
+                   //                     style: TStyle.textStyleVelaSansBold(
+                   //                         Theme.of(context)
+                   //                             .textTheme
+                   //                             .displayMedium!
+                   //                             .color!,
+                   //                         size: 16.0)),
+                   //               ),
+                   //               Visibility(
+                   //                 visible:  state.expiredSubscriptions[index].status==StatusSub.active,
+                   //                 child: Container(
+                   //                   width: 90.0,
+                   //                   alignment: Alignment.center,
+                   //                   padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
+                   //                   decoration: BoxDecoration(
+                   //                       color: colorGreen,
+                   //                       borderRadius: BorderRadius.circular(10.0)),
+                   //                   child: Text('активный',
+                   //                       style:TStyle.textStyleVelaSansBold(colorWhite,size: 10.0)),
+                   //                 ),
+                   //               )
+                   //             ],
+                   //           ),
+                   //         ),
+                   //         Visibility(
+                   //           visible: state.expiredSubscriptions[index].nameTeacher.isNotEmpty&&
+                   //               state.expiredSubscriptions[index].status==StatusSub.active,
+                   //           child: Padding(
+                   //             padding: const EdgeInsets.only(left: 20.0,right: 15.0,bottom: 8),
+                   //             child: Row(
+                   //               children: [
+                   //                 // Icon(Icons.person,color: colorGreen,size: 15.0),
+                   //                 // const Gap(5.0),
+                   //                 Text(state.expiredSubscriptions[index].nameTeacher,
+                   //                     style:TStyle.textStyleVelaSansMedium(colorGrey,size: 14.0)),
+                   //               ],
+                   //             ),
+                   //           ),
+                   //         ),
+                   //
+                   //   //todo test date end
+                   //   Visibility(
+                   //           visible: false,
+                   //           child: Padding(
+                   //             padding: const EdgeInsets.only(left: 20.0,bottom: 5.0),
+                   //             child: Row(
+                   //               children: [
+                   //                 Row(
+                   //                   children: [
+                   //                     Text('Дата окончания'.tr(),
+                   //                         style: TStyle.textStyleVelaSansRegular( Theme.of(context)
+                   //                         .textTheme
+                   //                         .displayMedium!
+                   //                         .color!,size: 10.0)),
+                   //                     const Gap(5.0),
+                   //                     Text(DateTimeParser.getDateFromApi(date: state.expiredSubscriptions[index].dateEnd),
+                   //                         style: TStyle.textStyleVelaSansBold( Theme.of(context)
+                   //                         .textTheme
+                   //                         .displayMedium!
+                   //                         .color!,size: 10.0))
+                   //                   ],
+                   //                 ),
+                   //               ],
+                   //
+                   //
+                   //             ),
+                   //           ),
+                   //         ),
+                   //         const Gap(5.0),
+                   //         Padding(
+                   //           padding: const EdgeInsets.only(left: 20.0,right: 20.0,bottom: 5.0),
+                   //           child: Row(
+                   //             crossAxisAlignment: CrossAxisAlignment.center,
+                   //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   //             children: [
+                   //               if(state.expiredSubscriptions[index].status==StatusSub.active)...{
+                   //                 Column(
+                   //                   crossAxisAlignment: CrossAxisAlignment.start,
+                   //                   children: [
+                   //                     Row(
+                   //                       children: [
+                   //                         Text('Осталось уроков: '.tr(),
+                   //                             style: TStyle
+                   //                                 .textStyleVelaSansMedium(
+                   //                                 Theme.of(context)
+                   //                                     .textTheme
+                   //                                     .displayMedium!
+                   //                                     .color!,
+                   //                                 size: 14.0)),
+                   //                         Text(
+                   //                             '${ state.expiredSubscriptions[index].balanceLesson}',
+                   //                             style: TStyle
+                   //                                 .textStyleVelaSansBold(
+                   //                                 Theme.of(context)
+                   //                                     .textTheme
+                   //                                     .displayMedium!
+                   //                                     .color!,
+                   //                                 size: 14.0)),
+                   //                       ],
+                   //                     ),
+                   //                     const Gap(3.0),
+                   //                     Row(
+                   //                       children: [
+                   //                         Text('Дата окончания'.tr(),style: TStyle.textStyleVelaSansRegular( Theme.of(context)
+                   //                             .textTheme
+                   //                             .displayMedium!
+                   //                             .color!,size: 10.0)),
+                   //                         const Gap(5.0),
+                   //                         Text(' ${DateTimeParser.getDateFromApi(date: state.expiredSubscriptions[index].dateEnd)}',
+                   //                             style: TStyle.textStyleVelaSansBold( Theme.of(context)
+                   //                             .textTheme
+                   //                             .displayMedium!
+                   //                             .color!,size: 10.0))
+                   //                       ],
+                   //                     ),
+                   //                     Visibility(
+                   //                       visible: state.expiredSubscriptions[index].option.status!=OptionStatus.unknown,
+                   //                       child: Row(
+                   //                         children: [
+                   //                           Text(state.expiredSubscriptions[index].option.status == OptionStatus.freezing?
+                   //                           'Заморозка до '.tr()
+                   //                               :'Каникулы до '.tr(),
+                   //                               style: TStyle.textStyleVelaSansRegular(Theme.of(context)
+                   //                                   .textTheme
+                   //                                   .displayMedium!
+                   //                                   .color!,
+                   //                                   size: 10.0)),
+                   //                           Text(DateTimeParser.getDateFromApi(date: state.expiredSubscriptions[index].option.dateEnd),
+                   //                               style: TStyle.textStyleVelaSansBold(Theme.of(context)
+                   //                                   .textTheme
+                   //                                   .displayMedium!
+                   //                                   .color!,
+                   //                                   size: 10.0)),
+                   //                         ],
+                   //                       ),
+                   //                     )
+                   //
+                   //
+                   //                   ],
+                   //                 )
+                   //               }else ...{
+                   //                 Container(
+                   //                   alignment: Alignment.center,
+                   //                   width: 100.0,
+                   //                   padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
+                   //                   decoration: BoxDecoration(
+                   //                       color: colorRed,
+                   //                       borderRadius:
+                   //                       BorderRadius.circular(
+                   //                           10.0)),
+                   //                   child: Text(
+                   //                       state.expiredSubscriptions[index].status==StatusSub.inactive?'неактивный'.tr():
+                   //                       'запланирован'.tr(),
+                   //                       style: TStyle
+                   //                           .textStyleVelaSansBold(
+                   //                           colorWhite,
+                   //                           size: 10.0)),
+                   //                 ),
+                   //               },
+                   //               Visibility(
+                   //                 visible: _allViewDirection,
+                   //                 child: Text(
+                   //                     state.expiredSubscriptions[index].nameDir,
+                   //                     style: TStyle.textStyleVelaSansBold(
+                   //                         Theme.of(context)
+                   //                             .textTheme
+                   //                             .displayMedium!
+                   //                             .color!,
+                   //                         size: 13.0)),
+                   //               )
+                   //             ],
+                   //           ),
+                   //         ),
+                   //         const Gap(10.0)
+                   //       ],
+                   //     ),
+                   //   );
+                   // }),
+
+                   const Gap(20.0),
+                   GestureDetector(
+                     onTap: (){
+                       GoRouter.of(context).push(pathListSubscriptionsHistory,extra: state.subscriptionHistory);
+                     },
+                     child: Container(
+                       padding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 20.0),
+                       decoration: BoxDecoration(
+                           color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                           borderRadius: BorderRadius.circular(20.0)
                        ),
-                     ],
+                       child: Row(
+                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                         children: [
+                           Expanded(child: Text('История абонементов'.tr(),
+                               style: TStyle.textStyleVelaSansMedium(Theme.of(context).textTheme.displayMedium!.color!,size: 22.0))),
+                           Icon(Icons.arrow_forward_ios_rounded,color: Theme.of(context).textTheme.displayMedium!.color!)
+                         ],
+                       ),
+                     ),
                    ),
-                 ),
-                 const Gap(10.0),
-                 Visibility(
-                   visible: ParserPrice.getBalance(_summaBalance(directions: state.directions))!='0.00',
-                   child: BoxSubs(
-                       key: ValueKey(state.directions),
-                       namesDir: _titlesDirections,
-                       directions: state.directions,
-                       allViewDirection: _allViewDirection),
-                 ),
-                 // ...List.generate(state.expiredSubscriptions.length, (index) {
-                 //   return Container(
-                 //     margin: const EdgeInsets.all(5.0),
-                 //     decoration: BoxDecoration(
-                 //         color: colorBeruza.withOpacity(0.3),
-                 //         borderRadius: const BorderRadius.only(
-                 //             topLeft: Radius.circular(10.0),
-                 //             topRight: Radius.circular(20.0),
-                 //             bottomRight: Radius.circular(20.0),
-                 //             bottomLeft: Radius.circular(20.0))),
-                 //     child: Column(
-                 //       children: [
-                 //         Padding(
-                 //           padding: const EdgeInsets.only(left: 20.0,right: 15.0,top: 10.0),
-                 //           child: Row(
-                 //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                 //             children: [
-                 //               Expanded(
-                 //                 child: Text(
-                 //                     state.expiredSubscriptions[index].name,
-                 //                     style: TStyle.textStyleVelaSansBold(
-                 //                         Theme.of(context)
-                 //                             .textTheme
-                 //                             .displayMedium!
-                 //                             .color!,
-                 //                         size: 16.0)),
-                 //               ),
-                 //               Visibility(
-                 //                 visible:  state.expiredSubscriptions[index].status==StatusSub.active,
-                 //                 child: Container(
-                 //                   width: 90.0,
-                 //                   alignment: Alignment.center,
-                 //                   padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
-                 //                   decoration: BoxDecoration(
-                 //                       color: colorGreen,
-                 //                       borderRadius: BorderRadius.circular(10.0)),
-                 //                   child: Text('активный',
-                 //                       style:TStyle.textStyleVelaSansBold(colorWhite,size: 10.0)),
-                 //                 ),
-                 //               )
-                 //             ],
-                 //           ),
-                 //         ),
-                 //         Visibility(
-                 //           visible: state.expiredSubscriptions[index].nameTeacher.isNotEmpty&&
-                 //               state.expiredSubscriptions[index].status==StatusSub.active,
-                 //           child: Padding(
-                 //             padding: const EdgeInsets.only(left: 20.0,right: 15.0,bottom: 8),
-                 //             child: Row(
-                 //               children: [
-                 //                 // Icon(Icons.person,color: colorGreen,size: 15.0),
-                 //                 // const Gap(5.0),
-                 //                 Text(state.expiredSubscriptions[index].nameTeacher,
-                 //                     style:TStyle.textStyleVelaSansMedium(colorGrey,size: 14.0)),
-                 //               ],
-                 //             ),
-                 //           ),
-                 //         ),
-                 //
-                 //   //todo test date end
-                 //   Visibility(
-                 //           visible: false,
-                 //           child: Padding(
-                 //             padding: const EdgeInsets.only(left: 20.0,bottom: 5.0),
-                 //             child: Row(
-                 //               children: [
-                 //                 Row(
-                 //                   children: [
-                 //                     Text('Дата окончания'.tr(),
-                 //                         style: TStyle.textStyleVelaSansRegular( Theme.of(context)
-                 //                         .textTheme
-                 //                         .displayMedium!
-                 //                         .color!,size: 10.0)),
-                 //                     const Gap(5.0),
-                 //                     Text(DateTimeParser.getDateFromApi(date: state.expiredSubscriptions[index].dateEnd),
-                 //                         style: TStyle.textStyleVelaSansBold( Theme.of(context)
-                 //                         .textTheme
-                 //                         .displayMedium!
-                 //                         .color!,size: 10.0))
-                 //                   ],
-                 //                 ),
-                 //               ],
-                 //
-                 //
-                 //             ),
-                 //           ),
-                 //         ),
-                 //         const Gap(5.0),
-                 //         Padding(
-                 //           padding: const EdgeInsets.only(left: 20.0,right: 20.0,bottom: 5.0),
-                 //           child: Row(
-                 //             crossAxisAlignment: CrossAxisAlignment.center,
-                 //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                 //             children: [
-                 //               if(state.expiredSubscriptions[index].status==StatusSub.active)...{
-                 //                 Column(
-                 //                   crossAxisAlignment: CrossAxisAlignment.start,
-                 //                   children: [
-                 //                     Row(
-                 //                       children: [
-                 //                         Text('Осталось уроков: '.tr(),
-                 //                             style: TStyle
-                 //                                 .textStyleVelaSansMedium(
-                 //                                 Theme.of(context)
-                 //                                     .textTheme
-                 //                                     .displayMedium!
-                 //                                     .color!,
-                 //                                 size: 14.0)),
-                 //                         Text(
-                 //                             '${ state.expiredSubscriptions[index].balanceLesson}',
-                 //                             style: TStyle
-                 //                                 .textStyleVelaSansBold(
-                 //                                 Theme.of(context)
-                 //                                     .textTheme
-                 //                                     .displayMedium!
-                 //                                     .color!,
-                 //                                 size: 14.0)),
-                 //                       ],
-                 //                     ),
-                 //                     const Gap(3.0),
-                 //                     Row(
-                 //                       children: [
-                 //                         Text('Дата окончания'.tr(),style: TStyle.textStyleVelaSansRegular( Theme.of(context)
-                 //                             .textTheme
-                 //                             .displayMedium!
-                 //                             .color!,size: 10.0)),
-                 //                         const Gap(5.0),
-                 //                         Text(' ${DateTimeParser.getDateFromApi(date: state.expiredSubscriptions[index].dateEnd)}',
-                 //                             style: TStyle.textStyleVelaSansBold( Theme.of(context)
-                 //                             .textTheme
-                 //                             .displayMedium!
-                 //                             .color!,size: 10.0))
-                 //                       ],
-                 //                     ),
-                 //                     Visibility(
-                 //                       visible: state.expiredSubscriptions[index].option.status!=OptionStatus.unknown,
-                 //                       child: Row(
-                 //                         children: [
-                 //                           Text(state.expiredSubscriptions[index].option.status == OptionStatus.freezing?
-                 //                           'Заморозка до '.tr()
-                 //                               :'Каникулы до '.tr(),
-                 //                               style: TStyle.textStyleVelaSansRegular(Theme.of(context)
-                 //                                   .textTheme
-                 //                                   .displayMedium!
-                 //                                   .color!,
-                 //                                   size: 10.0)),
-                 //                           Text(DateTimeParser.getDateFromApi(date: state.expiredSubscriptions[index].option.dateEnd),
-                 //                               style: TStyle.textStyleVelaSansBold(Theme.of(context)
-                 //                                   .textTheme
-                 //                                   .displayMedium!
-                 //                                   .color!,
-                 //                                   size: 10.0)),
-                 //                         ],
-                 //                       ),
-                 //                     )
-                 //
-                 //
-                 //                   ],
-                 //                 )
-                 //               }else ...{
-                 //                 Container(
-                 //                   alignment: Alignment.center,
-                 //                   width: 100.0,
-                 //                   padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
-                 //                   decoration: BoxDecoration(
-                 //                       color: colorRed,
-                 //                       borderRadius:
-                 //                       BorderRadius.circular(
-                 //                           10.0)),
-                 //                   child: Text(
-                 //                       state.expiredSubscriptions[index].status==StatusSub.inactive?'неактивный'.tr():
-                 //                       'запланирован'.tr(),
-                 //                       style: TStyle
-                 //                           .textStyleVelaSansBold(
-                 //                           colorWhite,
-                 //                           size: 10.0)),
-                 //                 ),
-                 //               },
-                 //               Visibility(
-                 //                 visible: _allViewDirection,
-                 //                 child: Text(
-                 //                     state.expiredSubscriptions[index].nameDir,
-                 //                     style: TStyle.textStyleVelaSansBold(
-                 //                         Theme.of(context)
-                 //                             .textTheme
-                 //                             .displayMedium!
-                 //                             .color!,
-                 //                         size: 13.0)),
-                 //               )
-                 //             ],
-                 //           ),
-                 //         ),
-                 //         const Gap(10.0)
-                 //       ],
-                 //     ),
-                 //   );
-                 // }),
+                   const Gap(20.0),
+                   GestureDetector(
+                     onTap: (){
+                       GoRouter.of(context).push(pathListTransaction,extra: state.directions);
+                     },
+                     child: Container(
+                       padding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 20.0),
+                       decoration: BoxDecoration(
+                           color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                           borderRadius: BorderRadius.circular(20.0)
+                       ),
+                       child: Row(
+                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                         children: [
+                           Text('Операции по счету'.tr(),style: TStyle.textStyleVelaSansMedium(Theme.of(context).textTheme.displayMedium!.color!,size: 22.0)),
+                           Icon(Icons.arrow_forward_ios_rounded,color: Theme.of(context).textTheme.displayMedium!.color!)
+                         ],
+                       ),
+                     ),
+                   ),
+                   const Gap(20.0),
+                   GestureDetector(
+                     onTap: (){
+                       GoRouter.of(context).push(pathBonusLessons);
+                     },
+                     child: Container(
+                       padding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 20.0),
+                       decoration: BoxDecoration(
+                           color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                           borderRadius: BorderRadius.circular(20.0)
+                       ),
+                       child: Row(
+                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                         children: [
+                           Expanded(child: Text('Бонусные уроки'.tr(),
+                               style: TStyle.textStyleVelaSansMedium(Theme.of(context).textTheme.displayMedium!.color!,size: 22.0))),
+                           Icon(Icons.arrow_forward_ios_rounded,color: Theme.of(context).textTheme.displayMedium!.color!)
+                         ],
+                       ),
+                     ),
+                   ),
 
-                 const Gap(20.0),
-                 GestureDetector(
-                   onTap: (){
-                     GoRouter.of(context).push(pathListSubscriptionsHistory,extra: state.subscriptionHistory);
+                   if(state.applyBonusStatus == ApplyBonusStatus.loading)...{
+                     const CircularProgressIndicator()
                    },
-                   child: Container(
-                     padding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 20.0),
-                     decoration: BoxDecoration(
-                         color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                         borderRadius: BorderRadius.circular(20.0)
-                     ),
-                     child: Row(
-                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                       children: [
-                         Expanded(child: Text('История абонементов'.tr(),
-                             style: TStyle.textStyleVelaSansMedium(Theme.of(context).textTheme.displayMedium!.color!,size: 22.0))),
-                         Icon(Icons.arrow_forward_ios_rounded,color: Theme.of(context).textTheme.displayMedium!.color!)
-                       ],
-                     ),
-                   ),
-                 ),
-                 const Gap(20.0),
-                 GestureDetector(
-                   onTap: (){
-                     GoRouter.of(context).push(pathListTransaction,extra: state.directions);
-                   },
-                   child: Container(
-                     padding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 20.0),
-                     decoration: BoxDecoration(
-                         color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                         borderRadius: BorderRadius.circular(20.0)
-                     ),
-                     child: Row(
-                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                       children: [
-                         Text('Операции по счету'.tr(),style: TStyle.textStyleVelaSansMedium(Theme.of(context).textTheme.displayMedium!.color!,size: 22.0)),
-                         Icon(Icons.arrow_forward_ios_rounded,color: Theme.of(context).textTheme.displayMedium!.color!)
-                       ],
-                     ),
-                   ),
-                 ),
-                 const Gap(20.0),
-                 GestureDetector(
-                   onTap: (){
-                     GoRouter.of(context).push(pathBonusLessons);
-                   },
-                   child: Container(
-                     padding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 20.0),
-                     decoration: BoxDecoration(
-                         color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                         borderRadius: BorderRadius.circular(20.0)
-                     ),
-                     child: Row(
-                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                       children: [
-                         Expanded(child: Text('Бонусные уроки'.tr(),
-                             style: TStyle.textStyleVelaSansMedium(Theme.of(context).textTheme.displayMedium!.color!,size: 22.0))),
-                         Icon(Icons.arrow_forward_ios_rounded,color: Theme.of(context).textTheme.displayMedium!.color!)
-                       ],
-                     ),
-                   ),
-                 ),
-
-                 if(state.applyBonusStatus == ApplyBonusStatus.loading)...{
-                   const CircularProgressIndicator()
-                 },
 
 
 
 
-               ],
+                 ],
+               ),
              ),
            ),
          );

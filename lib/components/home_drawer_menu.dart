@@ -207,10 +207,6 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                       docsAccept: user.documents.isEmpty?true:docsAccept,
                       onSelectedPage:(item){
                         setState(() {
-                         if(user.documents.isEmpty){
-                           Dialoger.showToast('Нет документов для согласования'.tr());
-                           return;
-                         }
                           currentItemNotifier.value = item;
 
                         });
@@ -323,7 +319,13 @@ required bool docsAccept}){
                   child: DrawerItem(
                     title: titlesDrawMenuStudent[6],textColor: Theme.of(context).textTheme.displayMedium!.color!,
                     onPressed: () {
-                      GoRouter.of(context).push(pathDocuments);
+                      if(user.documents.isEmpty){
+                        Dialoger.showToast('Нет документов для согласования'.tr());
+                        return;
+                      }else{
+                        GoRouter.of(context).push(pathDocuments);
+                      }
+
                     },),
                 ),
               ),

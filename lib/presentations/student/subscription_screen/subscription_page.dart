@@ -88,6 +88,13 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
     return false;
   }
 
+  Future<void> _refreshData() async {
+    context.read<SubBloc>().add(GetUserEvent(
+        allViewDir: true,
+        currentDirIndex: _selIndexDirection,
+        refreshDirection: true));
+  }
+
 
 
   @override
@@ -153,139 +160,145 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
 
        return Padding(
          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-         child: SingleChildScrollView(
-           child: Column(
-             children: [
-               Padding(
-                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                 child: DrawingMenuSelected(items: _titlesDirections,
-                   onSelected: (index){
-                   _resetFocus = true;
-                   _selIndexDirection = index;
-                   if(index == _titlesDirections.length-1){
-                     _allViewDirection = true;
-                   }else{
-                     _allViewDirection = false;
-                   }
-                   context.read<SubBloc>().add(GetUserEvent(
-                       allViewDir: _allViewDirection,
-                       currentDirIndex: _selIndexDirection,
-                       refreshDirection: false));
+         child: RefreshIndicator(
+           onRefresh: () {
+             return _refreshData();
+           },
+           child: SingleChildScrollView(
+             physics: const AlwaysScrollableScrollPhysics(),
+             child: Column(
+               children: [
+                 Padding(
+                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                   child: DrawingMenuSelected(items: _titlesDirections,
+                     onSelected: (index){
+                     _resetFocus = true;
+                     _selIndexDirection = index;
+                     if(index == _titlesDirections.length-1){
+                       _allViewDirection = true;
+                     }else{
+                       _allViewDirection = false;
+                     }
+                     context.read<SubBloc>().add(GetUserEvent(
+                         allViewDir: _allViewDirection,
+                         currentDirIndex: _selIndexDirection,
+                         refreshDirection: false));
 
-                   },)
-               ),
-               const Gap(10.0),
-                Calendar(
-                  onDate: (date){},
-                  colorFill: Theme.of(context).colorScheme.surfaceContainerHighest,
-                  resetFocusDay: _resetFocus,
-                  lessons: state.lessons,
-                  onMonth: (month){
-                    _resetFocus = false;
-                     globalCurrentMonthCalendar = month;
-                  },
-                  onLesson: (List<Lesson> lessons){
-                    Dialoger.showModalBottomMenu(
-                      blurred: false,
-                        title: 'Урок №${lessons[0].id} из ${lessons[0].id+5}',
-                        args: [lessons,state.userEntity.directions],
-                        content: DetailsLesson());
-                  },),
-
-               Visibility(
-                 visible: state.listNotAcceptLesson.isNotEmpty,
-                 child: Padding(
-                   padding: const EdgeInsets.symmetric(horizontal: 10),
-                   child: Column(
-                     children: [
-                       const Gap(20.0),
-                       badges.Badge(
-                         position: badges.BadgePosition.topEnd(end: -5.0,top: -8.0),
-                         showBadge: state.listNotAcceptLesson.length>1,
-                         badgeContent: Text('${state.listNotAcceptLesson.length}',
-                             style: TStyle.textStyleVelaSansBold(colorWhite)),
-                         child: SizedBox(
-                           height: 40.0,
-                           child: SubmitButton(
-                             onTap: (){
-
-                               Dialoger.showModalBottomMenu(
-                                   blurred: false,
-                                   args:[state.firstNotAcceptLesson,
-                                     state.directions, state.listNotAcceptLesson,
-                                     _allViewDirection],
-                                   title:'Подтверждение урока'.tr(),
-                                   content: ConfirmLesson());
-                             },
-                             //colorFill: Theme.of(context).colorScheme.tertiary,
-                             colorFill: colorGreen,
-                             borderRadius: 10.0,
-                             textButton:
-                             'Подтвердите прохождение урока'.tr(),
-                           ),
-                         ),
-                       ),
-                     ],
-                   ),
+                     },)
                  ),
-               ),
-               const Gap(10),
-               BoxSubscription(
-                 key: ValueKey(state.directions),
-                 namesDir: _titlesDirections,
-                   directions: state.directions,
-                   allViewDirection: _allViewDirection),
-               const Gap(10.0),
-               Padding(
-                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                 child: Column(
-                   children: [
-                     const Gap(10.0),
-                     if(_visibleButtonBonus(bonuses: state.bonuses))...{
-                       Padding(
-                         padding: const EdgeInsets.only(bottom: 30.0),
-                         child: badges.Badge(
+                 const Gap(10.0),
+                  Calendar(
+                    onDate: (date){},
+                    colorFill: Theme.of(context).colorScheme.surfaceContainerHighest,
+                    resetFocusDay: _resetFocus,
+                    lessons: state.lessons,
+                    onMonth: (month){
+                      _resetFocus = false;
+                       globalCurrentMonthCalendar = month;
+                    },
+                    onLesson: (List<Lesson> lessons){
+                      Dialoger.showModalBottomMenu(
+                        blurred: false,
+                          title: 'Урок №${lessons[0].id} из ${lessons[0].id+5}',
+                          args: [lessons,state.userEntity.directions],
+                          content: DetailsLesson());
+                    },),
+
+                 Visibility(
+                   visible: state.listNotAcceptLesson.isNotEmpty,
+                   child: Padding(
+                     padding: const EdgeInsets.symmetric(horizontal: 10),
+                     child: Column(
+                       children: [
+                         const Gap(20.0),
+                         badges.Badge(
                            position: badges.BadgePosition.topEnd(end: -5.0,top: -8.0),
-                           showBadge: state.bonuses.length>1,
-                           badgeContent: Text('${state.bonuses.length}',
+                           showBadge: state.listNotAcceptLesson.length>1,
+                           badgeContent: Text('${state.listNotAcceptLesson.length}',
                                style: TStyle.textStyleVelaSansBold(colorWhite)),
                            child: SizedBox(
                              height: 40.0,
-                             child: OutLineButton(
-                               onTap: () {
-                                 if(state.bonuses.length>1){
-                                   Dialoger.showModalBottomMenu(
-                                       title: 'Получить бонусы'.tr(),
-                                       blurred: true,
-                                       args: state.bonuses,
-                                       content: ListBonuses());
+                             child: SubmitButton(
+                               onTap: (){
 
-
-                                 }else{
-                                   GoRouter.of(context).push(pathDetailBonus,
-                                       extra: [
-                                         state.bonuses[0],
-                                         state.userEntity.directions[0]
-                                       ]);
-                                 }
-
+                                 Dialoger.showModalBottomMenu(
+                                     blurred: false,
+                                     args:[state.firstNotAcceptLesson,
+                                       state.directions, state.listNotAcceptLesson,
+                                       _allViewDirection],
+                                     title:'Подтверждение урока'.tr(),
+                                     content: ConfirmLesson());
                                },
+                               //colorFill: Theme.of(context).colorScheme.tertiary,
+                               colorFill: colorGreen,
                                borderRadius: 10.0,
-                               textButton: state.bonuses.length > 1
-                                   ? 'Получить бонусы'.tr()
-                                   : state.bonuses[0].title,
+                               textButton:
+                               'Подтвердите прохождение урока'.tr(),
                              ),
                            ),
                          ),
-                       )
-
-                     }
-                   ],
+                       ],
+                     ),
+                   ),
                  ),
-               )
-             ],
-           ),
-         ).animate().fadeIn(duration: const Duration(milliseconds: 700)),
+                 const Gap(10),
+                 BoxSubscription(
+                   key: ValueKey(state.directions),
+                   namesDir: _titlesDirections,
+                     directions: state.directions,
+                     allViewDirection: _allViewDirection),
+                 const Gap(10.0),
+                 Padding(
+                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                   child: Column(
+                     children: [
+                       const Gap(10.0),
+                       if(_visibleButtonBonus(bonuses: state.bonuses))...{
+                         Padding(
+                           padding: const EdgeInsets.only(bottom: 30.0),
+                           child: badges.Badge(
+                             position: badges.BadgePosition.topEnd(end: -5.0,top: -8.0),
+                             showBadge: state.bonuses.length>1,
+                             badgeContent: Text('${state.bonuses.length}',
+                                 style: TStyle.textStyleVelaSansBold(colorWhite)),
+                             child: SizedBox(
+                               height: 40.0,
+                               child: OutLineButton(
+                                 onTap: () {
+                                   if(state.bonuses.length>1){
+                                     Dialoger.showModalBottomMenu(
+                                         title: 'Получить бонусы'.tr(),
+                                         blurred: true,
+                                         args: state.bonuses,
+                                         content: ListBonuses());
+
+
+                                   }else{
+                                     GoRouter.of(context).push(pathDetailBonus,
+                                         extra: [
+                                           state.bonuses[0],
+                                           state.userEntity.directions[0]
+                                         ]);
+                                   }
+
+                                 },
+                                 borderRadius: 10.0,
+                                 textButton: state.bonuses.length > 1
+                                     ? 'Получить бонусы'.tr()
+                                     : state.bonuses[0].title,
+                               ),
+                             ),
+                           ),
+                         )
+
+                       }
+                     ],
+                   ),
+                 )
+               ],
+             ),
+           ).animate().fadeIn(duration: const Duration(milliseconds: 700)),
+         ),
        );
      }
    );

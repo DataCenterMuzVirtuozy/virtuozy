@@ -84,7 +84,8 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
 
   double _heightCalculate(int indexItems,double sizeText){
     final s = _items.length == 2?25.0:15.0;
-    return (sizeText*indexItems)+(s*indexItems);
+    return (sizeText*indexItems);
+        //+(s*indexItems);
   }
 
   @override

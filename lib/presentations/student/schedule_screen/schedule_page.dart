@@ -58,6 +58,16 @@ class _SchedulePageState extends State<SchedulePage> with AuthMixin{
   }
 
 
+  Future<void> _refreshData() async {
+    context.read<ScheduleBloc>().add(GetScheduleEvent(
+        refreshMonth: false,
+        allViewDir: false,
+        refreshDirection: true,
+        currentDirIndex: _selIndexDirection,
+        month: widget.currentMonth));
+  }
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -114,89 +124,95 @@ class _SchedulePageState extends State<SchedulePage> with AuthMixin{
 
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: DrawingMenuSelected(items:_titlesDirections,
-                  onSelected: (index){
-                    _selIndexDirection = index;
-                    if(index == _titlesDirections.length-1){
-                      _allViewDirection = true;
-                    }else{
-                      _allViewDirection = false;
-                    }
-                    context.read<ScheduleBloc>().add(GetScheduleEvent(
-                        refreshMonth: false,
-                        allViewDir: _allViewDirection,
-                        currentDirIndex: _selIndexDirection,
-                        month: globalCurrentMonthCalendar,
-                        refreshDirection: false));
-                  },),
-                ),
-                const Gap(10.0),
-                 Calendar(
-                   onDate: (date){},
-                   colorFill: Theme.of(context).colorScheme.surfaceContainerHighest,
-                   clickableDay: true,
-                     lessons: state.lessons,
-                     onMonth: (month){
-                     if(globalCurrentMonthCalendar == month){
-                       return;
-                     }
-                       globalCurrentMonthCalendar = month;
-                       context.read<ScheduleBloc>().add(GetScheduleEvent(
-                           refreshMonth: true,
-                           currentDirIndex: _selIndexDirection,
-                           month: month,
-                           refreshDirection: false,
-                           allViewDir: _allViewDirection));
-                     },
-                     onLesson: (lessons){
-                       Dialoger.showModalBottomMenu(
-                           blurred: false,
-                           title: 'Урок №${lessons[0].id} из ${lessons[0].id+5}',
-                           args: [lessons,state.user.directions],
-                           content: DetailsLesson());
-                      }),
-                const Gap(10.0),
-
-
-                  ValueListenableBuilder<List<ScheduleLessons>>(
-                      valueListenable: listScheduleNotifier,
-                      builder: (context,schedules,child) {
-                        if(schedules.isNotEmpty){
-                          return Column(
-                            children: List.generate(schedules.length, (index) {
-
-                              if(schedules[index].lessons.isEmpty){
-                                return  Padding(
-                                  padding: const EdgeInsets.only(top: 40.0),
-                                  child: Center(
-                                      child: BoxInfo(
-                                          buttonVisible: false,
-                                          title: 'График пуст'.tr(),
-                                          description: 'У вас нет занятий на текущий месяц'.tr(),
-                                          iconData: CupertinoIcons.calendar_badge_plus)),
-                                );
-                              }
-
-                              return  ItemSchedule(lengthSchedule: state.schedulesLength,
-                                  scheduleLessons: schedules[index],
-                                user: user);
-                            }),
-                          );
-                        }
-
-                        return const CircularProgressIndicator();
-
+          child: RefreshIndicator(
+            onRefresh: (){
+              return _refreshData();
+            },
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: DrawingMenuSelected(items:_titlesDirections,
+                    onSelected: (index){
+                      _selIndexDirection = index;
+                      if(index == _titlesDirections.length-1){
+                        _allViewDirection = true;
+                      }else{
+                        _allViewDirection = false;
                       }
-                  )
+                      context.read<ScheduleBloc>().add(GetScheduleEvent(
+                          refreshMonth: false,
+                          allViewDir: _allViewDirection,
+                          currentDirIndex: _selIndexDirection,
+                          month: globalCurrentMonthCalendar,
+                          refreshDirection: false));
+                    },),
+                  ),
+                  const Gap(10.0),
+                   Calendar(
+                     onDate: (date){},
+                     colorFill: Theme.of(context).colorScheme.surfaceContainerHighest,
+                     clickableDay: true,
+                       lessons: state.lessons,
+                       onMonth: (month){
+                       if(globalCurrentMonthCalendar == month){
+                         return;
+                       }
+                         globalCurrentMonthCalendar = month;
+                         context.read<ScheduleBloc>().add(GetScheduleEvent(
+                             refreshMonth: true,
+                             currentDirIndex: _selIndexDirection,
+                             month: month,
+                             refreshDirection: false,
+                             allViewDir: _allViewDirection));
+                       },
+                       onLesson: (lessons){
+                         Dialoger.showModalBottomMenu(
+                             blurred: false,
+                             title: 'Урок №${lessons[0].id} из ${lessons[0].id+5}',
+                             args: [lessons,state.user.directions],
+                             content: DetailsLesson());
+                        }),
+                  const Gap(10.0),
+
+
+                    ValueListenableBuilder<List<ScheduleLessons>>(
+                        valueListenable: listScheduleNotifier,
+                        builder: (context,schedules,child) {
+                          if(schedules.isNotEmpty){
+                            return Column(
+                              children: List.generate(schedules.length, (index) {
+
+                                if(schedules[index].lessons.isEmpty){
+                                  return  Padding(
+                                    padding: const EdgeInsets.only(top: 40.0),
+                                    child: Center(
+                                        child: BoxInfo(
+                                            buttonVisible: false,
+                                            title: 'График пуст'.tr(),
+                                            description: 'У вас нет занятий на текущий месяц'.tr(),
+                                            iconData: CupertinoIcons.calendar_badge_plus)),
+                                  );
+                                }
+
+                                return  ItemSchedule(lengthSchedule: state.schedulesLength,
+                                    scheduleLessons: schedules[index],
+                                  user: user);
+                              }),
+                            );
+                          }
+
+                          return const CircularProgressIndicator();
+
+                        }
+                    )
 
 
 
-              ],
+                ],
+              ),
             ),
           ),
         );

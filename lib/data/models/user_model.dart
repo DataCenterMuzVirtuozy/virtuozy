@@ -122,7 +122,6 @@ class UserModel{
   factory DirectionModel.fromMap({required Map<String, dynamic> mapDirection,required List<dynamic> mapSubs,required List<dynamic> lessons}) {
 
     //final lessons =  mapDirection['lessons'] as List<dynamic>;
-     print('Dir ${mapDirection}');
     final nameDirection = mapDirection['name'] as String;
     final subs = mapSubs.map((e) => SubscriptionModel.fromMap(e,nameDirection)).toList();
     final subsDir = subs.where((element) =>mapDirection['id']==null?false: element.idDir == (mapDirection['id'] as int)).toList();
@@ -170,6 +169,7 @@ class UserModel{
    }
 
    for(var element in subs){
+
       if(element.dateStart.isNotEmpty&&element.status == 1){
           listSubsAllActive.add(element);
         millisecondsSinceEpochListActiveSub.add(DateFormat('yyyy-MM-dd').parse(element.dateStart).millisecondsSinceEpoch);

@@ -52,6 +52,10 @@ class _ListTransactionsPageState extends State<ListTransactionsPage> {
 
   }
 
+  Future<void>  _refreshData() async {
+    context.read<BlocFinance>().add(GetListTransactionsEvent(directions: widget.directions));
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -74,38 +78,43 @@ class _ListTransactionsPageState extends State<ListTransactionsPage> {
                 iconData: Icons.list_alt_sharp);
           }
 
-         return GroupedListView<TransactionEntity,String>(
-            elements: state.transactions,
-            sort: false,
-            groupBy: (element) => DateTimeParser.getDateForCompare(date: element.date),
-            groupSeparatorBuilder: (String value)
-            => Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Center(child: Text(value,
-                style: TStyle.textStyleVelaSansBold(
-                  Theme.of(context)
-                      .textTheme.displayMedium!.color!,
-                size: 14
-              ),)),
+         return RefreshIndicator(
+           onRefresh: (){
+             return _refreshData();
+           },
+           child: GroupedListView<TransactionEntity,String>(
+              elements: state.transactions,
+              sort: false,
+              groupBy: (element) => DateTimeParser.getDateForCompare(date: element.date),
+              groupSeparatorBuilder: (String value)
+              => Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Center(child: Text(value,
+                  style: TStyle.textStyleVelaSansBold(
+                    Theme.of(context)
+                        .textTheme.displayMedium!.color!,
+                  size: 14
+                ),)),
+              ),
+              itemBuilder: (context, TransactionEntity element) {
+                return ItemTransaction(
+                    allView: widget.directions.length>1,
+                    nameDir: _getNameDir(element.idDir, widget.directions),
+                    date: DateTimeParser.getDateFromApi(date: element.date),
+                    type: element.typeTransaction,
+                    time: element.time,
+                    quantity: '${element.typeTransaction == TypeTransaction.minusLesson?'-':'+'}'
+                        '${ParserPrice.getBalance(element.quantity)} руб.');
+              },
+              itemComparator: (item1, item2) {
+                return DateTimeParser.getDateForCompare(date: item1.date)
+                    .compareTo(DateTimeParser.getDateForCompare(date: item2.date));
+              }, // optional
+              useStickyGroupSeparators: false, // optional
+              floatingHeader: true, // optional
+              order: GroupedListOrder.ASC, // optional
             ),
-            itemBuilder: (context, TransactionEntity element) {
-              return ItemTransaction(
-                  allView: widget.directions.length>1,
-                  nameDir: _getNameDir(element.idDir, widget.directions),
-                  date: DateTimeParser.getDateFromApi(date: element.date),
-                  type: element.typeTransaction,
-                  time: element.time,
-                  quantity: '${element.typeTransaction == TypeTransaction.minusLesson?'-':'+'}'
-                      '${ParserPrice.getBalance(element.quantity)} руб.');
-            },
-            itemComparator: (item1, item2) {
-              return DateTimeParser.getDateForCompare(date: item1.date)
-                  .compareTo(DateTimeParser.getDateForCompare(date: item2.date));
-            }, // optional
-            useStickyGroupSeparators: false, // optional
-            floatingHeader: true, // optional
-            order: GroupedListOrder.ASC, // optional
-          );
+         );
 
           return ListView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
