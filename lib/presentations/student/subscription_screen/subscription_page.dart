@@ -9,6 +9,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:virtuozy/bloc/app_bloc.dart';
 import 'package:virtuozy/components/box_info.dart';
 import 'package:virtuozy/components/calendar/calendar.dart';
 import 'package:virtuozy/components/dialogs/dialoger.dart';
@@ -64,6 +65,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
        allViewDir: true,
        currentDirIndex: _selIndexDirection,
        refreshDirection: true));
+
   }
 
 
@@ -89,10 +91,9 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
   }
 
   Future<void> _refreshData() async {
-    context.read<SubBloc>().add(GetUserEvent(
-        allViewDir: true,
-        currentDirIndex: _selIndexDirection,
-        refreshDirection: true));
+    context.read<SubBloc>().add(RefreshDataEvent(allViewDir: true,
+             currentDirIndex: _selIndexDirection,
+             refreshDirection: true));
   }
 
 

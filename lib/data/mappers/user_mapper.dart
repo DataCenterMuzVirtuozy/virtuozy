@@ -8,6 +8,7 @@ import 'package:virtuozy/data/models/user_model.dart';
 import 'package:virtuozy/domain/entities/price_subscription_entity.dart';
 import 'package:virtuozy/domain/entities/subway_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
+import 'package:virtuozy/utils/status_to_color.dart';
 
 import '../../domain/entities/lesson_entity.dart';
 import '../../domain/entities/subscription_entity.dart';
@@ -62,22 +63,22 @@ class UserMapper{
     return type == 1?UserType.student:UserType.teacher;
   }
 
-  static LessonStatus _lessonStatus(int status){
-    switch(status){
-      case 1: return LessonStatus.planned;
-      case 2: return LessonStatus.complete;
-      case 3: return LessonStatus.cancel;
-      case 4: return LessonStatus.out;
-      case 5: return LessonStatus.reservation;
-      case 6: return LessonStatus.singly;
-      case 7: return LessonStatus.trial;
-      case 8:return LessonStatus.awaitAccept;
-      case 9: return LessonStatus.firstLesson;
-      case 10: return LessonStatus.lastLesson;
-      case 11: return LessonStatus.reschedule;
-    }
-    return LessonStatus.unknown;
-  }
+  // static LessonStatus _lessonStatus(int status){
+  //   switch(status){
+  //     case 1: return LessonStatus.planned;
+  //     case 2: return LessonStatus.complete;
+  //     case 3: return LessonStatus.cancel;
+  //     case 4: return LessonStatus.out;
+  //     case 5: return LessonStatus.reservation;
+  //     case 6: return LessonStatus.singly;
+  //     case 7: return LessonStatus.trial;
+  //     case 8:return LessonStatus.awaitAccept;
+  //     case 9: return LessonStatus.firstLesson;
+  //     case 10: return LessonStatus.lastLesson;
+  //     case 11: return LessonStatus.reschedule;
+  //   }
+  //   return LessonStatus.unknown;
+  // }
 
   static DirectionLesson _fromDirectionModel(DirectionModel directionModel){
     return DirectionLesson(
@@ -175,7 +176,7 @@ class UserMapper{
         idAuditory: lessonModel.idAuditory,
         nameTeacher: lessonModel.nameTeacher,
         timeAccept: lessonModel.timeAccept,
-        status: _lessonStatus(lessonModel.status),
+        status: StatusToColor.lessonStatusFromApi(lessonModel.status),
         nameStudent: lessonModel.nameStudent,
         idSchool: lessonModel.idSchool);
   }

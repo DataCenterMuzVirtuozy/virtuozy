@@ -2,6 +2,7 @@
 
  import 'dart:math';
 
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:virtuozy/di/locator.dart';
@@ -14,6 +15,8 @@ import 'package:virtuozy/utils/failure.dart';
 import 'package:virtuozy/utils/update_list_ext.dart';
 
 import '../../../../domain/entities/lesson_entity.dart';
+import '../../../../domain/repository/user_repository.dart';
+import '../../../../utils/preferences_util.dart';
 
 
 class SubBloc extends Bloc<SubEvent,SubState>{
@@ -23,10 +26,47 @@ class SubBloc extends Bloc<SubEvent,SubState>{
     on<NotAcceptLessonEvent>(_notAcceptLesson);
     on<UpdateUserEvent>(_updateUser);
     on<ActivateBonusEvent>(_activateBonus);
+    on<RefreshDataEvent>(_refreshData,transformer: droppable());
   }
 
 
   final _userCubit = locator.get<UserCubit>();
+  final _userRepository = locator.get<UserRepository>();
+
+  void _refreshData(RefreshDataEvent event, emit) async {
+    try{
+      emit(state.copyWith(subStatus: SubStatus.loading));
+      final uid = PreferencesUtil.uid;
+      final user = await _userRepository.getUser(uid: uid);
+      if(user.userStatus.isAuth){
+        final firstNotAcceptLesson = _firstNotAcceptLesson(user: user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
+        final listNotAcceptLesson = _getListNotAcceptLesson(user: user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
+        final lessons = _getAllLessons(user, event.allViewDir, event.currentDirIndex);
+        final directions = _getDirections(user: user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
+        final bonuses = _getBonuses(user: user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
+        final titlesDrawingMenu = _getTitlesDrawingMenu(directions: user.directions);
+        emit(state.copyWith(
+            titlesDrawingMenu: titlesDrawingMenu,
+            bonuses: bonuses,
+            userEntity: user,
+            lessons: lessons,
+            directions: directions,
+            subStatus: SubStatus.loaded,
+            firstNotAcceptLesson: firstNotAcceptLesson,
+            listNotAcceptLesson: listNotAcceptLesson));
+        _listenUserRefresh(event);
+      }else{
+        emit(state.copyWith( subStatus: SubStatus.loaded,userEntity: user));
+      }
+
+
+
+    }on Failure catch(e){
+      emit(state.copyWith( subStatus: SubStatus.error, error: e.message));
+
+    }
+  }
+
 
 
   void _getUser(GetUserEvent event,emit) async {
@@ -38,7 +78,6 @@ class SubBloc extends Bloc<SubEvent,SubState>{
 
        final user = _userCubit.userEntity;
        if(user.userStatus.isAuth){
-         print('U1');
          final firstNotAcceptLesson = _firstNotAcceptLesson(user: user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
          final listNotAcceptLesson = _getListNotAcceptLesson(user: user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
          final lessons = _getAllLessons(user, event.allViewDir, event.currentDirIndex);
@@ -56,15 +95,11 @@ class SubBloc extends Bloc<SubEvent,SubState>{
              listNotAcceptLesson: listNotAcceptLesson));
          _listenUser(event);
        }else{
-         print('U2');
          emit(state.copyWith( subStatus: SubStatus.loaded,userEntity: user));
        }
 
-
-
-
     }on Failure catch(e){
-      throw Failure(e.message);
+       emit(state.copyWith( subStatus: SubStatus.error, error: e.message));
      }
   }
 
@@ -72,6 +107,12 @@ class SubBloc extends Bloc<SubEvent,SubState>{
      _userCubit.stream.listen((user) async {
        add(UpdateUserEvent(currentDirIndex: event.currentDirIndex, user: user,allViewDir: event.allViewDir));
      });
+  }
+
+  void _listenUserRefresh(RefreshDataEvent event) {
+    _userCubit.stream.listen((user) async {
+      add(UpdateUserEvent(currentDirIndex: event.currentDirIndex, user: user,allViewDir: event.allViewDir));
+    });
   }
 
   List<String> _getTitlesDrawingMenu({required List<DirectionLesson> directions}){

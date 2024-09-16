@@ -89,8 +89,8 @@ class StatusToColor{
       }
 
     switch(lessonStatus){
-     case LessonStatus.planned: return _colors[6];
-     case LessonStatus.complete: return _colors[0];
+     case LessonStatus.planned: return _colors[0];
+     case LessonStatus.complete: return _colors[6];
      case LessonStatus.cancel: return _colors[2];
      case LessonStatus.out: return _colors[4];
      case LessonStatus.reservation: return _colors[3];

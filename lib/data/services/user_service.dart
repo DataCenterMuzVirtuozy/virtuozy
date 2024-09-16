@@ -42,7 +42,7 @@ class UserService{
           'phoneNumber':uid.replaceAll(' ', '')
        });
 
-       //print('USER ${res.data}');
+       print('USER DATA ${res.data}');
        if((res.data as List<dynamic>).isEmpty){
         await PreferencesUtil.clear();
         return throw   Failure('Пользователь не найден'.tr());
@@ -52,6 +52,7 @@ class UserService{
       }else{
         //final idUser = res.data[0]['id'] as int;
        idUser = 9827;
+
       }
 
        //api crm
@@ -59,13 +60,16 @@ class UserService{
            queryParameters: {
             'idUser': idUser
            });
-      print('Response Subs ${resSubs.data['data']}');
-       // api crm
+
+       //print('Response Subs ${resSubs.data}');
+
+
+      // api crm
        final resLessons = await dio.get(Endpoints.lessons,
            queryParameters: {
              'idStudent': idUser
            });
-     // print('Response Lesons ${resLessons.data}');
+
 
       var listLess = [];
       var listSubs = [];
@@ -77,6 +81,7 @@ class UserService{
         listSubs = resSubs.data['data'];
         listLess = resLessons.data['data'];
       }
+      print('Response Lessons ${listLess}');
        return UserModel.fromMap(mapUser: res.data[0],mapSubsAll: listSubs,lessons: listLess);
     } on Failure catch(e){
        throw  Failure(e.message);

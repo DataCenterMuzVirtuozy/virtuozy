@@ -26,6 +26,14 @@ class GetUserEvent extends SubEvent{
     required this.refreshDirection, required this.currentDirIndex});
 }
 
+ class RefreshDataEvent extends SubEvent{
+   final int currentDirIndex;
+   final bool refreshDirection;
+   final bool allViewDir;
+   const RefreshDataEvent({required this.allViewDir,
+     required this.refreshDirection, required this.currentDirIndex});
+ }
+
 class AcceptLessonEvent extends SubEvent{
   final Lesson lesson;
   final DirectionLesson direction;
