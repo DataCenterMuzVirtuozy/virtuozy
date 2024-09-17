@@ -59,7 +59,7 @@ class _SchedulePageState extends State<SchedulePage> with AuthMixin{
 
 
   Future<void> _refreshData() async {
-    context.read<ScheduleBloc>().add(GetScheduleEvent(
+    context.read<ScheduleBloc>().add(RefreshDataEvent(
         refreshMonth: false,
         allViewDir: false,
         refreshDirection: true,
@@ -353,8 +353,13 @@ class _SchedulePageState extends State<SchedulePage> with AuthMixin{
                          style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
                    ],
                  ),
-                 Text(lesson.nameTeacher,
-                     style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
+                 ConstrainedBox(
+                   constraints: const BoxConstraints(maxWidth: 150),
+                   child: Text(lesson.nameTeacher,
+                       maxLines: 2,
+                       overflow: TextOverflow.ellipsis,
+                       style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
+                 ),
                  Row(
                    crossAxisAlignment: CrossAxisAlignment.start,
                    children: [

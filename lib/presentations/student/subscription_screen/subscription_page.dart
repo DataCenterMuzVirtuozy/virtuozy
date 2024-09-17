@@ -94,6 +94,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
     context.read<SubBloc>().add(RefreshDataEvent(allViewDir: true,
              currentDirIndex: _selIndexDirection,
              refreshDirection: true));
+
   }
 
 

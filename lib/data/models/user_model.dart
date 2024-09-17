@@ -146,7 +146,7 @@ class UserModel{
     //List<int> ids = subsDir.map((e) => e.id).toList();
 
     for(var l in lessons){
-      if(idDir == l.idDir){
+      if(idDir == l.idDir&&l.status!=4){
         lessonsResult.add(l);
       }
     }

@@ -31,6 +31,20 @@ class GetScheduleEvent extends ScheduleEvent{
     required this.month});
 }
 
+class RefreshDataEvent extends ScheduleEvent{
+  final int currentDirIndex;
+  final int month;
+  final bool refreshDirection;
+  final bool refreshMonth;
+  final bool allViewDir;
+  const RefreshDataEvent({
+    required this.refreshMonth,
+    required this.allViewDir,
+    required this.refreshDirection,
+    required this.currentDirIndex,
+    required this.month});
+}
+
 
  class GetDetailsScheduleEvent extends ScheduleEvent{
    final int currentDirIndex;

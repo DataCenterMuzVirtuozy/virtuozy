@@ -38,6 +38,7 @@ class SubBloc extends Bloc<SubEvent,SubState>{
       emit(state.copyWith(subStatus: SubStatus.loading));
       final uid = PreferencesUtil.uid;
       final user = await _userRepository.getUser(uid: uid);
+      _userCubit.setUser(user: user);
       if(user.userStatus.isAuth){
         final firstNotAcceptLesson = _firstNotAcceptLesson(user: user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
         final listNotAcceptLesson = _getListNotAcceptLesson(user: user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
@@ -163,7 +164,6 @@ class SubBloc extends Bloc<SubEvent,SubState>{
       resLes = user.directions[indexDir].lessons;
     }
 
-    print('Lessons ${resLes.length}');
     return resLes;
   }
 

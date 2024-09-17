@@ -1,7 +1,8 @@
 
 
 
- import 'package:easy_localization/easy_localization.dart';
+ import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:virtuozy/di/locator.dart';
@@ -13,6 +14,8 @@ import 'package:virtuozy/presentations/student/schedule_screen/bloc/schedule_sta
 import 'package:virtuozy/utils/failure.dart';
 
 import '../../../../domain/entities/lesson_entity.dart';
+import '../../../../domain/repository/user_repository.dart';
+import '../../../../utils/preferences_util.dart';
 
 ValueNotifier<List<ScheduleLessons>> listScheduleNotifier = ValueNotifier<List<ScheduleLessons>>([]);
 
@@ -21,10 +24,12 @@ class ScheduleBloc extends Bloc<ScheduleEvent,ScheduleState>{
    on<GetScheduleEvent>(_getSchedule);
    on<UpdateUserEvent>(_updateUser);
    on<GetDetailsScheduleEvent>(_getDetailsSchedule);
+   on<RefreshDataEvent>(_refreshData,transformer: droppable());
 
   }
 
   final _userCubit = locator.get<UserCubit>();
+  final _userRepository = locator.get<UserRepository>();
 
 
 
@@ -45,6 +50,46 @@ class ScheduleBloc extends Bloc<ScheduleEvent,ScheduleState>{
           schedulesList: schedulesList));
     }on Failure catch(e){
 
+    }
+  }
+
+
+  void _refreshData(RefreshDataEvent event,emit) async {
+    try {
+      final uid = PreferencesUtil.uid;
+      final user = await _userRepository.getUser(uid: uid);
+      _userCubit.setUser(user: user);
+      if (user.userStatus.isNotAuth) {
+        emit(state.copyWith(status: ScheduleStatus.loaded, user: user));
+        return;
+      }
+      if (event.refreshDirection) {
+        emit(state.copyWith(status: ScheduleStatus.loading));
+        await Future.delayed(const Duration(milliseconds: 1000));
+      }
+      final schedulesList = _getListSchedules(
+          currentMonth: event.month,
+          userEntity: user, indexSelDirection: event.currentDirIndex,
+          allViewDir: event.allViewDir);
+      final schedulesLength = _getSchedulesLength(
+          userEntity: user, indexSelDirection: event.currentDirIndex,
+          allViewDir: event.allViewDir);
+      final lessons = _getAllLessons(
+          user, event.allViewDir, event.currentDirIndex);
+      if (!event.refreshMonth) {
+        emit(state.copyWith(
+            status: ScheduleStatus.loaded,
+            user: user,
+            lessons: lessons,
+            schedulesLength: schedulesLength));
+        listScheduleNotifier.value = schedulesList;
+      } else {
+        listScheduleNotifier.value = schedulesList;
+      }
+
+      _listenUserFromRefresh(event);
+    } on Failure catch (e) {
+      emit(state.copyWith(status: ScheduleStatus.error, error: e.message));
     }
   }
 
@@ -82,7 +127,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent,ScheduleState>{
 
 
      }on Failure catch(e){
-
+       emit(state.copyWith(status: ScheduleStatus.error, error: e.message));
      }
 
 
@@ -258,6 +303,18 @@ class ScheduleBloc extends Bloc<ScheduleEvent,ScheduleState>{
          currentMonth: event.month,
           userEntity: user, indexSelDirection: event.currentDirIndex,
       allViewDir: event.allViewDir);
+      final scheduleMonth = _getScheduleMonth(list:schedulesList, month: event.month);
+      listScheduleNotifier.value = schedulesList;
+      add(UpdateUserEvent(currentDirIndex: event.currentDirIndex, user: user,scheduleLessons: scheduleMonth));
+    });
+  }
+
+  void _listenUserFromRefresh(RefreshDataEvent event) {
+    _userCubit.stream.listen((user) async {
+      final  schedulesList = _getListSchedules(
+          currentMonth: event.month,
+          userEntity: user, indexSelDirection: event.currentDirIndex,
+          allViewDir: event.allViewDir);
       final scheduleMonth = _getScheduleMonth(list:schedulesList, month: event.month);
       listScheduleNotifier.value = schedulesList;
       add(UpdateUserEvent(currentDirIndex: event.currentDirIndex, user: user,scheduleLessons: scheduleMonth));
