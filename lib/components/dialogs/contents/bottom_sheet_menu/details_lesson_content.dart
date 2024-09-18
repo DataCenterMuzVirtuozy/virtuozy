@@ -142,17 +142,20 @@ class ItemDetailsLesson extends StatelessWidget {
                           size: 16.0)),
                 ],
               ),
-              Row(
-                children: [
-                  Icon(Icons.timelapse_rounded,
-                      color: Theme.of(context).textTheme.displayMedium!.color!,
-                      size: 15.0),
-                  const Gap(5.0),
-                  Text(lesson.timePeriod,
-                      style: TStyle.textStyleVelaSansMedium(
-                          Theme.of(context).textTheme.displayMedium!.color!,
-                          size: 16.0)),
-                ],
+              Visibility(
+                visible: lesson.timePeriod.isNotEmpty,
+                child: Row(
+                  children: [
+                    Icon(Icons.timelapse_rounded,
+                        color: Theme.of(context).textTheme.displayMedium!.color!,
+                        size: 15.0),
+                    const Gap(5.0),
+                    Text(lesson.timePeriod,
+                        style: TStyle.textStyleVelaSansMedium(
+                            Theme.of(context).textTheme.displayMedium!.color!,
+                            size: 16.0)),
+                  ],
+                ),
               ),
             ],
           ),
@@ -252,7 +255,7 @@ class ItemDetailsLesson extends StatelessWidget {
             ],
           ),
           Visibility(
-            visible: lesson.status == LessonStatus.complete,
+            visible: lesson.status == LessonStatus.complete&&lesson.timeAccept.isNotEmpty,
             child: Column(
               children: [
                 Divider(color: colorGrey),

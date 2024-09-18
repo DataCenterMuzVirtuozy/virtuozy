@@ -25,6 +25,7 @@ class SelectDateContent extends StatelessWidget{
       height: MediaQuery.of(context).size.height/2.7,
       child: SingleChildScrollView(
         child: Calendar(
+          focusedDay: DateTime.now(),
           visibleStatusColor: true,
           visibleInfoColors: false,
           clickableDay: true,

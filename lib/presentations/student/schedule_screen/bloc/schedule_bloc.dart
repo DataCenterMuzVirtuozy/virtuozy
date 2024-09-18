@@ -56,6 +56,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent,ScheduleState>{
 
   void _refreshData(RefreshDataEvent event,emit) async {
     try {
+      emit(state.copyWith(status: ScheduleStatus.loading));
       final uid = PreferencesUtil.uid;
       final user = await _userRepository.getUser(uid: uid);
       _userCubit.setUser(user: user);
@@ -63,10 +64,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent,ScheduleState>{
         emit(state.copyWith(status: ScheduleStatus.loaded, user: user));
         return;
       }
-      if (event.refreshDirection) {
-        emit(state.copyWith(status: ScheduleStatus.loading));
-        await Future.delayed(const Duration(milliseconds: 1000));
-      }
+
       final schedulesList = _getListSchedules(
           currentMonth: event.month,
           userEntity: user, indexSelDirection: event.currentDirIndex,

@@ -45,16 +45,20 @@ class _SchedulePageState extends State<SchedulePage> with AuthMixin{
   int _selIndexDirection = 0;
   List<String> _titlesDirections = [];
   bool _allViewDirection = false;
+  late DateTime _focusedDay;
+  int _currentMonth = 0;
 
   @override
   void initState() {
     super.initState();
+    _focusedDay = DateTime.now();
+    globalCurrentMonthCalendar =  widget.currentMonth;
     context.read<ScheduleBloc>().add(GetScheduleEvent(
       refreshMonth: false,
       allViewDir: false,
       refreshDirection: true,
         currentDirIndex: _selIndexDirection,
-        month: widget.currentMonth));
+        month: globalCurrentMonthCalendar));
   }
 
 
@@ -64,7 +68,7 @@ class _SchedulePageState extends State<SchedulePage> with AuthMixin{
         allViewDir: false,
         refreshDirection: true,
         currentDirIndex: _selIndexDirection,
-        month: widget.currentMonth));
+        month: globalCurrentMonthCalendar));
   }
 
 
@@ -85,7 +89,6 @@ class _SchedulePageState extends State<SchedulePage> with AuthMixin{
 
       },
       builder: (context,state) {
-
         if(state.status == ScheduleStatus.loading){
           return Center(
             child: CircularProgressIndicator(color: colorOrange),
@@ -152,7 +155,12 @@ class _SchedulePageState extends State<SchedulePage> with AuthMixin{
                   ),
                   const Gap(10.0),
                    Calendar(
-                     onDate: (date){},
+                     focusedDay: _focusedDay,
+                     resetFocusDay: false,
+                     onDate: (date){
+                       print('Date ${date}');
+                       _focusedDay = date;
+                     },
                      colorFill: Theme.of(context).colorScheme.surfaceContainerHighest,
                      clickableDay: true,
                        lessons: state.lessons,

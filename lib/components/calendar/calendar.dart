@@ -33,13 +33,15 @@ class Calendar extends StatefulWidget {
     this.visibleStatusColor = true,
     this.visibleInfoColors = true,
     this.colorFill = Colors.transparent,
-    required this.onDate});
+    required this.onDate,
+    required this.focusedDay});
 
   final List<Lesson> lessons;
   final Function onLesson;
   final Function onMonth;
   final Function onDate;
   final bool clickableDay;
+  final DateTime focusedDay;
   final bool focusedDayStatus;
   final bool visibleStatusColor;
   final bool resetFocusDay;
@@ -53,6 +55,7 @@ class Calendar extends StatefulWidget {
 class _CalendarState extends State<Calendar> with AuthMixin{
   final currentDayNotifi = locator.get<ValueNotifier<int>>();
   int month = 0;
+   DateTime day = DateTime.now();
   int i = 0;
   late DateTime _firstDay;
   late DateTime _focusedDay;
@@ -68,7 +71,7 @@ class _CalendarState extends State<Calendar> with AuthMixin{
   @override
   void initState() {
     super.initState();
-    _focusedDay = DateTime.now();
+    _focusedDay = widget.focusedDay;
   }
 
   @override
@@ -114,7 +117,7 @@ class _CalendarState extends State<Calendar> with AuthMixin{
                     context: context);
                 return;
               }
-              widget.onDate.call(day.toString().split(' ')[0]);
+              //widget.onDate.call(day.toString().split(' ')[0]);
             },
             calendarStyle: CalendarStyle(
               tablePadding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -191,7 +194,7 @@ class _CalendarState extends State<Calendar> with AuthMixin{
                 if(userType.isTeacher){
                   return _handleTodayTeacher(
                     onLesson: (d){
-                      widget.onDate.call(d.toString().split(' ')[0]);
+                      //widget.onDate.call(d.toString().split(' ')[0]);
                     },
                     lessons: widget.lessons,
                     today: day
@@ -212,6 +215,7 @@ class _CalendarState extends State<Calendar> with AuthMixin{
                     });
               },
               defaultBuilder: (context, day, values) {
+                _onDay(day);
                 _onMonth(day.month);
                 return _handlerDay(
                   focusedDayStatus: widget.focusedDayStatus,
@@ -223,7 +227,7 @@ class _CalendarState extends State<Calendar> with AuthMixin{
                     day: day.day,
                     context: context,
                     onLesson: (List<Lesson> lessons) {
-                      widget.onDate.call(lessons[0].date);
+                      //widget.onDate.call(lessons[0].date);
                       widget.onLesson.call(lessons);
                     });
               },
@@ -260,6 +264,13 @@ class _CalendarState extends State<Calendar> with AuthMixin{
     if (month == 0 || month != currentMonth) {
       widget.onMonth.call(currentMonth);
       month = currentMonth;
+    }
+  }
+
+  _onDay(DateTime currentDay) {
+    if(day.month!=currentDay.month) {
+      widget.onDate.call(currentDay);
+      day = currentDay;
     }
   }
 

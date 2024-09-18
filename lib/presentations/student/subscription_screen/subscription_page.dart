@@ -54,6 +54,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
   bool _hasBonus = false;
   bool _resetFocus = false;
   bool _allViewDirection = false;
+  late DateTime _focusedDay;
 
 
 
@@ -61,6 +62,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
   @override
   void initState() {
     super.initState();
+    _focusedDay = DateTime.now();
    context.read<SubBloc>().add(GetUserEvent(
        allViewDir: true,
        currentDirIndex: _selIndexDirection,
@@ -190,11 +192,15 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                  ),
                  const Gap(10.0),
                   Calendar(
-                    onDate: (date){},
+                    focusedDay: _focusedDay,
+                    onDate: (date){
+                      _focusedDay = date;
+                    },
                     colorFill: Theme.of(context).colorScheme.surfaceContainerHighest,
                     resetFocusDay: _resetFocus,
                     lessons: state.lessons,
                     onMonth: (month){
+
                       _resetFocus = false;
                        globalCurrentMonthCalendar = month;
                     },
