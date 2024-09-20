@@ -1,7 +1,8 @@
 
 
 
- import 'package:easy_localization/easy_localization.dart';
+ import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:virtuozy/di/locator.dart';
 import 'package:virtuozy/domain/entities/price_subscription_entity.dart';
@@ -14,7 +15,9 @@ import 'package:virtuozy/utils/failure.dart';
 import 'package:virtuozy/utils/update_list_ext.dart';
 
 import '../../../../domain/entities/transaction_entity.dart';
+import '../../../../domain/repository/user_repository.dart';
 import '../../../../domain/user_cubit.dart';
+import '../../../../utils/preferences_util.dart';
 import 'event_finance.dart';
 
 
@@ -26,11 +29,13 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
     on<GetListTransactionsEvent>(_getListTransaction);
     on<WritingOfMoneyEvent>(_writingOffMoney);
     on<ApplyBonusEvent>(_applyBonus);
+    on<RefreshSubscriptionEvent>(_refreshSubscription,transformer: droppable());
 
   }
 
   final _financeRepository = locator.get<FinanceRepository>();
   final _userCubit = locator.get<UserCubit>();
+  final _userRepository = locator.get<UserRepository>();
   List<TransactionEntity> _listTransaction = [];
 
 
@@ -76,6 +81,34 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
     }on Failure catch(e){
       emit(state.copyWith(paymentStatus: PaymentStatus.paymentError,error: e.message));
     }
+  }
+
+
+  void _refreshSubscription(RefreshSubscriptionEvent event,emit) async {
+    emit(state.copyWith(status: FinanceStatus.loading));
+    final uid = PreferencesUtil.uid;
+    final user = await _userRepository.getUser(uid: uid);
+    _userCubit.setUser(user: user);
+
+    if(user.userStatus == UserStatus.moderation || user.userStatus == UserStatus.notAuth){
+      emit(state.copyWith(
+          status: FinanceStatus.loaded));
+      return;
+    }
+
+    final titlesDrawingMenu = _getTitlesDrawingMenu(directions: user.directions);
+    final directions = _getDirections(user: user,indexDir: event.indexDirection,allViewDir: event.allViewDir);
+    final expiredSubscriptions = _getExpiredSubscriptions(directions,event.allViewDir,event.indexDirection);
+    List<SubscriptionEntity> listSubHistory = _getHistorySubscriptions(directions,event.allViewDir,event.indexDirection);
+    listSubHistory = _listSortSubHistory(list: listSubHistory);
+    emit(state.copyWith(
+        status: FinanceStatus.loaded,
+        user: user,
+        subscriptionHistory: listSubHistory,
+        directions: directions,
+        titlesDrawingMenu: titlesDrawingMenu,
+        expiredSubscriptions: expiredSubscriptions));
+
   }
 
 

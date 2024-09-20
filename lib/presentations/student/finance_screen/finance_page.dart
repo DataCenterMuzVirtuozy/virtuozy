@@ -88,7 +88,7 @@ class _FinancePageState extends State<FinancePage> {
   }
 
   Future<void> _refreshData() async {
-    context.read<BlocFinance>().add(GetBalanceSubscriptionEvent(
+    context.read<BlocFinance>().add(RefreshSubscriptionEvent(
         refreshDirection: true,
         indexDirection: _selIndexDirection,
         allViewDir: widget.selIndexDirection<0?true:false));

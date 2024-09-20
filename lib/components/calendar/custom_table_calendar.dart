@@ -335,6 +335,7 @@ class CustomTableCalendarState<T> extends State<CustomTableCalendar<T>> {
           widget.calendarFormat == CalendarFormat.month;
 
   void _swipeCalendarFormat(SwipeDirection direction) {
+    print('Swipe ${direction}');
     if (widget.onFormatChanged != null) {
       final formats = widget.availableCalendarFormats.keys.toList();
 
@@ -517,7 +518,7 @@ class CustomTableCalendarState<T> extends State<CustomTableCalendar<T>> {
             availableCalendarFormats: widget.availableCalendarFormats,
             simpleSwipeConfig: widget.simpleSwipeConfig,
             sixWeekMonthsEnforced: widget.sixWeekMonthsEnforced,
-            onVerticalSwipe: _swipeCalendarFormat,
+            //onVerticalSwipe: _swipeCalendarFormat,
             onPageChanged: (focusedDay) {
               _focusedDay.value = focusedDay;
               widget.onPageChanged?.call(focusedDay);
@@ -528,8 +529,7 @@ class CustomTableCalendarState<T> extends State<CustomTableCalendar<T>> {
               Widget? cell = widget.calendarBuilders.weekNumberBuilder
                   ?.call(context, weekNumber);
 
-              if (cell == null) {
-                cell = Padding(
+              cell ??= Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4),
                   child: Center(
                     child: Text(
@@ -538,7 +538,6 @@ class CustomTableCalendarState<T> extends State<CustomTableCalendar<T>> {
                     ),
                   ),
                 );
-              }
 
               return cell;
             },

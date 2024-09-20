@@ -33,6 +33,16 @@ class GetBalanceSubscriptionEvent extends EventFinance{
     required this.allViewDir,required this.indexDirection});
 }
 
+ class RefreshSubscriptionEvent extends EventFinance{
+   final int indexDirection;
+   final bool allViewDir;
+   final bool refreshDirection;
+   const RefreshSubscriptionEvent( {
+     required this.refreshDirection,
+     required this.allViewDir,required this.indexDirection});
+ }
+
+
 
  class ApplyBonusEvent extends EventFinance{
    final int idBonus;
