@@ -75,7 +75,7 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
             progressIndicatorBuilder: (context, url, downloadProgress) =>
                 CircularProgressIndicator(value: downloadProgress.progress,color: colorWhite),
             errorWidget: (context, url, error) {
-              return const Icon(Icons.error);
+              return  Image.asset(icLogoRec);
             },
           ),
         ),

@@ -71,7 +71,7 @@ class UserModel{
       //documents: docs.map((e) => DocumentModel.fromMap(e)).toList(),
       documents: [],
       //id: mapUser['id'] as int, //todo from crm null
-      id: mapUser['id']??9827,
+      id: mapUser['id']??1,
       lastName: mapUser['lastName'] as String,
       firstName: mapUser['firstName'] as String,
       branchName: mapUser['branchName'] as String,
@@ -85,7 +85,7 @@ class UserModel{
       sex: mapUser['sex'] as String,
       about_me: mapUser['about_me'] as String,
       date_birth: mapUser['date_birth'] as String,
-      registration_date: mapUser['registration_date'] as String,
+      registration_date: mapUser['registration_date']??'',
      // has_kids: mapUser['has_kids'] as bool, //todo  type 'String' is not a subtype of type 'bool' in type cast
       has_kids: false,
       //subways: subways,

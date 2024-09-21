@@ -243,6 +243,9 @@ class ItemDetailsLesson extends StatelessWidget {
                     height: 10.0,
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
+                        border: Border.all(color: lesson.status == LessonStatus.planned?colorBlack:
+                        StatusToColor.getColor(
+                            lessonStatus: lesson.status),width: 0.5),
                         color: StatusToColor.getColor(
                             lessonStatus: lesson.status)),
                   ),

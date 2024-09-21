@@ -58,7 +58,7 @@ class _ListSubscriptionHistoryState extends State<ListSubscriptionHistory> {
         children: [
           if(widget.listExpiredSubscriptions.isEmpty)...{
             BoxInfo(title: 'Список пуст'.tr(),
-    iconData: Icons.list_alt_sharp)
+          iconData: Icons.list_alt_sharp)
 
           }else...{
             Expanded(
@@ -95,14 +95,14 @@ class _ListSubscriptionHistoryState extends State<ListSubscriptionHistory> {
             )
 
             // Expanded(
-    //           child:  ListView.builder(
-    //               padding: const EdgeInsets.symmetric(horizontal: 15.0),
-    //               itemCount: widget.listExpiredSubscriptions.length,
-    //               itemBuilder: (c,i){
-    //                 return ItemSubHistory(
-    //                    subscriptionEntity: widget.listExpiredSubscriptions[i]);
-    //               }),
-    //         )
+          //           child:  ListView.builder(
+          //               padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          //               itemCount: widget.listExpiredSubscriptions.length,
+          //               itemBuilder: (c,i){
+          //                 return ItemSubHistory(
+          //                    subscriptionEntity: widget.listExpiredSubscriptions[i]);
+          //               }),
+          //         )
 
           }
 
