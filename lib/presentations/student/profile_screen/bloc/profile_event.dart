@@ -20,6 +20,11 @@ class ProfileEvent extends Equatable{
    const GetDataUserProfileEvent();
 }
 
+ class RefreshProfileEvent extends ProfileEvent{
+
+   const RefreshProfileEvent();
+ }
+
 class SaveNewDataUserEvent extends ProfileEvent{
   final EditProfileEntity editProfileEntity;
   const SaveNewDataUserEvent({required this.editProfileEntity});

@@ -1,7 +1,8 @@
 
 
 
- import 'package:flutter_bloc/flutter_bloc.dart';
+ import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:virtuozy/di/locator.dart';
 import 'package:virtuozy/domain/entities/edit_profile_entity.dart';
 import 'package:virtuozy/domain/entities/subway_entity.dart';
@@ -12,12 +13,15 @@ import 'package:virtuozy/presentations/student/profile_screen/bloc/profile_event
 import 'package:virtuozy/presentations/student/profile_screen/bloc/profile_state.dart';
 import 'package:virtuozy/utils/failure.dart';
 
+import '../../../../utils/preferences_util.dart';
+
 class ProfileBloc extends Bloc<ProfileEvent,ProfileState>{
   ProfileBloc():super(ProfileState.unknown()){
     on<GetDataUserProfileEvent>(_getDataUser);
     on<SaveNewDataUserEvent>(_saveNewUserData);
     on<GetSubwaysEvent>(_getSubways);
     on<AddSubwayEvent>(_addSubway);
+    on<RefreshProfileEvent>(_refreshDataUser,transformer: droppable());
   }
 
   final _userCubit = locator.get<UserCubit>();
@@ -43,6 +47,22 @@ class ProfileBloc extends Bloc<ProfileEvent,ProfileState>{
       emit(state.copyWith(findSubwaysStatus: FindSubwaysStatus.error,error: e.message));
     }
   }
+
+
+  void _refreshDataUser(RefreshProfileEvent event,emit) async {
+    try{
+      emit(state.copyWith(profileStatus: ProfileStatus.loading,
+          findSubwaysStatus: FindSubwaysStatus.unknown,subways: [],
+          addedSubway: SubwayEntity.unknown()));
+      await Future.delayed(const Duration(seconds: 1));
+      final uid = PreferencesUtil.uid;
+      final user = await _userRepository.getUser(uid: uid);
+      emit(state.copyWith(profileStatus: ProfileStatus.loaded,userEntity: user));
+    }on Failure catch(e){
+      emit(state.copyWith(profileStatus: ProfileStatus.error,error: e.message));
+    }
+  }
+
 
   void _getDataUser(GetDataUserProfileEvent event,emit) async {
     try{

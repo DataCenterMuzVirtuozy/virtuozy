@@ -25,6 +25,7 @@ import 'package:virtuozy/utils/theme_provider.dart';
 
 import '../../../components/buttons.dart';
 import '../../../components/dialogs/dialoger.dart';
+import '../../../resourses/images.dart';
 import '../../../utils/preferences_util.dart';
 import '../../../utils/text_style.dart';
 import 'bloc/profile_state.dart';
@@ -61,6 +62,10 @@ import 'bloc/profile_state.dart';
      }
    }
 
+   Future<void> _refreshData() async {
+     context.read<ProfileBloc>().add(const RefreshProfileEvent());
+   }
+
 
    @override
   void initState() {
@@ -74,134 +79,137 @@ import 'bloc/profile_state.dart';
     final h = MediaQuery.of(context).size.height;
 
      return Scaffold(
-       body: BlocConsumer<ProfileBloc,ProfileState>(
-         listener: (c,s){
-           if(s.profileStatus == ProfileStatus.error){
-             Dialoger.showMessage(s.error);
-           }
-           if(s.profileStatus == ProfileStatus.saved){
-             _edit = false;
-             Dialoger.showActionMaterialSnackBar(context: context, title: 'Изменения сохранены'.tr());
-           }
+       body: RefreshIndicator(
+         onRefresh: _refreshData,
+         child: BlocConsumer<ProfileBloc,ProfileState>(
+           listener: (c,s){
+             if(s.profileStatus == ProfileStatus.error){
+               Dialoger.showMessage(s.error);
+             }
+             if(s.profileStatus == ProfileStatus.saved){
+               _edit = false;
+               Dialoger.showActionMaterialSnackBar(context: context, title: 'Изменения сохранены'.tr());
+             }
 
-           if(s.profileStatus == ProfileStatus.loaded ||
-               s.profileStatus == ProfileStatus.saved){
-             profileEntity = EditProfileEntity(
-               whoFindTeem: s.userEntity.who_find,
-                 fileImageUrl: _imageFile,
-                 sex: s.userEntity.sex,
-                 dateBirth: s.userEntity.date_birth,
-                 hasKind: s.userEntity.has_kids,
-                 urlAva: s.userEntity.avaUrl,
-                 subways: s.userEntity.subways,
-                 aboutMe: s.userEntity.about_me);
+             if(s.profileStatus == ProfileStatus.loaded ||
+                 s.profileStatus == ProfileStatus.saved){
+               profileEntity = EditProfileEntity(
+                 whoFindTeem: s.userEntity.who_find,
+                   fileImageUrl: _imageFile,
+                   sex: s.userEntity.sex,
+                   dateBirth: s.userEntity.date_birth,
+                   hasKind: s.userEntity.has_kids,
+                   urlAva: s.userEntity.avaUrl,
+                   subways: s.userEntity.subways,
+                   aboutMe: s.userEntity.about_me);
 
-           }
-         },
-         builder: (context,state) {
+             }
+           },
+           builder: (context,state) {
 
-           if(state.profileStatus == ProfileStatus.loading){
-             return Center(child: CircularProgressIndicator(color: colorOrange));
-           }
+             if(state.profileStatus == ProfileStatus.loading){
+               return Center(child: CircularProgressIndicator(color: colorOrange));
+             }
 
-          if(state.profileStatus == ProfileStatus.loaded){
-            return IgnorePointer(
-              ignoring: state.profileStatus == ProfileStatus.saving,
-              child: SingleChildScrollView(
-                padding:  EdgeInsets.only(top: h/12,right: 20,left: 20),
-                child: Stack(
-                  alignment: Alignment.topCenter,
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: IconButton(onPressed: (){
-                        Navigator.pop(context);
-                      },
-                        icon: Icon(Platform.isAndroid?Icons.arrow_back_rounded:
-                        Icons.arrow_back_ios_new_rounded),),
-                    ),
-                    BodyInfoUser(
-                      key: ValueKey(_edit),
-                        user: state.userEntity,
-                        edit: _edit,
-                        profileEdit: profileEntity,
-                        state: state),
-                    GestureDetector(
-                      onTap: (){
-                        setState(() {
-                          if(_editPhotoMode){
-                            _editPhotoMode = false;
-                          }else{
-                            _editPhotoMode = true;
-                          }
+            if(state.profileStatus == ProfileStatus.loaded){
+              return IgnorePointer(
+                ignoring: state.profileStatus == ProfileStatus.saving,
+                child: SingleChildScrollView(
+                  padding:  EdgeInsets.only(top: h/12,right: 20,left: 20),
+                  child: Stack(
+                    alignment: Alignment.topCenter,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: IconButton(onPressed: (){
+                          Navigator.pop(context);
+                        },
+                          icon: Icon(Platform.isAndroid?Icons.arrow_back_rounded:
+                          Icons.arrow_back_ios_new_rounded),),
+                      ),
+                      BodyInfoUser(
+                        key: ValueKey(_edit),
+                          user: state.userEntity,
+                          edit: _edit,
+                          profileEdit: profileEntity,
+                          state: state),
+                      GestureDetector(
+                        onTap: (){
+                          setState(() {
+                            if(_editPhotoMode){
+                              _editPhotoMode = false;
+                            }else{
+                              _editPhotoMode = true;
+                            }
 
-                        });
-                      },
-                      child: SizedBox(
-                        width: 240,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Visibility(
-                              visible: _editPhotoMode,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 10),
-                                decoration: BoxDecoration(
-                                    color: colorOrange,
-                                    borderRadius: BorderRadius.circular(20)
-                                ),
-                                height: 50,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    IconButton(onPressed: (){
-                                      _pickImage(true);
-                                    },
-                                        icon: Icon(Icons.image_rounded,color: colorWhite)),
-                                    IconButton(onPressed: (){
-                                      _pickImage(false);
-                                    },
-                                        icon: Icon(Icons.camera_alt_outlined,color: colorWhite))
-                                  ],
-                                ),
-                              ).animate().fadeIn(duration: const Duration(milliseconds: 700)),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: colorOrange,
+                          });
+                        },
+                        child: SizedBox(
+                          width: 240,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Visibility(
+                                visible: _editPhotoMode,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                                  decoration: BoxDecoration(
+                                      color: colorOrange,
+                                      borderRadius: BorderRadius.circular(20)
+                                  ),
+                                  height: 50,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      IconButton(onPressed: (){
+                                        _pickImage(true);
+                                      },
+                                          icon: Icon(Icons.image_rounded,color: colorWhite)),
+                                      IconButton(onPressed: (){
+                                        _pickImage(false);
+                                      },
+                                          icon: Icon(Icons.camera_alt_outlined,color: colorWhite))
+                                    ],
+                                  ),
+                                ).animate().fadeIn(duration: const Duration(milliseconds: 700)),
                               ),
-                              padding: const EdgeInsets.all(2),
-                              child: _getAvatar(_imageFile,state.userEntity.avaUrl),
-                            ),
-                            Positioned(
-                              bottom: 0,
-                              right: 65,
-                              child: Container(
-                                padding: const EdgeInsets.all(5),
+                              Container(
                                 decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: colorOrange,
-                                    border: Border.all(color: colorWhite,width: 1.5)
+                                  shape: BoxShape.circle,
+                                  color: colorOrange,
                                 ),
-                                child: Icon(_editPhotoMode?Icons.close:
-                                Icons.edit,color: colorWhite,size: 20),
+                                padding: const EdgeInsets.all(2),
+                                child: _getAvatar(_imageFile,state.userEntity.avaUrl),
                               ),
-                            ),
-                          ],
+                              Positioned(
+                                bottom: 0,
+                                right: 65,
+                                child: Container(
+                                  padding: const EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: colorOrange,
+                                      border: Border.all(color: colorWhite,width: 1.5)
+                                  ),
+                                  child: Icon(_editPhotoMode?Icons.close:
+                                  Icons.edit,color: colorWhite,size: 20),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
 
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            );
+              );
 
-          }
+            }
 
-           return Container();
-         }
+             return Container();
+           }
+         ),
        ),
      );
    }
@@ -230,7 +238,7 @@ import 'bloc/profile_state.dart';
                imageUrl: urlAva,
                progressIndicatorBuilder: (context, url, downloadProgress) =>
                    CircularProgressIndicator(value: downloadProgress.progress,color: colorWhite),
-               errorWidget: (context, url, error) => const Icon(Icons.error),
+               errorWidget: (context, url, error) =>Image.asset(icLogoRec),
              ),
            ),
          );
