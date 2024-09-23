@@ -64,7 +64,7 @@ class UserModel{
     if(directions.length>5)directions.removeAt(9); //todo index 9 from crm - {id: null, name: Не выбрано, nameTeacher:  Не выбрано }
    //final settingsMap = mapUser['settingNotifi'] as List<dynamic>; //todo type 'String' is not a subtype of type 'List<dynamic>' in type cast
     //final docs =  mapUser['documents'] as List<dynamic>;//todo type 'String' is not a subtype of type 'List<dynamic>' in type cast
-   // final subways  = (mapUser['subways'] as List<dynamic>).map((e) =>SubwayModel.fromMap(e)).toList();//todo type 'String' is not a subtype of type 'List<dynamic>' in type cast
+    final subway  = SubwayModel.fromMap(mapUser['subway']);//todo type 'String' is not a subtype of type 'List<dynamic>' in type cast
     return UserModel(
       //notifiSttings: settingsMap.map((e) => NotifiSettingModel.fromMap(e)).toList(),
       notifiSttings: [],
@@ -86,10 +86,8 @@ class UserModel{
       about_me: mapUser['about_me'] as String,
       date_birth: mapUser['date_birth'] as String,
       registration_date: mapUser['registration_date']??'',
-     // has_kids: mapUser['has_kids'] as bool, //todo  type 'String' is not a subtype of type 'bool' in type cast
-      has_kids: false,
-      //subways: subways,
-      subways: [],
+      has_kids: mapUser['has_kids'] == '1'?true:false,
+      subways: [subway],
       who_find: mapUser['who_find'] as String,
       avaUrl: mapUser['avaUrl'] as String,
     );

@@ -19,6 +19,7 @@ class UserMapper{
 
 
   static UserEntity fromApi({required UserModel userModel}){
+    print('Kids ${userModel.has_kids}');
     return UserEntity(
         documents: userModel.documents
             .map((e) => DocumentMapper.fromApi(documentModel: e))

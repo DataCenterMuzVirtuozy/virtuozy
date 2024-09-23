@@ -317,7 +317,7 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
   }
 
   Color _getColorSubway(String color){
-    final code = '#$color';
+    final code = color;
     return  Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
@@ -428,10 +428,8 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
                                         setState(() {
                                           _edit = true;
                                           if(_subways.length>1){
-                                            print('Remove 1');
                                             _subways.removeAt(index);
                                           }else if(_subways.length==1){
-                                            print('Remove 2');
                                             _subways.clear();
                                           }
 
