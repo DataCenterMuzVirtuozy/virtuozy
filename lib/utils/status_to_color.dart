@@ -82,11 +82,20 @@ class StatusToColor{
    }
  }
 
-   static Color getColor({required LessonStatus lessonStatus, UserType userType = UserType.unknown}){
+   static Color getColor({required LessonStatus lessonStatus, UserType userType = UserType.unknown, LessonType typeLesson = LessonType.unknown}){
 
      if(userType.isTeacher){
        return _colors[3];
       }
+
+     if(typeLesson!=LessonType.unknown){
+       if(typeLesson.isPU){
+         return _colors[1];
+       }
+       if(typeLesson.isINDIVIDUAL){
+         return _colors[5];
+       }
+     }
 
     switch(lessonStatus){
      case LessonStatus.planned: return _colors[0];
@@ -128,9 +137,12 @@ class StatusToColor{
 
   static LessonType lessonType(int status){
     switch(status){
-      case 3: return LessonType.trial;
-      case 5: return LessonType.group;
-      case 1: return LessonType.singly;
+      case 3: return LessonType.CAN_PU_TYPE;
+      case 2: return LessonType.PU_TYPE;
+      case 5: return LessonType.GROUP_TYPE;
+      case 4: return LessonType.RESERVE_TYPE;
+      case 6: return LessonType.INDEPENDENT_TYPE;
+      case 1: return LessonType.INDIVIDUAL_TYPE;
     }
 
     return LessonType.unknown;

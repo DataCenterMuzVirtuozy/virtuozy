@@ -283,8 +283,12 @@ class UserModel{
     final idTeacher = map['idTeacher'];
     final status = map['status'];
     final bonus =map['bonus']??false;
-    final date = (map['date'] as String).split(' ')[0];
+    final date = map['date'] as String;
+    final dateStart = date.split(' ')[0];
     final idSchool =  map['idSchool'].toString();
+    final type = map['type']??'10';
+    final duration = map['timePeriod']??'0';
+    final timePeriod = DateTimeParser.parseTimePeriod(period: duration, date: date);
 
     return LessonModel(
       nameGroup: map['nameGroup']??'', //absent  from api
@@ -292,16 +296,16 @@ class UserModel{
       online: map['online']??false, //absent from api
       comments: map['comments']??'...', //absent from api
       nameSub: map['nameSub']??'...', //absent from api
-      duration: map['duration']??60, //absent from api
-      type: map['type']??10,  //absent
+      duration: int.parse(duration), //['duration']??60, //absent from api
+      type: int.parse(type),  //absent
       contactValues: map['contactValues']??[], //absent from api
       idDir: map['idDir']??1, //absent from api
       idSchool: idSchool,
       idSub: idSub,
       id: map['id']??0,
       timeAccept: map['timeAccept']??'',
-      date: date,
-      timePeriod: map['timePeriod']??'',
+      date: dateStart,
+      timePeriod: timePeriod,
       idTeacher: idTeacher,
       idAuditory: map['idAuditory']??'',
       nameTeacher: map['nameTeacher']??'',

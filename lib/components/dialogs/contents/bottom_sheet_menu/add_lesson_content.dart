@@ -61,11 +61,11 @@ class _AddLessonContentState extends State<AddLessonContent> {
                     _selectedTypeLesson = selected;
                     lesson = lesson.copyWith(
                         type: selected == 'Индивидуальные'
-                            ? LessonType.singly
+                            ? LessonType.INDIVIDUAL_TYPE
                             : selected == 'Групповой'
-                                ? LessonType.group
+                                ? LessonType.GROUP_TYPE
                                 : selected == 'Можно ПУ'
-                                    ? LessonType.trial
+                                    ? LessonType.CAN_PU_TYPE
                                     : LessonType.unknown);
                   });
                 },
@@ -342,17 +342,17 @@ class _Step2State extends State<Step2> with AuthMixin {
                 selectedValueLesson = value;
                 addedLesson = addedLesson.copyWith(
                     type: selectedValueLesson == itemsStudyes[0]
-                        ? LessonType.singly
+                        ? LessonType.INDIVIDUAL_TYPE
                         : selectedValueLesson == itemsStudyes[2]
-                            ? LessonType.group
+                            ? LessonType.GROUP_TYPE
                             : selectedValueLesson == itemsStudyes[1]
-                                ? LessonType.trial
+                                ? LessonType.PU_TYPE
                                 : LessonType.unknown);
               });
             },
           ),
           Visibility(
-            visible: addedLesson.type.isSingly,
+            visible: addedLesson.type.isINDIVIDUAL,
             child: Column(
               children: [
                 Gap(_h2),
@@ -418,7 +418,7 @@ class _Step2State extends State<Step2> with AuthMixin {
             ),
           ),
           Visibility(
-            visible: addedLesson.type.isGroup,
+            visible: addedLesson.type.isGROUP,
             child: Column(
               children: [
                 Gap(_h2),
@@ -558,7 +558,7 @@ class _Step2State extends State<Step2> with AuthMixin {
             },
           ),
           Visibility(
-            visible: addedLesson.type.isSingly || addedLesson.type.isGroup,
+            visible: addedLesson.type.isINDIVIDUAL || addedLesson.type.isGROUP,
             child: Column(
               children: [
                 Gap(_h2),
@@ -713,7 +713,7 @@ class _Step2State extends State<Step2> with AuthMixin {
             ],
           ),
           Visibility(
-            visible: addedLesson.type.isSingly,
+            visible: addedLesson.type.isINDIVIDUAL,
             child: Column(
               children: [
                 Gap(_h2),
@@ -848,7 +848,7 @@ class _Step2State extends State<Step2> with AuthMixin {
                 }
                 addedLesson =
                     addedLesson.copyWith(status: LessonStatus.planned,
-                      nameStudent: addedLesson.type.isGroup?'':selectedValueStudent);
+                      nameStudent: addedLesson.type.isGROUP?'':selectedValueStudent);
                 Dialoger.showCustomDialog(
                     args: [addedLesson, widget.callFromTable],
                     contextUp: context,
@@ -891,7 +891,7 @@ class _Step2State extends State<Step2> with AuthMixin {
           addedLesson.copyWith(comments: _editingControllerReview.text);
     }
 
-    if (addedLesson.type.isGroup) {
+    if (addedLesson.type.isGROUP) {
       if (selectedValueGroup == 'Не выбрано' || selectedValueGroup.isEmpty) {
         setState(() {
           errorGroup = true;
@@ -901,7 +901,7 @@ class _Step2State extends State<Step2> with AuthMixin {
     }
 
     if (selectedValueSubs.isEmpty) {
-      if (addedLesson.type.isSingly || addedLesson.type.isGroup) {
+      if (addedLesson.type.isINDIVIDUAL || addedLesson.type.isGROUP) {
         setState(() {
           errorSubs = true;
           res = false;
@@ -909,7 +909,7 @@ class _Step2State extends State<Step2> with AuthMixin {
       }
     }
 
-    if (selectedValueStudent.isEmpty && addedLesson.type.isSingly) {
+    if (selectedValueStudent.isEmpty && addedLesson.type.isINDIVIDUAL) {
       setState(() {
         errorClient = true;
         res = false;
@@ -918,7 +918,7 @@ class _Step2State extends State<Step2> with AuthMixin {
 
     if (selectedValueDir.isEmpty || selectedValueDir == 'Не выбрано') {
       setState(() {
-        if (addedLesson.type.isSingly || addedLesson.type.isGroup) {
+        if (addedLesson.type.isINDIVIDUAL || addedLesson.type.isGROUP) {
           errorDir = true;
           res = false;
         }
@@ -993,7 +993,7 @@ class _Step2State extends State<Step2> with AuthMixin {
           selectedValueStudent = List.from(client!).first;
           selectedValueSubs = itemsSubs[0];
           addedLesson = addedLesson.copyWith(
-              nameStudent: addedLesson.type.isGroup?'':selectedValueStudent,
+              nameStudent: addedLesson.type.isGROUP?'':selectedValueStudent,
               idStudent: 1,
               nameSub: selectedValueSubs);
         });

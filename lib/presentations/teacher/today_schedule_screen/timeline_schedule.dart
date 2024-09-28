@@ -122,7 +122,7 @@ class _TimelineScheduleState extends State<TimelineSchedule> with AuthMixin{
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Expanded(
-                                child: Text(data.$2.type.isGroup?
+                                child: Text(data.$2.type.isGROUP?
                                 data.$2.nameGroup:data.$2.nameStudent.isEmpty?'...':data.$2.nameStudent,
                                     style:
                                 TStyle.textStyleVelaSansRegular(Theme.of(context)

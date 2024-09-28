@@ -216,6 +216,48 @@ class ItemDetailsLesson extends StatelessWidget {
                       size: 16.0)),
             ],
           ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(Icons.type_specimen_outlined,
+                  color: colorGrey, size: 16.0),
+              const Gap(5),
+              Text('Тип занятия:',
+                  style:
+                  TStyle.textStyleVelaSansMedium(colorGrey, size: 15.0)),
+              const Gap(5),
+              Row(
+                children: [
+                  Text(
+                      lesson.type == LessonType.INDIVIDUAL_TYPE
+                          ? 'Индивидуальный'
+                          : lesson.type == LessonType.GROUP_TYPE
+                          ? 'Групповой'
+                          : lesson.type == LessonType.CAN_PU_TYPE?'Можно ПУ':
+                      lesson.type == LessonType.PU_TYPE?"Пробный урок":
+                      lesson.type == LessonType.RESERVE_TYPE?"Резерв":"Независимый",
+                      style: TStyle.textStyleVelaSansBold(
+                          textColorBlack(context),
+                          size: 16.0)),
+                  // const Gap(10),
+                  // Container(
+                  //   padding: const EdgeInsets.symmetric(
+                  //       horizontal: 8, vertical: 2),
+                  //   decoration: BoxDecoration(
+                  //       color: colorGrey,
+                  //       borderRadius: BorderRadius.circular(5)),
+                  //   child: Text(lesson.online ? 'offline' : "offline",
+                  //       textAlign: TextAlign.center,
+                  //       maxLines: 2,
+                  //       overflow: TextOverflow.ellipsis,
+                  //       style: TStyle.textStyleVelaSansBold(
+                  //           Theme.of(context).textTheme.displayMedium!.color!,
+                  //           size: 10.0)),
+                  // )
+                ],
+              )
+            ],
+          ),
           const Gap(10),
           Column(
             children: [
@@ -245,9 +287,9 @@ class ItemDetailsLesson extends StatelessWidget {
                         shape: BoxShape.circle,
                         border: Border.all(color: lesson.status == LessonStatus.planned?colorBlack:
                         StatusToColor.getColor(
-                            lessonStatus: lesson.status),width: 0.5),
+                            lessonStatus: lesson.status,typeLesson: lesson.type),width: 0.5),
                         color: StatusToColor.getColor(
-                            lessonStatus: lesson.status)),
+                            lessonStatus: lesson.status,typeLesson: lesson.type)),
                   ),
                   const Gap(10.0),
                   Text(StatusToColor.getNameStatus(lesson.status),

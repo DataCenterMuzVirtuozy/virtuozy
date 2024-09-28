@@ -317,7 +317,7 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
                                                 context),
                                             size: 13)),
                                     Visibility(
-                                      visible:  !state.tasks[index].lesson.type.isTrial,
+                                      visible:  !state.tasks[index].lesson.type.isPU,
                                       child: Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
@@ -380,7 +380,7 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
     return
         state.tasks[index].lesson.status == LessonStatus.cancel ||
         state.tasks[index].lesson.status == LessonStatus.out ||
-        state.tasks[index].lesson.type == LessonType.trial;
+        state.tasks[index].lesson.type == LessonType.PU_TYPE;
   }
 
   Color color(TableState state, int index, BuildContext context) {

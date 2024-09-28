@@ -161,7 +161,7 @@ class UserMapper{
       idStudent: lessonModel.idStudent,
       idDir: lessonModel.idDir,
       idTeacher: lessonModel.idTeacher,
-      type: _lessonType(lessonModel.type),
+      type: StatusToColor.lessonType(lessonModel.type),
       alien: true,
       comments: lessonModel.comments,
       nameSub: lessonModel.nameSub,
@@ -186,15 +186,15 @@ class UserMapper{
     return SubwayEntity(name: model.name,color: model.color);
   }
 
-  static LessonType _lessonType(int status){
-    switch(status){
-      case 1: return LessonType.trial;
-      case 2: return LessonType.group;
-      case 3: return LessonType.singly;
-    }
-
-    return LessonType.unknown;
-  }
+  // static LessonType _lessonType(int status){
+  //   switch(status){
+  //     case 1: return LessonType.trial;
+  //     case 2: return LessonType.group;
+  //     case 3: return LessonType.singly;
+  //   }
+  //
+  //   return LessonType.unknown;
+  // }
 
 
  }

@@ -56,9 +56,9 @@ class _InfoStatusLessonContentState extends State<InfoStatusLessonContent> {
                 Row(
                   children: [
                     Text(
-                        widget.lesson.type == LessonType.singly
+                        widget.lesson.type == LessonType.INDIVIDUAL_TYPE
                             ? 'Индивидуальный'
-                            : widget.lesson.type == LessonType.group
+                            : widget.lesson.type == LessonType.GROUP_TYPE
                                 ? 'Групповой'
                                 : 'Можно ПУ',
                         style: TStyle.textStyleVelaSansBold(
@@ -124,7 +124,7 @@ class _InfoStatusLessonContentState extends State<InfoStatusLessonContent> {
                   ],
                 ),
                 Visibility(
-                  visible: !widget.lesson.type.isTrial,
+                  visible: !widget.lesson.type.isPU,
                   child: Row(
                     children: [
                       Icon(Icons.directions, color: colorGreen, size: 16.0),
@@ -150,7 +150,7 @@ class _InfoStatusLessonContentState extends State<InfoStatusLessonContent> {
               ],
             ),
             Visibility(
-              visible: widget.lesson.type.isGroup,
+              visible: widget.lesson.type.isGROUP,
               child: Column(
                 children: [
                   const Gap(5),
@@ -226,7 +226,7 @@ class _InfoStatusLessonContentState extends State<InfoStatusLessonContent> {
               color: colorGrey,
             ),
             Visibility(
-              visible: !widget.lesson.type.isGroup,
+              visible: !widget.lesson.type.isGROUP,
               child: Column(
                 children: [
                   Row(

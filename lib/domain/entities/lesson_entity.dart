@@ -18,17 +18,20 @@ enum LessonStatus{
 }
 
 enum LessonType{
-  trial,
-  group,
-  singly,
+  PU_TYPE,
+  GROUP_TYPE,
+  CAN_PU_TYPE,
+  INDIVIDUAL_TYPE,
+  RESERVE_TYPE,
+  INDEPENDENT_TYPE,
   unknown
 
 }
 
 extension LessonTypeExt on LessonType{
-  bool get isTrial => this == LessonType.trial;
-  bool get isGroup => this == LessonType.group;
-  bool get isSingly => this == LessonType.singly;
+  bool get isPU => this == LessonType.PU_TYPE;
+  bool get isGROUP=> this == LessonType.GROUP_TYPE;
+  bool get isINDIVIDUAL => this == LessonType.INDIVIDUAL_TYPE;
   bool get isUnknown => this == LessonType.unknown;
 }
 

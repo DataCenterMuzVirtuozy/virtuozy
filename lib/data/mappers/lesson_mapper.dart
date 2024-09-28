@@ -57,11 +57,23 @@ class LessonMapper{
 
    static int _lessonType(LessonType type){
      switch(type){
-       case LessonType.trial: return 1;
-       case LessonType.group: return 2;
-       case LessonType.singly: return 3;
+       // case 3: return LessonType.CAN_PU_TYPE;
+       // case 2: return LessonType.PU_TYPE;
+       // case 5: return LessonType.GROUP_TYPE;
+       // case 4: return LessonType.RESERVE_TYPE;
+       // case 6: return LessonType.INDEPENDENT_TYPE;
+       // case 1: return LessonType.INDIVIDUAL_TYPE;
+       case LessonType.PU_TYPE: return 2;
+       case LessonType.GROUP_TYPE: return 5;
+       case LessonType.INDIVIDUAL_TYPE: return 1;
        case LessonType.unknown: return 0;
 
+       case LessonType.CAN_PU_TYPE:
+        return  3;
+       case LessonType.RESERVE_TYPE:
+         return 4;
+       case LessonType.INDEPENDENT_TYPE:
+         return 6;
      }
 
 

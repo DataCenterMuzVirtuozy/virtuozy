@@ -42,7 +42,7 @@ class UserService{
           'phoneNumber':uid.replaceAll(' ', '')
        });
 
-       print('USER DATA ${res.data}');
+       //print('USER DATA ${res.data}');
        if((res.data as List<dynamic>).isEmpty){
         await PreferencesUtil.clear();
         return throw   Failure('Пользователь не найден'.tr());
@@ -81,7 +81,7 @@ class UserService{
         listSubs = resSubs.data['data'];
         listLess = resLessons.data['data'];
       }
-      print('Response Lessons ${listLess}');
+      //print('Response Lessons ${listLess}');
        return UserModel.fromMap(mapUser: res.data[0],mapSubsAll: listSubs,lessons: listLess);
     } on Failure catch(e){
        throw  Failure(e.message);

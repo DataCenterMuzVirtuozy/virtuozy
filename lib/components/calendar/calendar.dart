@@ -384,6 +384,7 @@ class _CalendarState extends State<Calendar> with AuthMixin{
                                   shape: BoxShape.circle,
                                   color: visibleStatusColor
                                       ? StatusToColor.getColor(
+                                    typeLesson: lesson.type,
                                     userType: userType,
                                       lessonStatus: lessonsDay.length > 1
                                           ? LessonStatus.layering
