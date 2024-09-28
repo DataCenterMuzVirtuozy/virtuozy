@@ -32,6 +32,7 @@ extension LessonTypeExt on LessonType{
   bool get isPU => this == LessonType.PU_TYPE;
   bool get isGROUP=> this == LessonType.GROUP_TYPE;
   bool get isINDIVIDUAL => this == LessonType.INDIVIDUAL_TYPE;
+  bool get isINDEPENDENT => this == LessonType.INDEPENDENT_TYPE;
   bool get isUnknown => this == LessonType.unknown;
 }
 
@@ -76,9 +77,11 @@ class Lesson{
   final String comments;
   final String nameSub;
   final int idDir;
+  final int numberLesson;
   final String nameGroup;
 
   const Lesson({
+    required this.numberLesson,
     required this.nameGroup,
     required this.idStudent,
     required this.idDir,
@@ -107,6 +110,7 @@ class Lesson{
 
   factory Lesson.unknown(){
     return const Lesson(
+      numberLesson: 0,
       nameGroup: '',
       idStudent: 0,
       idDir: 0,
@@ -154,9 +158,11 @@ class Lesson{
     int? duration,
     int? idDir,
     int? idStudent,
-    String? nameGroup
+    String? nameGroup,
+    int? numberLesson
   }) {
     return Lesson(
+      numberLesson: numberLesson??this.numberLesson,
       nameGroup: nameGroup??this.nameGroup,
       idStudent: idStudent??this.idStudent,
       idDir: idDir??this.idDir,

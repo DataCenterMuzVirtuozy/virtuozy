@@ -92,8 +92,16 @@ class StatusToColor{
        if(typeLesson.isPU){
          return _colors[1];
        }
-       if(typeLesson.isINDIVIDUAL){
+       if(typeLesson.isINDEPENDENT){
          return _colors[5];
+       }
+
+       if(typeLesson.isGROUP||typeLesson.isINDIVIDUAL&&lessonStatus.isFirstLesson){
+         return _colors[9];
+       }
+
+       if(typeLesson.isGROUP||typeLesson.isINDIVIDUAL&&lessonStatus.isLastLesson){
+         return _colors[10];
        }
      }
 
@@ -118,19 +126,21 @@ class StatusToColor{
    }
 
   static LessonStatus lessonStatusFromApi(int status){
-    switch(status){
+
+
+   switch(status){
       case 1: return LessonStatus.planned; // !
       case 2: return LessonStatus.complete; // !
       case 3: return LessonStatus.cancel; // !
       case 6: return LessonStatus.out; // !
       case 7: return LessonStatus.reservation; // !
-      case 6222: return LessonStatus.singly; // not work
-      case 7222: return LessonStatus.trial;  //not work
+      case -1: return LessonStatus.singly; // not work
+      case -2: return LessonStatus.trial;  //not work
       case 11 :return LessonStatus.awaitAccept;
       case 8 : return LessonStatus.freezing; // !
       case 9: return LessonStatus.firstLesson; // not work
       case 10: return LessonStatus.lastLesson; // not work
-      case 4222: return LessonStatus.reschedule; // not work
+      case -3: return LessonStatus.reschedule; // not work
     }
     return LessonStatus.unknown;
   }
@@ -141,12 +151,14 @@ class StatusToColor{
       case 2: return LessonType.PU_TYPE;
       case 5: return LessonType.GROUP_TYPE;
       case 4: return LessonType.RESERVE_TYPE;
-      case 6: return LessonType.INDEPENDENT_TYPE;
-      case 1: return LessonType.INDIVIDUAL_TYPE;
+      case 6: return LessonType.INDEPENDENT_TYPE; //самостоятельный
+      case 1: return LessonType.INDIVIDUAL_TYPE; //индивидуальный
     }
 
     return LessonType.unknown;
   }
+
+
 
   static ClientStatus clientStatusFromApi(int status){
     switch(status){

@@ -234,6 +234,7 @@ class _TimelineScheduleState extends State<TimelineSchedule> with AuthMixin{
          required String nameTeacher,
          required String dateDay}) {
      return Lesson(
+       numberLesson: 0,
          nameGroup: '',
          idStudent: 0,
          idDir: 0,

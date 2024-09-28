@@ -30,7 +30,7 @@ class TeacherModel {
   factory TeacherModel.fromMap(
       {required Map<String, dynamic> mapTeacher,
       required List<dynamic> mapLessons}) {
-    final lessons = mapLessons.map((e) => LessonModel.fromMap(e, '')).toList();
+    final lessons = mapLessons.map((e) => LessonModel.fromMap(e, '',0)).toList();
 
     return TeacherModel(
       // lessons: l,

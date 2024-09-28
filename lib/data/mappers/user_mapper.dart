@@ -19,7 +19,6 @@ class UserMapper{
 
 
   static UserEntity fromApi({required UserModel userModel}){
-    print('Kids ${userModel.has_kids}');
     return UserEntity(
         documents: userModel.documents
             .map((e) => DocumentMapper.fromApi(documentModel: e))
@@ -157,6 +156,7 @@ class UserMapper{
 
   static Lesson _fromLessonModel(LessonModel lessonModel){
     return Lesson(
+      numberLesson: lessonModel.numberLesson,
       nameGroup: lessonModel.nameGroup,
       idStudent: lessonModel.idStudent,
       idDir: lessonModel.idDir,

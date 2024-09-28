@@ -32,13 +32,12 @@ class _DetailsLessonContentState extends State<DetailsLessonContent> {
   late final PageController _pageController;
 
   DirectionLesson _getDirectionByLesson({required Lesson lessonEntity}) {
-    try{
-      return widget.directions.firstWhere((element) => element.name == lessonEntity.nameDirection);
-    }catch (e){
+    try {
+      return widget.directions
+          .firstWhere((element) => element.name == lessonEntity.nameDirection);
+    } catch (e) {
       return DirectionLesson.unknown();
     }
-
-
   }
 
   @override
@@ -147,7 +146,8 @@ class ItemDetailsLesson extends StatelessWidget {
                 child: Row(
                   children: [
                     Icon(Icons.timelapse_rounded,
-                        color: Theme.of(context).textTheme.displayMedium!.color!,
+                        color:
+                            Theme.of(context).textTheme.displayMedium!.color!,
                         size: 15.0),
                     const Gap(5.0),
                     Text(lesson.timePeriod,
@@ -219,23 +219,26 @@ class ItemDetailsLesson extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(Icons.type_specimen_outlined,
-                  color: colorGrey, size: 16.0),
+              Icon(Icons.type_specimen_outlined, color: colorGrey, size: 16.0),
               const Gap(5),
               Text('Тип занятия:',
-                  style:
-                  TStyle.textStyleVelaSansMedium(colorGrey, size: 15.0)),
+                  style: TStyle.textStyleVelaSansMedium(colorGrey, size: 15.0)),
               const Gap(5),
               Row(
                 children: [
                   Text(
-                      lesson.type == LessonType.INDIVIDUAL_TYPE
-                          ? 'Индивидуальный'
+                      lesson.type == LessonType.INDEPENDENT_TYPE
+                          ? 'Самостоятельный'
                           : lesson.type == LessonType.GROUP_TYPE
-                          ? 'Групповой'
-                          : lesson.type == LessonType.CAN_PU_TYPE?'Можно ПУ':
-                      lesson.type == LessonType.PU_TYPE?"Пробный урок":
-                      lesson.type == LessonType.RESERVE_TYPE?"Резерв":"Независимый",
+                              ? 'Групповой'
+                              : lesson.type == LessonType.CAN_PU_TYPE
+                                  ? 'Можно ПУ'
+                                  : lesson.type == LessonType.PU_TYPE
+                                      ? "Пробный урок"
+                                      : lesson.type ==
+                                              LessonType.INDIVIDUAL_TYPE
+                                          ? "Индивидуальный"
+                                          : "Резерв",
                       style: TStyle.textStyleVelaSansBold(
                           textColorBlack(context),
                           size: 16.0)),
@@ -285,11 +288,16 @@ class ItemDetailsLesson extends StatelessWidget {
                     height: 10.0,
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        border: Border.all(color: lesson.status == LessonStatus.planned?colorBlack:
-                        StatusToColor.getColor(
-                            lessonStatus: lesson.status,typeLesson: lesson.type),width: 0.5),
+                        border: Border.all(
+                            color: lesson.status == LessonStatus.planned
+                                ? colorBlack
+                                : StatusToColor.getColor(
+                                    lessonStatus: lesson.status,
+                                    typeLesson: lesson.type),
+                            width: 0.5),
                         color: StatusToColor.getColor(
-                            lessonStatus: lesson.status,typeLesson: lesson.type)),
+                            lessonStatus: lesson.status,
+                            typeLesson: lesson.type)),
                   ),
                   const Gap(10.0),
                   Text(StatusToColor.getNameStatus(lesson.status),
@@ -300,7 +308,8 @@ class ItemDetailsLesson extends StatelessWidget {
             ],
           ),
           Visibility(
-            visible: lesson.status == LessonStatus.complete&&lesson.timeAccept.isNotEmpty,
+            visible: lesson.status == LessonStatus.complete &&
+                lesson.timeAccept.isNotEmpty,
             child: Column(
               children: [
                 Divider(color: colorGrey),
@@ -353,5 +362,4 @@ class ItemDetailsLesson extends StatelessWidget {
       ),
     );
   }
-
 }

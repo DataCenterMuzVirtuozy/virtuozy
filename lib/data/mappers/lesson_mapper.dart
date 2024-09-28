@@ -8,6 +8,7 @@ class LessonMapper{
 
    static LessonModel toApi(Lesson lesson){
      return LessonModel(
+       numberLesson: lesson.numberLesson,
        nameGroup: lesson.nameGroup,
        idStudent: lesson.idStudent,
          nameSub: lesson.nameSub,

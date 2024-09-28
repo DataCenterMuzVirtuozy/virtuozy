@@ -118,7 +118,7 @@ class UserModel{
 
 
   factory DirectionModel.fromMap({required Map<String, dynamic> mapDirection,required List<dynamic> mapSubs,required List<dynamic> lessons}) {
-
+     int index = 0;
     //final lessons =  mapDirection['lessons'] as List<dynamic>;
     final nameDirection = mapDirection['name'] as String;
     final subs = mapSubs.map((e) => SubscriptionModel.fromMap(e,nameDirection)).toList();
@@ -126,17 +126,39 @@ class UserModel{
     final lastSub = _getLastSub(subsDir);
     final int idDir = mapDirection['id'];
    // final bonus = mapDirection['bonus'] as List<dynamic>;
+
     return DirectionModel(
       id: idDir,
      // bonus: bonus.map((e) => BonusModel.fromMap(e,nameDirection)).toList(),
       bonus: [],
       subscriptionsAll: subsDir,
       name: nameDirection,
-      lessons: _getLessons(lessons: lessons.map((e) => LessonModel.fromMap(e,nameDirection)).toList(),idDir: idDir),
+      lessons: _getLessons(lessons: lessons.map((e) => LessonModel.fromMap(e,nameDirection,lastOrFirstLesson(e,lastSub[0]))).toList(),idDir: idDir),
       lastSubscriptions: lastSub,
 
     );
   }
+
+    //todo need number lesson from crm
+    static int lastOrFirstLesson(dynamic lesson,SubscriptionModel sub){
+
+    final numberLesson = lesson['numberLesson']??0;
+      if(numberLesson == 1){
+        return 1;
+      }
+
+      if(numberLesson == _countAllLesson(sub)){
+        return 2;
+      }
+
+      return 0;
+    }
+
+   static int _countAllLesson(SubscriptionModel subscription){
+     final i1 = subscription.price;
+     final i2 = subscription.priceOneLesson;
+     return i1~/i2;
+   }
 
 
     static List<LessonModel> _getLessons({required List<LessonModel> lessons,required int idDir}){
@@ -222,10 +244,12 @@ class UserModel{
   final String nameSub;
   final bool online;
   final int duration;
+  final int numberLesson;
 
 
 
    const LessonModel( {
+     required this.numberLesson,
      required this.nameGroup,
      required this.idStudent,
      required this.nameSub,
@@ -275,13 +299,13 @@ class UserModel{
     };
   }
 
-  factory LessonModel.fromMap(Map<String, dynamic> map,String nameDirection) {
+  factory LessonModel.fromMap(Map<String, dynamic> map,String nameDirection,int lastOrFirst) {
 
     //todo edit on crm
     final idStudent = map['idStudent'];
     final idSub = map['idSub'];
     final idTeacher = map['idTeacher'];
-    final status = map['status'];
+    final status = lastOrFirst == 1?9:lastOrFirst == 2?10:map['status']; //1 - first lesson 2 - last lesson
     final bonus =map['bonus']??false;
     final date = map['date'] as String;
     final dateStart = date.split(' ')[0];
@@ -291,6 +315,7 @@ class UserModel{
     final timePeriod = DateTimeParser.parseTimePeriod(period: duration, date: date);
 
     return LessonModel(
+      numberLesson: map['numberLesson']??0,
       nameGroup: map['nameGroup']??'', //absent  from api
       idStudent: idStudent,
       online: map['online']??false, //absent from api
