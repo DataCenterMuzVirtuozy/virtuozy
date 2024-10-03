@@ -566,8 +566,9 @@ class ItemMyLids extends StatelessWidget{
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 2),
                     decoration:  BoxDecoration(
-                        color:  StatusToColor.getColor(
-                            lessonStatus: lid.dateLestLesson.isNotEmpty?lid.statusLastLesson:lid.statusNearLesson),
+                        color:  Colors.amber, //todo color from status lesson
+                        //StatusToColor.getColor(
+                           // lesson: lid.),
                         borderRadius: BorderRadius.circular(5),
                         border: Border.all(
                             color:  lid.dateLestLesson.isNotEmpty&&lid.statusLastLesson.isComplete||lid.statusLastLesson.isPlanned

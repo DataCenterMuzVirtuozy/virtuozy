@@ -292,12 +292,11 @@ class ItemDetailsLesson extends StatelessWidget {
                             color: lesson.status == LessonStatus.planned
                                 ? colorBlack
                                 : StatusToColor.getColor(
-                                    lessonStatus: lesson.status,
-                                    typeLesson: lesson.type),
+                                    lesson: lesson),
                             width: 0.5),
                         color: StatusToColor.getColor(
-                            lessonStatus: lesson.status,
-                            typeLesson: lesson.type)),
+                            lesson: lesson
+                        )),
                   ),
                   const Gap(10.0),
                   Text(StatusToColor.getNameStatus(lesson.status),

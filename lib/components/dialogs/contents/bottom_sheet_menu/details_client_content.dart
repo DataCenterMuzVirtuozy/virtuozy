@@ -300,10 +300,11 @@ class DetailsClientContent extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                      color: StatusToColor.getColor(
-                          lessonStatus: client.status != ClientStatus.archive
-                              ? client.statusNearLesson
-                              : client.statusLastLesson),
+                    color: Colors.amber, //todo color from status
+                      // color: StatusToColor.getColor(
+                      //     lesson: client.status != ClientStatus.archive
+                      //         ? client.statusNearLesson
+                      //         : client.statusLastLesson),
                       border: Border.all(
                           color: client.statusNearLesson.isComplete ||
                                   client.statusNearLesson.isPlanned ||

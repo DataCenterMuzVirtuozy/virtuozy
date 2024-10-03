@@ -322,7 +322,7 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson>
                             decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: StatusToColor.getColor(
-                                    lessonStatus: lesson.status)),
+                                    lesson: lesson)),
                           ),
                           const Gap(10.0),
                           Text(StatusToColor.getNameStatus(lesson.status),

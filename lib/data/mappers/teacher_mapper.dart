@@ -6,6 +6,7 @@ import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/utils/status_to_color.dart';
 
 import '../../domain/entities/lesson_entity.dart';
+import '../models/lesson_model.dart';
 import '../models/user_model.dart';
 
 class TeacherMapper{
@@ -13,7 +14,7 @@ class TeacherMapper{
 
 
     static TeacherEntity fromApi({required TeacherModel teacherModel}){
-      final lessons = teacherModel.lessons.map((e) => _fromLessonModel(e,teacherModel.id)).toList();
+      final lessons = teacherModel.lessons.map((e) => _fromLessonModel(e as LessonModel,teacherModel.id)).toList();
       return TeacherEntity(
         directions: teacherModel.directions,
         lessons: lessons,
@@ -28,7 +29,8 @@ class TeacherMapper{
 
     static Lesson _fromLessonModel(LessonModel lessonModel, int idTeacher){
       return Lesson(
-        numberLesson: lessonModel.numberLesson,
+        isLast: lessonModel.isLast,
+        isFirst: lessonModel.isFirst,
         nameGroup: lessonModel.nameGroup,
         idStudent: lessonModel.idStudent,
         idDir: lessonModel.idDir,

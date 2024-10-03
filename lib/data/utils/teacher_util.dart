@@ -16,6 +16,7 @@ import 'package:virtuozy/domain/entities/lids_entity.dart';
 import '../../di/locator.dart';
 import '../../domain/entities/client_entity.dart';
 import '../../domain/entities/teacher_entity.dart';
+import '../models/lesson_model.dart';
 import '../models/lids_model.dart';
 
 class TeacherUtil{

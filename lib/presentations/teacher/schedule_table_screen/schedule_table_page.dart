@@ -276,8 +276,8 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
                               color: state.tasks[index].lesson.alien
                                   ? Colors.grey
                                   : StatusToColor.getColor(
-                                      lessonStatus:
-                                          state.tasks[index].lesson.status),
+                                      lesson:
+                                          state.tasks[index].lesson),
                               dateTime: state.tasks[index].timePlannerDateTime,
                               minutesDuration: 60,
                               daysDuration: 1,
@@ -399,7 +399,8 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
         required String nameTeacher,
       required String dateDay}) {
     return Lesson(
-      numberLesson: 0,
+      isFirst: true,
+      isLast: false,
       nameGroup: '',
       idStudent: 0,
       idDir: 0,
@@ -420,7 +421,7 @@ class _ScheduleTablePageState extends State<ScheduleTablePage> with AuthMixin{
         idAuditory: idAuditory,
         nameTeacher: nameTeacher,
         nameStudent: '',
-        status: LessonStatus.firstLesson,
+        status: LessonStatus.unknown,
         nameDirection: '',
         online: false);
   }

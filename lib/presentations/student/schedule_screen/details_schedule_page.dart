@@ -180,7 +180,7 @@ class _DetailsSchedulePageState extends State<DetailsSchedulePage> {
                         Container(
                           decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: StatusToColor.getColor(lessonStatus: lesson.status)
+                              color: StatusToColor.getColor(lesson: lesson)
                           ),
                           width: 5.0,
                           height: 5.0,

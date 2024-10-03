@@ -342,7 +342,7 @@ class _CalendarState extends State<Calendar> with AuthMixin{
     try {
       final stringDays = lessons.map((e) => e.date).toList();
       if (stringDays.contains(DateFormat('yyyy-MM-dd').format(dateTime))) {
-        final lesson = lessons.firstWhere((element) =>
+        Lesson lesson = lessons.firstWhere((element) =>
         DateFormat('yyyy-MM-dd')
             .parse(element.date)
             .day == day &&
@@ -357,6 +357,9 @@ class _CalendarState extends State<Calendar> with AuthMixin{
           return ValueListenableBuilder<int>(
               valueListenable: currentDayNotifi,
               builder: (context, valueDay, child) {
+                lesson = lesson.copyWith(status: lessonsDay.length > 1
+                    ? LessonStatus.layering
+                    : lessonsDay[0].status);
                 return Padding(
                   padding: const EdgeInsets.all(3.0),
                   child: InkWell(
@@ -384,11 +387,8 @@ class _CalendarState extends State<Calendar> with AuthMixin{
                                   shape: BoxShape.circle,
                                   color: visibleStatusColor
                                       ? StatusToColor.getColor(
-                                    typeLesson: lesson.type,
-                                    userType: userType,
-                                      lessonStatus: lessonsDay.length > 1
-                                          ? LessonStatus.layering
-                                          : lessonsDay[0].status)
+                                    lesson: lesson,
+                                    userType: userType)
                                       : Colors.transparent,
                                   border: Border.all(
                                       color: colorOrange,

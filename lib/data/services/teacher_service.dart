@@ -11,6 +11,7 @@ import 'package:virtuozy/domain/entities/lesson_entity.dart';
 
 import '../../di/locator.dart';
 import '../../utils/failure.dart';
+import '../models/lesson_model.dart';
 import '../rest/dio_client.dart';
 import '../rest/endpoints.dart';
 

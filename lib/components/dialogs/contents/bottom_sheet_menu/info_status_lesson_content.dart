@@ -204,7 +204,7 @@ class _InfoStatusLessonContentState extends State<InfoStatusLessonContent> {
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
                       color: StatusToColor.getColor(
-                          lessonStatus: widget.lesson.status),
+                          lesson: widget.lesson),
                       borderRadius: BorderRadius.circular(5),
                       border: widget.lesson.status == LessonStatus.planned ||
                               widget.lesson.status == LessonStatus.reservation||
@@ -337,8 +337,6 @@ class _InfoStatusLessonContentState extends State<InfoStatusLessonContent> {
                       Visibility(
                         visible:
                   widget.lesson.status == LessonStatus.singly ||
-                  widget.lesson.status == LessonStatus.lastLesson ||
-                  widget.lesson.status == LessonStatus.firstLesson ||
                   widget.lesson.status == LessonStatus.planned,
                         child: Expanded(
                           child: SubmitButton(
@@ -361,8 +359,6 @@ class _InfoStatusLessonContentState extends State<InfoStatusLessonContent> {
                       Visibility(
                         visible:
                         widget.lesson.status == LessonStatus.singly ||
-                            widget.lesson.status == LessonStatus.lastLesson ||
-                            widget.lesson.status == LessonStatus.firstLesson ||
                             widget.lesson.status == LessonStatus.planned,
                         child: Expanded(
                           child: SubmitButton(
@@ -392,8 +388,6 @@ class _InfoStatusLessonContentState extends State<InfoStatusLessonContent> {
                       Visibility(
                         visible:
                            widget.lesson.status == LessonStatus.singly ||
-                            widget.lesson.status == LessonStatus.lastLesson ||
-                            widget.lesson.status == LessonStatus.firstLesson ||
                             widget.lesson.status == LessonStatus.planned ||
                            widget.lesson.status.isReservation,
                         child: Expanded(
@@ -417,8 +411,6 @@ class _InfoStatusLessonContentState extends State<InfoStatusLessonContent> {
                       Visibility(
                         visible:
                         widget.lesson.status == LessonStatus.singly ||
-                            widget.lesson.status == LessonStatus.lastLesson ||
-                            widget.lesson.status == LessonStatus.firstLesson ||
                             widget.lesson.status == LessonStatus.planned||
                            widget.lesson.status.isReservation ||
                             widget.lesson.status.isReschedule,

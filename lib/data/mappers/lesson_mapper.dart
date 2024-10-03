@@ -3,12 +3,16 @@
  import 'package:virtuozy/data/models/user_model.dart';
 import 'package:virtuozy/domain/entities/lesson_entity.dart';
 
+import '../../utils/status_to_color.dart';
+import '../models/lesson_model.dart';
+
 class LessonMapper{
 
 
    static LessonModel toApi(Lesson lesson){
      return LessonModel(
-       numberLesson: lesson.numberLesson,
+       isFirst: lesson.isFirst,
+       isLast: lesson.isLast,
        nameGroup: lesson.nameGroup,
        idStudent: lesson.idStudent,
          nameSub: lesson.nameSub,
@@ -33,6 +37,35 @@ class LessonMapper{
          bonus: lesson.bonus);
    }
 
+   static Lesson fromLessonModel(LessonModel lessonModel){
+     return Lesson(
+         isFirst: lessonModel.isFirst,
+         isLast: lessonModel.isLast,
+         nameGroup: lessonModel.nameGroup,
+         idStudent: lessonModel.idStudent,
+         idDir: lessonModel.idDir,
+         idTeacher: lessonModel.idTeacher,
+         type: StatusToColor.lessonType(lessonModel.type),
+         alien: true,
+         comments: lessonModel.comments,
+         nameSub: lessonModel.nameSub,
+         duration: lessonModel.duration,
+         online: lessonModel.online,
+         contactValues: lessonModel.contactValues,
+         idSub: lessonModel.idSub,
+         bonus: lessonModel.bonus,
+         nameDirection: lessonModel.nameDirection,
+         id: lessonModel.id,
+         date: lessonModel.date,
+         timePeriod: lessonModel.timePeriod,
+         idAuditory: lessonModel.idAuditory,
+         nameTeacher: lessonModel.nameTeacher,
+         timeAccept: lessonModel.timeAccept,
+         status: StatusToColor.lessonStatusFromApi(lessonModel.status),
+         nameStudent: lessonModel.nameStudent,
+         idSchool: lessonModel.idSchool);
+   }
+
 
 
    static int _lessonStatus(LessonStatus status){
@@ -45,8 +78,6 @@ class LessonMapper{
        case LessonStatus.singly: return 6343; //not work
        case LessonStatus.trial: return 73453; //not work
        case LessonStatus.awaitAccept:return 834; //not work
-       case LessonStatus.firstLesson: return 9345; //not work
-       case LessonStatus.lastLesson: return 10345; //not work
        case LessonStatus.unknown: return 0;
        case LessonStatus.layering: return 12;
        case LessonStatus.reschedule: return 4; //not work

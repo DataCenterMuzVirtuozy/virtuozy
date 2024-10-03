@@ -14,6 +14,7 @@ import 'package:virtuozy/domain/entities/subscription_entity.dart';
 import 'package:virtuozy/utils/date_time_parser.dart';
 
 import '../../domain/entities/notifi_setting_entity.dart';
+import 'lesson_model.dart';
 
 class UserModel{
    final int id;
@@ -133,32 +134,15 @@ class UserModel{
       bonus: [],
       subscriptionsAll: subsDir,
       name: nameDirection,
-      lessons: _getLessons(lessons: lessons.map((e) => LessonModel.fromMap(e,nameDirection,lastOrFirstLesson(e,lastSub[0]))).toList(),idDir: idDir),
+      lessons: _getLessons(lessons: lessons.map((e) => LessonModel.fromMap(e,nameDirection)).toList(),idDir: idDir),
       lastSubscriptions: lastSub,
 
     );
   }
 
-    //todo need number lesson from crm
-    static int lastOrFirstLesson(dynamic lesson,SubscriptionModel sub){
 
-    final numberLesson = lesson['numberLesson']??0;
-      if(numberLesson == 1){
-        return 1;
-      }
 
-      if(numberLesson == _countAllLesson(sub)){
-        return 2;
-      }
 
-      return 0;
-    }
-
-   static int _countAllLesson(SubscriptionModel subscription){
-     final i1 = subscription.price;
-     final i2 = subscription.priceOneLesson;
-     return i1~/i2;
-   }
 
 
     static List<LessonModel> _getLessons({required List<LessonModel> lessons,required int idDir}){
@@ -221,126 +205,6 @@ class UserModel{
 
 
 
- class LessonModel{
-  final String nameGroup;
-  final int id;
-  final int idStudent;
-  final int idSub;
-  final int idDir;
-  final String idSchool;
-   final String date; //2024-12-22
-   final String timePeriod;
-   final String idAuditory;
-   final String nameTeacher;
-  final String nameStudent;
-   final int status;
-   final int type;
-   final String timeAccept;
-   final String nameDirection;
-   final bool bonus;
-   final int idTeacher;
-   final List<dynamic> contactValues;
-  final String comments;
-  final String nameSub;
-  final bool online;
-  final int duration;
-  final int numberLesson;
-
-
-
-   const LessonModel( {
-     required this.numberLesson,
-     required this.nameGroup,
-     required this.idStudent,
-     required this.nameSub,
-     required this.comments,
-     required this.duration,
-     required this.online,
-     required this.type,
-     required this.idTeacher,
-     required this.contactValues,
-     required this.idDir,
-     required this.idSchool,
-     required this.nameStudent,
-     required this.nameDirection,
-     required this.id,
-     required this.idSub,
-     required this.timeAccept,
-    required this.date,
-    required this.timePeriod,
-    required this.idAuditory,
-    required this.nameTeacher,
-    required this.status,
-     required this.bonus
-  });
-
- static Map<String,dynamic> toMap(LessonModel lessonModel){
-    return {
-      'nameGroup':lessonModel.nameGroup,
-      'online':lessonModel.online,
-      'comments':lessonModel.comments,
-      'nameSub':lessonModel.nameSub,
-      'duration':lessonModel.duration,
-      'type':lessonModel.type,
-      'contactValues': lessonModel.contactValues,
-      'idDir':lessonModel.idDir,
-      'idSchool':lessonModel.idSchool,
-      'idSub':lessonModel.idSub,
-      'timeAccept':lessonModel.timeAccept,
-      'date':lessonModel.date,
-      'timePeriod':lessonModel.timePeriod,
-    'idTeacher':lessonModel.idTeacher,
-    'idAuditory':lessonModel.idAuditory,
-      'nameTeacher':lessonModel.nameTeacher,
-      'nameDir':lessonModel.nameDirection,
-      'nameStudent':lessonModel.nameStudent,
-       'idStudent': lessonModel.idStudent,
-      'status':lessonModel.status
-    };
-  }
-
-  factory LessonModel.fromMap(Map<String, dynamic> map,String nameDirection,int lastOrFirst) {
-
-    //todo edit on crm
-    final idStudent = map['idStudent'];
-    final idSub = map['idSub'];
-    final idTeacher = map['idTeacher'];
-    final status = lastOrFirst == 1?9:lastOrFirst == 2?10:map['status']; //1 - first lesson 2 - last lesson
-    final bonus =map['bonus']??false;
-    final date = map['date'] as String;
-    final dateStart = date.split(' ')[0];
-    final idSchool =  map['idSchool'].toString();
-    final type = map['type']??'10';
-    final duration = map['timePeriod']??'0';
-    final timePeriod = DateTimeParser.parseTimePeriod(period: duration, date: date);
-
-    return LessonModel(
-      numberLesson: map['numberLesson']??0,
-      nameGroup: map['nameGroup']??'', //absent  from api
-      idStudent: idStudent,
-      online: map['online']??false, //absent from api
-      comments: map['comments']??'...', //absent from api
-      nameSub: map['nameSub']??'...', //absent from api
-      duration: int.parse(duration), //['duration']??60, //absent from api
-      type: int.parse(type),  //absent
-      contactValues: map['contactValues']??[], //absent from api
-      idDir: map['idDir']??1, //absent from api
-      idSchool: idSchool,
-      idSub: idSub,
-      id: map['id']??0,
-      timeAccept: map['timeAccept']??'',
-      date: dateStart,
-      timePeriod: timePeriod,
-      idTeacher: idTeacher,
-      idAuditory: map['idAuditory']??'',
-      nameTeacher: map['nameTeacher']??'',
-      status: status,
-      nameDirection: map['nameDir']??'', //absent from api
-      bonus: bonus,
-        nameStudent: map['nameStudent']??''
-    );
-  }
-}
 
 
 

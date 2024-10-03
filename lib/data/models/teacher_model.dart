@@ -1,5 +1,7 @@
 import 'package:virtuozy/data/models/user_model.dart';
 
+import 'lesson_model.dart';
+
 class TeacherModel {
   final int id;
   final String lastName;
@@ -30,7 +32,7 @@ class TeacherModel {
   factory TeacherModel.fromMap(
       {required Map<String, dynamic> mapTeacher,
       required List<dynamic> mapLessons}) {
-    final lessons = mapLessons.map((e) => LessonModel.fromMap(e, '',0)).toList();
+    final lessons = mapLessons.map((e) => LessonModel.fromMap(e, '')).toList();
 
     return TeacherModel(
       // lessons: l,

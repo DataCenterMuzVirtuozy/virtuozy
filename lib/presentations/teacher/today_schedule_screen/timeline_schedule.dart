@@ -105,7 +105,7 @@ class _TimelineScheduleState extends State<TimelineSchedule> with AuthMixin{
                              width: 5.0,
                              margin: const EdgeInsets.only(right: 10.0),
                              decoration: BoxDecoration(
-                               color: StatusToColor.getColor(lessonStatus:data.$2.status),
+                               color: StatusToColor.getColor(lesson:data.$2),
                                // border: Border.all(
                                //   color: colorOrange,
                                //   width: 1
@@ -234,7 +234,8 @@ class _TimelineScheduleState extends State<TimelineSchedule> with AuthMixin{
          required String nameTeacher,
          required String dateDay}) {
      return Lesson(
-       numberLesson: 0,
+         isFirst: true,
+         isLast: false,
          nameGroup: '',
          idStudent: 0,
          idDir: 0,
@@ -255,7 +256,7 @@ class _TimelineScheduleState extends State<TimelineSchedule> with AuthMixin{
          idAuditory: '',
          nameTeacher: nameTeacher,
          nameStudent: '',
-         status: LessonStatus.firstLesson,
+         status: LessonStatus.planned,
          nameDirection: '',
          online: false);
    }

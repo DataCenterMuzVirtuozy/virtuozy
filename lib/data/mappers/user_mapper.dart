@@ -1,6 +1,7 @@
 
 
  import 'package:virtuozy/data/mappers/document_mapper.dart';
+import 'package:virtuozy/data/mappers/lesson_mapper.dart';
 import 'package:virtuozy/data/mappers/notifi_setting_mapper.dart';
 import 'package:virtuozy/data/models/price_subscription_model.dart';
 import 'package:virtuozy/data/models/subway_model.dart';
@@ -12,6 +13,7 @@ import 'package:virtuozy/utils/status_to_color.dart';
 
 import '../../domain/entities/lesson_entity.dart';
 import '../../domain/entities/subscription_entity.dart';
+import '../models/lesson_model.dart';
 import '../models/subscription_model.dart';
 
 class UserMapper{
@@ -86,7 +88,7 @@ class UserMapper{
         bonus: directionModel.bonus.map((e) => _fromApiBonus(bonusModel: e)).toList(),
         subscriptionsAll: fromApiPriceSubAll(directionModel.subscriptionsAll),
         name: directionModel.name,
-        lessons: directionModel.lessons.map((e) => _fromLessonModel(e)).toList(),
+        lessons: directionModel.lessons.map((e) => LessonMapper.fromLessonModel(e)).toList(),
         lastSubscriptions: fromApiPriceSub(directionModel.lastSubscriptions));
   }
 
@@ -154,33 +156,7 @@ class UserMapper{
         quantity: bonusModel.quantity);
   }
 
-  static Lesson _fromLessonModel(LessonModel lessonModel){
-    return Lesson(
-      numberLesson: lessonModel.numberLesson,
-      nameGroup: lessonModel.nameGroup,
-      idStudent: lessonModel.idStudent,
-      idDir: lessonModel.idDir,
-      idTeacher: lessonModel.idTeacher,
-      type: StatusToColor.lessonType(lessonModel.type),
-      alien: true,
-      comments: lessonModel.comments,
-      nameSub: lessonModel.nameSub,
-      duration: lessonModel.duration,
-      online: lessonModel.online,
-      contactValues: lessonModel.contactValues,
-      idSub: lessonModel.idSub,
-      bonus: lessonModel.bonus,
-      nameDirection: lessonModel.nameDirection,
-        id: lessonModel.id,
-        date: lessonModel.date,
-        timePeriod: lessonModel.timePeriod,
-        idAuditory: lessonModel.idAuditory,
-        nameTeacher: lessonModel.nameTeacher,
-        timeAccept: lessonModel.timeAccept,
-        status: StatusToColor.lessonStatusFromApi(lessonModel.status),
-        nameStudent: lessonModel.nameStudent,
-        idSchool: lessonModel.idSchool);
-  }
+
 
   static SubwayEntity fromApiSubway({required SubwayModel model}){
     return SubwayEntity(name: model.name,color: model.color);

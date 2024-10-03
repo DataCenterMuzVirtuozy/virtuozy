@@ -9,8 +9,6 @@ enum LessonStatus{
   singly,
   awaitAccept,
   layering,
-  firstLesson,
-  lastLesson,
   reschedule,
   freezing,
   unknown,
@@ -46,8 +44,6 @@ extension LessonStatusExt on LessonStatus{
   bool get isSingly => this == LessonStatus.singly;
   bool get isAwaitAccept => this == LessonStatus.awaitAccept;
   bool get isLayering => this == LessonStatus.layering;
-  bool get isFirstLesson => this == LessonStatus.firstLesson;
-  bool get isLastLesson => this == LessonStatus.lastLesson;
   bool get isReschedule => this == LessonStatus.reschedule;
   bool get isUnknown => this == LessonStatus.unknown;
 
@@ -77,11 +73,13 @@ class Lesson{
   final String comments;
   final String nameSub;
   final int idDir;
-  final int numberLesson;
   final String nameGroup;
+  final bool isFirst;
+  final bool isLast;
 
   const Lesson({
-    required this.numberLesson,
+    required this.isFirst,
+    required this.isLast,
     required this.nameGroup,
     required this.idStudent,
     required this.idDir,
@@ -110,7 +108,8 @@ class Lesson{
 
   factory Lesson.unknown(){
     return const Lesson(
-      numberLesson: 0,
+      isFirst: false,
+      isLast: false,
       nameGroup: '',
       idStudent: 0,
       idDir: 0,
@@ -159,10 +158,13 @@ class Lesson{
     int? idDir,
     int? idStudent,
     String? nameGroup,
-    int? numberLesson
+    bool? isFirst,
+    bool? isLast
+
   }) {
     return Lesson(
-      numberLesson: numberLesson??this.numberLesson,
+      isLast: isLast??this.isLast,
+      isFirst: isFirst??this.isFirst,
       nameGroup: nameGroup??this.nameGroup,
       idStudent: idStudent??this.idStudent,
       idDir: idDir??this.idDir,

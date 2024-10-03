@@ -68,10 +68,6 @@ class StatusToColor{
        return StatusToColor.namesStatus[7];
      case LessonStatus.layering:
        return StatusToColor.namesStatus[8];
-     case LessonStatus.firstLesson:
-       return StatusToColor.namesStatus[9];
-     case LessonStatus.lastLesson:
-       return StatusToColor.namesStatus[10];
      case LessonStatus.unknown:
        return '';
 
@@ -82,30 +78,40 @@ class StatusToColor{
    }
  }
 
-   static Color getColor({required LessonStatus lessonStatus, UserType userType = UserType.unknown, LessonType typeLesson = LessonType.unknown}){
+   static Color getColor({required Lesson lesson, UserType userType = UserType.unknown,}){
 
      if(userType.isTeacher){
        return _colors[3];
       }
 
-     if(typeLesson!=LessonType.unknown){
-       if(typeLesson.isPU){
-         return _colors[1];
-       }
-       if(typeLesson.isINDEPENDENT){
-         return _colors[5];
-       }
+     if(lesson.type!=LessonType.unknown){
 
-       if(typeLesson.isGROUP||typeLesson.isINDIVIDUAL&&lessonStatus.isFirstLesson){
+       if(lesson.isFirst){
          return _colors[9];
        }
 
-       if(typeLesson.isGROUP||typeLesson.isINDIVIDUAL&&lessonStatus.isLastLesson){
+       if(lesson.isLast){
+         return _colors[10];
+       }
+
+       if(lesson.type.isPU){
+         return _colors[1];
+       }
+
+       if(lesson.type.isINDEPENDENT){
+         return _colors[5];
+       }
+
+       if(lesson.type.isGROUP||lesson.type.isINDIVIDUAL&&lesson.isFirst){
+         return _colors[9];
+       }
+
+       if(lesson.type.isGROUP||lesson.type.isINDIVIDUAL&&lesson.isLast){
          return _colors[10];
        }
      }
 
-    switch(lessonStatus){
+    switch(lesson.status){
      case LessonStatus.planned: return _colors[0];
      case LessonStatus.complete: return _colors[6];
      case LessonStatus.cancel: return _colors[2];
@@ -116,12 +122,12 @@ class StatusToColor{
       case LessonStatus.awaitAccept:return _colors[7];
       case LessonStatus.layering: return _colors[8];
       case LessonStatus.unknown: return const Color.fromRGBO(255, 255, 255, 0.0);
-      case LessonStatus.firstLesson: return _colors[9];
-      case LessonStatus.lastLesson: return _colors[10];
       case LessonStatus.reschedule:return _colors[2];
       case LessonStatus.freezing: return _colors[5];
 
     }
+
+
 
    }
 
@@ -138,8 +144,6 @@ class StatusToColor{
       case -2: return LessonStatus.trial;  //not work
       case 11 :return LessonStatus.awaitAccept;
       case 8 : return LessonStatus.freezing; // !
-      case 9: return LessonStatus.firstLesson; // not work
-      case 10: return LessonStatus.lastLesson; // not work
       case -3: return LessonStatus.reschedule; // not work
     }
     return LessonStatus.unknown;
@@ -180,7 +184,7 @@ class StatusToColor{
     for(var l  in lessons){
       final dl = DateFormat('yyyy-MM-dd').parse(l.date).millisecondsSinceEpoch;
       if(dl>dt){
-        return getColor(lessonStatus: l.status);
+        return getColor(lesson: l);
       }
     }
      return _colors[3];

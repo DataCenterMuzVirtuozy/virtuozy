@@ -545,8 +545,9 @@ class ItemAll extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                      color: StatusToColor.getColor(
-                          lessonStatus: client.statusNearLesson),
+                      color:  Colors.amber, //todo color from status lesson
+                      //StatusToColor.getColor(
+                      // lesson: lid.statusNearLesson),
                       border: Border.all(
                           color: client.statusNearLesson.isComplete ||
                                   client.statusNearLesson.isPlanned
@@ -706,8 +707,9 @@ class ItemAction extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                      color: StatusToColor.getColor(
-                          lessonStatus: client.statusNearLesson),
+                      color:  Colors.amber, //todo color from status lesson
+                      //StatusToColor.getColor(
+                      // lesson: lid.statusNearLesson),
                       border: Border.all(
                           color: client.statusNearLesson.isComplete ||
                                   client.statusNearLesson.isPlanned
@@ -819,8 +821,9 @@ class ItemArchive extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                      color: StatusToColor.getColor(
-                          lessonStatus: client.statusLastLesson),
+                      color:  Colors.amber, //todo color from status lesson
+                      //StatusToColor.getColor(
+                      // lesson: lid.statusLastLesson),
                       border: Border.all(
                           color: client.statusLastLesson.isComplete ||
                                   client.statusLastLesson.isPlanned
@@ -918,8 +921,9 @@ class ItemToday extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                      color: StatusToColor.getColor(
-                          lessonStatus: client.statusNearLesson),
+                      color:  Colors.amber, //todo color from status lesson
+                      //StatusToColor.getColor(
+                      // lesson: lid.statusNearLesson),
                       border: Border.all(
                           color: client.statusNearLesson.isComplete ||
                                   client.statusNearLesson.isPlanned
@@ -1016,8 +1020,9 @@ class ItemReplacemant extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                      color: StatusToColor.getColor(
-                          lessonStatus: client.statusNearLesson),
+                      color:  Colors.amber, //todo color from status lesson
+                      //StatusToColor.getColor(
+                      // lesson: lid.statusNearLesson),
                       border: Border.all(
                           color: client.statusNearLesson.isComplete ||
                                   client.statusNearLesson.isPlanned
