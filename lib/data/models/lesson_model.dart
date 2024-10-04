@@ -25,10 +25,12 @@ class LessonModel{
   final int duration;
   final bool isFirst;
   final bool isLast;
+  final String nameAuditory;
 
 
 
   const LessonModel( {
+    required this.nameAuditory,
     required this.isFirst,
     required this.isLast,
     required this.nameGroup,
@@ -82,7 +84,6 @@ class LessonModel{
   }
 
   factory LessonModel.fromMap(Map<String, dynamic> map,String nameDirection) {
-    print('isF ${map['isFirst']} isL ${map['isLast']} Date ${map['date']}');
     final idStudent = map['idStudent'];
     final idSub = map['idSub'];
     final idTeacher = map['idTeacher'];
@@ -96,6 +97,7 @@ class LessonModel{
     final timePeriod = DateTimeParser.parseTimePeriod(period: duration, date: date);
 
     return LessonModel(
+        nameAuditory: map['nameAuditory']??'',
         isFirst: map['isFirst']??false,
         isLast: map['isLast']??false,
         nameGroup: map['nameGroup']??'', //absent  from api

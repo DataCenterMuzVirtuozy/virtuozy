@@ -23,5 +23,6 @@ class ParserPrice {
     } else {
       return quantity.toString();
     }
+
   }
 }

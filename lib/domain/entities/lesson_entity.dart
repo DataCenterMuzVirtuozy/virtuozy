@@ -76,8 +76,10 @@ class Lesson{
   final String nameGroup;
   final bool isFirst;
   final bool isLast;
+  final String nameAuditory;
 
   const Lesson({
+    required this.nameAuditory,
     required this.isFirst,
     required this.isLast,
     required this.nameGroup,
@@ -108,6 +110,7 @@ class Lesson{
 
   factory Lesson.unknown(){
     return const Lesson(
+      nameAuditory: '',
       isFirst: false,
       isLast: false,
       nameGroup: '',
@@ -159,10 +162,13 @@ class Lesson{
     int? idStudent,
     String? nameGroup,
     bool? isFirst,
-    bool? isLast
+    bool? isLast,
+    int?  maxLessonsCount,
+     String? nameAuditory
 
   }) {
     return Lesson(
+      nameAuditory: nameAuditory??this.nameAuditory,
       isLast: isLast??this.isLast,
       isFirst: isFirst??this.isFirst,
       nameGroup: nameGroup??this.nameGroup,

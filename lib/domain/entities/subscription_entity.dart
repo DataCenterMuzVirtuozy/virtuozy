@@ -25,8 +25,10 @@ enum StatusSub{
    final StatusSub status;
    final Option option;
    final List<dynamic> contactValues;
+   final int maxLessonsCount;
 
    const SubscriptionEntity( {
+     required this.maxLessonsCount,
      required this.contactValues,
      required this.nameTeacher,
      required this.idDir,
@@ -63,9 +65,11 @@ enum StatusSub{
      int? id,
      Option? option,
      String? nameTeacher,
-     List<dynamic>? contactValues
+     List<dynamic>? contactValues,
+      int? maxLessonsCount
   }) {
     return SubscriptionEntity(
+      maxLessonsCount: maxLessonsCount??this.maxLessonsCount,
       contactValues: contactValues??this.contactValues,
       id:id??this.id,
       nameTeacher: nameTeacher??this.nameTeacher,

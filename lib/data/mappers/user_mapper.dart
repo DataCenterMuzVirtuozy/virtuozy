@@ -95,6 +95,7 @@ class UserMapper{
   static List<SubscriptionEntity> fromApiPriceSub(List<SubscriptionModel> subscriptionModels){
 
     return subscriptionModels.map((e) => SubscriptionEntity(
+      maxLessonsCount: e.maxLessonsCount,
       contactValues: e.contactValues,
       option: fromOptionApi(
           optionModel: e.options.isEmpty?const OptionModel(status: '', dateEnd: ''):e.options[0]), //todo work with list
@@ -122,6 +123,7 @@ class UserMapper{
 
   static List<SubscriptionEntity> fromApiPriceSubAll(List<SubscriptionModel> subscriptionModelAll){
      return subscriptionModelAll.map((e) =>  SubscriptionEntity(
+       maxLessonsCount: e.maxLessonsCount,
        contactValues: e.contactValues,
        option: fromOptionApi(optionModel: e.options.isEmpty?const OptionModel(status: '', dateEnd: ''):e.options[0]), // todo work in list,
        idDir: e.idDir,

@@ -73,17 +73,18 @@ class FinanceService{
          var dio = Dio();
          List<TransactionModel> transactions = [];
          if(idUser==1){
-           dio = _dio;
+           dio = _dioApi;
 
          }else{
-           dio = _dioApi;
+           dio = _dio;
 
          }
          final res = await dio.get(Endpoints.transactions,queryParameters: {"idUser": idUser});
          if(idUser==1){
-           transactions = (res.data as List<dynamic>).map((e)=> TransactionModel.fromMap(e)).toList();
-         }else{
            transactions = (res.data['data'] as List<dynamic>).map((e)=> TransactionModel.fromMap(e)).toList();
+         }else{
+           transactions = (res.data as List<dynamic>).map((e)=> TransactionModel.fromMap(e)).toList();
+
          }
 
          return transactions;

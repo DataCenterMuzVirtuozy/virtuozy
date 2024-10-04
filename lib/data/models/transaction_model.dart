@@ -35,8 +35,6 @@ class TransactionModel{
       final typeTransaction = map['typeTransaction'];
       final quantity = double.parse(map['quantity'].toString());
       final idDir =  map['idDir'];
-
-
       return TransactionModel(
         idUser: idUser,
         date: map['date'] as String,

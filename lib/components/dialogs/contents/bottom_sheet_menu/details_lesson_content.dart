@@ -210,7 +210,7 @@ class ItemDetailsLesson extends StatelessWidget {
                           size: 15.0)),
                 ],
               ),
-              Text(lesson.idAuditory,
+              Text(lesson.nameAuditory,
                   style: TStyle.textStyleVelaSansBold(
                       Theme.of(context).textTheme.displayMedium!.color!,
                       size: 16.0)),

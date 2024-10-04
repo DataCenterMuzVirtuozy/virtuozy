@@ -20,8 +20,11 @@ class SubscriptionModel{
   final String nameTeacher;
   final List<OptionModel> options;
   final List<dynamic> contactValues;
+  final int maxLessonsCount;
+
 
   const SubscriptionModel( {
+    required this.maxLessonsCount,
     required this.contactValues,
     required this.idUser,
     required this.idDir,
@@ -75,6 +78,7 @@ class SubscriptionModel{
 
 
     return SubscriptionModel(
+        maxLessonsCount: map['maxLessonsCount']??0,
         contactValues: map['contactValues']??[],
       idDir: idDir,
       idUser: idUser,

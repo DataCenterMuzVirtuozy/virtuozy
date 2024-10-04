@@ -524,7 +524,7 @@ class _ItemSubState extends State<ItemSub> {
                                 //color: Theme.of(context).colorScheme.secondary,
                                 //shape: BoxShape.circle
                               ),
-                              child: Text('${widget.subscription.balanceLesson} из ${_countAllLesson(widget.subscription)}',
+                              child: Text('${widget.subscription.balanceLesson} из ${widget.subscription.maxLessonsCount}',
                                   style:TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,
                                       size: 14.0)),
                             ),
