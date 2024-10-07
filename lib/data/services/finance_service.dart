@@ -18,8 +18,6 @@ import '../rest/endpoints.dart';
 class FinanceService{
 
 
-  final _dio = locator.get<DioClient>().init();
-  final _dioApi = locator.get<DioClient>().initApi();
    Future<PricesDirectionModel> getSubscriptionsByDirection({required String nameDirection}) async {
      try{
        final listSub = _listPriceDirection.map((e) => PricesDirectionModel.fromMap(e)).toList();
@@ -31,9 +29,10 @@ class FinanceService{
 
    Future<List<PriceSubscriptionModel>> getSubscriptionsAll() async {
      try{
-
+       final dioInit = locator.get<DioClient>().init(); //test
+       final dioApi = locator.get<DioClient>().initApi();
        await Future.delayed(const Duration(seconds: 1));
-       final res = await _dio.get(Endpoints.subscriptions);
+       final res = await dioApi.get(Endpoints.subscriptions);
        final subs = (res.data as List<dynamic>).map((e)=> PriceSubscriptionModel.fromMap(e)).toList();
         return subs;
      }on Failure catch(e){
@@ -45,7 +44,9 @@ class FinanceService{
 
    Future<int> baySubscription({required Map<String,dynamic> subscriptionModelApi}) async {
      try{
-       final res = await _dio.post(Endpoints.subsUser,data: subscriptionModelApi);
+       final dioInit = locator.get<DioClient>().init(); //test
+       final dioApi = locator.get<DioClient>().initApi();
+       final res = await dioApi.post(Endpoints.subsUser,data: subscriptionModelApi);
        return res.data['id'] as int;
      }on Failure catch(e){
        throw Failure(e.message);
@@ -70,13 +71,15 @@ class FinanceService{
          // }
 
          //api crm
+         final dioInit = locator.get<DioClient>().init(); //test
+         final dioApi = locator.get<DioClient>().initApi();
          var dio = Dio();
          List<TransactionModel> transactions = [];
          if(idUser==1){
-           dio = _dioApi;
+           dio = dioApi;
 
          }else{
-           dio = _dio;
+           dio = dioInit;
 
          }
          final res = await dio.get(Endpoints.transactions,queryParameters: {"idUser": idUser});
@@ -98,7 +101,9 @@ class FinanceService{
 
   Future<void> addTransaction({required Map<String,dynamic> transactionModelApi}) async {
      try{
-        await _dio.post(Endpoints.transactions,data: transactionModelApi);
+       final dioInit = locator.get<DioClient>().init(); //test
+       final dioApi = locator.get<DioClient>().initApi();
+        await dioApi.post(Endpoints.transactions,data: transactionModelApi);
       }on Failure catch(e){
         throw Failure(e.message);
       }on DioException catch(e){

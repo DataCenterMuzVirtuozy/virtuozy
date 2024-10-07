@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
+import 'package:virtuozy/utils/preferences_util.dart';
 
 import 'endpoints.dart';
 
@@ -34,9 +35,10 @@ class DioClient {
   }
 
   Dio initApi() {
+    final baseUrl = PreferencesUtil.urlSchool;
     final dio = Dio(
       BaseOptions(
-        baseUrl: Endpoints.baseApi,
+        baseUrl: baseUrl,
         connectTimeout: const Duration(milliseconds: 15000),
         receiveTimeout: const Duration(milliseconds: 100000),
         contentType: Headers.jsonContentType,

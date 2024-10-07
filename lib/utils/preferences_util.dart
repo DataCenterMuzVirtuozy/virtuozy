@@ -6,13 +6,22 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/utils/theme_provider.dart';
 
+import '../resourses/strings.dart';
+
 class PreferencesUtil{
 
   static SharedPreferences? _prefsInstance;
 
+
+
+
   static Future<SharedPreferences?> init() async {
     _prefsInstance = await SharedPreferences.getInstance();
     return _prefsInstance;
+  }
+
+  static Future<void> setUrlSchool(String urlSchool) async {
+    await _prefsInstance!.setString(_keyUrlSchool, urlSchool);
   }
 
   static Future<void> setUID({required String uid}) async {
@@ -78,7 +87,7 @@ class PreferencesUtil{
     await _prefsInstance!.setInt(_keyTheme, theme);
   }
 
-
+  static String get urlSchool => _prefsInstance!.getString(_keyUrlSchool)??mskUrl;
   static int get statusUser => _prefsInstance!.getInt(_keyStatus)??0;
   static String get lastNameUser => _prefsInstance!.getString(_keyLastName)??'';
   static String get firstNameUser => _prefsInstance!.getString(_keyFirstName)??'';
@@ -129,3 +138,4 @@ String get _keyBranch => 'key_branch';
 String get _keyStatus => 'key_status';
 String get _keyUID => 'key_uid';
 String get _keyTypeUser => 'key_type_user';
+String get _keyUrlSchool => 'key_loc_school';

@@ -14,6 +14,7 @@ import 'package:lottie/lottie.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:virtuozy/components/buttons.dart';
+import 'package:virtuozy/components/checkbox_menu.dart';
 import 'package:virtuozy/components/dialogs/dialoger.dart';
 import 'package:virtuozy/presentations/auth_screen/bloc/auth_bloc.dart';
 import 'package:virtuozy/presentations/auth_screen/bloc/auth_event.dart';
@@ -42,6 +43,7 @@ class _LogInPageState extends State<LogInPage> {
   late TextEditingController _phoneController;
   bool _darkTheme = false;
   late MaskTextInputFormatter _maskFormatter;
+  final List<String> _namesLocationSchool = ['Москва','Новосибирск'];
 
 
   @override
@@ -74,6 +76,10 @@ class _LogInPageState extends State<LogInPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+            
+          MyCheckboxMenu(message: 'Helly')
+        ],
         iconTheme: IconThemeData(
             color: Theme.of(context).iconTheme.color
         ),
@@ -105,7 +111,7 @@ class _LogInPageState extends State<LogInPage> {
 
             },
             builder: (context,state) {
-              print('STATUS ${state.authStatus}');
+
               if(state.authStatus == AuthStatus.processLogIn||
                   state.authStatus == AuthStatus.authenticated){
                 return SizedBox(

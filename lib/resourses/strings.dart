@@ -2,6 +2,12 @@
 
  import 'package:easy_localization/easy_localization.dart';
 
+
+ String  get mskUrl => 'https://msk.crm-muz.ru/api';
+ String get nskUrl => 'https://nsk.crm-muz.ru/api';
+
+
+
 List<String> get titlesDrawMenuStudent => [
     'Главная'.tr(),
     'Расписание'.tr(),

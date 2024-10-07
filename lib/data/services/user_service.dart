@@ -24,25 +24,27 @@ import '../models/user_model.dart';
 class UserService{
 
 
-   final _dio = locator.get<DioClient>().init();
-   final _dioApi = locator.get<DioClient>().initApi();
+
 
   //todo get data crm - in working
    Future<UserModel> getUser({required String uid}) async {
+
+     final dioInit = locator.get<DioClient>().init();
+     final dioApi = locator.get<DioClient>().initApi();
     try{
       var dio = Dio();
       var idUser = 0;
       if(!uid.contains('111')){
-        dio = _dioApi;
+        dio = dioInit;
       }else{
-        dio = _dio;
+        dio = dioApi;
       }
        final res = await dio.get(Endpoints.user,
        queryParameters: {
           'phoneNumber':uid.replaceAll(' ', '')
        });
 
-       //print('USER DATA ${res.data}');
+       print('USER DATA ${res.data}');
        if((res.data as List<dynamic>).isEmpty){
         await PreferencesUtil.clear();
         return throw   Failure('Пользователь не найден'.tr());
@@ -92,8 +94,11 @@ class UserService{
 
 
 
-
+   //call api crm
    Future<void> saveSettingNotifi({required int uid,required List<NotifiSettingsEntity> settingEntity}) async{
+
+     final dioApi = locator.get<DioClient>().initApi();
+
     try{
       List<Map<String,dynamic>> data = [];
       for (var element in settingEntity) {
@@ -104,7 +109,7 @@ class UserService{
       }
 
 
-     await _dio.patch('${Endpoints.user}/$uid',
+     await dioApi.patch('${Endpoints.user}/$uid',
          data: {
           'settingNotifi': data
          });
@@ -118,13 +123,14 @@ class UserService{
 
    Future<void> acceptDocuments({required int uid,required List<DocumentModel> docs}) async {
      try{
+       final dioApi = locator.get<DioClient>().initApi();
        List<Map<String,dynamic>> data = [];
        for (var element in docs) {
          data.add(element.toMap());
        }
 
 
-       await _dio.patch('${Endpoints.user}/$uid',
+       await dioApi.patch('${Endpoints.user}/$uid',
            data: {
              'documents': data
            });
@@ -135,6 +141,7 @@ class UserService{
 
    Future<void> saveSettingDataProfile({required int uid,required EditProfileEntity profileEntity}) async{
      try{
+       final dioApi = locator.get<DioClient>().initApi();
        final List<Map<String,dynamic>> subWay = [];
 
 
@@ -145,7 +152,7 @@ class UserService{
          });
        }
 
-       await _dio.patch('${Endpoints.user}/$uid',
+       await dioApi.patch('${Endpoints.user}/$uid',
            data: {
              'subways':subWay,
              'sex': profileEntity.sex,
@@ -182,21 +189,22 @@ class UserService{
        }
 
      } on Failure catch(e){
-       print('Error 1 ${e.message}');
+
        throw  Failure(e.message);
      } on DioException catch(e){
-       print('Error 2 ${e.toString()}');
+
        throw  Failure(e.toString());
      } catch(e){
-       print('Error 3 ${e.toString()}');
+
        throw const Failure('Ошибка загрузки фото');
      }
    }
 
    Future<List<dynamic>> subways({required String  query}) async {
      try{
+       final dioApi = locator.get<DioClient>().initApi();
      final user = locator.get<UserCubit>();
-     final res =  await _dio.post(Endpoints.subways,
+     final res =  await dioApi.post(Endpoints.subways,
            options: Options(
              headers: {"Authorization": "Token $apiKeyDaData"}
            ),
@@ -211,10 +219,10 @@ class UserService{
 
       return res.data['suggestions'];
      } on Failure catch(e){
-       print('Error 1 ${e.message}');
+
        throw  Failure(e.message);
      } on DioException catch(e){
-       print('Error 2 ${e.toString()}');
+
        throw  Failure(e.toString());
      }
    }
