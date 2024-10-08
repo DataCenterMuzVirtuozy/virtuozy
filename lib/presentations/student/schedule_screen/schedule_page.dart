@@ -299,7 +299,7 @@ class _SchedulePageState extends State<SchedulePage> with AuthMixin{
        if(lesson.status == LessonStatus.awaitAccept){
          Dialoger.showModalBottomMenu(
              blurred: false,
-             title: 'Урок #${lesson.id}'.tr(),
+             title: 'Урок #${user.directions[0].lessons.indexOf(lesson)}'.tr(), //todo change directions
              args: [[lesson],user.directions],
              content: DetailsLesson());
        }
@@ -357,7 +357,7 @@ class _SchedulePageState extends State<SchedulePage> with AuthMixin{
                    children: [
                      Text('Аудитория '.tr(),
                          style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
-                     Text(lesson.idAuditory,
+                     Text(lesson.nameAuditory,
                          style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
                    ],
                  ),
@@ -377,7 +377,7 @@ class _SchedulePageState extends State<SchedulePage> with AuthMixin{
                            color: colorOrange,size: 12.0),
                      ),
                      const Gap(5),
-                     Text(lesson.idSchool,
+                     Text(lesson.nameSchool,
                          maxLines: 2,
                          overflow: TextOverflow.ellipsis,
                          style: TStyle.textStyleVelaSansRegular( Theme.of(context).textTheme.displayMedium!.color!, size: 12.0)),

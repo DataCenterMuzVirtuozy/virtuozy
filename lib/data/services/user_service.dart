@@ -26,7 +26,7 @@ class UserService{
 
 
 
-  //todo get data crm - in working
+
    Future<UserModel> getUser({required String uid}) async {
 
      final dioInit = locator.get<DioClient>().init();
@@ -34,26 +34,30 @@ class UserService{
     try{
       var dio = Dio();
       var idUser = 0;
-      if(!uid.contains('111')){
+      if(uid.contains('111')){
         dio = dioInit;
       }else{
         dio = dioApi;
       }
+
+
        final res = await dio.get(Endpoints.user,
        queryParameters: {
-          'phoneNumber':uid.replaceAll(' ', '')
+          'phoneNumber': uid.replaceAll(' ', '')
        });
 
-       print('USER DATA ${res.data}');
+
        if((res.data as List<dynamic>).isEmpty){
         await PreferencesUtil.clear();
         return throw   Failure('Пользователь не найден'.tr());
        }
+
+
       if(uid.contains('111')){
          idUser = res.data[0]['id'] as int;
       }else{
-        //final idUser = res.data[0]['id'] as int;
-       idUser = 1;
+         idUser = res.data[0]['id'] as int;
+       //idUser = 1;
 
       }
 

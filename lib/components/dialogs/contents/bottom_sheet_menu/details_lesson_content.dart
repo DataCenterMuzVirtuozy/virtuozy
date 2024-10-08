@@ -190,7 +190,7 @@ class ItemDetailsLesson extends StatelessWidget {
                           size: 15.0)),
                 ],
               ),
-              Text(lesson.idSchool,
+              Text(lesson.nameSchool,
                   style: TStyle.textStyleVelaSansBold(
                       Theme.of(context).textTheme.displayMedium!.color!,
                       size: 16.0)),

@@ -207,7 +207,8 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                     onLesson: (List<Lesson> lessons){
                       Dialoger.showModalBottomMenu(
                         blurred: false,
-                          title: 'Урок №${lessons[0].id} из ${lessons[0].id+5}',
+                          title: lessons.length>1?'':
+                          'Урок №${state.lessons.indexOf(lessons[0])+1} из ${state.directions[_selIndexDirection].lastSubscriptions[0].maxLessonsCount}',
                           args: [lessons,state.userEntity.directions],
                           content: DetailsLesson());
                     },),

@@ -11,6 +11,7 @@ class LessonMapper{
 
    static LessonModel toApi(Lesson lesson){
      return LessonModel(
+       nameSchool: lesson.nameSchool,
        nameAuditory: lesson.nameAuditory,
        isFirst: lesson.isFirst,
        isLast: lesson.isLast,
@@ -40,6 +41,7 @@ class LessonMapper{
 
    static Lesson fromLessonModel(LessonModel lessonModel){
      return Lesson(
+       nameSchool: lessonModel.nameSchool,
        nameAuditory: lessonModel.nameAuditory,
          isFirst: lessonModel.isFirst,
          isLast: lessonModel.isLast,
