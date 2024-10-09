@@ -23,6 +23,7 @@ import 'package:virtuozy/presentations/student/subscription_screen/bloc/sub_bloc
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/resourses/images.dart';
 import 'package:virtuozy/router/paths.dart';
+import 'package:virtuozy/utils/preferences_util.dart';
 
 import '../../components/text_fields.dart';
 import '../../utils/text_style.dart';
@@ -43,7 +44,7 @@ class _LogInPageState extends State<LogInPage> {
   late TextEditingController _phoneController;
   bool _darkTheme = false;
   late MaskTextInputFormatter _maskFormatter;
-  final List<String> _namesLocationSchool = ['Москва','Новосибирск'];
+
 
 
   @override
@@ -76,9 +77,8 @@ class _LogInPageState extends State<LogInPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
-            
-          MyCheckboxMenu(message: 'Helly')
+        actions: const [
+          MyCheckboxMenu()
         ],
         iconTheme: IconThemeData(
             color: Theme.of(context).iconTheme.color
@@ -169,6 +169,16 @@ class _LogInPageState extends State<LogInPage> {
                       const Gap(20.0),
                       SubmitButton(
                         onTap: (){
+                          final baseUrlApi = PreferencesUtil.urlSchool;
+                          if(baseUrlApi.isEmpty){
+                            if (controllerMenu.isOpen) {
+                              controllerMenu.close();
+                            } else {
+                              controllerMenu.open();
+                            }
+                            Dialoger.showToast('Выберите город'.tr());
+                            return;
+                          }
                           context.read<AuthBloc>().add(LogInEvent(
                             phone: _phoneController.text,
                               code: _codeController.text));

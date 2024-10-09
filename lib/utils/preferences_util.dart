@@ -87,7 +87,7 @@ class PreferencesUtil{
     await _prefsInstance!.setInt(_keyTheme, theme);
   }
 
-  static String get urlSchool => _prefsInstance!.getString(_keyUrlSchool)??mskUrl;
+  static String get urlSchool => _prefsInstance!.getString(_keyUrlSchool)??'';
   static int get statusUser => _prefsInstance!.getInt(_keyStatus)??0;
   static String get lastNameUser => _prefsInstance!.getString(_keyLastName)??'';
   static String get firstNameUser => _prefsInstance!.getString(_keyFirstName)??'';

@@ -10,10 +10,12 @@ import 'package:virtuozy/utils/preferences_util.dart';
 
 import '../utils/text_style.dart';
 
-class MyCheckboxMenu extends StatefulWidget {
-  const MyCheckboxMenu({super.key, required this.message});
+late MenuController controllerMenu;
 
-  final String message;
+class MyCheckboxMenu extends StatefulWidget {
+  const MyCheckboxMenu({super.key});
+
+
 
   @override
   State<MyCheckboxMenu> createState() => _MyCheckboxMenuState();
@@ -25,6 +27,7 @@ class _MyCheckboxMenuState extends State<MyCheckboxMenu> {
   SingleActivator(LogicalKeyboardKey.keyS, control: true);
   bool _msk  = false;
   bool _nsk = false;
+  bool _empty = true;
 
   @override
   void dispose() {
@@ -37,10 +40,19 @@ class _MyCheckboxMenuState extends State<MyCheckboxMenu> {
   void initState() {
     super.initState();
   final urlSchool = PreferencesUtil.urlSchool;
-    if(urlSchool == mskUrl){
+
+   if(urlSchool.isEmpty){
+      _empty = true;
+      _nsk = false;
+      _msk = false;
+   }else if(urlSchool == mskUrl){
       _msk = true;
+      _nsk = false;
+      _empty = false;
     }else{
       _nsk = true;
+      _msk = false;
+      _empty = false;
     }
   }
 
@@ -71,6 +83,7 @@ class _MyCheckboxMenuState extends State<MyCheckboxMenu> {
                           setState(() {
                             _msk = v!;
                             if(_msk){
+                              _empty = false;
                               _nsk = false;
                             }
                           });
@@ -94,6 +107,7 @@ class _MyCheckboxMenuState extends State<MyCheckboxMenu> {
                           setState(() {
                             _nsk = v!;
                             if(_nsk){
+                              _empty = false;
                               _msk = false;
                             }
                           });
@@ -104,11 +118,38 @@ class _MyCheckboxMenuState extends State<MyCheckboxMenu> {
 
                   ],
                 ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.only(right: 20),
+                child: Row(
+                  children: [
+                    Checkbox(
+                        side: BorderSide(color: Theme.of(context).textTheme.displayMedium!.color!),
+                        checkColor: colorWhite,
+                        value: _empty,
+                        onChanged: (v) async {
+                          setState(() {
+                            _empty = v!;
+                            if(_empty){
+                              _nsk = false;
+                              _msk = false;
+                            }
+                          });
+                          await PreferencesUtil.setUrlSchool('');
+                        }),
+                    Text('Не выбрано'.tr(),style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,
+                        size: 12.0))
+
+                  ],
+                ),
               )
+
 
             ],
             builder: (BuildContext context, MenuController controller,
                 Widget? child) {
+              controllerMenu = controller;
               return TextButton(
                 focusNode: _buttonFocusNode,
                 onPressed: () {

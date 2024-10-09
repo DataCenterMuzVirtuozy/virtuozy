@@ -9,6 +9,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:virtuozy/components/checkbox_menu.dart';
 import 'package:virtuozy/components/dialogs/dialoger.dart';
 import 'package:virtuozy/presentations/auth_screen/bloc/auth_bloc.dart';
 import 'package:virtuozy/presentations/auth_screen/bloc/auth_state.dart';
@@ -36,6 +37,16 @@ class _SingInPageState extends State<SingInPage> {
   late TextEditingController _lastNameController;
   late MaskTextInputFormatter _maskFormatter;
   bool _darkTheme = false;
+  String selectedValue = "Не выбрано";
+
+  List<DropdownMenuItem<String>> get dropdownItems{
+    List<DropdownMenuItem<String>> menuItems = [
+      DropdownMenuItem(value: "Москва", child: Text("Москва",style: TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0))),
+      DropdownMenuItem(value: "Новосибирск", child: Text("Новосибирск",style: TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0),)),
+      DropdownMenuItem(value: "Не выбрано", child: Text("Не выбрано",style: TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0),)),
+    ];
+    return menuItems;
+  }
 
 
   @override
@@ -107,6 +118,29 @@ class _SingInPageState extends State<SingInPage> {
                   const Gap(20.0),
                   Column(
                     children: [
+                      Container(
+                        padding: const EdgeInsets.only(left: 20,right: 20),
+                        height: 50.0,
+                        width: MediaQuery.of(context).size.width,
+                        decoration:  BoxDecoration(
+                          borderRadius: BorderRadius.circular(50.0),
+                          border: Border.all(
+                            color: colorPink,
+                            width: 1.0,
+                          ),
+                        ),
+                        child: DropdownButton(
+                          underline: Container(color: Colors.transparent,),
+                          isExpanded: true,
+                          value: selectedValue,
+                            items: dropdownItems,
+                            onChanged: (v){
+                                setState(() {
+                                  selectedValue = v!;
+                                });
+                            }),
+                      ),
+                      const Gap(15.0),
                       CustomField(controller: _lastNameController, textHint: 'Фамилия'.tr(), iconData: Icons.drive_file_rename_outline, fillColor: colorWhite),
                       const Gap(15.0),
                       CustomField(controller: _firsNameController, textHint: 'Имя'.tr(),iconData: Icons.drive_file_rename_outline, fillColor: colorWhite),
@@ -120,6 +154,10 @@ class _SingInPageState extends State<SingInPage> {
                       const Gap(30.0),
                       SubmitButton(
                         onTap: (){
+                          if(selectedValue == 'Не выбрано'){
+                            Dialoger.showActionMaterialSnackBar(context: context, title: 'Выберите город'.tr());
+                            return;
+                          }
                           context.read<AuthBloc>().add(SingInEvent(
                               lastName: _lastNameController.text,
                           firstName: _firsNameController.text,
