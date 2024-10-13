@@ -1,21 +1,19 @@
-
-
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/resourses/strings.dart';
 import 'package:virtuozy/utils/preferences_util.dart';
 
 import '../utils/text_style.dart';
+import 'dialogs/dialoger.dart';
+import 'dialogs/sealeds.dart';
 
 late MenuController controllerMenu;
 
 class MyCheckboxMenu extends StatefulWidget {
   const MyCheckboxMenu({super.key});
-
-
 
   @override
   State<MyCheckboxMenu> createState() => _MyCheckboxMenuState();
@@ -24,8 +22,8 @@ class MyCheckboxMenu extends StatefulWidget {
 class _MyCheckboxMenuState extends State<MyCheckboxMenu> {
   final FocusNode _buttonFocusNode = FocusNode(debugLabel: 'Menu Button');
   static const SingleActivator _showShortcut =
-  SingleActivator(LogicalKeyboardKey.keyS, control: true);
-  bool _msk  = false;
+      SingleActivator(LogicalKeyboardKey.keyS, control: true);
+  bool _msk = false;
   bool _nsk = false;
   bool _empty = true;
 
@@ -35,21 +33,20 @@ class _MyCheckboxMenuState extends State<MyCheckboxMenu> {
     super.dispose();
   }
 
-
   @override
   void initState() {
     super.initState();
-  final urlSchool = PreferencesUtil.urlSchool;
+    final urlSchool = PreferencesUtil.urlSchool;
 
-   if(urlSchool.isEmpty){
+    if (urlSchool.isEmpty) {
       _empty = true;
       _nsk = false;
       _msk = false;
-   }else if(urlSchool == mskUrl){
+    } else if (urlSchool == mskUrl) {
       _msk = true;
       _nsk = false;
       _empty = false;
-    }else{
+    } else {
       _nsk = true;
       _msk = false;
       _empty = false;
@@ -60,9 +57,7 @@ class _MyCheckboxMenuState extends State<MyCheckboxMenu> {
   Widget build(BuildContext context) {
     return CallbackShortcuts(
       bindings: <ShortcutActivator, VoidCallback>{
-        _showShortcut: () {
-
-        },
+        _showShortcut: () {},
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,22 +71,27 @@ class _MyCheckboxMenuState extends State<MyCheckboxMenu> {
                 child: Row(
                   children: [
                     Checkbox(
-                        side: BorderSide(color: Theme.of(context).textTheme.displayMedium!.color!),
+                        side: BorderSide(
+                            color: Theme.of(context)
+                                .textTheme
+                                .displayMedium!
+                                .color!),
                         checkColor: colorWhite,
                         value: _msk,
                         onChanged: (v) async {
                           setState(() {
                             _msk = v!;
-                            if(_msk){
+                            if (_msk) {
                               _empty = false;
                               _nsk = false;
                             }
                           });
                           await PreferencesUtil.setUrlSchool(mskUrl);
                         }),
-                    Text('Москва'.tr(),style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,
-                        size: 12.0))
-
+                    Text('Москва'.tr(),
+                        style: TStyle.textStyleVelaSansBold(
+                            Theme.of(context).textTheme.displayMedium!.color!,
+                            size: 12.0))
                   ],
                 ),
               ),
@@ -100,66 +100,82 @@ class _MyCheckboxMenuState extends State<MyCheckboxMenu> {
                 child: Row(
                   children: [
                     Checkbox(
-                        side: BorderSide(color: Theme.of(context).textTheme.displayMedium!.color!),
+                        side: BorderSide(
+                            color: Theme.of(context)
+                                .textTheme
+                                .displayMedium!
+                                .color!),
                         checkColor: colorWhite,
                         value: _nsk,
                         onChanged: (v) async {
                           setState(() {
                             _nsk = v!;
-                            if(_nsk){
+                            if (_nsk) {
                               _empty = false;
                               _msk = false;
                             }
                           });
                           await PreferencesUtil.setUrlSchool(nskUrl);
                         }),
-                    Text('Новосибирск'.tr(),style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,
-                        size: 12.0))
-
+                    Text('Новосибирск'.tr(),
+                        style: TStyle.textStyleVelaSansBold(
+                            Theme.of(context).textTheme.displayMedium!.color!,
+                            size: 12.0))
                   ],
                 ),
               ),
-
               Padding(
                 padding: const EdgeInsets.only(right: 20),
                 child: Row(
                   children: [
                     Checkbox(
-                        side: BorderSide(color: Theme.of(context).textTheme.displayMedium!.color!),
+                        side: BorderSide(
+                            color: Theme.of(context)
+                                .textTheme
+                                .displayMedium!
+                                .color!),
                         checkColor: colorWhite,
                         value: _empty,
                         onChanged: (v) async {
                           setState(() {
                             _empty = v!;
-                            if(_empty){
+                            if (_empty) {
                               _nsk = false;
                               _msk = false;
                             }
                           });
                           await PreferencesUtil.setUrlSchool('');
                         }),
-                    Text('Не выбрано'.tr(),style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,
-                        size: 12.0))
-
+                    Text('Не выбрано'.tr(),
+                        style: TStyle.textStyleVelaSansBold(
+                            Theme.of(context).textTheme.displayMedium!.color!,
+                            size: 12.0))
                   ],
                 ),
               )
-
-
             ],
             builder: (BuildContext context, MenuController controller,
                 Widget? child) {
               controllerMenu = controller;
               return TextButton(
                 focusNode: _buttonFocusNode,
-                onPressed: () {
-                  if (controller.isOpen) {
-                    controller.close();
-                  } else {
-                    controller.open();
-                  }
+                onPressed: () async {
+                  // if (controller.isOpen) {
+                  //   controller.close();
+                  // } else {
+                  //   controller.open();
+                  // }
+                 final loc = await _handleLocationPermission();
+                 if(loc){
+                   Dialoger.showCustomDialog(contextUp: context,
+                       args: true,
+                       content: OpenSettingsLocations());
+                 }
                 },
-                child: Icon(Icons.location_on_outlined,color: Theme.of(context).textTheme.displayMedium!.color!,),
+                child: Icon(
+                  Icons.location_on_outlined,
+                  color: Theme.of(context).textTheme.displayMedium!.color!,
+                ),
               );
             },
           ),
@@ -167,4 +183,37 @@ class _MyCheckboxMenuState extends State<MyCheckboxMenu> {
       ),
     );
   }
+
+  //todo add translate text
+  Future<bool> _handleLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      Dialoger.showCustomDialog(contextUp: context,
+          args: false,
+          content: OpenSettingsLocations());
+
+      return false;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        Dialoger.showActionMaterialSnackBar(
+            context: context, title: 'Разрешения на местоположение отклонены');
+        //_openAppSettings();
+        return false;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      Dialoger.showActionMaterialSnackBar(
+          context: context,
+          title:
+              'Разрешения на определение местоположения навсегда отклонены, мы не можем запрашивать разрешения.');
+      return false;
+    }
+    return true;
+  }
+
 }

@@ -225,17 +225,15 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                     children: [
                       //todo url enter
                       IconButton(onPressed: ()async{
-                        Dialoger.showBottomMenu(
+                        Dialoger.showModalBottomMenu(
                             title: 'Telegram',
                             args: TypeMessager.telegram,
-                            context: context,
                             content: ListSupport());
                       }, icon:  Image.asset(telegram,width: 30,height: 30,)),
                       IconButton(onPressed: () async {
-                        Dialoger.showBottomMenu(
+                        Dialoger.showModalBottomMenu(
                             title: 'WhatsApp',
                             args: TypeMessager.whatsapp,
-                            context: context,
                             content: ListSupport());
                       }, icon:  Image.asset(whatsapp,width: 35,height: 35,))
 

@@ -16,8 +16,7 @@ class PhoneNum extends StatelessWidget{
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Dialoger.showBottomMenu(
-          context: context,
+        Dialoger.showModalBottomMenu(
             title: phone,
             args: phone,
             content: PhoneCaller());

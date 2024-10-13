@@ -99,7 +99,7 @@ class _SingInPageState extends State<SingInPage> {
               }
 
               if(s.authStatus == AuthStatus.onSearchLocation){
-                GoRouter.of(context).push(pathBranchSearch);
+               //GoRouter.of(context).push(pathBranchSearch);
               }
             },
             builder: (context,state) {

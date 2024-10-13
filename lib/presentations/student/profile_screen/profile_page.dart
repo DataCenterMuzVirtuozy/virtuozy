@@ -470,9 +470,8 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
                             ),
                           ),
                           onTap: () {
-                            Dialoger.showBottomMenu(
+                            Dialoger.showModalBottomMenu(
                                 title: 'Добавить станцию'.tr(),
-                                context: context,
                                 content: FindSubways());
                           },
                         ),

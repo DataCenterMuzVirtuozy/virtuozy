@@ -6,11 +6,13 @@ import 'package:virtuozy/components/dialogs/contents/alert_dialog/details_info_l
 import 'package:virtuozy/components/dialogs/contents/alert_dialog/download_doc_content.dart';
 import 'package:virtuozy/components/dialogs/contents/alert_dialog/log_out_content.dart';
 import 'package:virtuozy/components/dialogs/contents/alert_dialog/log_out_teacher_content.dart';
+import 'package:virtuozy/components/dialogs/contents/alert_dialog/open_location_settings_content.dart';
 import 'package:virtuozy/components/dialogs/contents/alert_dialog/select_date_content.dart';
 import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/add_lesson_content.dart';
 import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/bonuses_list_content.dart';
 import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/details_client_content.dart';
 import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/details_lesson_content.dart';
+import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/find_location_content.dart';
 import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/phone_caller_content.dart';
 import 'package:virtuozy/domain/entities/document_entity.dart';
 import 'package:virtuozy/domain/entities/teacher_entity.dart';
@@ -36,6 +38,14 @@ sealed class DialogsContent{
 
 sealed class AlertDialogContent{
   build({required BuildContext context,Object? args});
+}
+
+class OpenSettingsLocations extends AlertDialogContent{
+  @override
+  build({required BuildContext context, Object? args}) {
+  return OpenLocationSettingsContent(locationEnable: args as bool,);
+  }
+
 }
 
 
@@ -98,6 +108,14 @@ class LogOutTeacher extends AlertDialogContent{
   @override
   build({required BuildContext context, Object? args}) {
     return LogOutTeacherContent(teacher: (args as TeacherEntity));
+  }
+
+}
+
+class FindLocation extends DialogsContent{
+  @override
+  build({required BuildContext context, Object? args}) {
+    return const FindLocationContent();
   }
 
 }

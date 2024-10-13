@@ -92,7 +92,7 @@ class UserService{
     } on Failure catch(e){
        throw  Failure(e.message);
     } on DioException catch(e){
-     throw  Failure(e.message!);
+     throw  Failure('Error');
     }
    }
 

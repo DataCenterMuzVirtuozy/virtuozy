@@ -107,6 +107,7 @@ class Dialoger {
             InfoStatusLesson() => InfoStatusLesson().build(context: _,args: args),
 
             PhoneCaller() => PhoneCaller().build(context: _,args: args),
+            FindLocation() => FindLocation().build(context: _,args: args),
           };
           return BackdropFilter(
             filter: blurred
@@ -169,91 +170,92 @@ class Dialoger {
     });
   }
 
-  static void showBottomMenu(
-      {required String title,
-      required BuildContext context,
-      required DialogsContent content,
-      bool blurred = true,
-      Object? args}) {
-    final Widget body = switch (content) {
-      ConfirmLesson() => ConfirmLesson().build(context: context, args: args),
-      SelectBranch() => SelectBranch().build(context: context),
-      SearchLocationComplete() =>
-        SearchLocationComplete().build(context: context),
-      DetailsLesson() => DetailsLesson().build(context: context, args: args),
-      ListBonuses() => ListBonuses().build(context: context, args: args),
-      ListSupport() => ListSupport().build(context: context, args: args),
-      FindSubways() => FindSubways().build(context: context),
-      DetailsClient() => DetailsClient().build(context: context),
-      AddLesson() => throw AddLesson().build(context: context),
-      InfoStatusLesson() => InfoStatusLesson().build(context:context),
-      PhoneCaller() => PhoneCaller().build(context: context,args: args),
-    };
-
-    showModalBottomSheet(
-        isDismissible: true,
-        enableDrag: true,
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        context: context,
-        builder: (_) {
-          return BackdropFilter(
-            filter: blurred
-                ? ImageFilter.blur(sigmaX: 10, sigmaY: 5)
-                : ImageFilter.blur(sigmaX: 0.0, sigmaY: 0.0),
-            child: Wrap(
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  padding:
-                      const EdgeInsets.only(right: 10.0, left: 10.0, top: 10.0),
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.background,
-                      borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(30),
-                          topRight: Radius.circular(30))),
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 45.0,
-                        padding: const EdgeInsets.only(
-                            top: 5.0, right: 15.0, left: 20.0),
-                        decoration: BoxDecoration(
-                            color: colorGrey,
-                            borderRadius: const BorderRadius.only(
-                                topRight: Radius.circular(20.0),
-                                topLeft: Radius.circular(20.0),
-                                bottomLeft: Radius.circular(10.0),
-                                bottomRight: Radius.circular(10.0))),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              title,
-                              style: TStyle.textStyleGaretHeavy(colorWhite,
-                                  size: 18.0),
-                            ),
-                            InkWell(
-                                onTap: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Icon(Icons.close_rounded,
-                                    color: colorWhite)),
-                          ],
-                        ),
-                      ),
-                      const Gap(10.0),
-                      body
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          );
-        }).whenComplete(() {
-      currentDayNotifi.value = 0;
-    });
-  }
+  // static void showBottomMenu(
+  //     {required String title,
+  //     required BuildContext context,
+  //     required DialogsContent content,
+  //     bool blurred = true,
+  //     Object? args}) {
+  //   final Widget body = switch (content) {
+  //     ConfirmLesson() => ConfirmLesson().build(context: context, args: args),
+  //     SelectBranch() => SelectBranch().build(context: context),
+  //     SearchLocationComplete() =>
+  //       SearchLocationComplete().build(context: context),
+  //     DetailsLesson() => DetailsLesson().build(context: context, args: args),
+  //     ListBonuses() => ListBonuses().build(context: context, args: args),
+  //     ListSupport() => ListSupport().build(context: context, args: args),
+  //     FindSubways() => FindSubways().build(context: context),
+  //     DetailsClient() => DetailsClient().build(context: context),
+  //     AddLesson() => throw AddLesson().build(context: context),
+  //     InfoStatusLesson() => InfoStatusLesson().build(context:context),
+  //     PhoneCaller() => PhoneCaller().build(context: context,args: args),
+  //     FindLocation() => FindLocation().build(context: context,args: args),
+  //   };
+  //
+  //   showModalBottomSheet(
+  //       isDismissible: true,
+  //       enableDrag: true,
+  //       isScrollControlled: true,
+  //       backgroundColor: Colors.transparent,
+  //       context: context,
+  //       builder: (_) {
+  //         return BackdropFilter(
+  //           filter: blurred
+  //               ? ImageFilter.blur(sigmaX: 10, sigmaY: 5)
+  //               : ImageFilter.blur(sigmaX: 0.0, sigmaY: 0.0),
+  //           child: Wrap(
+  //             children: [
+  //               Container(
+  //                 width: MediaQuery.of(context).size.width,
+  //                 padding:
+  //                     const EdgeInsets.only(right: 10.0, left: 10.0, top: 10.0),
+  //                 decoration: BoxDecoration(
+  //                     color: Theme.of(context).colorScheme.background,
+  //                     borderRadius: const BorderRadius.only(
+  //                         topLeft: Radius.circular(30),
+  //                         topRight: Radius.circular(30))),
+  //                 child: Column(
+  //                   children: [
+  //                     Container(
+  //                       height: 45.0,
+  //                       padding: const EdgeInsets.only(
+  //                           top: 5.0, right: 15.0, left: 20.0),
+  //                       decoration: BoxDecoration(
+  //                           color: colorGrey,
+  //                           borderRadius: const BorderRadius.only(
+  //                               topRight: Radius.circular(20.0),
+  //                               topLeft: Radius.circular(20.0),
+  //                               bottomLeft: Radius.circular(10.0),
+  //                               bottomRight: Radius.circular(10.0))),
+  //                       child: Row(
+  //                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                         children: [
+  //                           Text(
+  //                             title,
+  //                             style: TStyle.textStyleGaretHeavy(colorWhite,
+  //                                 size: 18.0),
+  //                           ),
+  //                           InkWell(
+  //                               onTap: () {
+  //                                 Navigator.pop(context);
+  //                               },
+  //                               child: Icon(Icons.close_rounded,
+  //                                   color: colorWhite)),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                     const Gap(10.0),
+  //                     body
+  //                   ],
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         );
+  //       }).whenComplete(() {
+  //     currentDayNotifi.value = 0;
+  //   });
+  // }
 
   static void showLogOut({required BuildContext context, required UserEntity user}) {
     showCustomDialog(
@@ -294,6 +296,8 @@ class Dialoger {
       InfoDetailsLesson() => InfoDetailsLesson().build(context: contextUp),
       EditStatusLesson() => EditStatusLesson().build(context: contextUp,args: args),
       AddNewLesson() => AddNewLesson().build(context: contextUp,args: args),
+
+      OpenSettingsLocations() => OpenSettingsLocations().build(context: contextUp,args: args),
     };
     return showDialog<T>(
       context: contextUp,
