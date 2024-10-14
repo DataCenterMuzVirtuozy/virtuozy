@@ -6,6 +6,7 @@ import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/resourses/strings.dart';
 import 'package:virtuozy/utils/preferences_util.dart';
 
+import '../data/utils/location_util.dart';
 import '../utils/text_style.dart';
 import 'dialogs/dialoger.dart';
 import 'dialogs/sealeds.dart';
@@ -160,17 +161,11 @@ class _MyCheckboxMenuState extends State<MyCheckboxMenu> {
               return TextButton(
                 focusNode: _buttonFocusNode,
                 onPressed: () async {
-                  // if (controller.isOpen) {
-                  //   controller.close();
-                  // } else {
-                  //   controller.open();
-                  // }
-                 final loc = await _handleLocationPermission();
-                 if(loc){
-                   Dialoger.showCustomDialog(contextUp: context,
-                       args: true,
+                 final accessLoc = await LocationUtil.handleLocationPermission(context: context);
+                 Dialoger.showCustomDialog(contextUp: context,
+                       args: accessLoc,
                        content: OpenSettingsLocations());
-                 }
+
                 },
                 child: Icon(
                   Icons.location_on_outlined,
@@ -184,36 +179,6 @@ class _MyCheckboxMenuState extends State<MyCheckboxMenu> {
     );
   }
 
-  //todo add translate text
-  Future<bool> _handleLocationPermission() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      Dialoger.showCustomDialog(contextUp: context,
-          args: false,
-          content: OpenSettingsLocations());
 
-      return false;
-    }
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        Dialoger.showActionMaterialSnackBar(
-            context: context, title: 'Разрешения на местоположение отклонены');
-        //_openAppSettings();
-        return false;
-      }
-    }
-    if (permission == LocationPermission.deniedForever) {
-      Dialoger.showActionMaterialSnackBar(
-          context: context,
-          title:
-              'Разрешения на определение местоположения навсегда отклонены, мы не можем запрашивать разрешения.');
-      return false;
-    }
-    return true;
-  }
 
 }

@@ -1,16 +1,9 @@
-
-
-  import 'dart:io';
-
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lottie/lottie.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:virtuozy/components/buttons.dart';
@@ -23,14 +16,15 @@ import 'package:virtuozy/presentations/student/subscription_screen/bloc/sub_bloc
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/resourses/images.dart';
 import 'package:virtuozy/router/paths.dart';
-import 'package:virtuozy/utils/preferences_util.dart';
 
+import '../../components/dialogs/sealeds.dart';
 import '../../components/text_fields.dart';
+import '../../data/utils/location_util.dart';
 import '../../utils/text_style.dart';
 import '../../utils/theme_provider.dart';
 import '../student/subscription_screen/bloc/sub_event.dart';
 
-class LogInPage extends StatefulWidget{
+class LogInPage extends StatefulWidget {
   const LogInPage({super.key});
 
   @override
@@ -38,14 +32,10 @@ class LogInPage extends StatefulWidget{
 }
 
 class _LogInPageState extends State<LogInPage> {
-
-
   late TextEditingController _codeController;
   late TextEditingController _phoneController;
   bool _darkTheme = false;
   late MaskTextInputFormatter _maskFormatter;
-
-
 
   @override
   void initState() {
@@ -54,11 +44,9 @@ class _LogInPageState extends State<LogInPage> {
     _phoneController = TextEditingController();
     _maskFormatter = MaskTextInputFormatter(
         mask: '+# (###) ###-##-##',
-        filter: { "#": RegExp(r'[0-9]') },
-        type: MaskAutoCompletionType.lazy
-    );
+        filter: {"#": RegExp(r'[0-9]')},
+        type: MaskAutoCompletionType.lazy);
   }
-
 
   @override
   void didChangeDependencies() {
@@ -73,47 +61,57 @@ class _LogInPageState extends State<LogInPage> {
     _phoneController.dispose();
   }
 
+  void _handleLocation() async {
+    final accessLoc =
+        await LocationUtil.handleLocationPermission(context: context);
+    Dialoger.showCustomDialog(
+        contextUp: context, args: accessLoc, content: OpenSettingsLocations());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: const [
-          MyCheckboxMenu()
-        ],
-        iconTheme: IconThemeData(
-            color: Theme.of(context).iconTheme.color
-        ),
+        actions: const [MyCheckboxMenu()],
+        iconTheme: IconThemeData(color: Theme.of(context).iconTheme.color),
         backgroundColor: Theme.of(context).colorScheme.background,
         centerTitle: true,
-        title:   _darkTheme?Image.asset(logoDark,width: 100.0):
-        SvgPicture.asset(logo, width: 100.0),
+        title: _darkTheme
+            ? Image.asset(logoDark, width: 100.0)
+            : SvgPicture.asset(logo, width: 100.0),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(left: 20.0,right: 20.0,top: 50.0),
+        padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 50.0),
         child: SingleChildScrollView(
-          child: BlocConsumer<AuthBloc,AuthState>(
-            listener: ( c,s) {
-
-                if(s.error.isNotEmpty){
-                  Dialoger.showActionMaterialSnackBar(context: context,
-                      title: s.error);
+          child: BlocConsumer<AuthBloc, AuthState>(
+            listener: (c, s) {
+              if (s.authStatus == AuthStatus.baseUrlEmpty) {
+                if (controllerMenu.isOpen) {
+                  controllerMenu.close();
+                } else {
+                  controllerMenu.open();
                 }
 
-                if(s.authStatus == AuthStatus.authenticated||
-                    s.authStatus == AuthStatus.moderation){
-                  context.read<SubBloc>().add(const GetUserEvent(
-                      allViewDir: true,
-                      currentDirIndex: 0,
-                      refreshDirection: true));
-                  GoRouter.of(context).pop(pathMain);
-                }
+                _handleLocation();
+              }
 
+              if (s.error.isNotEmpty) {
+                Dialoger.showActionMaterialSnackBar(
+                    context: context, title: s.error);
+              }
 
+              if (s.authStatus == AuthStatus.authenticated ||
+                  s.authStatus == AuthStatus.moderation) {
+                context.read<SubBloc>().add(const GetUserEvent(
+                    allViewDir: true,
+                    currentDirIndex: 0,
+                    refreshDirection: true));
+                GoRouter.of(context).pop(pathMain);
+              }
             },
-            builder: (context,state) {
-
-              if(state.authStatus == AuthStatus.processLogIn||
-                  state.authStatus == AuthStatus.authenticated){
+            builder: (context, state) {
+              if (state.authStatus == AuthStatus.processLogIn ||
+                  state.authStatus == AuthStatus.authenticated) {
                 return SizedBox(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
@@ -132,8 +130,10 @@ class _LogInPageState extends State<LogInPage> {
                     children: [
                       Image.asset(illustration_5),
                       const Gap(30.0),
-                      Text('Добро пожаловать!'.tr(),style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,
-                          size: 25.0)),
+                      Text('Добро пожаловать!'.tr(),
+                          style: TStyle.textStyleVelaSansBold(
+                              Theme.of(context).textTheme.displayMedium!.color!,
+                              size: 25.0)),
                     ],
                   ),
                   const Gap(30.0),
@@ -141,10 +141,8 @@ class _LogInPageState extends State<LogInPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       PhoneField(
-                        onChange: (String text){
-
-                        },
-                        textInputFormatter: _maskFormatter,
+                          onChange: (String text) {},
+                          textInputFormatter: _maskFormatter,
                           controller: _phoneController),
                       const Gap(20.0),
                       CustomField(
@@ -156,45 +154,51 @@ class _LogInPageState extends State<LogInPage> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text('Не пришел пароль по СМС? Позвоните по телефону'.tr(),
-                          textAlign: TextAlign.center,
-                          style: TStyle.textStyleVelaSansMedium(colorRed,size: 14.0),),
-                         TextButton(onPressed: () async {
-                            await _launchUrlTel(tel: '8 (499) 322-71-04');
-                         },
-                             child:  Text('8 (499) 322-71-04',
-                               style: TStyle.textStyleVelaSansRegularUnderline(colorRed,size: 16.0),))
+                          Text(
+                            'Не пришел пароль по СМС? Позвоните по телефону'
+                                .tr(),
+                            textAlign: TextAlign.center,
+                            style: TStyle.textStyleVelaSansMedium(colorRed,
+                                size: 14.0),
+                          ),
+                          TextButton(
+                              onPressed: () async {
+                                await _launchUrlTel(tel: '8 (499) 322-71-04');
+                              },
+                              child: Text(
+                                '8 (499) 322-71-04',
+                                style: TStyle.textStyleVelaSansRegularUnderline(
+                                    colorRed,
+                                    size: 16.0),
+                              ))
                         ],
                       ),
                       const Gap(20.0),
                       SubmitButton(
-                        onTap: (){
-                          final baseUrlApi = PreferencesUtil.urlSchool;
-                          if(baseUrlApi.isEmpty){
-                            if (controllerMenu.isOpen) {
-                              controllerMenu.close();
-                            } else {
-                              controllerMenu.open();
-                            }
-                            Dialoger.showToast('Выберите город'.tr());
-                            return;
-                          }
+                        onTap: () {
                           context.read<AuthBloc>().add(LogInEvent(
-                            phone: _phoneController.text,
+                              phone: _phoneController.text,
                               code: _codeController.text));
                         },
-                        textButton:'Войти'.tr(),
+                        textButton: 'Войти'.tr(),
                       ),
                       const Gap(10.0),
-                      TextButton(onPressed: (){
-                        if(state.authStatus != AuthStatus.sendRequestCode){
-                          GoRouter.of(context).push(pathSingIn);
-                        }
-
-                      },
-                          child: Text('Регистрация'.tr(),
-                          style: TStyle.textStyleVelaSansRegularUnderline(Theme.of(context).textTheme.displayMedium!.color!,
-                              size: 18.0),)),
+                      TextButton(
+                          onPressed: () {
+                            if (state.authStatus !=
+                                AuthStatus.sendRequestCode) {
+                              GoRouter.of(context).push(pathSingIn);
+                            }
+                          },
+                          child: Text(
+                            'Регистрация'.tr(),
+                            style: TStyle.textStyleVelaSansRegularUnderline(
+                                Theme.of(context)
+                                    .textTheme
+                                    .displayMedium!
+                                    .color!,
+                                size: 18.0),
+                          )),
                       const Gap(5.0),
                       // InkWell(
                       //   onTap: () async {
@@ -222,13 +226,9 @@ class _LogInPageState extends State<LogInPage> {
   }
 
   Future<void> _launchUrlTel({required String tel}) async {
-    final Uri url = Uri(
-        scheme:'tel',
-      path: tel);
+    final Uri url = Uri(scheme: 'tel', path: tel);
     if (!await launchUrl(url)) {
       throw Exception('Could not launch $url');
     }
   }
-
-
 }

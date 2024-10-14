@@ -57,10 +57,10 @@ class _OpenLocationSettingsContentState extends State<OpenLocationSettingsConten
               const Gap(5.0),
               TextButton(
                 onPressed: () {
+                  Navigator.pop(context);
                   if(!widget.locationEnable){
                     _openAppSettings();
                   }else{
-                    Navigator.pop(context);
                     Dialoger.showModalBottomMenu(title: 'Поиск местоположения'.tr(),
                         content: FindLocation());
                   }

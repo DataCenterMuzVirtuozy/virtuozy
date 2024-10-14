@@ -13,12 +13,14 @@ class SubmitButton extends StatefulWidget {
   final String? textButton;
   final double? width;
   final double? borderRadius;
+  final double? textSize;
    Color? colorFill;
 
 
 
    SubmitButton({Key? key,
     this.onTap,
+     this.textSize = 15.0,
     this.textButton='OK',
      this.borderRadius = 50.0,
     this.width=double.infinity,
@@ -62,7 +64,7 @@ class _SubmitButtonState extends State<SubmitButton> {
         child: Text(
           widget.textButton!,
           textAlign: TextAlign.center,
-          style: TStyle.textStyleVelaSansBold(colorWhite,size: 15.0)
+          style: TStyle.textStyleVelaSansBold(colorWhite,size: widget.textSize!)
         ),
       ),
     );

@@ -40,15 +40,17 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
 
     try{
       emit(state.copyWith(authStatus: AuthStatus.processLogIn,error: ''));
+      final baseUrlApi = PreferencesUtil.urlSchool;
       if(event.phone.isEmpty){
         throw Failure('Введите номер телефона'.tr());
       }else if(event.code.isEmpty){
         throw Failure('Введиде пароль'.tr());
+      } else if(baseUrlApi.isEmpty){
+        emit(state.copyWith(authStatus: AuthStatus.baseUrlEmpty, error: ''));
+        return;
       }
 
-
       final phone = PreferencesUtil.phoneUser;
-
       if(event.phone == "+3 (333) 333-33-33"){
         final teacher = await _teacherRepository.getTeacher(uid: event.phone);
         _teacherCubit.setTeacher(teacher: teacher);
