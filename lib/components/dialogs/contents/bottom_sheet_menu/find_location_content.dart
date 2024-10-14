@@ -102,7 +102,7 @@ class _FindLocationContentState extends State<FindLocationContent> with TickerPr
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0,),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0,).copyWith(bottom: 30),
         child: Column(
           children: [
             Lottie.asset(animationLocation,
