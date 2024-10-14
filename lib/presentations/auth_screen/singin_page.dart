@@ -129,16 +129,33 @@ class _SingInPageState extends State<SingInPage> {
                             width: 1.0,
                           ),
                         ),
-                        child: DropdownButton(
-                          underline: Container(color: Colors.transparent,),
-                          isExpanded: true,
-                          value: selectedValue,
-                            items: dropdownItems,
-                            onChanged: (v){
-                                setState(() {
-                                  selectedValue = v!;
-                                });
-                            }),
+                        child: Stack(
+                          children: [
+                            DropdownButton(
+                              underline: Container(color: Colors.transparent,),
+                              isExpanded: true,
+                              value: selectedValue,
+                                items: dropdownItems,
+                                onChanged: (v){
+                                    setState(() {
+                                      selectedValue = v!;
+                                    });
+                                }),
+                            Visibility(
+                              visible: selectedValue == 'Не выбрано',
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Container(
+                                  color: Colors.white,
+                                  child: Text(
+                                    "Выбери город".tr(),
+                                    style: TStyle.textStyleVelaSansRegular(colorGrey,size: 14.0),
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                       const Gap(15.0),
                       CustomField(controller: _lastNameController, textHint: 'Фамилия'.tr(), iconData: Icons.drive_file_rename_outline, fillColor: colorWhite),

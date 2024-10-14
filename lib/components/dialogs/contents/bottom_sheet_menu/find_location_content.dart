@@ -64,9 +64,9 @@ class _FindLocationContentState extends State<FindLocationContent> with TickerPr
       Placemark place = placemarks[0];
       setState(() {
         _administrativeArea = place.administrativeArea!;
-         if(place.administrativeArea!.contains(_filialsTest[0])){
+         if(place.administrativeArea!.contains(_filials[0])){
            _currentAddress = 'msk';
-         }else if(place.administrativeArea!.contains(_filialsTest[1])){
+         }else if(place.administrativeArea!.contains(_filials[1])){
            _currentAddress = 'nsk';
          }else{
            _currentAddress = '1';
@@ -126,7 +126,7 @@ class _FindLocationContentState extends State<FindLocationContent> with TickerPr
                 });
               },
               child: _visibleAdminArea?Text(_administrativeArea, textAlign: TextAlign.center,
-              style: TStyle.textStyleVelaSansBold(colorOrange,size: 18),):
+              style: TStyle.textStyleVelaSansBold(colorGrey,size: 18),):
               Text(_currentAddress.isEmpty?'Поиск школ поблизости....'.tr():_currentAddress == '0'?
                   'Ошибка.\nМестоположение не определено'.tr():
               _currentAddress == '1'?'Нет ближайшей школы'.tr():
