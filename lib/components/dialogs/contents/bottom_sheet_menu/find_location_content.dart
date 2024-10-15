@@ -33,9 +33,9 @@ class FindLocationContent extends StatefulWidget{
 class _FindLocationContentState extends State<FindLocationContent> with TickerProviderStateMixin {
 
   String _currentAddress = '';
-  final List<String> _filials = ['Новосибирская','Московская'];
-  final List<String> _titles = ['Новосибирск','Москва'];
-  final List<String> _filialsTest= ['Минская','Московская'];
+  final List<String> _paterns = ['Новосибирская','Новосибирск','Московская','Москва'];
+  //final List<String> _titles = ['Новосибирск','Москва'];
+  final List<String> _paternsTest= ['Минская','Московская'];
   late final AnimationController _controller;
   String _administrativeArea = '';
   bool _visibleAdminArea  = false;
@@ -64,9 +64,9 @@ class _FindLocationContentState extends State<FindLocationContent> with TickerPr
       Placemark place = placemarks[0];
       setState(() {
         _administrativeArea = place.administrativeArea!;
-         if(place.administrativeArea!.contains(_filials[0])){
+         if(place.administrativeArea!.contains(_paterns[2])||place.administrativeArea!.contains(_paterns[3])){
            _currentAddress = 'msk';
-         }else if(place.administrativeArea!.contains(_filials[1])){
+         }else if(place.administrativeArea!.contains(_paterns[0])||place.administrativeArea!.contains(_paterns[1])){
            _currentAddress = 'nsk';
          }else{
            _currentAddress = '1';
@@ -130,7 +130,7 @@ class _FindLocationContentState extends State<FindLocationContent> with TickerPr
               Text(_currentAddress.isEmpty?'Поиск школ поблизости....'.tr():_currentAddress == '0'?
                   'Ошибка.\nМестоположение не определено'.tr():
               _currentAddress == '1'?'Нет ближайшей школы'.tr():
-              'Ближайшая школа в \n${_currentAddress == 'ns1'?'г. ${_titles[0]}':'г. ${_titles[1]}'}',
+              'Ближайшая школа в \n${_currentAddress == 'nsk'?'г. ${_paterns[1]}':'г. ${_paterns[3]}'}',
                   textAlign: TextAlign.center,
                   style:
                   TStyle.textStyleVelaSansBold(_currentAddress == '0'||_currentAddress == '1'?colorRed:
@@ -177,7 +177,7 @@ class _FindLocationContentState extends State<FindLocationContent> with TickerPr
                               return;
                             }
                             Navigator.pop(context);
-                            Dialoger.showToast('Филиал школы в г. ${_currentAddress == 'nsk'?_titles[0]:_titles[1]}');
+                            Dialoger.showToast('Филиал школы в г. ${_currentAddress == 'nsk'?_paterns[1]:_paterns[3]}');
                             await PreferencesUtil.setUrlSchool(_currentAddress == 'nsk'?nskUrl:mskUrl);
                           },
                           borderRadius: 10,

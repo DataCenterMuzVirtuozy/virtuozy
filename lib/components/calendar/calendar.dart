@@ -2,9 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:virtuozy/di/locator.dart';
@@ -210,7 +208,6 @@ class _CalendarState extends State<Calendar> with AuthMixin{
                     day: day.day,
                     context: context,
                     onLesson: (List<Lesson> lessons) {
-                      widget.onDate.call(lessons[0].date);
                       widget.onLesson.call(lessons);
                     });
               },
@@ -227,7 +224,6 @@ class _CalendarState extends State<Calendar> with AuthMixin{
                     day: day.day,
                     context: context,
                     onLesson: (List<Lesson> lessons) {
-                      //widget.onDate.call(lessons[0].date);
                       widget.onLesson.call(lessons);
                     });
               },
