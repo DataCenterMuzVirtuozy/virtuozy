@@ -655,11 +655,11 @@ class _FinancePageState extends State<FinancePage> {
    bool _open = false;
 
 
-   int _countAllLesson(SubscriptionEntity subscription){
-     final i1 = subscription.price;
-     final i2 = subscription.priceOneLesson;
-     return i1~/i2;
-   }
+   // int _countAllLesson(SubscriptionEntity subscription){
+   //   final i1 = subscription.price;
+   //   final i2 = subscription.priceOneLesson;
+   //   return i1~/i2;
+   // }
 
    @override
    Widget build(BuildContext context) {
@@ -700,7 +700,7 @@ class _FinancePageState extends State<FinancePage> {
                                //color: Theme.of(context).colorScheme.secondary,
                                //shape: BoxShape.circle
                              ),
-                             child: Text('${widget.subscription.balanceLesson} из ${_countAllLesson(widget.subscription)}',
+                             child: Text('${widget.subscription.balanceLesson} из ${widget.subscription.maxLessonsCount}',
                                  style:TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,
                                      size: 14.0)),
                            ),
