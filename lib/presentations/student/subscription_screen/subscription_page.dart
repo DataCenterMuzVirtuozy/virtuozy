@@ -205,6 +205,11 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                        globalCurrentMonthCalendar = month;
                     },
                     onLesson: (List<Lesson> lessons){
+
+                      // var l = state.lessons.where((l)=>l.idDir == lessons[0].idDir);
+                      // print('Lessons ${l.length}');
+                      // print('Subs ${state.directions[_selIndexDirection].lastSubscriptions[0].id}');
+
                       Dialoger.showModalBottomMenu(
                         blurred: false,
                           title: lessons.length>1?'':

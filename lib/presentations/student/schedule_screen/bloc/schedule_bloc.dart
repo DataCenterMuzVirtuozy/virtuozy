@@ -143,7 +143,6 @@ class ScheduleBloc extends Bloc<ScheduleEvent,ScheduleState>{
       resLes = user.directions[indexDir].lessons;
     }
 
-
     return resLes;
   }
 
@@ -188,6 +187,8 @@ class ScheduleBloc extends Bloc<ScheduleEvent,ScheduleState>{
      }
 
     final lesTS = lessons.map((e) => (DateFormat('yyyy-MM-dd').parse(e.date).millisecondsSinceEpoch)).toList();
+     final yearNow = DateTime.now().year;
+     lesTS.removeWhere((ts)=>DateTime.fromMillisecondsSinceEpoch(ts).year < yearNow);
     List<ScheduleLessons> listResult = [];
     lesTS.sort();
     listResult.add(
@@ -212,6 +213,8 @@ class ScheduleBloc extends Bloc<ScheduleEvent,ScheduleState>{
     }
 
     final lesTS = lessons.map((e) => (DateFormat('yyyy-MM-dd').parse(e.date).millisecondsSinceEpoch)).toList();
+    final yearNow = DateTime.now().year;
+    lesTS.removeWhere((ts)=>DateTime.fromMillisecondsSinceEpoch(ts).year < yearNow);
     List<ScheduleLessons> listResult = [];
     lesTS.sort();
     for(var a in lesTS){

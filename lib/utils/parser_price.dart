@@ -17,7 +17,7 @@ class ParserPrice {
         if (i4 > 0) {
           return '$i1$i5.$i4';
         } else {
-          return '$i1 $i5';
+          return '$i1$i5';
         }
       }
     } else {

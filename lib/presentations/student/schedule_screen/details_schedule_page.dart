@@ -213,14 +213,17 @@ class _DetailsSchedulePageState extends State<DetailsSchedulePage> {
                   ),
                   Row(
                     children: [
-                      Text('Аудитория '.tr(),
+                      Text('Кабинет '.tr(),
                           style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
-                      Text(lesson.idAuditory,
+                      Text(lesson.nameAuditory,
                           style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
                     ],
                   ),
-                  Text(lesson.nameTeacher,
-                      style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 150),
+                    child: Text(lesson.nameTeacher,
+                        style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
+                  ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

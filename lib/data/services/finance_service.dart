@@ -82,12 +82,14 @@ class FinanceService{
          //
          // }
          final res = await dioApi.get(Endpoints.transactions,queryParameters: {"idUser": idUser});
-         if(idUser==1){
-           transactions = (res.data['data'] as List<dynamic>).map((e)=> TransactionModel.fromMap(e)).toList();
-         }else{
-           transactions = (res.data as List<dynamic>).map((e)=> TransactionModel.fromMap(e)).toList();
+         transactions = (res.data['data'] as List<dynamic>).map((e)=> TransactionModel.fromMap(e)).toList();
 
-         }
+         // if(idUser==1){
+         //   transactions = (res.data['data'] as List<dynamic>).map((e)=> TransactionModel.fromMap(e)).toList();
+         // }else{
+         //   transactions = (res.data as List<dynamic>).map((e)=> TransactionModel.fromMap(e)).toList();
+         //
+         // }
 
          return transactions;
        }on Failure catch(e){

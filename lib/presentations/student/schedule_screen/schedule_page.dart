@@ -355,7 +355,7 @@ class _SchedulePageState extends State<SchedulePage> with AuthMixin{
                      style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
                  Row(
                    children: [
-                     Text('Аудитория '.tr(),
+                     Text('Кабинет '.tr(),
                          style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
                      Text(lesson.nameAuditory,
                          style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
