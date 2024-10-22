@@ -99,6 +99,10 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
 
   }
 
+  int _maxNumberLessonFromSubs({required int idSub, required List<SubscriptionEntity> subs}){
+    return subs.firstWhere((s)=>s.id == idSub).maxLessonsCount;
+  }
+
 
 
   @override
@@ -213,7 +217,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                       Dialoger.showModalBottomMenu(
                         blurred: false,
                           title: lessons.length>1?'':
-                          'Урок №${state.lessons.indexOf(lessons[0])+1} из ${state.directions[_selIndexDirection].lastSubscriptions[0].maxLessonsCount}',
+                          'Урок №${lessons[0].number} из ${_maxNumberLessonFromSubs(idSub: lessons[0].idSub,subs: state.directions[_selIndexDirection].subscriptionsAll)}',
                           args: [lessons,state.userEntity.directions],
                           content: DetailsLesson());
                     },),

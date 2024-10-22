@@ -29,6 +29,7 @@ class TeacherMapper{
 
     static Lesson _fromLessonModel(LessonModel lessonModel, int idTeacher){
       return Lesson(
+        number: lessonModel.number,
         nameSchool: lessonModel.nameSchool,
          nameAuditory: lessonModel.nameAuditory,
         isLast: lessonModel.isLast,

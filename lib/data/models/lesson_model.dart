@@ -27,10 +27,12 @@ class LessonModel{
   final bool isLast;
   final String nameAuditory;
   final String nameSchool;
+  final int number;
 
 
 
   const LessonModel( {
+    required this.number,
     required this.nameSchool,
     required this.nameAuditory,
     required this.isFirst,
@@ -99,6 +101,7 @@ class LessonModel{
     final timePeriod = DateTimeParser.parseTimePeriod(period: duration, date: date);
 
     return LessonModel(
+      number: map['number']??0,
       nameSchool: map['nameSchool']??'',
         nameAuditory: map['nameAuditory']??'',
         isFirst: map['isFirst']??false,
