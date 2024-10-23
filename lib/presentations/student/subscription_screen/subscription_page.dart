@@ -217,7 +217,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                       Dialoger.showModalBottomMenu(
                         blurred: false,
                           title: lessons.length>1?'':
-                          'Урок №${lessons[0].number} из ${_maxNumberLessonFromSubs(idSub: lessons[0].idSub,subs: state.directions[_selIndexDirection].subscriptionsAll)}',
+                          'Урок № ${lessons[0].number} из ${_maxNumberLessonFromSubs(idSub: lessons[0].idSub,subs: state.directions[_selIndexDirection].subscriptionsAll)}',
                           args: [lessons,state.userEntity.directions],
                           content: DetailsLesson());
                     },),

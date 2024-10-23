@@ -72,12 +72,20 @@ class _CalendarState extends State<Calendar> with AuthMixin{
     _focusedDay = widget.focusedDay;
   }
 
+
+  @override
+  void dispose() {
+    super.dispose();
+  _timer.cancel();
+
+  }
+
   @override
   Widget build(BuildContext context) {
     if (widget.resetFocusDay) {
       _focusedDay = DateTime.now();
     }
-
+    _focusedDay = DateTime.now();
     _firstDay = _getFirstDate(lessons: widget.lessons);
     _lastDay = _getLastDate(lessons: widget.lessons);
 
