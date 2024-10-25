@@ -204,7 +204,6 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                     resetFocusDay: _resetFocus,
                     lessons: state.lessons,
                     onMonth: (month){
-
                       _resetFocus = false;
                        globalCurrentMonthCalendar = month;
                     },

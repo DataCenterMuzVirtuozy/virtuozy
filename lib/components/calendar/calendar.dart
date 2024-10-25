@@ -76,7 +76,7 @@ class _CalendarState extends State<Calendar> with AuthMixin{
   @override
   void dispose() {
     super.dispose();
-  _timer.cancel();
+
 
   }
 
@@ -85,7 +85,6 @@ class _CalendarState extends State<Calendar> with AuthMixin{
     if (widget.resetFocusDay) {
       _focusedDay = DateTime.now();
     }
-    _focusedDay = DateTime.now();
     _firstDay = _getFirstDate(lessons: widget.lessons);
     _lastDay = _getLastDate(lessons: widget.lessons);
 
@@ -196,6 +195,22 @@ class _CalendarState extends State<Calendar> with AuthMixin{
               _focusedDay = day;
             },
             calendarBuilders: CalendarBuilders(
+              outsideBuilder: (context, day, values){
+                print('Out ${day.month}');
+                return _handlerDay(
+                    focusedDayStatus: widget.focusedDayStatus,
+                    visibleStatusColor: widget.visibleStatusColor,
+                    clickableDay: widget.clickableDay,
+                    dateTime: day,
+                    monthOfDay: day.month,
+                    lessons: widget.lessons,
+                    day: day.day,
+                    context: context,
+                    onLesson: (List<Lesson> lessons) {
+                      widget.onLesson.call(lessons);
+                    });
+
+              },
               todayBuilder: (context, day, values) {
                 if(userType.isTeacher){
                   return _handleTodayTeacher(

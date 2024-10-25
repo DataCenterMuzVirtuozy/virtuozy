@@ -21,6 +21,7 @@ import '../../../components/dialogs/sealeds.dart';
 import '../../../components/drawing_menu_selected.dart';
 import '../../../components/title_page.dart';
 import '../../../domain/entities/lesson_entity.dart';
+import '../../../domain/entities/subscription_entity.dart';
 import '../../../resourses/colors.dart';
 import '../../../utils/text_style.dart';
 import '../subscription_screen/subscription_page.dart';
@@ -69,6 +70,10 @@ class _SchedulePageState extends State<SchedulePage> with AuthMixin{
         refreshDirection: true,
         currentDirIndex: _selIndexDirection,
         month: globalCurrentMonthCalendar));
+  }
+
+  int _maxNumberLessonFromSubs({required int idSub, required List<SubscriptionEntity> subs}){
+    return subs.firstWhere((s)=>s.id == idSub).maxLessonsCount;
   }
 
 
@@ -158,7 +163,6 @@ class _SchedulePageState extends State<SchedulePage> with AuthMixin{
                      focusedDay: _focusedDay,
                      resetFocusDay: false,
                      onDate: (date){
-                       print('Date ${date}');
                        _focusedDay = date;
                      },
                      colorFill: Theme.of(context).colorScheme.surfaceContainerHighest,
@@ -176,10 +180,10 @@ class _SchedulePageState extends State<SchedulePage> with AuthMixin{
                              refreshDirection: false,
                              allViewDir: _allViewDirection));
                        },
-                       onLesson: (lessons){
+                       onLesson: (List<Lesson> lessons){
                          Dialoger.showModalBottomMenu(
                              blurred: false,
-                             title: 'Урок №${lessons[0].id} из ${lessons[0].id+5}',
+                             title: 'Урок № ${lessons[0].number} из ${_maxNumberLessonFromSubs(idSub: lessons[0].idSub,subs: state.user.directions[_selIndexDirection].subscriptionsAll)}',
                              args: [lessons,state.user.directions],
                              content: DetailsLesson());
                         }),

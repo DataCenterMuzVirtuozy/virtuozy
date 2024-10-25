@@ -582,11 +582,11 @@ class CustomTableCalendarState<T> extends State<CustomTableCalendar<T>> {
   }
 
   Widget _buildCell(DateTime day, DateTime focusedDay) {
-    //final isOutside = day.month != focusedDay.month;
-    const isOutside = false;
-    // if (isOutside && _shouldBlockOutsideDays) {
-    //   return Container();
-    // }
+    final isOutside = day.month != focusedDay.month;
+   //const isOutside = false;
+    if (isOutside && _shouldBlockOutsideDays) {
+      return Container();
+    }
 
     return LayoutBuilder(
       builder: (context, constraints) {
