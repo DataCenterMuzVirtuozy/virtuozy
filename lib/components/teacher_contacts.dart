@@ -38,7 +38,7 @@ class TeacherContacts extends StatelessWidget{
              child: InkWell(
                child: Image.asset(whatsapp),
                onTap: () async {
-                await UrlLaunch.url(contacts[1]);
+                await UrlLaunch.url('https://wa.clck.bar/${contacts[1]}');
                },
              )),
          const Gap(5.0),
@@ -50,7 +50,7 @@ class TeacherContacts extends StatelessWidget{
                  child: Image.asset(telegram),
                ),
                onTap: () async {
-                 await UrlLaunch.url(contacts[2]);
+                 await UrlLaunch.url('https://t.me/${contacts[2]}');
                },
              ))
 

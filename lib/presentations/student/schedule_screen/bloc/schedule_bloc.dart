@@ -44,12 +44,13 @@ class ScheduleBloc extends Bloc<ScheduleEvent,ScheduleState>{
       final  schedulesList = _getDetailsListSchedules(
           userEntity: user, indexSelDirection: event.currentDirIndex,
           allViewDir: event.allViewDir);
+     final list = schedulesList.reversed;
       emit(state.copyWith(
           status: ScheduleStatus.loaded,
           user: user,
-          schedulesList: schedulesList));
+          schedulesList: list.toList()));
     }on Failure catch(e){
-
+      emit(state.copyWith(status: ScheduleStatus.error, error: e.message));
     }
   }
 
@@ -120,7 +121,6 @@ class ScheduleBloc extends Bloc<ScheduleEvent,ScheduleState>{
        }else {
          listScheduleNotifier.value = schedulesList;
        }
-
        _listenUser(event);
 
 

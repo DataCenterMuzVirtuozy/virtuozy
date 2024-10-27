@@ -196,7 +196,6 @@ class _CalendarState extends State<Calendar> with AuthMixin{
             },
             calendarBuilders: CalendarBuilders(
               outsideBuilder: (context, day, values){
-                print('Out ${day.month}');
                 return _handlerDay(
                     focusedDayStatus: widget.focusedDayStatus,
                     visibleStatusColor: widget.visibleStatusColor,
@@ -359,87 +358,91 @@ class _CalendarState extends State<Calendar> with AuthMixin{
     required bool clickableDay,
     required Function onLesson}) {
     try {
+
       final stringDays = lessons.map((e) => e.date).toList();
+
       if (stringDays.contains(DateFormat('yyyy-MM-dd').format(dateTime))) {
         Lesson lesson = lessons.firstWhere((element) =>
         DateFormat('yyyy-MM-dd')
             .parse(element.date)
-            .day == day &&
-            DateFormat('yyyy-MM-dd')
-                .parse(element.date)
-                .month == month);
-        final monthLesson = DateFormat('yyyy-MM-dd')
-            .parse(lesson.date)
-            .month;
+            .day == day);
+        // final monthLesson = DateFormat('yyyy-MM-dd')
+        //     .parse(lesson.date)
+        //     .month;
+        // if (monthLesson != monthOfDay) {
+           //   return;
+        // }
         final lessonsDay = _handleLessonsDay(lesson, lessons);
-        if (monthLesson == monthOfDay) {
-          return ValueListenableBuilder<int>(
-              valueListenable: currentDayNotifi,
-              builder: (context, valueDay, child) {
-                lesson = lesson.copyWith(status: lessonsDay.length > 1
-                    ? LessonStatus.layering
-                    : lessonsDay[0].status);
-                return Padding(
-                  padding: const EdgeInsets.all(3.0),
-                  child: InkWell(
-                      borderRadius: BorderRadius.circular(60.0),
-                      onTap: () {
-                        if (clickableDay) {
-                          onLesson.call(lessonsDay);
-                          if(!focusedDayStatus){
-                            return;
-                          }
-                          currentDayNotifi.value = day;
+        return ValueListenableBuilder<int>(
+            valueListenable: currentDayNotifi,
+            builder: (context, valueDay, child) {
+              lesson = lesson.copyWith(status: lessonsDay.length > 1
+                  ? LessonStatus.layering
+                  : lessonsDay[0].status);
+              return Padding(
+                padding: const EdgeInsets.all(3.0),
+                child: InkWell(
+                    borderRadius: BorderRadius.circular(60.0),
+                    onTap: () {
+                      if (clickableDay) {
+                        onLesson.call(lessonsDay);
+                        if(!focusedDayStatus){
+                          return;
                         }
-                      },
-                      child: Container(
-                        width: 45.0,
-                        height: 45.0,
-                        decoration: const BoxDecoration(shape: BoxShape.circle),
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Container(
-                              height: 45.0,
-                              width: 45.0,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: visibleStatusColor
-                                      ? StatusToColor.getColor(
+                        currentDayNotifi.value = day;
+                      }
+                    },
+                    child: Container(
+                      width: 45.0,
+                      height: 45.0,
+                      decoration: const BoxDecoration(shape: BoxShape.circle),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                            height: 45.0,
+                            width: 45.0,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: visibleStatusColor
+                                    ? StatusToColor.getColor(
                                     lesson: lesson,
                                     userType: userType)
-                                      : Colors.transparent,
-                                  border: Border.all(
-                                      color: colorOrange,
-                                      width:
-                                      valueDay == day ? 3.0 : 1.0)
-                              ),
-                            ),
-                            Visibility(
-                                visible: lessonsDay.length > 1,
-                                child: RotationTransition(
-                                  turns:
-                                      const AlwaysStoppedAnimation(135 / 360),
-                                  child: Container(
-                                    margin: const EdgeInsets.all(5),
-                                    height: valueDay == day ? 3.0 : 1.0,
+                                    : Colors.transparent,
+                                border: Border.all(
                                     color: colorOrange,
-                                  ),
-                                )),
-                            Center(
-                              child: Text(
-                                day.toString(),
-                                style: TStyle.textStyleVelaSansBold(colorBlack),
-                              ),
+                                    width:
+                                    valueDay == day ? 3.0 : 1.0)
                             ),
-                          ],
-                        ),
-                      )),
-                );
-              });
-        }
+                          ),
+                          Visibility(
+                              visible: lessonsDay.length > 1,
+                              child: RotationTransition(
+                                turns:
+                                const AlwaysStoppedAnimation(135 / 360),
+                                child: Container(
+                                  margin: const EdgeInsets.all(5),
+                                  height: valueDay == day ? 3.0 : 1.0,
+                                  color: colorOrange,
+                                ),
+                              )),
+                          Center(
+                            child: Text(
+                              day.toString(),
+                              style: TStyle.textStyleVelaSansBold(colorBlack),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )),
+              );
+            });
+
+
       }
-    } catch (e) {}
+    } catch (e) {
+      print('Error ${e.toString()}');
+    }
   }
 
   List<Lesson> _handleLessonsDay(Lesson lesson, List<Lesson> lessons) {
