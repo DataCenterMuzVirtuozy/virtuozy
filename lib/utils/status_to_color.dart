@@ -79,7 +79,7 @@ class StatusToColor{
  }
 
    static Color getColor({required Lesson lesson, UserType userType = UserType.unknown,}){
-
+     print('Status ${lesson.status} Date ${lesson.date} Type ${lesson.type}');
      if(userType.isTeacher){
        return _colors[3];
       }

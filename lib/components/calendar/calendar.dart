@@ -365,7 +365,10 @@ class _CalendarState extends State<Calendar> with AuthMixin{
         Lesson lesson = lessons.firstWhere((element) =>
         DateFormat('yyyy-MM-dd')
             .parse(element.date)
-            .day == day);
+            .day == day&&DateFormat('yyyy-MM-dd')
+            .parse(element.date)
+            .month == monthOfDay&& DateFormat('yyyy-MM-dd')
+            .parse(element.date).year == dateTime.year);
         // final monthLesson = DateFormat('yyyy-MM-dd')
         //     .parse(lesson.date)
         //     .month;
