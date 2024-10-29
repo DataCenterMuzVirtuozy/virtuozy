@@ -168,7 +168,7 @@ class _MyCheckboxMenuState extends State<MyCheckboxMenu> {
               return TextButton(
                 focusNode: _buttonFocusNode,
                 onPressed: () async {
-                 await LocationUtil.handleLocationPermission(context: context);
+                 await LocationUtil.handleLocationPermission(context: context,isMenuAction: true);
 
                 },
                 child: Icon(
