@@ -48,7 +48,6 @@ class UserService{
 
 
        if((res.data as List<dynamic>).isEmpty){
-        await PreferencesUtil.clear();
         return throw   Failure('Пользователь не найден'.tr());
        }
 

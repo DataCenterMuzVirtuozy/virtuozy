@@ -13,6 +13,7 @@ import 'dialogs/sealeds.dart';
 
 late MenuController controllerMenu;
 
+
 class MyCheckboxMenu extends StatefulWidget {
   const MyCheckboxMenu({super.key});
 
@@ -37,28 +38,34 @@ class _MyCheckboxMenuState extends State<MyCheckboxMenu> {
   @override
   void initState() {
     super.initState();
-    final urlSchool = PreferencesUtil.urlSchool;
+   _initLocation();
+  }
 
-    if (urlSchool.isEmpty) {
-      _empty = true;
-      _nsk = false;
-      _msk = false;
-    } else if (urlSchool == mskUrl) {
-      _msk = true;
-      _nsk = false;
-      _empty = false;
-    } else {
-      _nsk = true;
-      _msk = false;
-      _empty = false;
-    }
+  void _initLocation() {
+    final urlSchool = PreferencesUtil.urlSchool;
+      if (urlSchool.isEmpty) {
+        _empty = true;
+        _nsk = false;
+        _msk = false;
+      } else if (urlSchool == mskUrl) {
+        _msk = true;
+        _nsk = false;
+        _empty = false;
+      } else {
+        _nsk = true;
+        _msk = false;
+        _empty = false;
+      }
   }
 
   @override
   Widget build(BuildContext context) {
+
     return CallbackShortcuts(
       bindings: <ShortcutActivator, VoidCallback>{
-        _showShortcut: () {},
+        _showShortcut: () {
+
+        },
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,10 +168,7 @@ class _MyCheckboxMenuState extends State<MyCheckboxMenu> {
               return TextButton(
                 focusNode: _buttonFocusNode,
                 onPressed: () async {
-                 final accessLoc = await LocationUtil.handleLocationPermission(context: context);
-                 Dialoger.showCustomDialog(contextUp: context,
-                       args: accessLoc,
-                       content: OpenSettingsLocations());
+                 await LocationUtil.handleLocationPermission(context: context);
 
                 },
                 child: Icon(

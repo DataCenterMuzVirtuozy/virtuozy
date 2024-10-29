@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 
 import '../../components/dialogs/dialoger.dart';
 import '../../components/dialogs/sealeds.dart';
+import '../../utils/preferences_util.dart';
 
 class LocationUtil{
 

@@ -62,10 +62,8 @@ class _LogInPageState extends State<LogInPage> {
   }
 
   void _handleLocation() async {
-    final accessLoc =
-        await LocationUtil.handleLocationPermission(context: context);
-    Dialoger.showCustomDialog(
-        contextUp: context, args: accessLoc, content: OpenSettingsLocations());
+    await LocationUtil.handleLocationPermission(context: context);
+
   }
 
   @override
@@ -86,12 +84,11 @@ class _LogInPageState extends State<LogInPage> {
           child: BlocConsumer<AuthBloc, AuthState>(
             listener: (c, s) {
               if (s.authStatus == AuthStatus.baseUrlEmpty) {
-                if (controllerMenu.isOpen) {
-                  controllerMenu.close();
-                } else {
-                  controllerMenu.open();
-                }
-
+                // if (controllerMenu.isOpen) {
+                //   controllerMenu.close();
+                // } else {
+                //   controllerMenu.open();
+                // }
                 _handleLocation();
               }
 

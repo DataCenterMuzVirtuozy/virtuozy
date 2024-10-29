@@ -10,6 +10,7 @@ import 'package:virtuozy/components/dialogs/sealeds.dart';
 
 import '../../../../resourses/colors.dart';
 import '../../../../utils/text_style.dart';
+import '../../../checkbox_menu.dart';
 
 class OpenLocationSettingsContent extends StatefulWidget{
   const OpenLocationSettingsContent({super.key, required this.locationEnable});
@@ -48,6 +49,7 @@ class _OpenLocationSettingsContentState extends State<OpenLocationSettingsConten
               TextButton(
                   onPressed: () {
                     Navigator.pop(context);
+                    controllerMenu.open();
                   },
                   child: Text('Отмена'.tr(),
                       textAlign: TextAlign.center,
