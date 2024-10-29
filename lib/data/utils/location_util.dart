@@ -1,6 +1,7 @@
 
 
- import 'package:flutter/widgets.dart';
+ import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../../components/checkbox_menu.dart';
@@ -15,15 +16,18 @@ class LocationUtil{
      bool serviceEnabled;
      LocationPermission permission;
      serviceEnabled = await Geolocator.isLocationServiceEnabled();
-     print('A1');
+
      if (!serviceEnabled) {
        Dialoger.showCustomDialog(contextUp: context,
            args: false,
            content: OpenSettingsLocations());
 
        return false;
+     }else{
+       Dialoger.showModalBottomMenu(title: 'Поиск местоположения'.tr(),
+           content: FindLocation());
      }
-     print('A2');
+
      permission = await Geolocator.checkPermission();
      if (permission == LocationPermission.denied) {
        permission = await Geolocator.requestPermission();
@@ -34,7 +38,7 @@ class LocationUtil{
          return false;
        }
      }
-     print('A3');
+
      if (permission == LocationPermission.deniedForever) {
        Dialoger.showActionMaterialSnackBar(
            context: context,
@@ -42,12 +46,8 @@ class LocationUtil{
            'Разрешения на определение местоположения навсегда отклонены, мы не можем запрашивать разрешения.');
        return false;
      }
-     print('A4');
-     final baseUrlApi = PreferencesUtil.urlSchool;
-     if(baseUrlApi.isEmpty||isMenuAction){
-       controllerMenu.open();
-       return false;
-     }
+
+
      return true;
    }
  }
