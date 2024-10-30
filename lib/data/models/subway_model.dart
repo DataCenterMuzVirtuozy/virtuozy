@@ -23,15 +23,15 @@ class SubwayModel {
 
 
     factory SubwayModel.fromMap(Map<String, dynamic> map) {
-      String color = '';
-      if (map['color'] == null) {
-        color = map['data']['color'] as String;
-      } else {
-        color = map['color'] as String;
-      }
+      // String color = '';
+      // if (map['color'] == null) {
+      //   color = map['data']['color']??'';
+      // } else {
+      //   color = map['color'] as String;
+      // }
       return SubwayModel(
-        color: color,
-        name: map['value'] as String,
+        color: map['color']??'',
+        name: map['value']??'',
       );
     }
   }

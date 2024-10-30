@@ -65,18 +65,17 @@ class UserModel{
     if(directions.length>5)directions.removeAt(9); //todo index 9 from crm - {id: null, name: Не выбрано, nameTeacher:  Не выбрано }
    //final settingsMap = mapUser['settingNotifi'] as List<dynamic>; //todo type 'String' is not a subtype of type 'List<dynamic>' in type cast
     //final docs =  mapUser['documents'] as List<dynamic>;//todo type 'String' is not a subtype of type 'List<dynamic>' in type cast
-    final subway  = SubwayModel.fromMap(mapUser['subway']);//todo type 'String' is not a subtype of type 'List<dynamic>' in type cast
+    final subway  = SubwayModel.fromMap(mapUser['subway']);
     return UserModel(
       //notifiSttings: settingsMap.map((e) => NotifiSettingModel.fromMap(e)).toList(),
       notifiSttings: [],
       //documents: docs.map((e) => DocumentModel.fromMap(e)).toList(),
       documents: [],
-      //id: mapUser['id'] as int, //todo from crm null
       id: mapUser['id']??1,
-      lastName: mapUser['lastName'] as String,
-      firstName: mapUser['firstName'] as String,
-      branchName: mapUser['branchName'] as String,
-      phoneNumber: mapUser['phoneNumber'] as String,
+      lastName: mapUser['lastName']??'',
+      firstName: mapUser['firstName']??'',
+      branchName: mapUser['branchName']??'',
+      phoneNumber: mapUser['phoneNumber']??'',
       userStatus: mapUser['userStatus'] as int, //todo from crm null 1- auth 2 - mod 0 - not auth
       userType: mapUser['userType'] as int,
       directions: directions

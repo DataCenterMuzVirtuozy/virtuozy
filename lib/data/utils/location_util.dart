@@ -24,8 +24,9 @@ class LocationUtil{
 
        return false;
      }else{
-       Dialoger.showModalBottomMenu(title: 'Поиск местоположения'.tr(),
-           content: FindLocation());
+       Dialoger.showCustomDialog(contextUp: context,
+           args: true,
+           content: OpenSettingsLocations());
      }
 
      permission = await Geolocator.checkPermission();

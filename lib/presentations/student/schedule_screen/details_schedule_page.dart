@@ -233,7 +233,7 @@ class _DetailsSchedulePageState extends State<DetailsSchedulePage> {
                             color: colorOrange,size: 12.0),
                       ),
                       const Gap(5),
-                      Text(lesson.idSchool,
+                      Text(lesson.nameSchool,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: TStyle.textStyleVelaSansRegular( Theme.of(context).textTheme.displayMedium!.color!, size: 12.0)),

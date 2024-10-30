@@ -114,16 +114,16 @@ class _FindLocationContentState extends State<FindLocationContent> with TickerPr
             const Gap(15.0),
             GestureDetector(
               onTap: (){
-                if(_administrativeArea.isEmpty){
-                  return;
-                }
-                setState(()  {
-                   if(_visibleAdminArea){
-                     _visibleAdminArea = false;
-                   }else{
-                     _visibleAdminArea = true;
-                   }
-                });
+                // if(_administrativeArea.isEmpty){
+                //   return;
+                // }
+                // setState(()  {
+                //    if(_visibleAdminArea){
+                //      _visibleAdminArea = false;
+                //    }else{
+                //      _visibleAdminArea = true;
+                //    }
+                // });
               },
               child: _visibleAdminArea?Text(_administrativeArea, textAlign: TextAlign.center,
               style: TStyle.textStyleVelaSansBold(colorGrey,size: 18),):

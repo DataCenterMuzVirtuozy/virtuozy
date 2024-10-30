@@ -30,7 +30,7 @@ class DateTimeParser{
         return '';
       }
       final dt =  DateFormat('yyyy-MM-dd').parse(date);
-      return DateFormat.yMd().format(dt);
+      return DateFormat('dd.MM.yyyy').format(dt);
     }
 
 

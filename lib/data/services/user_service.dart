@@ -121,6 +121,8 @@ class UserService{
      throw  Failure(e.message);
     } on DioException catch(e){
      throw  Failure(e.toString());
+    } catch (e){
+      throw  Failure(e.toString());
     }
    }
 
