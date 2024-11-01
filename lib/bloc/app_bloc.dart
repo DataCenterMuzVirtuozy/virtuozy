@@ -1,8 +1,10 @@
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:virtuozy/components/app_bar.dart';
 import 'package:virtuozy/domain/entities/teacher_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/domain/repository/teacher_repository.dart';
@@ -68,6 +70,8 @@ part 'app_state.dart';
   }on Failure catch(e){
    emit(state.copyWith(authStatusCheck: AuthStatusCheck.error,error: e.message));
 
+  } catch (e){
+   emit(state.copyWith(authStatusCheck: AuthStatusCheck.error,error: 'Ошибка получения данных'.tr()));
   }
 
   }

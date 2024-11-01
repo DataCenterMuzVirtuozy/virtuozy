@@ -83,13 +83,13 @@ class UserModel{
               DirectionModel.fromMap(mapDirection: e, mapSubs: mapSubsAll,lessons:lessons))
           .toList(),
       sex: mapUser['sex'] as String,
-      about_me: mapUser['about_me'] as String,
-      date_birth: mapUser['date_birth'] as String,
+      about_me: mapUser['about_me']??'',
+      date_birth: mapUser['date_birth']??'',
       registration_date: mapUser['registration_date']??'',
       has_kids: mapUser['has_kids'] == '1'?true:false,
       subways: [subway],
-      who_find: mapUser['who_find'] as String,
-      avaUrl: mapUser['avaUrl'] as String,
+      who_find: mapUser['who_find']??'',
+      avaUrl: mapUser['avaUrl']??'',
     );
   }
 }
