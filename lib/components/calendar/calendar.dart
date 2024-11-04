@@ -368,7 +368,7 @@ class _CalendarState extends State<Calendar> with AuthMixin{
             .day == day&&DateFormat('yyyy-MM-dd')
             .parse(element.date)
             .month == monthOfDay&& DateFormat('yyyy-MM-dd')
-            .parse(element.date).year == dateTime.year);
+            .parse(element.date).year == dateTime.year );
         // final monthLesson = DateFormat('yyyy-MM-dd')
         //     .parse(lesson.date)
         //     .month;
@@ -376,6 +376,7 @@ class _CalendarState extends State<Calendar> with AuthMixin{
            //   return;
         // }
         final lessonsDay = _handleLessonsDay(lesson, lessons);
+
         return ValueListenableBuilder<int>(
             valueListenable: currentDayNotifi,
             builder: (context, valueDay, child) {

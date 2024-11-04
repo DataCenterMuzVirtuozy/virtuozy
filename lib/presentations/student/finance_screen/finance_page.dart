@@ -120,6 +120,7 @@ class _FinancePageState extends State<FinancePage> {
 
            if(s.directions.length>1){
              _allViewDirection =true;
+             _selIndexDirection = s.directions.length;
            }
            _titlesDirections = s.titlesDrawingMenu;
          }

@@ -56,7 +56,7 @@ class _SchedulePageState extends State<SchedulePage> with AuthMixin{
     globalCurrentMonthCalendar =  widget.currentMonth;
     context.read<ScheduleBloc>().add(GetScheduleEvent(
       refreshMonth: false,
-      allViewDir: false,
+      allViewDir: true,
       refreshDirection: true,
         currentDirIndex: _selIndexDirection,
         month: globalCurrentMonthCalendar));
