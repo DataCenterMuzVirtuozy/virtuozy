@@ -21,7 +21,7 @@ class TransactionModel{
 
     static Map<String, dynamic> toMap({required TransactionEntity transactionEntity}) {
     return {
-      'typeTransaction': transactionEntity.typeTransaction == TypeTransaction.addBalance?1:0,
+      'typeTransaction': transactionEntity.typeTransaction == TypeTransaction.addBalance?1:2,
       'time': transactionEntity.time,
       'date': transactionEntity.date,
       'quantity': transactionEntity.quantity,

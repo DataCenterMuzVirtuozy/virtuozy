@@ -11,7 +11,7 @@ class TransactionMapper{
       idUser: transactionModel.idUser,
       idDir: transactionModel.idDir,
         date: transactionModel.date,
-        typeTransaction: transactionModel.typeTransaction == 0?TypeTransaction.minusLesson:TypeTransaction.addBalance,
+        typeTransaction: transactionModel.typeTransaction == 2?TypeTransaction.minusLesson:TypeTransaction.addBalance,
         time: transactionModel.time,
         quantity: transactionModel.quantity);
   }
