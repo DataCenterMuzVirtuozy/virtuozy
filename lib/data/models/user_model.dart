@@ -66,6 +66,7 @@ class UserModel{
    //final settingsMap = mapUser['settingNotifi'] as List<dynamic>; //todo type 'String' is not a subtype of type 'List<dynamic>' in type cast
     //final docs =  mapUser['documents'] as List<dynamic>;//todo type 'String' is not a subtype of type 'List<dynamic>' in type cast
     final subway  = SubwayModel.fromMap(mapUser['subway']);
+    final List<SubwayModel> listSubway = subway.color.isEmpty?[]:[subway];
     return UserModel(
       //notifiSttings: settingsMap.map((e) => NotifiSettingModel.fromMap(e)).toList(),
       notifiSttings: [],
@@ -87,7 +88,7 @@ class UserModel{
       date_birth: mapUser['date_birth']??'',
       registration_date: mapUser['registration_date']??'',
       has_kids: mapUser['has_kids'] == '1'?true:false,
-      subways: [subway],
+      subways: listSubway,
       who_find: mapUser['who_find']??'',
       avaUrl: mapUser['avaUrl']??'',
     );

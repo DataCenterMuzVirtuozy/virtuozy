@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import '../../../components/app_bar.dart';
+import '../../../components/box_info.dart';
 import '../../../components/drawing_menu_selected.dart';
 import '../../../domain/entities/lesson_entity.dart';
 import '../../../domain/entities/schedule_lessons.dart';
@@ -31,7 +32,7 @@ class DetailsSchedulePage extends StatefulWidget{
 class _DetailsSchedulePageState extends State<DetailsSchedulePage> {
   int _selIndexDirection = 0;
   List<String> _titlesDirections = [];
-  bool _allViewDirection = false;
+  bool _allViewDirection = true;
 
 
   @override
@@ -39,7 +40,7 @@ class _DetailsSchedulePageState extends State<DetailsSchedulePage> {
     super.initState();
     context.read<ScheduleBloc>().add(GetDetailsScheduleEvent(
       refreshDirection: true,
-        allViewDir: false,
+        allViewDir: _allViewDirection,
         currentDirIndex: _selIndexDirection));
   }
 
@@ -58,6 +59,7 @@ class _DetailsSchedulePageState extends State<DetailsSchedulePage> {
          }
        },
        builder: (context,state) {
+
 
 
          if(state.status == ScheduleStatus.loading){
@@ -87,7 +89,19 @@ class _DetailsSchedulePageState extends State<DetailsSchedulePage> {
                          currentDirIndex: _selIndexDirection));
                    },),
                  ),
-                 const Gap(10.0),
+
+                 Visibility(
+               visible:  state.schedulesList.isEmpty && state.status == ScheduleStatus.loaded,
+              child: Padding(
+                padding:  EdgeInsets.only(top: MediaQuery.sizeOf(context).height*0.3),
+                child: BoxInfo(
+                    buttonVisible:false,
+                    title: 'Список пуст'.tr(),
+                    description: 'У вас нет уроков в данном направлении'.tr(),
+                    iconData: CupertinoIcons.music_note_list),
+              ),
+            ),
+
                  Column(
                    children: List.generate(state.schedulesList.length, (index) {
                      return  ItemScheduleDetails(scheduleLessons: state.schedulesList[index],

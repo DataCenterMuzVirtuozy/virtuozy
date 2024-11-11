@@ -318,6 +318,10 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
 
   Color _getColorSubway(String color){
     final code = color;
+    print('Code color ${code}');
+    if(code.isEmpty){
+      return Colors.transparent;
+    }
     return  Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
@@ -399,13 +403,13 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
                                     shape: BoxShape.circle,
                                     color: theme == ThemeStatus.dark?null:colorWhite,
                                     border: Border.all(color:
-                                    _getColorSubway( _subways[index].color),
+                                    _getColorSubway(_subways[0].color), //todo list only with one item
                                         width: 1 )
                                   ),
                                   padding: const EdgeInsets.all(2),
                                  margin: const EdgeInsets.only(top: 3),
                                   child:  Icon(Icons.directions_subway,
-                                      color: _getColorSubway( _subways[index].color),
+                                      color: _getColorSubway( _subways[0].color), //todo list only with one item
                                       size: 14),
                                 ),
                                                                     const Gap(10),

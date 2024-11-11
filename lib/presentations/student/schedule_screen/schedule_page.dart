@@ -45,7 +45,7 @@ class _SchedulePageState extends State<SchedulePage> with AuthMixin{
 
   int _selIndexDirection = 0;
   List<String> _titlesDirections = [];
-  bool _allViewDirection = false;
+  bool _allViewDirection = true;
   late DateTime _focusedDay;
   int _currentMonth = 0;
 
@@ -56,7 +56,7 @@ class _SchedulePageState extends State<SchedulePage> with AuthMixin{
     globalCurrentMonthCalendar =  widget.currentMonth;
     context.read<ScheduleBloc>().add(GetScheduleEvent(
       refreshMonth: false,
-      allViewDir: true,
+      allViewDir: _allViewDirection,
       refreshDirection: true,
         currentDirIndex: _selIndexDirection,
         month: globalCurrentMonthCalendar));
@@ -66,7 +66,7 @@ class _SchedulePageState extends State<SchedulePage> with AuthMixin{
   Future<void> _refreshData() async {
     context.read<ScheduleBloc>().add(RefreshDataEvent(
         refreshMonth: false,
-        allViewDir: false,
+        allViewDir: _allViewDirection,
         refreshDirection: true,
         currentDirIndex: _selIndexDirection,
         month: globalCurrentMonthCalendar));
