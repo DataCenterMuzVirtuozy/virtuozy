@@ -46,7 +46,7 @@ class _SupportListContentState extends State<SupportListContent>
   }
 
   String _getTitle(TypeMessager typeMessager, int index, String idFilial) {
-    if (idFilial == 'Москва') {
+    if (idFilial == 'msk') {
       if (TypeMessager.telegram == typeMessager) {
         return listSupportTelegramMSK[index];
       } else {
@@ -62,7 +62,7 @@ class _SupportListContentState extends State<SupportListContent>
   }
 
   int _getLength(TypeMessager typeMessager, String idFilial) {
-    if (idFilial == 'Москва') {
+    if (idFilial == 'msk') {
       if (TypeMessager.telegram == typeMessager) {
         return listSupportTelegramMSK.length;
       } else {
@@ -110,7 +110,7 @@ class _SupportListContentState extends State<SupportListContent>
                             textColorBlack(
                               context,
                             ),
-                            size: 20),
+                            size: 16),
                       ),
                     )
                   ],

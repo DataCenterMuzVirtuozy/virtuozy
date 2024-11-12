@@ -15,7 +15,9 @@ late MenuController controllerMenu;
 
 
 class MyCheckboxMenu extends StatefulWidget {
-  const MyCheckboxMenu({super.key});
+  const MyCheckboxMenu({super.key, required this.onChange});
+
+  final Function onChange;
 
   @override
   State<MyCheckboxMenu> createState() => _MyCheckboxMenuState();
@@ -92,6 +94,7 @@ class _MyCheckboxMenuState extends State<MyCheckboxMenu> {
                             if (_msk) {
                               _empty = false;
                               _nsk = false;
+                              widget.onChange.call('msk');
                             }
                           });
                           await PreferencesUtil.setUrlSchool(mskUrl);
@@ -121,6 +124,7 @@ class _MyCheckboxMenuState extends State<MyCheckboxMenu> {
                             if (_nsk) {
                               _empty = false;
                               _msk = false;
+                              widget.onChange.call('nsk');
                             }
                           });
                           await PreferencesUtil.setUrlSchool(nskUrl);
@@ -150,6 +154,7 @@ class _MyCheckboxMenuState extends State<MyCheckboxMenu> {
                             if (_empty) {
                               _nsk = false;
                               _msk = false;
+                              widget.onChange.call('');
                             }
                           });
                           await PreferencesUtil.setUrlSchool('');

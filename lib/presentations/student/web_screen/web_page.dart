@@ -30,7 +30,8 @@ class _WebPageState extends State<WebPage> with AuthMixin{
   @override
   void initState() {
     super.initState();
-    if(user.branchName == 'Москва'){
+    print('City ${user.branchName}');
+    if(user.branchName == 'msk'){
        _urlWeb = Endpoints.urlMSK;
     }else{
       _urlWeb = Endpoints.urlNSK;

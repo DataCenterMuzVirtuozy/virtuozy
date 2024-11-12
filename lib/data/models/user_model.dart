@@ -12,8 +12,10 @@ import 'package:virtuozy/data/models/subscription_model.dart';
 import 'package:virtuozy/data/models/subway_model.dart';
 import 'package:virtuozy/domain/entities/subscription_entity.dart';
 import 'package:virtuozy/utils/date_time_parser.dart';
+import 'package:virtuozy/utils/preferences_util.dart';
 
 import '../../domain/entities/notifi_setting_entity.dart';
+import '../../utils/contact_school_by_location.dart';
 import 'lesson_model.dart';
 
 class UserModel{
@@ -67,6 +69,7 @@ class UserModel{
     //final docs =  mapUser['documents'] as List<dynamic>;//todo type 'String' is not a subtype of type 'List<dynamic>' in type cast
     final subway  = SubwayModel.fromMap(mapUser['subway']);
     final List<SubwayModel> listSubway = subway.color.isEmpty?[]:[subway];
+    final branchName = ContactSchoolByLocation.getIdLocation();
     return UserModel(
       //notifiSttings: settingsMap.map((e) => NotifiSettingModel.fromMap(e)).toList(),
       notifiSttings: [],
@@ -75,7 +78,7 @@ class UserModel{
       id: mapUser['id']??1,
       lastName: mapUser['lastName']??'',
       firstName: mapUser['firstName']??'',
-      branchName: mapUser['branchName']??'',
+      branchName: branchName,    //mapUser['branchName']??'',
       phoneNumber: mapUser['phoneNumber']??'',
       userStatus: mapUser['userStatus'] as int, //todo from crm null 1- auth 2 - mod 0 - not auth
       userType: mapUser['userType'] as int,

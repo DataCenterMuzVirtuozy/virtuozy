@@ -5,7 +5,8 @@
 
  String  get mskUrl => 'https://msk.crm-muz.ru/api';
  String get nskUrl => 'https://nsk.crm-muz.ru/api';
-
+  String get numMsk => '8 (499) 112-43-97';
+  String get numNsk => '7 (383) 227-84-56';
 
 
 List<String> get titlesDrawMenuStudent => [
@@ -37,8 +38,8 @@ List<String> get titlesDrawMenuStudent => [
  ];
 
  List<String> get listSupportWhatsappMSK =>[
-   'Музыкальная школа Виртуозы, м. Студенческая',
-   'Музыкальная школа Виртуозы, м. Гагаринская',
+   'Музыкальная школа Виртуозы, м. Парк Культуры',
+   'Музыкальная школа Виртуозы, м. Таганская'
 
  ];
 

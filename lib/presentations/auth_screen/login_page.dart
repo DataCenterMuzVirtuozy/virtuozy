@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
@@ -8,6 +9,7 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:virtuozy/components/buttons.dart';
 import 'package:virtuozy/components/checkbox_menu.dart';
+import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/add_lesson_content.dart';
 import 'package:virtuozy/components/dialogs/dialoger.dart';
 import 'package:virtuozy/presentations/auth_screen/bloc/auth_bloc.dart';
 import 'package:virtuozy/presentations/auth_screen/bloc/auth_event.dart';
@@ -16,6 +18,8 @@ import 'package:virtuozy/presentations/student/subscription_screen/bloc/sub_bloc
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/resourses/images.dart';
 import 'package:virtuozy/router/paths.dart';
+import 'package:virtuozy/utils/contact_school_by_location.dart';
+import 'package:virtuozy/utils/preferences_util.dart';
 
 import '../../components/dialogs/sealeds.dart';
 import '../../components/text_fields.dart';
@@ -35,6 +39,7 @@ class _LogInPageState extends State<LogInPage> {
   late TextEditingController _codeController;
   late TextEditingController _phoneController;
   bool _darkTheme = false;
+  String _phoneNum = '';
   late MaskTextInputFormatter _maskFormatter;
 
   @override
@@ -70,7 +75,13 @@ class _LogInPageState extends State<LogInPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: const [MyCheckboxMenu()],
+        actions:  [MyCheckboxMenu(onChange: (idLoc){
+          setState(() {
+            _phoneNum = ContactSchoolByLocation.getPhoneNumberByIdLocation(idLoc);
+          });
+
+
+        },)],
         iconTheme: IconThemeData(color: Theme.of(context).iconTheme.color),
         backgroundColor: Theme.of(context).colorScheme.background,
         centerTitle: true,
@@ -91,6 +102,7 @@ class _LogInPageState extends State<LogInPage> {
                 // }
                 _handleLocation();
               }
+
 
               if (s.error.isNotEmpty) {
                 Dialoger.showActionMaterialSnackBar(
@@ -148,27 +160,30 @@ class _LogInPageState extends State<LogInPage> {
                           iconData: Icons.code,
                           fillColor: colorPink.withOpacity(0.5)),
                       const Gap(20.0),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Не пришел пароль по СМС? Позвоните по телефону'
-                                .tr(),
-                            textAlign: TextAlign.center,
-                            style: TStyle.textStyleVelaSansMedium(colorRed,
-                                size: 14.0),
-                          ),
-                          TextButton(
-                              onPressed: () async {
-                                await _launchUrlTel(tel: '8 (499) 322-71-04');
-                              },
-                              child: Text(
-                                '8 (499) 322-71-04',
-                                style: TStyle.textStyleVelaSansRegularUnderline(
-                                    colorRed,
-                                    size: 16.0),
-                              ))
-                        ],
+                      Visibility(
+                        visible: _phoneNum.isNotEmpty,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Не пришел пароль по СМС? Позвоните по телефону'
+                                  .tr(),
+                              textAlign: TextAlign.center,
+                              style: TStyle.textStyleVelaSansMedium(colorRed,
+                                  size: 14.0),
+                            ),
+                            TextButton(
+                                onPressed: () async {
+                                  await _launchUrlTel(tel: _phoneNum);
+                                },
+                                child: Text(
+                                  _phoneNum,
+                                  style: TStyle.textStyleVelaSansRegularUnderline(
+                                      colorRed,
+                                      size: 16.0),
+                                ))
+                          ],
+                        ).animate().fade(duration: const Duration(milliseconds: 700)),
                       ),
                       const Gap(20.0),
                       SubmitButton(
