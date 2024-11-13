@@ -84,6 +84,7 @@ class UserMapper{
 
   static DirectionLesson _fromDirectionModel(DirectionModel directionModel){
     return DirectionLesson(
+      nameTeacher: directionModel.nameTeacher,
       id: directionModel.id,
         bonus: directionModel.bonus.map((e) => _fromApiBonus(bonusModel: e)).toList(),
         subscriptionsAll: fromApiPriceSubAll(directionModel.subscriptionsAll),

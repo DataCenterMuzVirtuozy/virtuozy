@@ -64,7 +64,7 @@ class UserModel{
   factory UserModel.fromMap({required Map<String, dynamic> mapUser,required List<dynamic> mapSubsAll,required List<dynamic> lessons}) {
 
     final directions = (mapUser['directions'] as List<dynamic>);
-    if(directions.length>5)directions.removeAt(9); //todo index 9 from crm - {id: null, name: Не выбрано, nameTeacher:  Не выбрано }
+    //if(directions.length>5)directions.removeAt(9); //todo index 9 from crm - {id: null, name: Не выбрано, nameTeacher:  Не выбрано }
    //final settingsMap = mapUser['settingNotifi'] as List<dynamic>; //todo type 'String' is not a subtype of type 'List<dynamic>' in type cast
     //final docs =  mapUser['documents'] as List<dynamic>;//todo type 'String' is not a subtype of type 'List<dynamic>' in type cast
     final subway  = SubwayModel.fromMap(mapUser['subway']);
@@ -104,6 +104,7 @@ class UserModel{
 
  class DirectionModel{
    final int id;
+   final String nameTeacher;
    final List<BonusModel> bonus;
    final List<SubscriptionModel> subscriptionsAll;
    final List<SubscriptionModel> lastSubscriptions;
@@ -111,6 +112,7 @@ class UserModel{
    final List<LessonModel> lessons;
 
    const DirectionModel({
+     required this.nameTeacher,
      required this.id,
     required this.bonus,
      required this.subscriptionsAll,
@@ -125,6 +127,7 @@ class UserModel{
      int index = 0;
     //final lessons =  mapDirection['lessons'] as List<dynamic>;
     final nameDirection = mapDirection['name'] as String;
+    final nameTeacherDir = mapDirection['nameTeacher']??'';
     final subs = mapSubs.map((e) => SubscriptionModel.fromMap(e,nameDirection)).toList();
     final subsDir = subs.where((element) =>mapDirection['id']==null?false: element.idDir == (mapDirection['id'] as int)).toList();
     final lastSub = _getLastSub(subsDir);
@@ -132,6 +135,7 @@ class UserModel{
    // final bonus = mapDirection['bonus'] as List<dynamic>;
 
     return DirectionModel(
+      nameTeacher: nameTeacherDir,
       id: idDir,
      // bonus: bonus.map((e) => BonusModel.fromMap(e,nameDirection)).toList(),
       bonus: [],

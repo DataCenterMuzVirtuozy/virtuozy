@@ -146,9 +146,11 @@ class DirectionLesson{
   final List<SubscriptionEntity> subscriptionsAll;
   final List<SubscriptionEntity> lastSubscriptions;
   final String name;
+  final String nameTeacher;
   final List<Lesson> lessons;
 
   const DirectionLesson({
+    required this.nameTeacher,
     required this.id,
     required this.lastSubscriptions,
     required this.bonus,
@@ -159,7 +161,7 @@ class DirectionLesson{
 
 
   factory DirectionLesson.unknown(){
-    return const DirectionLesson(id: 0, lastSubscriptions: [], bonus: [], subscriptionsAll: [], name: '', lessons: []);
+    return const DirectionLesson(id: 0, lastSubscriptions: [],nameTeacher: '', bonus: [], subscriptionsAll: [], name: '', lessons: []);
   }
 
 
@@ -171,10 +173,12 @@ class DirectionLesson{
     List<SubscriptionEntity>? lastSubscriptions,
     String? name,
     List<Lesson>? lessons,
-    int? id
+    int? id,
+    String? nameTeacher
   }) {
     return DirectionLesson(
       id: id??this.id,
+      nameTeacher: nameTeacher??this.nameTeacher,
       lastSubscriptions: lastSubscriptions??this.lastSubscriptions,
       bonus: bonus ?? this.bonus,
       subscriptionsAll: subscriptionsAll ?? this.subscriptionsAll,

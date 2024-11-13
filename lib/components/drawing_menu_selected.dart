@@ -84,7 +84,7 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
 
   double _heightCalculate(int indexItems,double sizeText){
     final s = _items.length == 2?25.0:15.0;
-    return (sizeText*indexItems)+40.0;
+    return (sizeText*indexItems)+40;
         //+(s*indexItems);
   }
 
@@ -110,7 +110,7 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                       SizedBox(height: _itemBox+10),
+                       SizedBox(height: _itemBox+15),
                       ...List.generate(_items.length, (index){
                         return GestureDetector(
                           onTap: (){

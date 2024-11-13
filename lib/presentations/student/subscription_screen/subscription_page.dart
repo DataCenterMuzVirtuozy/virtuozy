@@ -180,7 +180,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
                    child: DrawingMenuSelected(items: _titlesDirections,
                      onSelected: (index){
-                     _resetFocus = true;
+                     _resetFocus = false;
                      _selIndexDirection = index;
                      if(index == _titlesDirections.length-1){
                        _allViewDirection = true;
@@ -508,15 +508,15 @@ class _ItemSubState extends State<ItemSub> {
       child: Column(
         children: [
           AnimatedContainer(
-            height: !_open?50:135,
+            height: !_open?80:140,
             curve: Curves.easeIn,
             duration: const Duration(milliseconds: 500),
             child: SingleChildScrollView(
               physics: const NeverScrollableScrollPhysics(),
               child: Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(widget.subscription.nameDir,
                           style:TStyle.textStyleVelaSansBold(colorGrey,size: 16.0)),
