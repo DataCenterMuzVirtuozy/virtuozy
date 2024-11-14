@@ -40,7 +40,7 @@ class DioClient {
     print('Base Url ${baseUrl}');
     final dio = Dio(
       BaseOptions(
-        baseUrl: baseUrl,
+        baseUrl: 'https://msk.crm-muz.ru/api',
         connectTimeout: const Duration(milliseconds: 15000),
         receiveTimeout: const Duration(milliseconds: 100000),
         contentType: Headers.jsonContentType,

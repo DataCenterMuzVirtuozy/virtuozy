@@ -23,23 +23,22 @@ import '../models/user_model.dart';
 
 class UserService{
 
+
+  //todo error
   Future<UserModel> signIn({required String phone, required String password, required String confirmPassword}) async {
 
     final dioApi = locator.get<DioClient>().initApi();
     try{
-      final res = await dioApi.post(Endpoints.logIn,
+      final res = await dioApi.post(Endpoints.singIn,
           queryParameters: {
             'phone': phone.replaceAll(' ', ''),
             'password':password,
             'password_confirmation':confirmPassword
           });
 
-      if((res.data as List<dynamic>).isEmpty){
-        return throw   Failure('Пользователь не найден'.tr());
-      }
-
       print('Response  ${res.data}');
-      final  token = res.data[0]['id'] as int;
+      final  token = res.data['token'];
+      await PreferencesUtil.setToken(token: token);
       //await PreferencesUtil.setToken(token: token);
       // final resSubs = await dioApi.get(Endpoints.subsUser,
       //   options: Options(
@@ -62,8 +61,9 @@ class UserService{
       return UserModel.fromMap(mapUser: res.data[0],mapSubsAll: [],lessons: []);
     } on Failure catch(e){
       throw  Failure(e.message);
-    } on DioException catch(e){
-      throw  Failure('Error');
+    } on DioException catch(e,stakeTrace){
+      print('Stake ${stakeTrace}');
+      throw  Failure('Ошибка авторизации'.tr());
     }
   }
 
