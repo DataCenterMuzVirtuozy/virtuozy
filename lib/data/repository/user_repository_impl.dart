@@ -45,4 +45,14 @@ class UserRepositoryImpl extends UserRepository{
       return await _util.subways(query: query);
   }
 
+  @override
+  Future<UserEntity> logIn({required String phone,required String password}) async {
+    return await _util.logIn(phone: phone,password: password);
+  }
+
+  @override
+  Future<UserEntity> signIn({required String phone, required String password, required String confirmPassword}) async {
+    return await _util.signIn(phone: phone,password: password,confirmPassword: confirmPassword);
+  }
+
 }

@@ -23,6 +23,15 @@ class UserUtil{
        return UserMapper.fromApi(userModel: model);
     }
 
+    Future<UserEntity> logIn({required String phone,required String password}) async {
+      final model = await _service.logIn(phone: phone,password: password);
+      return UserMapper.fromApi(userModel: model);
+    }
+    Future<UserEntity> signIn({required String phone, required String password, required String confirmPassword}) async{
+      final model = await _service.signIn(phone: phone,password: password,confirmPassword: confirmPassword);
+      return UserMapper.fromApi(userModel: model);
+    }
+
     Future<void> saveSettingNotifi({required int uid,required List<NotifiSettingsEntity> settingEntity}) async {
       await _service.saveSettingNotifi(uid: uid,settingEntity: settingEntity);
     }
@@ -39,6 +48,7 @@ class UserUtil{
     Future<String> loadAvaProfile({required int uid,required EditProfileEntity profileEntity}) async {
       return await _service.loadAvaProfile(uid: uid, profileEntity: profileEntity);
     }
+
 
     Future<List<SubwayEntity>> subways({required String  query}) async {
       final res = await _service.subways(query: query);

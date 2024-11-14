@@ -43,7 +43,7 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
       final baseUrlApi = PreferencesUtil.urlSchool;
       if(event.phone.isEmpty){
         throw Failure('Введите номер телефона'.tr());
-      }else if(event.code.isEmpty){
+      }else if(event.password.isEmpty){
         throw Failure('Введиде пароль'.tr());
       } else if(baseUrlApi.isEmpty){
         emit(state.copyWith(authStatus: AuthStatus.baseUrlEmpty, error: ''));
@@ -55,7 +55,7 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
         final teacher = await _teacherRepository.getTeacher(uid: event.phone);
         _teacherCubit.setTeacher(teacher: teacher);
         await PreferencesUtil.setTypeUser(userType: UserType.teacher);
-        await PreferencesUtil.setUID(uid: event.phone);
+        // await PreferencesUtil.setToken(uid: event.phone);
         emit(state.copyWith(authStatus: AuthStatus.authenticated));
          return;
       }
@@ -99,8 +99,8 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
         emit(state.copyWith(authStatus: AuthStatus.moderation));
         return;
       }else{
-        UserEntity user = await _userRepository.getUser(uid: event.phone);
-        await PreferencesUtil.setUID(uid: event.phone);
+        UserEntity user = await _userRepository.logIn(phone: event.phone,password: event.password);
+        //await PreferencesUtil.setUID(uid: event.phone);
         user = user.copyWith(userStatus: UserStatus.auth);
         _userCubit.setUser(user: user);
         await _createLocalUser(user);
@@ -113,7 +113,8 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
     }on Failure catch (e){
       await PreferencesUtil.clear();
       emit(state.copyWith(authStatus: AuthStatus.error,error: e.message));
-    } catch (e){
+    } catch (e,stakeTrace){
+      print('Error 3 ${e.toString()} ${stakeTrace}');
       await PreferencesUtil.clear();
       emit(state.copyWith(authStatus: AuthStatus.error,error: 'Ошибка получения данных'.tr()));
     }
@@ -124,6 +125,7 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
 
     try{
       emit(state.copyWith(authStatus: AuthStatus.processSingIn,error: ''));
+
       if(event.lastName.isEmpty){
         throw Failure('Фамилия неуказана'.tr());
       }else if(event.firstName.isEmpty){
@@ -131,8 +133,7 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
       }else if(event.phone.isEmpty){
         throw Failure('Введите номер телефона'.tr());
       }
-
-
+      UserEntity user = await _userRepository.signIn(phone: event.phone, password: event.password, confirmPassword: event.confirmPassword);
       user =  UserEntity(
           notifiSttings: [
             const NotifiSettingsEntity(name:"Уведомление об оплате",

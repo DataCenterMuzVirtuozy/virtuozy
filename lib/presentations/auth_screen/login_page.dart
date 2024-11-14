@@ -36,8 +36,9 @@ class LogInPage extends StatefulWidget {
 }
 
 class _LogInPageState extends State<LogInPage> {
-  late TextEditingController _codeController;
+
   late TextEditingController _phoneController;
+  late TextEditingController _passwordController;
   bool _darkTheme = false;
   String _phoneNum = '';
   late MaskTextInputFormatter _maskFormatter;
@@ -45,8 +46,9 @@ class _LogInPageState extends State<LogInPage> {
   @override
   void initState() {
     super.initState();
-    _codeController = TextEditingController();
+
     _phoneController = TextEditingController();
+    _passwordController = TextEditingController();
     _maskFormatter = MaskTextInputFormatter(
         mask: '+# (###) ###-##-##',
         filter: {"#": RegExp(r'[0-9]')},
@@ -62,8 +64,9 @@ class _LogInPageState extends State<LogInPage> {
   @override
   void dispose() {
     super.dispose();
-    _codeController.dispose();
+
     _phoneController.dispose();
+    _passwordController.dispose();
   }
 
   void _handleLocation() async {
@@ -155,7 +158,7 @@ class _LogInPageState extends State<LogInPage> {
                           controller: _phoneController),
                       const Gap(20.0),
                       CustomField(
-                          controller: _codeController,
+                          controller: _passwordController,
                           textHint: 'Пароль'.tr(),
                           iconData: Icons.code,
                           fillColor: colorPink.withOpacity(0.5)),
@@ -189,8 +192,8 @@ class _LogInPageState extends State<LogInPage> {
                       SubmitButton(
                         onTap: () {
                           context.read<AuthBloc>().add(LogInEvent(
-                              phone: _phoneController.text,
-                              code: _codeController.text));
+                            password: _passwordController.text,
+                              phone: _phoneController.text));
                         },
                         textButton: 'Войти'.tr(),
                       ),

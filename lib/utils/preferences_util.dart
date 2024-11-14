@@ -24,8 +24,8 @@ class PreferencesUtil{
     await _prefsInstance!.setString(_keyUrlSchool, urlSchool);
   }
 
-  static Future<void> setUID({required String uid}) async {
-    await _prefsInstance!.setString(_keyUID, uid);
+  static Future<void> setToken({required String token}) async {
+    await _prefsInstance!.setString(_keyToken, token);
   }
 
   // 0 - not auth 1 - auth 2 - moderation
@@ -93,7 +93,7 @@ class PreferencesUtil{
   static String get firstNameUser => _prefsInstance!.getString(_keyFirstName)??'';
   static String get phoneUser => _prefsInstance!.getString(_keyPhoneNumber)??'';
   static String get branchUser => _prefsInstance!.getString(_keyBranch)??'';
-  static String get uid => _prefsInstance!.getString(_keyUID)??'';
+  static String get token => _prefsInstance!.getString(_keyToken)??'';
   static UserType get userType {
     final type = _prefsInstance!.getInt(_keyTypeUser)??0;
     switch(type){
@@ -136,6 +136,6 @@ String get _keyFirstName =>'key_first_name';
 String get _keyPhoneNumber => 'ky_phone';
 String get _keyBranch => 'key_branch';
 String get _keyStatus => 'key_status';
-String get _keyUID => 'key_uid';
+String get _keyToken => 'key_tok';
 String get _keyTypeUser => 'key_type_user';
 String get _keyUrlSchool => 'key_loc_school';

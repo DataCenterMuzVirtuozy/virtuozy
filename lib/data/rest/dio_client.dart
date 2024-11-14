@@ -34,9 +34,10 @@ class DioClient {
     return dio;
   }
 
+
   Dio initApi() {
     final baseUrl = PreferencesUtil.urlSchool;
-    //print('URL ${baseUrl}');
+    print('Base Url ${baseUrl}');
     final dio = Dio(
       BaseOptions(
         baseUrl: baseUrl,

@@ -36,7 +36,7 @@ class SubBloc extends Bloc<SubEvent,SubState>{
   void _refreshData(RefreshDataEvent event, emit) async {
     try{
       emit(state.copyWith(subStatus: SubStatus.loading));
-      final uid = PreferencesUtil.uid;
+      final uid = PreferencesUtil.token;
       final user = await _userRepository.getUser(uid: uid);
       _userCubit.setUser(user: user);
       if(user.userStatus.isAuth){

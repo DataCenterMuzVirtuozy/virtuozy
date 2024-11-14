@@ -55,7 +55,7 @@ class ProfileBloc extends Bloc<ProfileEvent,ProfileState>{
           findSubwaysStatus: FindSubwaysStatus.unknown,subways: [],
           addedSubway: SubwayEntity.unknown()));
       await Future.delayed(const Duration(seconds: 1));
-      final uid = PreferencesUtil.uid;
+      final uid = PreferencesUtil.token;
       final user = await _userRepository.getUser(uid: uid);
       emit(state.copyWith(profileStatus: ProfileStatus.loaded,userEntity: user));
     }on Failure catch(e){

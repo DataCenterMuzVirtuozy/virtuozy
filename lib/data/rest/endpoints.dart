@@ -10,6 +10,8 @@ class Endpoints{
   static const String transactions = '/transactions';
   static const String uploads = '/uploads';
   static const String clients ='/clients';
+  static const String logIn  = '/login';
+  static const String singIn  = '/register';
   static const String urlNSK = 'https://virtuozy-nsk.ru';
   static const String urlMSK = 'https://virtuozy-msk.ru';
   static const String subways = 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/metro';

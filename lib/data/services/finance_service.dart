@@ -29,12 +29,12 @@ class FinanceService{
 
    Future<List<PriceSubscriptionModel>> getSubscriptionsAll() async {
      try{
-       final dioTest = locator.get<DioClient>().init(); //test
+      // final dioTest = locator.get<DioClient>().init(); //test
        final dioApi = locator.get<DioClient>().initApi();
        await Future.delayed(const Duration(seconds: 1));
-       final res = await dioTest.get(Endpoints.subscriptions);
-       final subs = (res.data as List<dynamic>).map((e)=> PriceSubscriptionModel.fromMap(e)).toList();
-        return subs;
+       //final res = await dioTest.get(Endpoints.subscriptions);
+      // final subs = (res.data as List<dynamic>).map((e)=> PriceSubscriptionModel.fromMap(e)).toList();
+        return [];
      }on Failure catch(e){
        throw Failure(e.message);
      }
@@ -44,7 +44,7 @@ class FinanceService{
 
    Future<int> baySubscription({required Map<String,dynamic> subscriptionModelApi}) async {
      try{
-       final dioTest = locator.get<DioClient>().init(); //test
+       //final dioTest = locator.get<DioClient>().init(); //test
        final dioApi = locator.get<DioClient>().initApi();
        final res = await dioApi.post(Endpoints.subsUser,data: subscriptionModelApi);
        return res.data['id'] as int;
@@ -71,7 +71,7 @@ class FinanceService{
          // }
 
          //api crm
-         final dioInit = locator.get<DioClient>().init(); //test
+         //final dioInit = locator.get<DioClient>().init(); //test
          final dioApi = locator.get<DioClient>().initApi();
          //var dio = Dio();
          List<TransactionModel> transactions = [];
@@ -102,7 +102,7 @@ class FinanceService{
 
   Future<void> addTransaction({required Map<String,dynamic> transactionModelApi}) async {
      try{
-       final dioInit = locator.get<DioClient>().init(); //test
+       //final dioInit = locator.get<DioClient>().init(); //test
        final dioApi = locator.get<DioClient>().initApi();
         await dioApi.post(Endpoints.transactions,data: transactionModelApi);
       }on Failure catch(e){

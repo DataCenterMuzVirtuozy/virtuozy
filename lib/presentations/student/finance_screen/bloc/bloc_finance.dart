@@ -86,7 +86,7 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
 
   void _refreshSubscription(RefreshSubscriptionEvent event,emit) async {
     emit(state.copyWith(status: FinanceStatus.loading));
-    final uid = PreferencesUtil.uid;
+    final uid = PreferencesUtil.token;
     final user = await _userRepository.getUser(uid: uid);
     _userCubit.setUser(user: user);
 

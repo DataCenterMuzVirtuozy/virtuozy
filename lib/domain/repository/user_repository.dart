@@ -15,4 +15,6 @@ abstract class UserRepository{
    Future<void> saveSettingDataProfile({required int uid,required EditProfileEntity profileEntity});
    Future<String> loadAvaProfile({required int uid,required EditProfileEntity profileEntity});
    Future<List<SubwayEntity>> subways({required  String query});
+   Future<UserEntity> logIn({required String phone,required String password});
+   Future<UserEntity> signIn({required String phone, required String password, required String confirmPassword});
  }

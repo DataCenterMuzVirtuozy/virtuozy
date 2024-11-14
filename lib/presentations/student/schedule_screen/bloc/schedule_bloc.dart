@@ -58,7 +58,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent,ScheduleState>{
   void _refreshData(RefreshDataEvent event,emit) async {
     try {
       emit(state.copyWith(status: ScheduleStatus.loading));
-      final uid = PreferencesUtil.uid;
+      final uid = PreferencesUtil.token;
       final user = await _userRepository.getUser(uid: uid);
       _userCubit.setUser(user: user);
       if (user.userStatus.isNotAuth) {

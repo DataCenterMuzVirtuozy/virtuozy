@@ -35,6 +35,9 @@ class _SingInPageState extends State<SingInPage> {
   late TextEditingController _phoneController;
   late TextEditingController _firsNameController;
   late TextEditingController _lastNameController;
+  late TextEditingController _passController;
+  late TextEditingController _confirmPassController;
+
   late MaskTextInputFormatter _maskFormatter;
   bool _darkTheme = false;
   String selectedValue = "Не выбрано";
@@ -52,6 +55,8 @@ class _SingInPageState extends State<SingInPage> {
   @override
   void initState() {
     super.initState();
+    _passController = TextEditingController();
+    _confirmPassController= TextEditingController();
     _phoneController = TextEditingController();
     _lastNameController = TextEditingController();
     _firsNameController = TextEditingController();
@@ -75,6 +80,8 @@ class _SingInPageState extends State<SingInPage> {
     _phoneController.dispose();
     _lastNameController.dispose();
     _firsNameController.dispose();
+    _passController.dispose();
+    _confirmPassController.dispose();
   }
 
   @override
@@ -176,6 +183,8 @@ class _SingInPageState extends State<SingInPage> {
                             return;
                           }
                           context.read<AuthBloc>().add(SingInEvent(
+                            password: _passController.text,
+                              confirmPassword: _confirmPassController.text,
                               lastName: _lastNameController.text,
                           firstName: _firsNameController.text,
                           phone: _phoneController.text));

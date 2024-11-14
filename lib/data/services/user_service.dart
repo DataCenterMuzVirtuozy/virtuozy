@@ -23,75 +23,125 @@ import '../models/user_model.dart';
 
 class UserService{
 
+  Future<UserModel> signIn({required String phone, required String password, required String confirmPassword}) async {
 
-
-
-
-   Future<UserModel> getUser({required String uid}) async {
-
-     final dioInit = locator.get<DioClient>().init();
-     final dioApi = locator.get<DioClient>().initApi();
+    final dioApi = locator.get<DioClient>().initApi();
     try{
-      var dio = Dio();
-      var idUser = 0;
-      if(uid.contains('111')){
-        dio = dioInit;
-      }else{
-        dio = dioApi;
-      }
+      final res = await dioApi.post(Endpoints.logIn,
+          queryParameters: {
+            'phone': phone.replaceAll(' ', ''),
+            'password':password,
+            'password_confirmation':confirmPassword
+          });
 
-
-       final res = await dio.get(Endpoints.user,
-       queryParameters: {
-          'phoneNumber': uid.replaceAll(' ', '')
-       });
-
-
-       if((res.data as List<dynamic>).isEmpty){
+      if((res.data as List<dynamic>).isEmpty){
         return throw   Failure('Пользователь не найден'.tr());
-       }
-
-
-      if(uid.contains('111')){
-         idUser = res.data[0]['id'] as int;
-      }else{
-         idUser = res.data[0]['id'] as int;
-       //idUser = 1;
-
       }
 
-       //api crm
-       final resSubs = await dio.get(Endpoints.subsUser,
-           queryParameters: {
-            'idUser': idUser
-           });
+      print('Response  ${res.data}');
+      final  token = res.data[0]['id'] as int;
+      //await PreferencesUtil.setToken(token: token);
+      // final resSubs = await dioApi.get(Endpoints.subsUser,
+      //   options: Options(
+      //       headers: {'Authorization':'Bearer $token'}
+      //   ),);
+      //
+      // //print('Response Subs ${resSubs.data}');
+      //
+      // final resLessons = await dioApi.get(Endpoints.lessons,
+      //   options: Options(
+      //       headers: {'Authorization':'Bearer $token'}
+      //   ),);
+      //
+      // var listLess = [];
+      // var listSubs = [];
+      //
+      // listSubs = resSubs.data['data'];
+      // listLess = resLessons.data['data'];
+      // //print('Response Lessons ${listLess}');
+      return UserModel.fromMap(mapUser: res.data[0],mapSubsAll: [],lessons: []);
+    } on Failure catch(e){
+      throw  Failure(e.message);
+    } on DioException catch(e){
+      throw  Failure('Error');
+    }
+  }
 
-       //print('Response Subs ${resSubs.data}');
+
+  Future<UserModel> logIn({required String phone, required String password}) async {
+    final dioApi = locator.get<DioClient>().initApi();
+    try{
+      final resLogin = await dioApi.post(Endpoints.logIn,
+          queryParameters: {
+            'phone':  phone.replaceAll(' ', ''),
+            'password':password
+          });
+      final  token = resLogin.data['token'];
+     await PreferencesUtil.setToken(token: token);
+      final resUser = await dioApi.get(Endpoints.user,
+        options: Options(
+            headers: {'Authorization':'Bearer $token'}
+        ),);
 
 
-      // api crm
-       final resLessons = await dio.get(Endpoints.lessons,
-           queryParameters: {
-             'idStudent': idUser
-           });
+      final resSubs = await dioApi.get(Endpoints.subsUser,
+        options: Options(
+            headers: {'Authorization':'Bearer $token'}
+        ),);
 
+      final resLessons = await dioApi.get(Endpoints.lessons,
+          options: Options(
+            headers: {'Authorization':'Bearer $token'}
+          ),);
 
       var listLess = [];
       var listSubs = [];
 
-      if(uid.contains('111')){
-        listLess = resLessons.data;
-        listSubs  = resSubs.data;
-      }else{
-        listSubs = resSubs.data['data'];
-        listLess = resLessons.data['data'];
-      }
-      //print('Response Lessons ${listLess}');
-       return UserModel.fromMap(mapUser: res.data[0],mapSubsAll: listSubs,lessons: listLess);
+      listSubs = resSubs.data['data'];
+      listLess = resLessons.data['data'];
+
+      return UserModel.fromMap(mapUser: resUser.data, mapSubsAll: listSubs,lessons: listLess);
+    } on Failure catch(e){
+
+      throw  Failure(e.message);
+    } on DioException catch(e){
+      throw  Failure('Ошибка авторизации'.tr());
+    }
+  }
+
+
+
+
+
+  Future<UserModel> getUser({required String uid}) async {
+     final dioApi = locator.get<DioClient>().initApi();
+    try{
+    final token =  PreferencesUtil.token;
+      final resUser = await dioApi.get(Endpoints.user,
+        options: Options(
+            headers: {'Authorization':'Bearer $token'}
+        ),);
+
+
+      final resSubs = await dioApi.get(Endpoints.subsUser,
+        options: Options(
+            headers: {'Authorization':'Bearer $token'}
+        ),);
+
+      final resLessons = await dioApi.get(Endpoints.lessons,
+        options: Options(
+            headers: {'Authorization':'Bearer $token'}
+        ),);
+
+      var listLess = [];
+      var listSubs = [];
+      listSubs = resSubs.data['data'];
+      listLess = resLessons.data['data'];
+      return UserModel.fromMap(mapUser: resUser.data, mapSubsAll: listSubs,lessons: listLess);
     } on Failure catch(e){
        throw  Failure(e.message);
     } on DioException catch(e){
-     throw  Failure('Error');
+      throw  Failure('Ошибка авторизации'.tr());
     }
    }
 

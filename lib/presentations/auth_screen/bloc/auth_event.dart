@@ -16,10 +16,11 @@ class AuthEvent extends Equatable{
 
 
  class LogInEvent extends AuthEvent{
-    final String code;
+
     final String phone;
+    final String password;
     const LogInEvent( {required this.phone,
-    required this.code,
+      required this.password,
   });
 }
 
@@ -39,8 +40,12 @@ class CompleteSinIgEvent extends AuthEvent{
    final String lastName;
    final String firstName;
    final String phone;
+   final String password;
+   final String confirmPassword;
 
    const SingInEvent({
+     required this.password,
+     required this.confirmPassword,
      required this.lastName,
      required this.firstName,
      required this.phone,

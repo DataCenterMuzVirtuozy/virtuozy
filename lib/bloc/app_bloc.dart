@@ -41,7 +41,7 @@ part 'app_state.dart';
   void _initApp(InitAppEvent event,emit) async {
   try{
    emit(state.copyWith(authStatusCheck: AuthStatusCheck.unknown,error: ''));
-   final uid = PreferencesUtil.uid;
+   final uid = PreferencesUtil.token;
    if(uid.isEmpty){
     _userCubit.setUser(user: UserEntity.unknown());
     emit(state.copyWith(authStatusCheck: AuthStatusCheck.unauthenticated));
