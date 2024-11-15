@@ -214,8 +214,6 @@ class _SubscriptionPageState extends State<SubscriptionPage>{
                       // print('Subs ${state.directions[_selIndexDirection].lastSubscriptions[0].id}');
                       Dialoger.showModalBottomMenu(
                         blurred: false,
-                          title: lessons.length>1?'':
-                          'Урок № ${lessons[0].number} из ${_maxNumberLessonFromSubs(idSub: lessons[0].idSub,subs: state.directions[0].subscriptionsAll)}',
                           args: [lessons,state.userEntity.directions],
                           content: DetailsLesson());
                     },),

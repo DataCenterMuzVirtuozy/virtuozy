@@ -684,8 +684,8 @@ class _FinancePageState extends State<FinancePage> {
            children: [
              Column(
                children: [
-                 Row(
-                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                 Column(
+                   crossAxisAlignment: CrossAxisAlignment.start,
                    children: [
                      Text(widget.subscription.nameDir,
                          style:TStyle.textStyleVelaSansBold(colorGrey,size: 16.0)),

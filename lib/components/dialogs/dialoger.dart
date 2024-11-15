@@ -77,7 +77,7 @@ class Dialoger {
   }
 
   static void showModalBottomMenu(
-      {required String title,
+      {String title = '',
       String desc = '',
       double sizeTitle = 16.0,
       double sizeDesc = 15.0,
@@ -129,35 +129,42 @@ class Dialoger {
                           topRight: Radius.circular(30))),
                   child: Column(
                     children: [
-                      Container(
-                        height: 45.0,
-                        padding: const EdgeInsets.only(
-                            top: 5.0, right: 15.0, left: 20.0),
-                        decoration: BoxDecoration(
-                            color: colorGrey,
-                            borderRadius: const BorderRadius.only(
-                                topRight: Radius.circular(20.0),
-                                topLeft: Radius.circular(20.0),
-                                bottomLeft: Radius.circular(10.0),
-                                bottomRight: Radius.circular(10.0))),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      Visibility(
+                        visible: title.isNotEmpty,
+                        child: Column(
                           children: [
-                            Text(
-                              title,
-                              style: TStyle.textStyleGaretHeavy(colorWhite,
-                                  size: sizeTitle),
+                            Container(
+                              height: 45.0,
+                              padding: const EdgeInsets.only(
+                                  top: 5.0, right: 15.0, left: 20.0),
+                              decoration: BoxDecoration(
+                                  color: colorGrey,
+                                  borderRadius: const BorderRadius.only(
+                                      topRight: Radius.circular(20.0),
+                                      topLeft: Radius.circular(20.0),
+                                      bottomLeft: Radius.circular(10.0),
+                                      bottomRight: Radius.circular(10.0))),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    title,
+                                    style: TStyle.textStyleGaretHeavy(colorWhite,
+                                        size: sizeTitle),
+                                  ),
+                                  InkWell(
+                                      onTap: () {
+                                        Navigator.pop(_);
+                                      },
+                                      child: Icon(Icons.close_rounded,
+                                          color: colorWhite)),
+                                ],
+                              ),
                             ),
-                            InkWell(
-                                onTap: () {
-                                  Navigator.pop(_);
-                                },
-                                child: Icon(Icons.close_rounded,
-                                    color: colorWhite)),
+                            const Gap(20.0),
                           ],
                         ),
                       ),
-                      const Gap(20.0),
                       body
                     ],
                   ),

@@ -221,7 +221,7 @@ class ItemSubHistory extends StatelessWidget{
                         colorGreen,
                         borderRadius: BorderRadius.circular(10.0)),
                     alignment: Alignment.center,
-                    child: Text(subscriptionEntity.status == StatusSub.inactive?'неактивный'.tr():
+                    child: Text(subscriptionEntity.status == StatusSub.inactive?'окончился'.tr():
                     subscriptionEntity.status == StatusSub.planned?'запланирован'.tr():'активный'.tr(),
                         style: TStyle.textStyleVelaSansBold(colorWhite,
                             size: 10.0)),

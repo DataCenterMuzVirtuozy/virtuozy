@@ -8,6 +8,7 @@ import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/utils/date_time_parser.dart';
 
 import '../../../../domain/entities/lesson_entity.dart';
+import '../../../../domain/entities/subscription_entity.dart';
 import '../../../../resourses/colors.dart';
 import '../../../../utils/status_to_color.dart';
 import '../../../../utils/text_style.dart';
@@ -27,9 +28,10 @@ class DetailsLessonContent extends StatefulWidget {
 }
 
 class _DetailsLessonContentState extends State<DetailsLessonContent> {
-  final double _heightBox = 355.0;
-  late int selectedPage;
+  final double _heightBox = 390.0;
+   int selectedPage = 0;
   late final PageController _pageController;
+  List<SubscriptionEntity> _lastAllSubscribtion = [];
 
   DirectionLesson _getDirectionByLesson({required Lesson lessonEntity}) {
     try {
@@ -40,12 +42,27 @@ class _DetailsLessonContentState extends State<DetailsLessonContent> {
     }
   }
 
+
+  String _maxNumberLessonFromSubs({required int idSub, required List<SubscriptionEntity> subs}){
+    try{
+      return 'из ${subs.firstWhere((s)=>s.id == idSub).maxLessonsCount.toString()}';
+    }catch (e){
+      return ' ';
+    }
+
+
+
+  }
+
   @override
   void initState() {
-    selectedPage = 0;
     _pageController = PageController(initialPage: selectedPage);
+  for(var list in widget.directions){
+    _lastAllSubscribtion.addAll(list.lastSubscriptions);
+  }
     super.initState();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +75,35 @@ class _DetailsLessonContentState extends State<DetailsLessonContent> {
         height: _heightBox,
         child: Column(
           children: [
+            Container(
+              height: 45.0,
+              padding: const EdgeInsets.only(
+                  top: 5.0, right: 15.0, left: 20.0),
+              decoration: BoxDecoration(
+                  color: colorGrey,
+                  borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(20.0),
+                      topLeft: Radius.circular(20.0),
+                      bottomLeft: Radius.circular(10.0),
+                      bottomRight: Radius.circular(10.0))),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Урок № ${widget.lessons[selectedPage].number} ${_maxNumberLessonFromSubs(idSub: widget.lessons[selectedPage].idSub, subs:_lastAllSubscribtion)}',
+                    style: TStyle.textStyleGaretHeavy(colorWhite,
+                        size: 16.0),
+                  ),
+                  InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Icon(Icons.close_rounded,
+                          color: colorWhite)),
+                ],
+              ),
+            ),
+            const Gap(10.0),
             Expanded(
               child: PageView.builder(
                   controller: _pageController,

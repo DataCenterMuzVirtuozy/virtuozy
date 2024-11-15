@@ -104,7 +104,8 @@ class UserService{
     } on Failure catch(e){
 
       throw  Failure(e.message);
-    } on DioException catch(e){
+    } on DioException catch(e,stack){
+      print('Error Auth ${stack} ${e.message}');
       throw  Failure('Ошибка авторизации'.tr());
     }
   }
@@ -117,6 +118,7 @@ class UserService{
      final dioApi = locator.get<DioClient>().initApi();
     try{
     final token =  PreferencesUtil.token;
+    print('$token');
       final resUser = await dioApi.get(Endpoints.user,
         options: Options(
             headers: {'Authorization':'Bearer $token'}

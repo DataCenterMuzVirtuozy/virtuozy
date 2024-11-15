@@ -72,9 +72,6 @@ class _SchedulePageState extends State<SchedulePage> with AuthMixin{
         month: globalCurrentMonthCalendar));
   }
 
-  int _maxNumberLessonFromSubs({required int idSub, required List<SubscriptionEntity> subs}){
-    return subs.firstWhere((s)=>s.id == idSub).maxLessonsCount;
-  }
 
 
   @override
@@ -183,7 +180,7 @@ class _SchedulePageState extends State<SchedulePage> with AuthMixin{
                        onLesson: (List<Lesson> lessons){
                          Dialoger.showModalBottomMenu(
                              blurred: false,
-                             title: 'Урок № ${lessons[0].number} из ${_maxNumberLessonFromSubs(idSub: lessons[0].idSub,subs: state.user.directions[_selIndexDirection].subscriptionsAll)}',
+                             //title: 'Урок № ${lessons[0].number} из ${_maxNumberLessonFromSubs(idSub: lessons[0].idSub,subs: state.user.directions[_selIndexDirection].subscriptionsAll)}',
                              args: [lessons,state.user.directions],
                              content: DetailsLesson());
                         }),
