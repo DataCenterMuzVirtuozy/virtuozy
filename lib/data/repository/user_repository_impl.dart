@@ -51,8 +51,8 @@ class UserRepositoryImpl extends UserRepository{
   }
 
   @override
-  Future<UserEntity> signIn({required String phone, required String password, required String confirmPassword}) async {
-    return await _util.signIn(phone: phone,password: password,confirmPassword: confirmPassword);
+  Future<void> signIn({required String phone, required String name, required String surName}) async {
+     await _util.signIn(phone: phone,name: name,surName: surName);
   }
 
 }

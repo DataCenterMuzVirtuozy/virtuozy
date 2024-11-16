@@ -98,11 +98,6 @@ class _LogInPageState extends State<LogInPage> {
           child: BlocConsumer<AuthBloc, AuthState>(
             listener: (c, s) {
               if (s.authStatus == AuthStatus.baseUrlEmpty) {
-                // if (controllerMenu.isOpen) {
-                //   controllerMenu.close();
-                // } else {
-                //   controllerMenu.open();
-                // }
                 _handleLocation();
               }
 

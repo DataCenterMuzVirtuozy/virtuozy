@@ -125,53 +125,64 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
 
     try{
       emit(state.copyWith(authStatus: AuthStatus.processSingIn,error: ''));
-
-      if(event.lastName.isEmpty){
+      final urkSchool = PreferencesUtil.urlSchool;
+      if(urkSchool.isEmpty){
+        emit(state.copyWith(authStatus: AuthStatus.onSearchLocation));
+      }else if(event.surName.isEmpty){
         throw Failure('Фамилия неуказана'.tr());
-      }else if(event.firstName.isEmpty){
+      }else if(event.name.isEmpty){
         throw Failure('Имя неуказано'.tr());
       }else if(event.phone.isEmpty){
         throw Failure('Введите номер телефона'.tr());
       }
-      UserEntity user = await _userRepository.signIn(phone: event.phone, password: event.password, confirmPassword: event.confirmPassword);
-      user =  UserEntity(
-          notifiSttings: [
-            const NotifiSettingsEntity(name:"Уведомление об оплате",
-                config:1),
-            const NotifiSettingsEntity(name:"Подтверждение уроков",
-                config:1),
-            const NotifiSettingsEntity(name:"Напоминание об уроке",
-                config:1),
-            const NotifiSettingsEntity(name:"Пропуск урока",
-                config:1),
-            const NotifiSettingsEntity(name:"Уведомление о бонусах",
-                config:1),
-            const NotifiSettingsEntity(name:"Новые предложения",
-                config:1),
-          ],
-          documents: [],
-          userStatus: UserStatus.moderation,
-          lastName: event.lastName,
-          firstName: event.firstName,
-          branchName: '',
-          phoneNumber: event.phone,
-          userType: UserType.student,
-          directions: [],
-          id: 0,
-          sex: '',
-          about_me: '',
-          date_birth: '',
-          registration_date: '',
-          has_kids: false,
-          subways:[],
-          avaUrl: '',
-          who_find: '');
+      await Future.delayed(const Duration(seconds: 2));
+      await _userRepository.signIn(phone: event.phone, name: event.name, surName: event.surName);
+      final user = _createUserEntity(event);
       await _createLocalUser(user);
-      emit(state.copyWith(authStatus: AuthStatus.onSearchLocation));
+      emit(state.copyWith(authStatus: AuthStatus.sendRequestCode));
     }on Failure catch(e){
        emit(state.copyWith(authStatus: AuthStatus.error,error: e.message));
     }
 
+  }
+
+
+
+
+  UserEntity _createUserEntity( SingInEvent event) {
+    final user =  UserEntity(
+        notifiSttings: [
+          const NotifiSettingsEntity(name:"Уведомление об оплате",
+              config:1),
+          const NotifiSettingsEntity(name:"Подтверждение уроков",
+              config:1),
+          const NotifiSettingsEntity(name:"Напоминание об уроке",
+              config:1),
+          const NotifiSettingsEntity(name:"Пропуск урока",
+              config:1),
+          const NotifiSettingsEntity(name:"Уведомление о бонусах",
+              config:1),
+          const NotifiSettingsEntity(name:"Новые предложения",
+              config:1),
+        ],
+        documents: [],
+        userStatus: UserStatus.moderation,
+        lastName: event.surName,
+        firstName: event.name,
+        branchName: '',
+        phoneNumber: event.phone,
+        userType: UserType.student,
+        directions: [],
+        id: 0,
+        sex: '',
+        about_me: '',
+        date_birth: '',
+        registration_date: '',
+        has_kids: false,
+        subways:[],
+        avaUrl: '',
+        who_find: '');
+    return user;
   }
 
   Future<void> _createLocalUser(UserEntity user) async {

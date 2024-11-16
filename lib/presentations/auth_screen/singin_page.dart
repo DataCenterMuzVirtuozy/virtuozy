@@ -17,8 +17,11 @@ import 'package:virtuozy/router/paths.dart';
 
 import '../../components/buttons.dart';
 import '../../components/text_fields.dart';
+import '../../data/utils/location_util.dart';
 import '../../resourses/colors.dart';
 import '../../resourses/images.dart';
+import '../../resourses/strings.dart';
+import '../../utils/preferences_util.dart';
 import '../../utils/text_style.dart';
 import '../../utils/theme_provider.dart';
 import 'bloc/auth_event.dart';
@@ -35,9 +38,6 @@ class _SingInPageState extends State<SingInPage> {
   late TextEditingController _phoneController;
   late TextEditingController _firsNameController;
   late TextEditingController _lastNameController;
-  late TextEditingController _passController;
-  late TextEditingController _confirmPassController;
-
   late MaskTextInputFormatter _maskFormatter;
   bool _darkTheme = false;
   String selectedValue = "Не выбрано";
@@ -52,11 +52,25 @@ class _SingInPageState extends State<SingInPage> {
   }
 
 
+  _saveLocation(String selectedValue) async {
+    String urlSch = '';
+    if(selectedValue == 'Москва'){
+      urlSch = mskUrl;
+    }else if(selectedValue == 'Новосибирск'){
+      urlSch = nskUrl;
+    }
+    await PreferencesUtil.setUrlSchool(urlSch);
+  }
+
+  void _handleLocation() async {
+    await LocationUtil.handleLocationPermission(context: context);
+
+  }
+
+
   @override
   void initState() {
     super.initState();
-    _passController = TextEditingController();
-    _confirmPassController= TextEditingController();
     _phoneController = TextEditingController();
     _lastNameController = TextEditingController();
     _firsNameController = TextEditingController();
@@ -80,8 +94,7 @@ class _SingInPageState extends State<SingInPage> {
     _phoneController.dispose();
     _lastNameController.dispose();
     _firsNameController.dispose();
-    _passController.dispose();
-    _confirmPassController.dispose();
+
   }
 
   @override
@@ -101,15 +114,35 @@ class _SingInPageState extends State<SingInPage> {
         child: SingleChildScrollView(
           child: BlocConsumer<AuthBloc,AuthState>(
             listener: (c, s) {
+
+              if(s.authStatus == AuthStatus.sendRequestCode){
+                GoRouter.of(context).push(pathSuccessSendSMS);
+              }
+
               if(s.error.isNotEmpty){
                 Dialoger.showActionMaterialSnackBar(context: context, title: s.error);
               }
 
               if(s.authStatus == AuthStatus.onSearchLocation){
-               //GoRouter.of(context).push(pathBranchSearch);
+                _handleLocation();
               }
             },
             builder: (context,state) {
+
+              if (state.authStatus == AuthStatus.processSingIn) {
+                return SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(color: colorOrange),
+                    ],
+                  ),
+                );
+              }
+
+
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -146,6 +179,7 @@ class _SingInPageState extends State<SingInPage> {
                                 onChanged: (v){
                                     setState(() {
                                       selectedValue = v!;
+                                      _saveLocation(selectedValue);
                                     });
                                 }),
                             Visibility(
@@ -179,14 +213,13 @@ class _SingInPageState extends State<SingInPage> {
                       SubmitButton(
                         onTap: (){
                           if(selectedValue == 'Не выбрано'){
-                            Dialoger.showActionMaterialSnackBar(context: context, title: 'Выберите город'.tr());
+                           // Dialoger.showActionMaterialSnackBar(context: context, title: 'Выберите город'.tr());
+                            _handleLocation();
                             return;
                           }
                           context.read<AuthBloc>().add(SingInEvent(
-                            password: _passController.text,
-                              confirmPassword: _confirmPassController.text,
-                              lastName: _lastNameController.text,
-                          firstName: _firsNameController.text,
+                            name: _firsNameController.text,
+                              surName: _lastNameController.text,
                           phone: _phoneController.text));
                         },
                         textButton: 'Далее'.tr(),

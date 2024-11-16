@@ -25,40 +25,20 @@ class UserService{
 
 
   //todo error
-  Future<UserModel> signIn({required String phone, required String password, required String confirmPassword}) async {
+  Future<void> signIn({required String phone, required String name, required String surName}) async {
 
     final dioApi = locator.get<DioClient>().initApi();
     try{
-      final res = await dioApi.post(Endpoints.singIn,
-          queryParameters: {
-            'phone': phone.replaceAll(' ', ''),
-            'password':password,
-            'password_confirmation':confirmPassword
-          });
-
+      var formData = FormData.fromMap( {
+        'phone': '+66666666666',
+        'name':name,
+        'surname':surName
+      });
+      final res = await dioApi.post(Endpoints.singIn, data: formData);
       print('Response  ${res.data}');
-      final  token = res.data['token'];
-      await PreferencesUtil.setToken(token: token);
-      //await PreferencesUtil.setToken(token: token);
-      // final resSubs = await dioApi.get(Endpoints.subsUser,
-      //   options: Options(
-      //       headers: {'Authorization':'Bearer $token'}
-      //   ),);
-      //
-      // //print('Response Subs ${resSubs.data}');
-      //
-      // final resLessons = await dioApi.get(Endpoints.lessons,
-      //   options: Options(
-      //       headers: {'Authorization':'Bearer $token'}
-      //   ),);
-      //
-      // var listLess = [];
-      // var listSubs = [];
-      //
-      // listSubs = resSubs.data['data'];
-      // listLess = resLessons.data['data'];
-      // //print('Response Lessons ${listLess}');
-      return UserModel.fromMap(mapUser: res.data[0],mapSubsAll: [],lessons: []);
+      // final  token = res.data['token'];
+      // await PreferencesUtil.setToken(token: token);
+      //return UserModel.fromMap(mapUser: {},mapSubsAll: [],lessons: []);
     } on Failure catch(e){
       throw  Failure(e.message);
     } on DioException catch(e,stakeTrace){
@@ -105,7 +85,6 @@ class UserService{
 
       throw  Failure(e.message);
     } on DioException catch(e,stack){
-      print('Error Auth ${stack} ${e.message}');
       throw  Failure('Ошибка авторизации'.tr());
     }
   }
@@ -118,7 +97,6 @@ class UserService{
      final dioApi = locator.get<DioClient>().initApi();
     try{
     final token =  PreferencesUtil.token;
-    print('$token');
       final resUser = await dioApi.get(Endpoints.user,
         options: Options(
             headers: {'Authorization':'Bearer $token'}

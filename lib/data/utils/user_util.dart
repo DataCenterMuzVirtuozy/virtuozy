@@ -27,9 +27,9 @@ class UserUtil{
       final model = await _service.logIn(phone: phone,password: password);
       return UserMapper.fromApi(userModel: model);
     }
-    Future<UserEntity> signIn({required String phone, required String password, required String confirmPassword}) async{
-      final model = await _service.signIn(phone: phone,password: password,confirmPassword: confirmPassword);
-      return UserMapper.fromApi(userModel: model);
+    Future<void> signIn({required String phone, required String name, required String surName}) async{
+       await _service.signIn(phone: phone,name: name,surName: surName);
+      //return UserMapper.fromApi(userModel: model);
     }
 
     Future<void> saveSettingNotifi({required int uid,required List<NotifiSettingsEntity> settingEntity}) async {

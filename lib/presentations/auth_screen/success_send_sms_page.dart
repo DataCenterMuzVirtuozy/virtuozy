@@ -10,6 +10,7 @@ import 'package:go_router/go_router.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:virtuozy/router/paths.dart';
+import 'package:virtuozy/utils/contact_school_by_location.dart';
 
 import '../../resourses/colors.dart';
 import '../../resourses/images.dart';
@@ -37,7 +38,7 @@ class SuccessSendSMS extends StatelessWidget{
                     textAlign: TextAlign.center,
                     style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,
                         size: 20.0)),
-                Text('Ожидайте СМС с паролем от сотрудника школы.'.tr(),
+                Text('Ожидайте СМС с паролем'.tr(),
                     textAlign: TextAlign.center,
                     style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,
                         size: 20.0)),
@@ -81,7 +82,7 @@ class SuccessSendSMS extends StatelessWidget{
                     children: [
                       Icon(Icons.transit_enterexit,color: colorGrey),
                       const Gap(5.0),
-                      Text('virtuozy-msk.ru',
+                      Text(ContactSchoolByLocation.getUrlWebsite(),
                         style: TStyle.textStyleVelaSansRegularUnderline(colorGrey,size: 18.0),),
                     ],
                   ),

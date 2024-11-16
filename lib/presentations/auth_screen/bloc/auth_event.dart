@@ -37,17 +37,14 @@ class CompleteSinIgEvent extends AuthEvent{
 
 
  class SingInEvent extends AuthEvent{
-   final String lastName;
-   final String firstName;
+   final String name;
+   final String surName;
    final String phone;
-   final String password;
-   final String confirmPassword;
+
 
    const SingInEvent({
-     required this.password,
-     required this.confirmPassword,
-     required this.lastName,
-     required this.firstName,
+     required this.name,
+     required this.surName,
      required this.phone,
    });
  }

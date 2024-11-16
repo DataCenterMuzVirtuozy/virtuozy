@@ -1,6 +1,7 @@
 
  import 'package:virtuozy/utils/preferences_util.dart';
 
+import '../data/rest/endpoints.dart';
 import '../resourses/strings.dart';
 
 class ContactSchoolByLocation{
@@ -26,6 +27,11 @@ class ContactSchoolByLocation{
      }
      final phone =  idLoc=='msk'?numMsk:numNsk;
      return phone;
+   }
+
+   static getUrlWebsite(){
+     final id =  PreferencesUtil.urlSchool.contains('msk')?Endpoints.urlMSK:Endpoints.urlNSK;
+     return id;
    }
 
 
