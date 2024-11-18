@@ -671,7 +671,8 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
               ),
             ),
             Visibility(
-              visible: !_fullDataProfile(_profileEdited),
+              //visible: !_fullDataProfile(_profileEdited),
+              visible: false,
               child: Container(
                 margin: const EdgeInsets.symmetric(vertical: 10.0),
                 padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 15.0),

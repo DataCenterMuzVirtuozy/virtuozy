@@ -21,18 +21,19 @@ import 'custom_table_calendar.dart';
 /// [resetFocusDay] true - при вызове метода build, возвращает календарь на текущую дату
 ///
 class Calendar extends StatefulWidget {
-  const Calendar({super.key,
-    required this.lessons,
-    required this.onLesson,
-    required this.onMonth,
-    this.clickableDay = true,
-    this.resetFocusDay = true,
-    this.focusedDayStatus = true,
-    this.visibleStatusColor = true,
-    this.visibleInfoColors = true,
-    this.colorFill = Colors.transparent,
-    required this.onDate,
-    required this.focusedDay});
+  const Calendar(
+      {super.key,
+      required this.lessons,
+      required this.onLesson,
+      required this.onMonth,
+      this.clickableDay = true,
+      this.resetFocusDay = true,
+      this.focusedDayStatus = true,
+      this.visibleStatusColor = true,
+      this.visibleInfoColors = true,
+      this.colorFill = Colors.transparent,
+      required this.onDate,
+      required this.focusedDay});
 
   final List<Lesson> lessons;
   final Function onLesson;
@@ -50,10 +51,10 @@ class Calendar extends StatefulWidget {
   State<Calendar> createState() => _CalendarState();
 }
 
-class _CalendarState extends State<Calendar> with AuthMixin{
+class _CalendarState extends State<Calendar> with AuthMixin {
   final currentDayNotifi = locator.get<ValueNotifier<int>>();
   int month = 0;
-   DateTime day = DateTime.now();
+  DateTime day = DateTime.now();
   int i = 0;
   late DateTime _firstDay;
   late DateTime _focusedDay;
@@ -72,12 +73,9 @@ class _CalendarState extends State<Calendar> with AuthMixin{
     _focusedDay = widget.focusedDay;
   }
 
-
   @override
   void dispose() {
     super.dispose();
-
-
   }
 
   @override
@@ -90,8 +88,7 @@ class _CalendarState extends State<Calendar> with AuthMixin{
 
     return Container(
       decoration: BoxDecoration(
-          color: widget.colorFill,
-          borderRadius: BorderRadius.circular(20.0)),
+          color: widget.colorFill, borderRadius: BorderRadius.circular(20.0)),
       child: Column(
         children: [
           CustomTableCalendar(
@@ -103,11 +100,7 @@ class _CalendarState extends State<Calendar> with AuthMixin{
             startingDayOfWeek: StartingDayOfWeek.monday,
             daysOfWeekStyle: DaysOfWeekStyle(
                 weekdayStyle: TStyle.textStyleVelaSansBold(
-                    Theme
-                        .of(context)
-                        .textTheme
-                        .displayMedium!
-                        .color!),
+                    Theme.of(context).textTheme.displayMedium!.color!),
                 weekendStyle: TStyle.textStyleVelaSansBold(colorRed)),
             firstDay: _firstDay,
             lastDay: _lastDay,
@@ -127,54 +120,24 @@ class _CalendarState extends State<Calendar> with AuthMixin{
             calendarStyle: CalendarStyle(
               tablePadding: const EdgeInsets.symmetric(horizontal: 10.0),
               selectedTextStyle: TStyle.textStyleVelaSansBold(
-                  Theme
-                      .of(context)
-                      .textTheme
-                      .displayMedium!
-                      .color!),
+                  Theme.of(context).textTheme.displayMedium!.color!),
               rangeStartTextStyle: TStyle.textStyleVelaSansBold(
-                  Theme
-                      .of(context)
-                      .textTheme
-                      .displayMedium!
-                      .color!),
+                  Theme.of(context).textTheme.displayMedium!.color!),
               disabledTextStyle: TStyle.textStyleVelaSansBold(
-                  Theme
-                      .of(context)
-                      .textTheme
-                      .displayMedium!
-                      .color!),
+                  Theme.of(context).textTheme.displayMedium!.color!),
               todayTextStyle: TStyle.textStyleVelaSansBold(colorWhite),
               rangeEndTextStyle: TStyle.textStyleVelaSansBold(
-                  Theme
-                      .of(context)
-                      .textTheme
-                      .displayMedium!
-                      .color!),
+                  Theme.of(context).textTheme.displayMedium!.color!),
               weekendTextStyle: TStyle.textStyleVelaSansBold(
-                  Theme
-                      .of(context)
-                      .textTheme
-                      .displayMedium!
-                      .color!),
+                  Theme.of(context).textTheme.displayMedium!.color!),
               outsideTextStyle: TStyle.textStyleVelaSansBold(
-                  Theme
-                      .of(context)
-                      .textTheme
-                      .displayMedium!
-                      .color!),
+                  Theme.of(context).textTheme.displayMedium!.color!),
               defaultTextStyle: TStyle.textStyleVelaSansBold(
-                  Theme
-                      .of(context)
-                      .textTheme
-                      .displayMedium!
-                      .color!),
+                  Theme.of(context).textTheme.displayMedium!.color!),
             ),
             onDaySelected: (d1, d2) {
               final selDay = d2.day;
-              final nowDay = DateTime
-                  .now()
-                  .day;
+              final nowDay = DateTime.now().day;
               if (selDay == nowDay) {
                 Dialoger.showMessage('Нет записей на текущий день'.tr(),
                     context: context);
@@ -183,11 +146,7 @@ class _CalendarState extends State<Calendar> with AuthMixin{
             headerStyle: HeaderStyle(
               titleCentered: true,
               titleTextStyle: TStyle.textStyleVelaSansBold(
-                  Theme
-                      .of(context)
-                      .textTheme
-                      .displayMedium!
-                      .color!,
+                  Theme.of(context).textTheme.displayMedium!.color!,
                   size: 18.0),
               formatButtonVisible: false,
             ),
@@ -195,7 +154,7 @@ class _CalendarState extends State<Calendar> with AuthMixin{
               _focusedDay = day;
             },
             calendarBuilders: CalendarBuilders(
-              outsideBuilder: (context, day, values){
+              outsideBuilder: (context, day, values) {
                 return _handlerDay(
                     focusedDayStatus: widget.focusedDayStatus,
                     visibleStatusColor: widget.visibleStatusColor,
@@ -208,17 +167,15 @@ class _CalendarState extends State<Calendar> with AuthMixin{
                     onLesson: (List<Lesson> lessons) {
                       widget.onLesson.call(lessons);
                     });
-
               },
               todayBuilder: (context, day, values) {
-                if(userType.isTeacher){
+                if (userType.isTeacher) {
                   return _handleTodayTeacher(
-                    onLesson: (d){
-                      //widget.onDate.call(d.toString().split(' ')[0]);
-                    },
-                    lessons: widget.lessons,
-                    today: day
-                  );
+                      onLesson: (d) {
+                        //widget.onDate.call(d.toString().split(' ')[0]);
+                      },
+                      lessons: widget.lessons,
+                      today: day);
                 }
                 return _handlerDay(
                     visibleStatusColor: widget.visibleStatusColor,
@@ -237,7 +194,7 @@ class _CalendarState extends State<Calendar> with AuthMixin{
                 _onDay(day);
                 _onMonth(day.month);
                 return _handlerDay(
-                  focusedDayStatus: widget.focusedDayStatus,
+                    focusedDayStatus: widget.focusedDayStatus,
                     visibleStatusColor: widget.visibleStatusColor,
                     clickableDay: widget.clickableDay,
                     dateTime: day,
@@ -286,18 +243,16 @@ class _CalendarState extends State<Calendar> with AuthMixin{
   }
 
   _onDay(DateTime currentDay) {
-    if(day.month!=currentDay.month) {
+    if (day.month != currentDay.month) {
       widget.onDate.call(currentDay);
       day = currentDay;
     }
   }
 
-
-  _handleTodayTeacher({
-    required List<Lesson> lessons,
-    required DateTime today,
-    required Function onLesson
-  }){
+  _handleTodayTeacher(
+      {required List<Lesson> lessons,
+      required DateTime today,
+      required Function onLesson}) {
     return ValueListenableBuilder<int>(
         valueListenable: currentDayNotifi,
         builder: (context, valueDay, child) {
@@ -308,7 +263,7 @@ class _CalendarState extends State<Calendar> with AuthMixin{
                 onTap: () {
                   onLesson.call(today);
                   //currentDayNotifi.value = today.day;
-                  },
+                },
                 child: Container(
                   width: 45.0,
                   height: 45.0,
@@ -321,18 +276,12 @@ class _CalendarState extends State<Calendar> with AuthMixin{
                         width: 45.0,
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color:
-                                 StatusToColor.getColorNearLesson(
-                                   lessons: lessons,
-                                   today: today
-                                 ),
+                            color: StatusToColor.getColorNearLesson(
+                                lessons: lessons, today: today),
                             border: Border.all(
                                 color: colorOrange,
-                                width:
-                                valueDay == today.day ? 3.0 : 1.0)
-                        ),
+                                width: valueDay == today.day ? 3.0 : 1.0)),
                       ),
-
                       Center(
                         child: Text(
                           today.day.toString(),
@@ -344,45 +293,41 @@ class _CalendarState extends State<Calendar> with AuthMixin{
                 )),
           );
         });
-
   }
 
-  _handlerDay({
-    required List<Lesson> lessons,
-    required int day,
-    required bool focusedDayStatus,
-    required bool visibleStatusColor,
-    required DateTime dateTime,
-    required int monthOfDay,
-    required BuildContext context,
-    required bool clickableDay,
-    required Function onLesson}) {
+  _handlerDay(
+      {required List<Lesson> lessons,
+      required int day,
+      required bool focusedDayStatus,
+      required bool visibleStatusColor,
+      required DateTime dateTime,
+      required int monthOfDay,
+      required BuildContext context,
+      required bool clickableDay,
+      required Function onLesson}) {
     try {
-
       final stringDays = lessons.map((e) => e.date).toList();
 
       if (stringDays.contains(DateFormat('yyyy-MM-dd').format(dateTime))) {
         Lesson lesson = lessons.firstWhere((element) =>
-        DateFormat('yyyy-MM-dd')
-            .parse(element.date)
-            .day == day&&DateFormat('yyyy-MM-dd')
-            .parse(element.date)
-            .month == monthOfDay&& DateFormat('yyyy-MM-dd')
-            .parse(element.date).year == dateTime.year );
+            DateFormat('yyyy-MM-dd').parse(element.date).day == day &&
+            DateFormat('yyyy-MM-dd').parse(element.date).month == monthOfDay &&
+            DateFormat('yyyy-MM-dd').parse(element.date).year == dateTime.year);
         // final monthLesson = DateFormat('yyyy-MM-dd')
         //     .parse(lesson.date)
         //     .month;
         // if (monthLesson != monthOfDay) {
-           //   return;
+        //   return;
         // }
         final lessonsDay = _handleLessonsDay(lesson, lessons);
 
         return ValueListenableBuilder<int>(
             valueListenable: currentDayNotifi,
             builder: (context, valueDay, child) {
-              lesson = lesson.copyWith(status: lessonsDay.length > 1
-                  ? LessonStatus.layering
-                  : lessonsDay[0].status);
+              lesson = lesson.copyWith(
+                  status: lessonsDay.length > 1
+                      ? LessonStatus.layering
+                      : lessonsDay[0].status);
               return Padding(
                 padding: const EdgeInsets.all(3.0),
                 child: InkWell(
@@ -390,7 +335,7 @@ class _CalendarState extends State<Calendar> with AuthMixin{
                     onTap: () {
                       if (clickableDay) {
                         onLesson.call(lessonsDay);
-                        if(!focusedDayStatus){
+                        if (!focusedDayStatus) {
                           return;
                         }
                         currentDayNotifi.value = day;
@@ -410,20 +355,16 @@ class _CalendarState extends State<Calendar> with AuthMixin{
                                 shape: BoxShape.circle,
                                 color: visibleStatusColor
                                     ? StatusToColor.getColor(
-                                    lesson: lesson,
-                                    userType: userType)
+                                        lesson: lesson, userType: userType)
                                     : Colors.transparent,
                                 border: Border.all(
                                     color: colorOrange,
-                                    width:
-                                    valueDay == day ? 3.0 : 1.0)
-                            ),
+                                    width: valueDay == day ? 3.0 : 1.0)),
                           ),
                           Visibility(
                               visible: lessonsDay.length > 1,
                               child: RotationTransition(
-                                turns:
-                                const AlwaysStoppedAnimation(135 / 360),
+                                turns: const AlwaysStoppedAnimation(135 / 360),
                                 child: Container(
                                   margin: const EdgeInsets.all(5),
                                   height: valueDay == day ? 3.0 : 1.0,
@@ -441,8 +382,6 @@ class _CalendarState extends State<Calendar> with AuthMixin{
                     )),
               );
             });
-
-
       }
     } catch (e) {
       print('Error ${e.toString()}');
@@ -457,31 +396,27 @@ class _CalendarState extends State<Calendar> with AuthMixin{
   DateTime _getFirstDate({required List<Lesson> lessons}) {
     final List<int> millisecondsSinceEpochList = [];
 
-    if(lessons.isEmpty){
-      final date = DateTime.now().millisecondsSinceEpoch - 10519200000; // -4 month
+    if (lessons.isEmpty) {
+      final date =
+          DateTime.now().millisecondsSinceEpoch - 10519200000; // -4 month
       return DateTime.fromMillisecondsSinceEpoch(date.toInt());
     }
 
     for (var element in lessons) {
       millisecondsSinceEpochList.add(
-          DateFormat('yyyy-MM-dd')
-              .parse(element.date)
-              .millisecondsSinceEpoch);
+          DateFormat('yyyy-MM-dd').parse(element.date).millisecondsSinceEpoch);
     }
 
     final indexFirst = millisecondsSinceEpochList
         .indexOf(millisecondsSinceEpochList.reduce(min));
-    final monthFirst = DateTime
-        .fromMillisecondsSinceEpoch(
-        millisecondsSinceEpochList[indexFirst])
+    final monthFirst = DateTime.fromMillisecondsSinceEpoch(
+            millisecondsSinceEpochList[indexFirst])
         .month;
-    final yearFirst = DateTime
-        .fromMillisecondsSinceEpoch(
-        millisecondsSinceEpochList[indexFirst])
+    final yearFirst = DateTime.fromMillisecondsSinceEpoch(
+            millisecondsSinceEpochList[indexFirst])
         .year;
-    final dayFirst = DateTime
-        .fromMillisecondsSinceEpoch(
-        millisecondsSinceEpochList[indexFirst])
+    final dayFirst = DateTime.fromMillisecondsSinceEpoch(
+            millisecondsSinceEpochList[indexFirst])
         .day;
     return DateTime.utc(yearFirst, monthFirst, dayFirst);
   }
@@ -498,22 +433,15 @@ class _CalendarState extends State<Calendar> with AuthMixin{
     // final yearLast = DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpochList[indexLast]).year;
     // final dayLast = DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpochList[indexLast]).day;
 
+    if (lessons.isEmpty) {
+      final date =
+          DateTime.now().millisecondsSinceEpoch + 10519200000; // +4 month
+      return DateTime.fromMillisecondsSinceEpoch(date.toInt());
+    }
 
-      if(lessons.isEmpty){
-        final date = DateTime.now().millisecondsSinceEpoch + 10519200000; // +4 month
-        return DateTime.fromMillisecondsSinceEpoch(date.toInt());
-      }
-
-
-    final monthLast = DateTime
-        .now()
-        .month + 2;
-    final yearLast = DateTime
-        .now()
-        .year;
-    final dayLast = DateTime
-        .now()
-        .day;
+    final monthLast = DateTime.now().month + 2;
+    final yearLast = DateTime.now().year;
+    final dayLast = DateTime.now().day;
     final lastDay = DateTime.utc(yearLast, monthLast, dayLast);
     if (!_focusedDay.isBefore(lastDay)) {
       return _focusedDay;
@@ -561,11 +489,7 @@ class _InfoColorState extends State<InfoColor> {
                   Container(
                     height: 1.0,
                     width: 20.0,
-                    color: Theme
-                        .of(context)
-                        .textTheme
-                        .displayMedium!
-                        .color!,
+                    color: Theme.of(context).textTheme.displayMedium!.color!,
                   ),
                   IconButton(
                     onPressed: () {
@@ -579,21 +503,13 @@ class _InfoColorState extends State<InfoColor> {
                     },
                     icon: Icon(Icons.info_outline,
                         color:
-                        Theme
-                            .of(context)
-                            .textTheme
-                            .displayMedium!
-                            .color!,
+                            Theme.of(context).textTheme.displayMedium!.color!,
                         size: 20.0),
                   ),
                   Container(
                     height: 1.0,
                     width: 20.0,
-                    color: Theme
-                        .of(context)
-                        .textTheme
-                        .displayMedium!
-                        .color!,
+                    color: Theme.of(context).textTheme.displayMedium!.color!,
                   ),
                 ],
               ),
@@ -609,13 +525,23 @@ class _InfoColorState extends State<InfoColor> {
                             color: StatusToColor.statusColors[index]),
                         width: 30.0,
                         height: 20.0,
+                        child: Visibility(
+                          visible: false,
+                          child: RotationTransition(
+                            turns: const AlwaysStoppedAnimation(135 / 360),
+                            child: Container(
+                              margin: const EdgeInsets.all(5),
+                              height: 1.0,
+                              color: colorOrange,
+                            ),
+                          ),
+                        ),
                       ),
                       const Gap(10.0),
                       Expanded(
                         child: Text(
                           StatusToColor.namesStatus[index],
-                          style: TStyle.textStyleVelaSansBold(Theme
-                              .of(context)
+                          style: TStyle.textStyleVelaSansBold(Theme.of(context)
                               .textTheme
                               .displayMedium!
                               .color!),

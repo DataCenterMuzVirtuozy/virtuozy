@@ -333,6 +333,8 @@ required bool docsAccept}){
         index: 3,
         title: titlesDrawMenuStudent[3],
             textColor: Theme.of(context).textTheme.displayMedium!.color!, onPressed: () {
+            Dialoger.showToast('Нет предложений'.tr());
+            return;
           onSelectedPage.call(3);
           },),
 

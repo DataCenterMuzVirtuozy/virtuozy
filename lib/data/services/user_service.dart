@@ -24,18 +24,18 @@ import '../models/user_model.dart';
 class UserService{
 
 
-  //todo error
   Future<void> signIn({required String phone, required String name, required String surName}) async {
 
     final dioApi = locator.get<DioClient>().initApi();
+    final phoneFormated = phone.replaceAll(RegExp(r'[^0-9]'), '');
     try{
       var formData = FormData.fromMap( {
-        'phone': '+66666666666',
+        'phone': '+$phoneFormated',
         'name':name,
         'surname':surName
       });
-      final res = await dioApi.post(Endpoints.singIn, data: formData);
-      print('Response  ${res.data}');
+      await dioApi.post(Endpoints.singIn, data: formData);
+      //print('Response  ${res.data}');
       // final  token = res.data['token'];
       // await PreferencesUtil.setToken(token: token);
       //return UserModel.fromMap(mapUser: {},mapSubsAll: [],lessons: []);

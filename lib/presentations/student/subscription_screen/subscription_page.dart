@@ -436,10 +436,7 @@ class _BoxSubscriptionState extends State<BoxSubscription> {
                   const Gap(15),
                   Text(ParserPrice.getBalance(_summaBalance(directions: widget.directions)),
                       style:TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 20.0)),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4.0),
-                    child: Icon(CupertinoIcons.money_rubl,color: Theme.of(context).iconTheme.color,size: 25.0,),
-                  )
+                  Icon(CupertinoIcons.money_rubl,color: Theme.of(context).iconTheme.color,size: 25.0,)
                 ],
               ),
             ],
