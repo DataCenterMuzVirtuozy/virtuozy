@@ -70,7 +70,8 @@ part 'app_state.dart';
   }on Failure catch(e){
    emit(state.copyWith(authStatusCheck: AuthStatusCheck.error,error: e.message));
 
-  } catch (e){
+  } catch (e,stack){
+   print('Stak $stack');
    emit(state.copyWith(authStatusCheck: AuthStatusCheck.error,error: 'Ошибка получения данных'.tr()));
   }
 

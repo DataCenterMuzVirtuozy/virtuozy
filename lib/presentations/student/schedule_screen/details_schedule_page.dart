@@ -15,6 +15,7 @@ import '../../../domain/entities/lesson_entity.dart';
 import '../../../domain/entities/schedule_lessons.dart';
 import '../../../domain/entities/user_entity.dart';
 import '../../../resourses/colors.dart';
+import '../../../utils/craeator_list_directions.dart';
 import '../../../utils/date_time_parser.dart';
 import '../../../utils/status_to_color.dart';
 import '../../../utils/text_style.dart';
@@ -52,10 +53,10 @@ class _DetailsSchedulePageState extends State<DetailsSchedulePage> {
        listener: (c,s){
          if(s.status == ScheduleStatus.loaded){
            int length = s.user.directions.length;
-           _titlesDirections = s.user.directions.map((e) => e.name).toList();
-           if(length>1){
-             _titlesDirections.insert(length, 'Все направления'.tr());
-           }
+           _titlesDirections = CreatorListDirections.getTitlesDrawingMenu(directions: s.user.directions);
+           // if(length>1){
+           //   _titlesDirections.insert(length, 'Все направления'.tr());
+           // }
          }
        },
        builder: (context,state) {

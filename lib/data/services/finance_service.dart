@@ -12,6 +12,7 @@ import 'package:virtuozy/utils/date_time_parser.dart';
 import 'package:virtuozy/utils/failure.dart';
 
 import '../../di/locator.dart';
+import '../../utils/preferences_util.dart';
 import '../rest/dio_client.dart';
 import '../rest/endpoints.dart';
 
@@ -29,12 +30,12 @@ class FinanceService{
 
    Future<List<PriceSubscriptionModel>> getSubscriptionsAll() async {
      try{
-      // final dioTest = locator.get<DioClient>().init(); //test
-       final dioApi = locator.get<DioClient>().initApi();
+       final dioTest = locator.get<DioClient>().init(); //test
+       //final dioApi = locator.get<DioClient>().initApi();
        await Future.delayed(const Duration(seconds: 1));
-       //final res = await dioTest.get(Endpoints.subscriptions);
-      // final subs = (res.data as List<dynamic>).map((e)=> PriceSubscriptionModel.fromMap(e)).toList();
-        return [];
+       final res = await dioTest.get(Endpoints.subscriptions);
+       final subs = (res.data as List<dynamic>).map((e)=> PriceSubscriptionModel.fromMap(e)).toList();
+        return subs;
      }on Failure catch(e){
        throw Failure(e.message);
      }
@@ -57,40 +58,14 @@ class FinanceService{
 
    Future<List<TransactionModel>> getTransactions({required int idUser,required int idDirections}) async {
      try{
-         Map<String,dynamic> data = {};
-         // change list trans by idDir
-         // if(idDirections>0){
-         //   data = {
-         //     "idUser": idUser,
-         //     "idDir": idDirections,
-         //   };
-         // }else{
-         //   data = {
-         //     "idUser": 9827,
-         //   };
-         // }
 
-         //api crm
-         //final dioInit = locator.get<DioClient>().init(); //test
          final dioApi = locator.get<DioClient>().initApi();
-         //var dio = Dio();
+         final token =  PreferencesUtil.token;
          List<TransactionModel> transactions = [];
-         // if(idUser==1){
-         //   dio = dioApi;
-         // }else{
-         //   dio = dioInit;
-         //
-         // }
-         final res = await dioApi.get(Endpoints.transactions,queryParameters: {"idUser": idUser});
+         final res = await dioApi.get(Endpoints.transactions,options: Options(
+             headers: {'Authorization':'Bearer $token'}
+         ),);
          transactions = (res.data['data'] as List<dynamic>).map((e)=> TransactionModel.fromMap(e)).toList();
-
-         // if(idUser==1){
-         //   transactions = (res.data['data'] as List<dynamic>).map((e)=> TransactionModel.fromMap(e)).toList();
-         // }else{
-         //   transactions = (res.data as List<dynamic>).map((e)=> TransactionModel.fromMap(e)).toList();
-         //
-         // }
-
          return transactions;
        }on Failure catch(e){
          throw Failure(e.message);

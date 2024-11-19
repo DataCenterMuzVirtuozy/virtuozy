@@ -129,9 +129,9 @@ class UserModel{
     final nameDirection = mapDirection['name'] as String;
     final nameTeacherDir = mapDirection['nameTeacher']??'';
     final subs = mapSubs.map((e) => SubscriptionModel.fromMap(e,nameDirection)).toList();
-    final subsDir = subs.where((element) =>mapDirection['id']==null?false: element.idDir == (mapDirection['id'] as int)).toList();
+    final subsDir = subs.where((element) =>element.idDir == (mapDirection['customerId'] as int)).toList();
     final lastSub = _getLastSub(subsDir);
-    final int idDir = mapDirection['id'];
+    final int idDir = mapDirection['customerId'];
    // final bonus = mapDirection['bonus'] as List<dynamic>;
 
     return DirectionModel(
@@ -157,7 +157,7 @@ class UserModel{
     //List<int> ids = subsDir.map((e) => e.id).toList();
 
     for(var l in lessons){
-      if(idDir == l.idDir&&l.status!=4){
+      if(idDir == l.idStudent&&l.status!=4){
         lessonsResult.add(l);
       }
     }

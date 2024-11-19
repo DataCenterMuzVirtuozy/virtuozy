@@ -17,6 +17,7 @@ import 'package:virtuozy/utils/update_list_ext.dart';
 import '../../../../domain/entities/transaction_entity.dart';
 import '../../../../domain/repository/user_repository.dart';
 import '../../../../domain/user_cubit.dart';
+import '../../../../utils/craeator_list_directions.dart';
 import '../../../../utils/preferences_util.dart';
 import 'event_finance.dart';
 
@@ -96,7 +97,7 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
       return;
     }
 
-    final titlesDrawingMenu = _getTitlesDrawingMenu(directions: user.directions);
+    final titlesDrawingMenu = CreatorListDirections.getTitlesDrawingMenu(directions: user.directions);
     final directions = _getDirections(user: user,indexDir: event.indexDirection,allViewDir: event.allViewDir);
     final expiredSubscriptions = _getExpiredSubscriptions(directions,event.allViewDir,event.indexDirection);
     List<SubscriptionEntity> listSubHistory = _getHistorySubscriptions(directions,event.allViewDir,event.indexDirection);
@@ -130,7 +131,7 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
       return;
     }
 
-    final titlesDrawingMenu = _getTitlesDrawingMenu(directions: user.directions);
+    final titlesDrawingMenu = CreatorListDirections.getTitlesDrawingMenu(directions: user.directions);
     final directions = _getDirections(user: user,indexDir: event.indexDirection,allViewDir: event.allViewDir);
     final expiredSubscriptions = _getExpiredSubscriptions(directions,event.allViewDir,event.indexDirection);
     List<SubscriptionEntity> listSubHistory = _getHistorySubscriptions(directions,event.allViewDir,event.indexDirection);
@@ -189,17 +190,6 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
     return resList;
   }
 
-
-  List<String> _getTitlesDrawingMenu({required List<DirectionLesson> directions}){
-    List<String> resultList = [];
-    //directions.sort((a,b)=>b.lastSubscriptions[0].balanceSub.compareTo(a.lastSubscriptions[0].balanceSub));
-    resultList = directions.map((e) => e.name).toList();
-    int length = resultList.length;
-    if(length>1){
-      resultList.insert(length, 'Все направления'.tr());
-    }
-    return resultList;
-  }
 
 
 

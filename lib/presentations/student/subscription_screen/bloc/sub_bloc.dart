@@ -10,6 +10,7 @@ import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/domain/user_cubit.dart';
 import 'package:virtuozy/presentations/student/subscription_screen/bloc/sub_event.dart';
 import 'package:virtuozy/presentations/student/subscription_screen/bloc/sub_state.dart';
+import 'package:virtuozy/utils/craeator_list_directions.dart';
 
 import 'package:virtuozy/utils/failure.dart';
 import 'package:virtuozy/utils/update_list_ext.dart';
@@ -45,7 +46,7 @@ class SubBloc extends Bloc<SubEvent,SubState>{
         final lessons = _getAllLessons(user, event.allViewDir, event.currentDirIndex);
         final directions = _getDirections(user: user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
         final bonuses = _getBonuses(user: user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
-        final titlesDrawingMenu = _getTitlesDrawingMenu(directions: user.directions);
+        final titlesDrawingMenu = CreatorListDirections.getTitlesDrawingMenu(directions: user.directions);
         emit(state.copyWith(
             titlesDrawingMenu: titlesDrawingMenu,
             bonuses: bonuses,
@@ -84,7 +85,7 @@ class SubBloc extends Bloc<SubEvent,SubState>{
          final lessons = _getAllLessons(user, event.allViewDir, event.currentDirIndex);
          final directions = _getDirections(user: user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
          final bonuses = _getBonuses(user: user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
-         final titlesDrawingMenu = _getTitlesDrawingMenu(directions: user.directions);
+         final titlesDrawingMenu = CreatorListDirections.getTitlesDrawingMenu(directions: user.directions);
          emit(state.copyWith(
              titlesDrawingMenu: titlesDrawingMenu,
              bonuses: bonuses,
@@ -116,39 +117,8 @@ class SubBloc extends Bloc<SubEvent,SubState>{
     });
   }
 
-  List<String> _getTitlesDrawingMenu({required List<DirectionLesson> directions}){
-    List<String> resultList = [];
-    List<Map<String,String>> dataNameDirList =[];
-    List<String> namesDirCopy = [];
-    String nameCopy = '';
-    //directions.sort((a,b)=>b.lastSubscription.balanceSub.compareTo(a.lastSubscription.balanceSub));
-    dataNameDirList = directions.map((e) =>{'nameDir': e.name,'nameTeacher':e.nameTeacher}).toList();
-    for(var n in dataNameDirList){
-      if(namesDirCopy.contains(n['nameDir'])){
-        nameCopy = n['nameDir']!;
-      }else{
-        namesDirCopy.add(n['nameDir']!);
-      }
-
-    }
-    for(var n in dataNameDirList){
-      if(n['nameDir'] == nameCopy){
-        resultList.add('$nameCopy (${_parseNAmeTeacher(n['nameTeacher']!)})');
-      }else{
-        resultList.add('${n['nameDir']}');
-      }
-    }
-    int length = resultList.length;
-    if(length>1){
-      resultList.insert(length, 'Все направления'.tr());
-    }
-    return resultList;
-  }
 
 
-  String _parseNAmeTeacher(String fullName){
-    return fullName.split(' ')[0];
-  }
 
 
   List<BonusEntity> _getBonuses({required UserEntity user, required indexDir,required bool allViewDir}){
@@ -197,7 +167,7 @@ class SubBloc extends Bloc<SubEvent,SubState>{
     final lessons = _getAllLessons(event.user, event.allViewDir, event.currentDirIndex);
     final directions = _getDirections(user: event.user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
     final bonuses = _getBonuses(user: event.user,indexDir: event.currentDirIndex,allViewDir: event.allViewDir);
-    final titlesDrawingMenu = _getTitlesDrawingMenu(directions: event.user.directions);
+    final titlesDrawingMenu = CreatorListDirections.getTitlesDrawingMenu(directions: event.user.directions);
     emit(state.copyWith(
         titlesDrawingMenu: titlesDrawingMenu,
         bonuses: bonuses,

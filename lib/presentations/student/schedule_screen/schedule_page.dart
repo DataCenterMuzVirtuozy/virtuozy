@@ -12,6 +12,7 @@ import 'package:virtuozy/domain/entities/schedule_lessons.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/router/paths.dart';
 import 'package:virtuozy/utils/auth_mixin.dart';
+import 'package:virtuozy/utils/craeator_list_directions.dart';
 import 'package:virtuozy/utils/date_time_parser.dart';
 import 'package:virtuozy/utils/status_to_color.dart';
 import '../../../components/box_info.dart';
@@ -74,17 +75,19 @@ class _SchedulePageState extends State<SchedulePage> with AuthMixin{
 
 
 
+
+
   @override
   Widget build(BuildContext context) {
 
     return BlocConsumer<ScheduleBloc,ScheduleState>(
       listener: (c,s){
         if(s.status == ScheduleStatus.loaded){
-          int length = s.user.directions.length;
-          _titlesDirections = s.user.directions.map((e) => e.name).toList();
-          if(length>1){
-            _titlesDirections.insert(length, 'Все направления'.tr());
-          }
+         // int length = s.user.directions.length;
+          _titlesDirections = CreatorListDirections.getTitlesDrawingMenu(directions: s.user.directions);
+          // if(length>1){
+          //   _titlesDirections.insert(length, 'Все направления'.tr());
+          // }
         }
 
 

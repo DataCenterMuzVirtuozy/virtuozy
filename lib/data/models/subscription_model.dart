@@ -70,7 +70,8 @@ class SubscriptionModel{
 
    final options = map['options']==null?[]:(map['options'] as List).map((m) => OptionModel.fromMap(m)).toList();
    //OptionModel.fromMap((map['options'] as List).isEmpty?[]:map['options']); //todo принимать список
-   final idDir = map['idDir'];
+   print('Cus ID ${map['customerId']}'); //idDir
+   final idDir = map['customerId'];
    final idUser = map['idUser'];
    int balanceSub = map['balanceSub'];
    final balanceLesson = map['balanceLesson'];
