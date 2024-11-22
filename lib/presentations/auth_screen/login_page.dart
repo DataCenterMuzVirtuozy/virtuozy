@@ -46,9 +46,10 @@ class _LogInPageState extends State<LogInPage> {
   @override
   void initState() {
     super.initState();
-
+     _phoneNum = PreferencesUtil.phoneUser;
     _phoneController = TextEditingController();
     _passwordController = TextEditingController();
+    if(_phoneNum.isNotEmpty) _phoneController.text = _phoneNum;
     _maskFormatter = MaskTextInputFormatter(
         mask: '+# (###) ###-##-##',
         filter: {"#": RegExp(r'[0-9]')},

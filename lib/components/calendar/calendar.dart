@@ -59,6 +59,7 @@ class _CalendarState extends State<Calendar> with AuthMixin {
   late DateTime _firstDay;
   late DateTime _focusedDay;
   late DateTime _lastDay;
+  late DateTime _toDay;
   late int interval = 2000;
   var isClicked = false;
   late Timer _timer;
@@ -70,6 +71,7 @@ class _CalendarState extends State<Calendar> with AuthMixin {
   @override
   void initState() {
     super.initState();
+    _toDay = DateTime.now();
     _focusedDay = widget.focusedDay;
   }
 
@@ -156,6 +158,7 @@ class _CalendarState extends State<Calendar> with AuthMixin {
             calendarBuilders: CalendarBuilders(
               outsideBuilder: (context, day, values) {
                 return _handlerDay(
+                    toDay: _toDay,
                     focusedDayStatus: widget.focusedDayStatus,
                     visibleStatusColor: widget.visibleStatusColor,
                     clickableDay: widget.clickableDay,
@@ -178,6 +181,7 @@ class _CalendarState extends State<Calendar> with AuthMixin {
                       today: day);
                 }
                 return _handlerDay(
+                    toDay: _toDay,
                     visibleStatusColor: widget.visibleStatusColor,
                     clickableDay: widget.clickableDay,
                     dateTime: day,
@@ -194,6 +198,7 @@ class _CalendarState extends State<Calendar> with AuthMixin {
                 _onDay(day);
                 _onMonth(day.month);
                 return _handlerDay(
+                  toDay: _toDay,
                     focusedDayStatus: widget.focusedDayStatus,
                     visibleStatusColor: widget.visibleStatusColor,
                     clickableDay: widget.clickableDay,
@@ -302,12 +307,13 @@ class _CalendarState extends State<Calendar> with AuthMixin {
       required bool visibleStatusColor,
       required DateTime dateTime,
       required int monthOfDay,
+        required DateTime toDay,
       required BuildContext context,
       required bool clickableDay,
       required Function onLesson}) {
     try {
       final stringDays = lessons.map((e) => e.date).toList();
-
+      final today = toDay.day == dateTime.day&&toDay.month == dateTime.month;
       if (stringDays.contains(DateFormat('yyyy-MM-dd').format(dateTime))) {
         Lesson lesson = lessons.firstWhere((element) =>
             DateFormat('yyyy-MM-dd').parse(element.date).day == day &&
@@ -374,7 +380,7 @@ class _CalendarState extends State<Calendar> with AuthMixin {
                           Center(
                             child: Text(
                               day.toString(),
-                              style: TStyle.textStyleVelaSansBold(colorBlack),
+                              style: TStyle.textStyleVelaSansBold(today?colorRed:colorBlack),
                             ),
                           ),
                         ],
@@ -519,22 +525,32 @@ class _InfoColorState extends State<InfoColor> {
                       horizontal: 20.0, vertical: 2.0),
                   child: Row(
                     children: [
-                      Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.0),
-                            color: StatusToColor.statusColors[index]),
+                      SizedBox(
                         width: 30.0,
                         height: 20.0,
-                        child: Visibility(
-                          visible: false,
-                          child: RotationTransition(
-                            turns: const AlwaysStoppedAnimation(135 / 360),
-                            child: Container(
-                              margin: const EdgeInsets.all(5),
-                              height: 1.0,
-                              color: colorOrange,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  border: Border.all(color: colorOrange),
+                                  color: StatusToColor.statusColors[index]),
+                              width: 30.0,
+                              height: 20.0,
                             ),
-                          ),
+                            Visibility(
+                              visible: index == 8,
+                              child: RotationTransition(
+                                turns: const AlwaysStoppedAnimation(135 / 360),
+                                child: Container(
+                                  height:  1.0,
+                                  margin: const EdgeInsets.all(3),
+                                  color: colorOrange,
+                                ),
+                              ),
+                            )
+                          ],
                         ),
                       ),
                       const Gap(10.0),

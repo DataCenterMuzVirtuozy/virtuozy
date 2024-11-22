@@ -67,8 +67,8 @@ class UserModel{
     //if(directions.length>5)directions.removeAt(9); //todo index 9 from crm - {id: null, name: Не выбрано, nameTeacher:  Не выбрано }
    //final settingsMap = mapUser['settingNotifi'] as List<dynamic>; //todo type 'String' is not a subtype of type 'List<dynamic>' in type cast
     //final docs =  mapUser['documents'] as List<dynamic>;//todo type 'String' is not a subtype of type 'List<dynamic>' in type cast
-    final subway  = SubwayModel.fromMap(mapUser['subway']);
-    final List<SubwayModel> listSubway = subway.color.isEmpty?[]:[subway];
+    final List<dynamic> subways  = mapUser['subways']??[];
+   // final List<SubwayModel> listSubway = subway.color.isEmpty?[]:[subway];
     final branchName = ContactSchoolByLocation.getIdLocation();
     return UserModel(
       //notifiSttings: settingsMap.map((e) => NotifiSettingModel.fromMap(e)).toList(),
@@ -91,7 +91,7 @@ class UserModel{
       date_birth: mapUser['date_birth']??'',
       registration_date: mapUser['registration_date']??'',
       has_kids: mapUser['has_kids'] == '1'?true:false,
-      subways: listSubway,
+      subways: subways.isEmpty?[]:subways.map((e)=>SubwayModel.fromMap(e)).toList(),
       who_find: mapUser['who_find']??'',
       avaUrl: mapUser['avaUrl']??'',
     );

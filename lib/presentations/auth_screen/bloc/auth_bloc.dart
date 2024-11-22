@@ -100,7 +100,7 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
         return;
       }else{
         UserEntity user = await _userRepository.logIn(phone: event.phone,password: event.password);
-        //await PreferencesUtil.setUID(uid: event.phone);
+        await PreferencesUtil.setPhoneUser(phone: event.phone);
         user = user.copyWith(userStatus: UserStatus.auth);
         _userCubit.setUser(user: user);
         await _createLocalUser(user);
@@ -137,6 +137,7 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
       }
       await Future.delayed(const Duration(seconds: 2));
       await _userRepository.signIn(phone: event.phone, name: event.name, surName: event.surName);
+      await PreferencesUtil.setPhoneUser(phone: event.phone);
       final user = _createUserEntity(event);
       await _createLocalUser(user);
       emit(state.copyWith(authStatus: AuthStatus.sendRequestCode));

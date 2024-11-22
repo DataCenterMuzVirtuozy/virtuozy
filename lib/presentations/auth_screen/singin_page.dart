@@ -41,6 +41,7 @@ class _SingInPageState extends State<SingInPage> {
   late MaskTextInputFormatter _maskFormatter;
   bool _darkTheme = false;
   String selectedValue = "Не выбрано";
+  String _phoneNum = '';
 
   List<DropdownMenuItem<String>> get dropdownItems{
     List<DropdownMenuItem<String>> menuItems = [
@@ -71,9 +72,11 @@ class _SingInPageState extends State<SingInPage> {
   @override
   void initState() {
     super.initState();
+    _phoneNum = PreferencesUtil.phoneUser;
     _phoneController = TextEditingController();
     _lastNameController = TextEditingController();
     _firsNameController = TextEditingController();
+    if(_phoneNum.isNotEmpty) _phoneController.text = _phoneNum;
     _maskFormatter = MaskTextInputFormatter(
         mask: '+# (###) ###-##-##',
         filter: { "#": RegExp(r'[0-9]') },

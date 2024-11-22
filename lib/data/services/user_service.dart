@@ -85,6 +85,7 @@ class UserService{
 
       throw  Failure(e.message);
     } on DioException catch(e,stack){
+      print('Stake ${stack} Error ${e.message}');
       throw  Failure('Ошибка авторизации'.tr());
     }
   }
@@ -120,7 +121,8 @@ class UserService{
       return UserModel.fromMap(mapUser: resUser.data, mapSubsAll: listSubs,lessons: listLess);
     } on Failure catch(e){
        throw  Failure(e.message);
-    } on DioException catch(e){
+    } on DioException catch(e,stack){
+      print('Stake ${stack}');
       throw  Failure('Ошибка авторизации'.tr());
     }
    }
