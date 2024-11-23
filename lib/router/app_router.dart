@@ -30,6 +30,7 @@ import '../presentations/student/promotion_screen/details_promo_page.dart';
 import '../presentations/student/schedule_screen/details_schedule_page.dart';
 import '../presentations/student/subscription_screen/details_bonus_page.dart';
 import '../presentations/student/theme_screen/theme_page.dart';
+import '../presentations/student/web_screen/web_page.dart';
 
 
 class AppRouter{
@@ -157,6 +158,14 @@ class AppRouter{
               key: state.pageKey,
               child:  ListSubscriptionHistory(
                   listExpiredSubscriptions: (state.extra as List<SubscriptionEntity>)));
+        },
+      ),
+      GoRoute(
+        path: pathWep,
+        pageBuilder: (context, state) {
+          return CupertinoPage(
+              key: state.pageKey,
+              child:    WebPage(url: (state.extra as String)));
         },
       ),
       GoRoute(

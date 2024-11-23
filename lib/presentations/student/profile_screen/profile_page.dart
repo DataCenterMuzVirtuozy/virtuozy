@@ -84,7 +84,7 @@ import 'bloc/profile_state.dart';
          child: BlocConsumer<ProfileBloc,ProfileState>(
            listener: (c,s){
              if(s.profileStatus == ProfileStatus.error){
-               Dialoger.showMessage(s.error);
+               Dialoger.showMessage(s.error,context: context);
              }
              if(s.profileStatus == ProfileStatus.saved){
                _edit = false;
@@ -107,11 +107,14 @@ import 'bloc/profile_state.dart';
            },
            builder: (context,state) {
 
-             if(state.profileStatus == ProfileStatus.loading){
+             if(state.profileStatus == ProfileStatus.loading||
+                 state.profileStatus == ProfileStatus.saving){
                return Center(child: CircularProgressIndicator(color: colorOrange));
              }
 
-            if(state.profileStatus == ProfileStatus.loaded){
+            if(state.profileStatus == ProfileStatus.loaded
+                ||state.profileStatus == ProfileStatus.error
+            ||state.profileStatus == ProfileStatus.saved){
               return IgnorePointer(
                 ignoring: state.profileStatus == ProfileStatus.saving,
                 child: SingleChildScrollView(
@@ -318,9 +321,11 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
 
   Color _getColorSubway(String color){
     final code = color;
-    print('Code color ${code}');
     if(code.isEmpty){
-      return Colors.transparent;
+      return Theme.of(context)
+          .textTheme
+          .displayMedium!
+          .color!;
     }
     return  Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }

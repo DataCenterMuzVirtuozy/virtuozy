@@ -22,6 +22,7 @@ import '../../../components/app_bar.dart';
 import '../../../components/box_info.dart';
 import '../../../components/dialogs/dialoger.dart';
 import '../../../components/drawing_menu_selected.dart';
+import '../../../data/rest/endpoints.dart';
 import '../../../domain/entities/subscription_entity.dart';
 import '../../../utils/date_time_parser.dart';
 import '../../../utils/text_style.dart';
@@ -206,7 +207,7 @@ class _FinancePageState extends State<FinancePage> {
                                 colorFill: colorBeruza,
                                  textButton: 'Пополнить'.tr(),
                                  onTap: () {
-                                   GoRouter.of(context).push(pathPay,extra:state.directions);
+                                   GoRouter.of(context).push(pathWep,extra: Endpoints.urlPrice);
                                  }
                              ),
                            ),

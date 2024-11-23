@@ -15,6 +15,7 @@ import 'package:virtuozy/components/calendar/calendar.dart';
 import 'package:virtuozy/components/dialogs/dialoger.dart';
 import 'package:virtuozy/components/teacher_contacts.dart';
 import 'package:virtuozy/components/title_page.dart';
+import 'package:virtuozy/data/rest/endpoints.dart';
 import 'package:virtuozy/domain/entities/subscription_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/resourses/colors.dart';
@@ -25,6 +26,7 @@ import 'package:virtuozy/utils/date_time_parser.dart';
 import '../../../components/buttons.dart';
 import '../../../components/dialogs/sealeds.dart';
 import '../../../components/drawing_menu_selected.dart';
+import '../../../components/home_drawer_menu.dart';
 import '../../../di/locator.dart';
 import '../../../domain/entities/lesson_entity.dart';
 import '../../../utils/parser_price.dart';
@@ -402,7 +404,7 @@ class _BoxSubscriptionState extends State<BoxSubscription> {
                        final selIndexDir = widget.namesDir.indexWhere((element) => element == nameDir);
                        GoRouter.of(context).push(pathFinance,extra: selIndexDir);
                      }else{
-                       GoRouter.of(context).push(pathPay,extra: widget.directions);
+                       GoRouter.of(context).push(pathWep,extra: Endpoints.urlPrice);
                      }
                    },
                      subscription: subs[index]);
@@ -447,7 +449,8 @@ class _BoxSubscriptionState extends State<BoxSubscription> {
             child: SubmitButton(
               textButton: 'Пополнить'.tr(),
               onTap: () {
-                GoRouter.of(context).push(pathPay,extra: widget.directions);
+                //currentItemNotifier.value = 4;
+                GoRouter.of(context).push(pathWep,extra: Endpoints.urlPrice);
               }
             ),
           ),

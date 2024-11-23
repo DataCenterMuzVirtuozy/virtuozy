@@ -2,7 +2,9 @@
 
 
  import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:virtuozy/bloc/app_bloc.dart';
 import 'package:virtuozy/di/locator.dart';
 import 'package:virtuozy/domain/entities/edit_profile_entity.dart';
 import 'package:virtuozy/domain/entities/subway_entity.dart';
@@ -80,10 +82,13 @@ class ProfileBloc extends Bloc<ProfileEvent,ProfileState>{
 
   void _saveNewUserData(SaveNewDataUserEvent event,emit) async {
    try{
+     print('p1');
      EditProfileEntity profileEdited = event.editProfileEntity;
      UserEntity user = _userCubit.userEntity;
      emit(state.copyWith(profileStatus: ProfileStatus.saving));
+     print('p2');
     if(profileEdited.fileImageUrl != null){
+      print('p3');
       final url = await _userRepository.loadAvaProfile(uid: user.id, profileEntity: event.editProfileEntity);
       profileEdited = profileEdited.copyWith(urlAva: url);
     }
@@ -96,10 +101,16 @@ class ProfileBloc extends Bloc<ProfileEvent,ProfileState>{
          who_find: profileEdited.whoFindTeem,
          sex: profileEdited.sex);
      _userCubit.setUser(user: user);
+     print('p4');
      await _userRepository.saveSettingDataProfile(uid: user.id, profileEntity: profileEdited);
+     print('p5');
      emit(state.copyWith(profileStatus: ProfileStatus.saved,userEntity: user));
-   }on Failure catch(e){
-    emit(state.copyWith(profileStatus: ProfileStatus.error,error: e.message));
+   }on Failure catch(e,s){
+     print('p6 $s');
+    emit(state.copyWith(profileStatus: ProfileStatus.error,error: 'Ошибка отправки данных'.tr()));
+   } catch (e,s){
+     print('p7 $s');
+     emit(state.copyWith(profileStatus: ProfileStatus.error,error: 'Ошибка отправки данных'.tr()));
    }
   }
 

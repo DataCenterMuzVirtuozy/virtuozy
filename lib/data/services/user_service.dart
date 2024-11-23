@@ -1,7 +1,9 @@
 
 
 
- import 'package:dio/dio.dart';
+ import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:virtuozy/data/models/document_model.dart';
 import 'package:virtuozy/data/rest/dio_client.dart';
@@ -181,25 +183,24 @@ class UserService{
        final dioApi = locator.get<DioClient>().initApi();
        final List<Map<String,dynamic>> subWay = [];
 
-
+       final token =  PreferencesUtil.token;
        for(var s in profileEntity.subways){
          subWay.add({
            "value":s.name,
-           "color":s.color
+           //"color":s.color
          });
        }
 
-       await dioApi.patch('${Endpoints.user}/$uid',
-           data: {
-             'subways':subWay,
-             'sex': profileEntity.sex,
-             'date_birth':profileEntity.dateBirth,
-             'has_kids': profileEntity.hasKind,
-             'avaUrl':profileEntity.urlAva,
-             'about_me':profileEntity.aboutMe,
-             'who_find':profileEntity.whoFindTeem
-
-           });
+       var data =  {
+         'subways':subWay,
+         'date_of_birth': profileEntity.dateBirth,
+         'group_search_preferences':profileEntity.whoFindTeem
+       };
+       await dioApi.post(Endpoints.update,
+           options: Options(
+               headers: {'Authorization':'Bearer $token'}
+           ),
+           data: jsonEncode(data));
 
      } on Failure catch(e){
        print('Error 1 ${e.message}');
@@ -241,6 +242,7 @@ class UserService{
      try{
        final dioApi = locator.get<DioClient>().initApi();
      final user = locator.get<UserCubit>();
+     final loc =  user.userEntity.branchName=='msk'?'Москва':'Новосибирск';
      final res =  await dioApi.post(Endpoints.subways,
            options: Options(
              headers: {"Authorization": "Token $apiKeyDaData"}
@@ -249,7 +251,7 @@ class UserService{
             'query':query,
              'filters':[
                {
-                 "city": user.userEntity.branchName,
+                 "city":loc,
                }
              ]
            });

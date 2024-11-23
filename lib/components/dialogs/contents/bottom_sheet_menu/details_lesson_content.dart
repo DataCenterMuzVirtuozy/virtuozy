@@ -89,10 +89,13 @@ class _DetailsLessonContentState extends State<DetailsLessonContent> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Урок № ${widget.lessons[selectedPage].number} ${_maxNumberLessonFromSubs(idSub: widget.lessons[selectedPage].idSub, subs:_lastAllSubscribtion)}',
-                    style: TStyle.textStyleGaretHeavy(colorWhite,
-                        size: 16.0),
+                  Visibility(
+                    visible: widget.lessons[selectedPage].number>0,
+                    child: Text(
+                      'Урок № ${widget.lessons[selectedPage].number} ${_maxNumberLessonFromSubs(idSub: widget.lessons[selectedPage].idSub, subs:_lastAllSubscribtion)}',
+                      style: TStyle.textStyleGaretHeavy(colorWhite,
+                          size: 16.0),
+                    ),
                   ),
                   InkWell(
                       onTap: () {

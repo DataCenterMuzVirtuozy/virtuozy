@@ -53,7 +53,7 @@ class _SubwaysContentState extends State<SubwaysContent> with AuthMixin {
                     ),
                     const Gap(5),
                     Text(
-                      user.branchName,
+                      user.branchName=='msk'?'Москва':'Новосибирск',
                       style:
                           TStyle.textStyleVelaSansBold(colorOrange, size: 16),
                     )

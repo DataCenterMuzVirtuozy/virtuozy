@@ -189,7 +189,7 @@ class _MainPageState extends State<MainPage> with AuthMixin{
         SchedulePage(currentMonth: globalCurrentMonthCalendar),
         const FinancePage(selIndexDirection: -1),
         const PromotionPage(),
-        const WebPage()
+        const WebPage(url: '',)
       ];
     }else if(userType.isTeacher){
       return [
@@ -205,7 +205,7 @@ class _MainPageState extends State<MainPage> with AuthMixin{
         SchedulePage(currentMonth: globalCurrentMonthCalendar),
         const FinancePage(selIndexDirection: -1),
         const PromotionPage(),
-        const WebPage()
+        const WebPage(url: '',)
       ];
     }
 

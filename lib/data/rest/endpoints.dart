@@ -10,16 +10,17 @@ class Endpoints{
   static const String transactions = '/transactions';
   static const String uploads = '/uploads';
   static const String clients ='/clients';
+  static const String update = '/users/update';
   static const String logIn  = '/login';
   static const String singIn  = '/register';
   static const String urlNSK = 'https://virtuozy-nsk.ru';
   static const String urlMSK = 'https://virtuozy-msk.ru';
+  static const String urlPrice = 'https://virtuozy-msk.ru/price/';
   static const String subways = 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/metro';
 
 
 
-  //api crm
-  static const String baseApi = 'https://crm-muz.ru/api';
+
   static const String subs = '/subsUser';
 
 }

@@ -15,7 +15,9 @@ import 'package:webview_flutter/webview_flutter.dart';
 
  //todo pag not loading in ios
 class WebPage extends StatefulWidget{
-  const WebPage({super.key});
+  const WebPage({super.key, required this.url});
+
+  final String url;
 
   @override
   State<WebPage> createState() => _WebPageState();
@@ -30,11 +32,17 @@ class _WebPageState extends State<WebPage> with AuthMixin{
   @override
   void initState() {
     super.initState();
-    if(user.branchName == 'msk'){
-       _urlWeb = Endpoints.urlMSK;
+
+    if(widget.url.isEmpty){
+      if(user.branchName == 'msk'){
+        _urlWeb = Endpoints.urlMSK;
+      }else{
+        _urlWeb = Endpoints.urlNSK;
+      }
     }else{
-      _urlWeb = Endpoints.urlNSK;
+      _urlWeb = widget.url;
     }
+
     // #docregion platform_features
     late final PlatformWebViewControllerCreationParams params;
 
@@ -114,10 +122,13 @@ Page resource error:
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      body: _loadingPage?const Center(child: CircularProgressIndicator()):
+      Padding(
+        padding:  EdgeInsets.only(top: widget.url.isEmpty?0:30),
+        child: WebViewWidget(controller: _controller),
+      ),
+    );
 
-    if(_loadingPage){
-      return const Center(child: CircularProgressIndicator());
-    }
-    return WebViewWidget(controller: _controller);
   }
 }

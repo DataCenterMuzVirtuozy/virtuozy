@@ -380,7 +380,7 @@ class _CalendarState extends State<Calendar> with AuthMixin {
                           Center(
                             child: Text(
                               day.toString(),
-                              style: TStyle.textStyleVelaSansBold(today?colorRed:colorBlack),
+                              style: TStyle.textStyleVelaSansBold(colorBlack,size: today?16:12),
                             ),
                           ),
                         ],
