@@ -194,7 +194,9 @@ class UserService{
        var data =  {
          'subways':subWay,
          'date_of_birth': profileEntity.dateBirth,
-         'group_search_preferences':profileEntity.whoFindTeem
+         'group_search_preferences':profileEntity.whoFindTeem,
+         'has_child': profileEntity.hasKind?1:0,
+         'about': profileEntity.aboutMe
        };
        await dioApi.post(Endpoints.update,
            options: Options(
