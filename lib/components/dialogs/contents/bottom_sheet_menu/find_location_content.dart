@@ -14,6 +14,7 @@ import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/add_lesso
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/utils/preferences_util.dart';
 
+import '../../../../presentations/auth_screen/singin_page.dart';
 import '../../../../resourses/images.dart';
 import '../../../../resourses/strings.dart';
 import '../../../../utils/text_style.dart';
@@ -66,8 +67,10 @@ class _FindLocationContentState extends State<FindLocationContent> with TickerPr
         _administrativeArea = place.administrativeArea!;
          if(place.administrativeArea!.contains(_paterns[2])||place.administrativeArea!.contains(_paterns[3])){
            _currentAddress = 'msk';
+           openDropMenuNotifier.value = _currentAddress;
          }else if(place.administrativeArea!.contains(_paterns[0])||place.administrativeArea!.contains(_paterns[1])){
            _currentAddress = 'nsk';
+           openDropMenuNotifier.value = _currentAddress;
          }else{
            _currentAddress = '1';
          }
@@ -174,6 +177,7 @@ class _FindLocationContentState extends State<FindLocationContent> with TickerPr
                             if(_currentAddress=='1'||_currentAddress == '0'){
                               Navigator.pop(context);
                               controllerMenu.open();
+                              openDropMenuNotifier.value = 'open';
                               return;
                             }
                             Navigator.pop(context);

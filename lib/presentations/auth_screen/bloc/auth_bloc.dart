@@ -50,7 +50,6 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
         return;
       }
 
-      final phone = PreferencesUtil.phoneUser;
       if(event.phone == "+3 (333) 333-33-33"){
         final teacher = await _teacherRepository.getTeacher(uid: event.phone);
         _teacherCubit.setTeacher(teacher: teacher);
@@ -60,46 +59,7 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
          return;
       }
 
-      if(phone == event.phone){
-        await Future.delayed(const Duration(seconds: 1));
-        //todo id
-        _userCubit.setUser(user:  UserEntity(
-            notifiSttings: [
-              const NotifiSettingsEntity(name:"Уведомление об оплате",
-                config:1),
-              const NotifiSettingsEntity(name:"Подтверждение уроков",
-                config:1),
-              const NotifiSettingsEntity(name:"Напоминание об уроке",
-                config:1),
-              const NotifiSettingsEntity(name:"Пропуск урока",
-                config:1),
-              const NotifiSettingsEntity(name:"Уведомление о бонусах",
-                config:1),
-              const NotifiSettingsEntity(name:"Новые предложения",
-                config:1),
-            ],
-            documents: [],
-            userStatus: UserStatus.moderation,
-            lastName: PreferencesUtil.lastNameUser,
-            firstName: PreferencesUtil.firstNameUser,
-            branchName: PreferencesUtil.branchUser,
-            phoneNumber: PreferencesUtil.phoneUser,
-            userType: UserType.student,
-            directions: [],
-            id: 0,
-            sex: '',
-            about_me: '',
-            date_birth: '',
-            registration_date: '',
-            has_kids: false,
-            subways:[],
-            avaUrl: '',
-            who_find: ''));
-        await PreferencesUtil.setTypeUser(userType: UserType.student);
-        emit(state.copyWith(authStatus: AuthStatus.moderation));
-        return;
-      }else{
-        UserEntity user = await _userRepository.logIn(phone: event.phone,password: event.password);
+      UserEntity user = await _userRepository.logIn(phone: event.phone,password: event.password);
         await PreferencesUtil.setPhoneUser(phone: event.phone);
         user = user.copyWith(userStatus: UserStatus.auth);
         _userCubit.setUser(user: user);
@@ -107,8 +67,6 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
         await Future.delayed(const Duration(seconds: 1));
         await PreferencesUtil.setTypeUser(userType: UserType.student);
         emit(state.copyWith(authStatus: AuthStatus.authenticated));
-        return;
-      }
 
     }on Failure catch (e){
       await PreferencesUtil.clear();

@@ -87,6 +87,9 @@ class PreferencesUtil{
     await _prefsInstance!.setInt(_keyTheme, theme);
   }
 
+
+  //getters
+
   static String get urlSchool => _prefsInstance!.getString(_keyUrlSchool)??'';
   static int get statusUser => _prefsInstance!.getInt(_keyStatus)??0;
   static String get lastNameUser => _prefsInstance!.getString(_keyLastName)??'';
@@ -118,7 +121,16 @@ class PreferencesUtil{
 
 
   static clear() async {
-    _prefsInstance!.clear();
+    _prefsInstance!.remove(_keyUrlSchool);
+    _prefsInstance!.remove(_keyStatus);
+    _prefsInstance!.remove(_keyLastName);
+    _prefsInstance!.remove(_keyFirstName);
+    _prefsInstance!.remove(_keyBranch);
+    _prefsInstance!.remove(_keyToken);
+    _prefsInstance!.remove(_keyTypeUser);
+    _prefsInstance!.remove(_keyTheme);
+    _prefsInstance!.remove(_keyUrlSchool);
+
   }
 
 

@@ -28,6 +28,7 @@ import '../../utils/text_style.dart';
 import '../../utils/theme_provider.dart';
 import '../student/subscription_screen/bloc/sub_event.dart';
 
+
 class LogInPage extends StatefulWidget {
   const LogInPage({super.key});
 
@@ -40,20 +41,27 @@ class _LogInPageState extends State<LogInPage> {
   late TextEditingController _phoneController;
   late TextEditingController _passwordController;
   bool _darkTheme = false;
-  String _phoneNum = '';
+  String _phoneNumSupport = '';
+  String _phoneNumUser = '';
   late MaskTextInputFormatter _maskFormatter;
 
   @override
   void initState() {
     super.initState();
-     _phoneNum = PreferencesUtil.phoneUser;
+    _phoneNumUser = PreferencesUtil.phoneUser;
     _phoneController = TextEditingController();
     _passwordController = TextEditingController();
-    if(_phoneNum.isNotEmpty) _phoneController.text = _phoneNum;
+
     _maskFormatter = MaskTextInputFormatter(
         mask: '+# (###) ###-##-##',
         filter: {"#": RegExp(r'[0-9]')},
         type: MaskAutoCompletionType.lazy);
+    if(_phoneNumUser.isNotEmpty) {
+
+      final phone = _maskFormatter.maskText(_phoneNumUser);
+      _phoneController.text = phone;
+    }
+
   }
 
   @override
@@ -81,7 +89,7 @@ class _LogInPageState extends State<LogInPage> {
       appBar: AppBar(
         actions:  [MyCheckboxMenu(onChange: (idLoc){
           setState(() {
-            _phoneNum = ContactSchoolByLocation.getPhoneNumberByIdLocation(idLoc);
+            _phoneNumSupport = ContactSchoolByLocation.getPhoneNumberByIdLocation(idLoc);
           });
 
 
@@ -160,7 +168,7 @@ class _LogInPageState extends State<LogInPage> {
                           fillColor: colorPink.withOpacity(0.5)),
                       const Gap(20.0),
                       Visibility(
-                        visible: _phoneNum.isNotEmpty,
+                        visible: _phoneNumSupport.isNotEmpty,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -173,10 +181,10 @@ class _LogInPageState extends State<LogInPage> {
                             ),
                             TextButton(
                                 onPressed: () async {
-                                  await _launchUrlTel(tel: _phoneNum);
+                                  await _launchUrlTel(tel: _phoneNumSupport);
                                 },
                                 child: Text(
-                                  _phoneNum,
+                                  _phoneNumSupport,
                                   style: TStyle.textStyleVelaSansRegularUnderline(
                                       colorRed,
                                       size: 16.0),
@@ -196,10 +204,12 @@ class _LogInPageState extends State<LogInPage> {
                       const Gap(10.0),
                       TextButton(
                           onPressed: () {
-                            if (state.authStatus !=
-                                AuthStatus.sendRequestCode) {
-                              GoRouter.of(context).push(pathSingIn);
-                            }
+                            // if (state.authStatus !=
+                            //     AuthStatus.sendRequestCode) {
+                            //   GoRouter.of(context).push(pathSingIn);
+                            // }
+
+                            GoRouter.of(context).push(pathSingIn);
                           },
                           child: Text(
                             'Регистрация'.tr(),

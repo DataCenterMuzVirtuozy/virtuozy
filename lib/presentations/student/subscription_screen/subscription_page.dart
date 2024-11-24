@@ -371,6 +371,11 @@ class _BoxSubscriptionState extends State<BoxSubscription> {
 
   }
 
+   List<SubscriptionEntity> _getHistorySubscriptions(List<DirectionLesson> directions,int idSelDir){
+    DirectionLesson dir = directions.firstWhere((d)=>d.id==idSelDir);
+     return dir.subscriptionsAll;
+   }
+
   @override
   Widget build(BuildContext context) {
     return            Container(
@@ -399,13 +404,10 @@ class _BoxSubscriptionState extends State<BoxSubscription> {
                  // }
 
                  return ItemSub(
-                   onTap: (String nameDir){
-                     if(widget.allViewDirection){
-                       final selIndexDir = widget.namesDir.indexWhere((element) => element == nameDir);
-                       GoRouter.of(context).push(pathFinance,extra: selIndexDir);
-                     }else{
-                       GoRouter.of(context).push(pathWep,extra: Endpoints.urlPrice);
-                     }
+                   onTap: (int idDir){
+                     final subsList = _getHistorySubscriptions(widget.directions, idDir);
+                     GoRouter.of(context).push(pathListSubscriptionsHistory,extra:subsList);
+
                    },
                      subscription: subs[index]);
 
@@ -637,7 +639,7 @@ class _ItemSubState extends State<ItemSub> {
                     alignment: Alignment.centerRight,
                     child: InkWell(
                       onTap: (){
-                        widget.onTap.call(widget.subscription.nameDir);
+                        widget.onTap.call(widget.subscription.idDir);
                       },
                         child: Text('Подробнее',style: TStyle.textStyleVelaSansRegularUnderline(colorGrey,size: 12),)),
                   )

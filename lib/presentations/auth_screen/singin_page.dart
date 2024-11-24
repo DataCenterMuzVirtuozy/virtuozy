@@ -26,6 +26,9 @@ import '../../utils/text_style.dart';
 import '../../utils/theme_provider.dart';
 import 'bloc/auth_event.dart';
 
+
+ ValueNotifier<String> openDropMenuNotifier = ValueNotifier('');
+
 class SingInPage extends StatefulWidget{
   const SingInPage({super.key});
 
@@ -42,6 +45,7 @@ class _SingInPageState extends State<SingInPage> {
   bool _darkTheme = false;
   String selectedValue = "Не выбрано";
   String _phoneNum = '';
+    final GlobalKey _dropdownButtonKey = GlobalKey();
 
   List<DropdownMenuItem<String>> get dropdownItems{
     List<DropdownMenuItem<String>> menuItems = [
@@ -50,6 +54,24 @@ class _SingInPageState extends State<SingInPage> {
       DropdownMenuItem(value: "Не выбрано", child: Text("Не выбрано",style: TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0),)),
     ];
     return menuItems;
+  }
+
+  void openDropdown() {
+    GestureDetector? detector;
+    void searchForGestureDetector(BuildContext element) {
+      element.visitChildElements((element) {
+        if (element.widget is GestureDetector) {
+          detector = element.widget as GestureDetector?;
+        } else {
+          searchForGestureDetector(element);
+        }
+
+      });
+    }
+    searchForGestureDetector(_dropdownButtonKey.currentContext!);
+    assert(detector != null);
+    detector!.onTap!();
+
   }
 
 
@@ -72,16 +94,32 @@ class _SingInPageState extends State<SingInPage> {
   @override
   void initState() {
     super.initState();
-    _phoneNum = PreferencesUtil.phoneUser;
+    //_phoneNum = PreferencesUtil.phoneUser;
     _phoneController = TextEditingController();
     _lastNameController = TextEditingController();
     _firsNameController = TextEditingController();
-    if(_phoneNum.isNotEmpty) _phoneController.text = _phoneNum;
+    //if(_phoneNum.isNotEmpty) _phoneController.text = _phoneNum;
     _maskFormatter = MaskTextInputFormatter(
         mask: '+# (###) ###-##-##',
         filter: { "#": RegExp(r'[0-9]') },
         type: MaskAutoCompletionType.lazy
     );
+
+    openDropMenuNotifier.addListener((){
+      if(openDropMenuNotifier.value =='open'){
+        openDropdown();
+      }else if(openDropMenuNotifier.value == 'msk'){
+        setState(() {
+          selectedValue = 'Москва';
+          _saveLocation(selectedValue);
+        });
+      }else if(openDropMenuNotifier.value == 'nsk'){
+        setState(() {
+          selectedValue = 'Новосибирск';
+          _saveLocation(selectedValue);
+        });
+      }
+    });
   }
 
   @override
@@ -119,7 +157,7 @@ class _SingInPageState extends State<SingInPage> {
             listener: (c, s) {
 
               if(s.authStatus == AuthStatus.sendRequestCode){
-                GoRouter.of(context).push(pathSuccessSendSMS);
+                GoRouter.of(context).pushReplacement(pathSuccessSendSMS);
               }
 
               if(s.error.isNotEmpty){
@@ -174,17 +212,21 @@ class _SingInPageState extends State<SingInPage> {
                         ),
                         child: Stack(
                           children: [
+
                             DropdownButton(
-                              underline: Container(color: Colors.transparent,),
-                              isExpanded: true,
-                              value: selectedValue,
-                                items: dropdownItems,
-                                onChanged: (v){
-                                    setState(() {
-                                      selectedValue = v!;
-                                      _saveLocation(selectedValue);
-                                    });
-                                }),
+                                  key  : _dropdownButtonKey,
+                                  underline: Container(color: Colors.transparent,),
+                                  isExpanded: true,
+                                  value: selectedValue,
+                                    items: dropdownItems,
+                                    onChanged: (v){
+                                        setState(() {
+                                          selectedValue = v!;
+                                          _saveLocation(selectedValue);
+                                        });
+
+                              }
+                            ),
                             Visibility(
                               visible: selectedValue == 'Не выбрано',
                               child: Align(
