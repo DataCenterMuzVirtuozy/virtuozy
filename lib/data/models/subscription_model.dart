@@ -68,9 +68,10 @@ class SubscriptionModel{
 
   factory SubscriptionModel.fromMap(Map<String, dynamic> map,String nameDirection) {
 
-   final options = map['options']==null?[]:(map['options'] as List).map((m) => OptionModel.fromMap(m)).toList();
-   //OptionModel.fromMap((map['options'] as List).isEmpty?[]:map['options']); //todo принимать список
-   print('Cus ID ${map['customerId']}'); //idDir
+   final options = (map['options'] as List).map((m) => OptionModel.fromMap(m)).toList();
+    for(var o in options){
+      print('Options ${o.status} ${o.dateEnd}');
+    }
    final idDir = map['customerId'];
    final idUser = map['idUser'];
    int balanceSub = map['balanceSub'];
@@ -96,7 +97,7 @@ class SubscriptionModel{
       dateBay: map['dateBay'] as String,
       nameDir: nameDirection,
       nameTeacher: map['nameTeacher'] as String,
-        options: [] // null from crm
+        options: options.where((o)=>o.dateEnd.isNotEmpty).toList()// null from crm
     );
   }
 }

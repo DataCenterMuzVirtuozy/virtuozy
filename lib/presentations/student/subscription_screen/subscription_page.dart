@@ -33,6 +33,7 @@ import '../../../utils/parser_price.dart';
 import '../../../utils/text_style.dart';
 import '../finance_screen/bloc/bloc_finance.dart';
 import '../finance_screen/bloc/event_finance.dart';
+import '../widgets/options_list.dart';
 import 'bloc/sub_bloc.dart';
 import 'bloc/sub_event.dart';
 import 'bloc/sub_state.dart';
@@ -479,6 +480,7 @@ class _ItemSubState extends State<ItemSub> {
 
 
   bool _open = false;
+  double _heightContainer = 80;
 
 
   int _countAllLesson(SubscriptionEntity subscription){
@@ -489,6 +491,13 @@ class _ItemSubState extends State<ItemSub> {
 
   @override
   Widget build(BuildContext context) {
+
+    if(!_open){
+      _heightContainer = 80;
+    }else{
+      _heightContainer = widget.subscription.options.isEmpty?140:
+      140+(widget.subscription.options.length*70);
+    }
     return Padding(
         padding: const EdgeInsets.only(bottom: 5.0),
     child: InkWell(
@@ -508,7 +517,7 @@ class _ItemSubState extends State<ItemSub> {
       child: Column(
         children: [
           AnimatedContainer(
-            height: !_open?80:140,
+            height: _heightContainer,
             curve: Curves.easeIn,
             duration: const Duration(milliseconds: 500),
             child: SingleChildScrollView(
@@ -589,11 +598,18 @@ class _ItemSubState extends State<ItemSub> {
                         mainAxisAlignment:  MainAxisAlignment.spaceBetween,
                         children: [
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Icon(Icons.person,color: colorGreen,size: 10.0),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Icon(Icons.person,color: colorGreen,size: 10.0),
+                              ),
                               const Gap(5.0),
-                              Text(widget.subscription.nameTeacher,
-                                  style:TStyle.textStyleVelaSansMedium(colorGrey,size: 13.0)),
+                              ConstrainedBox(
+                                constraints: BoxConstraints(maxWidth: MediaQuery.sizeOf(context).width*0.5),
+                                child: Text(widget.subscription.nameTeacher,
+                                    style:TStyle.textStyleVelaSansMedium(colorGrey,size: 13.0)),
+                              ),
                             ],
                           ),
                           TeacherContacts(contacts: widget.subscription.contactValues, size: 25.0,)
@@ -615,26 +631,7 @@ class _ItemSubState extends State<ItemSub> {
                         ],
                       ),
                     ),
-
-                    Visibility(
-                      visible: widget.subscription.option.status!=OptionStatus.unknown
-                        &&widget.subscription.option.dateEnd.isNotEmpty,
-                      child: Row(
-                        children: [
-                          Icon(widget.subscription.option.status == OptionStatus.freezing?Icons.icecream:
-                          Icons.free_breakfast_outlined,color: colorGreen,size: 10),
-                          const Gap(5),
-                          Text(widget.subscription.option.status == OptionStatus.freezing?
-                          'Заморозка до '.tr()
-                              :'Каникулы до '.tr(),
-                              style: TStyle.textStyleVelaSansMedium(colorGrey,
-                                  size: 13.0)),
-                          Text(DateTimeParser.getDateFromApi(date: widget.subscription.option.dateEnd),
-                              style: TStyle.textStyleVelaSansMedium(colorGrey,
-                                  size: 13.0)),
-                        ],
-                      ),
-                    ),
+                     OptionsList(subscription: widget.subscription,),
                   Align(
                     alignment: Alignment.centerRight,
                     child: InkWell(

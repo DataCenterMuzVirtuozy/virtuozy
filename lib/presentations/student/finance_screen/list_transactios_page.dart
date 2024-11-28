@@ -116,19 +116,7 @@ class _ListTransactionsPageState extends State<ListTransactionsPage> {
             ),
          );
 
-          return ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
-            itemCount: state.transactions.length,
-              itemBuilder: (c,i){
-              return ItemTransaction(
-             allView: widget.directions.length>1,
-             nameDir: _getNameDir(state.transactions[i].idDir, widget.directions),
-             date: DateTimeParser.getDateFromApi(date: state.transactions[i].date),
-               type: state.transactions[i].typeTransaction,
-               time: state.transactions[i].time,
-               quantity: '${state.transactions[i].typeTransaction == TypeTransaction.minusLesson?'-':'+'}'
-                   '${ParserPrice.getBalance(state.transactions[i].quantity)} руб.');
-          });
+
         }
       ),
     );

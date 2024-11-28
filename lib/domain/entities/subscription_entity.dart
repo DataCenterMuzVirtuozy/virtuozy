@@ -23,7 +23,7 @@ enum StatusSub{
    final String nameTeacher;
    final String commentary;
    final StatusSub status;
-   final Option option;
+   final List<Option> options;
    final List<dynamic> contactValues;
    final int maxLessonsCount;
 
@@ -45,7 +45,7 @@ enum StatusSub{
      required this.dateBay,
      required this.commentary,
      required this.status,
-     required this.option
+     required this.options
   });
 
    SubscriptionEntity copyWith({
@@ -63,7 +63,7 @@ enum StatusSub{
       int? idUser,
       int? idDir,
      int? id,
-     Option? option,
+     List<Option>? options,
      String? nameTeacher,
      List<dynamic>? contactValues,
       int? maxLessonsCount
@@ -73,7 +73,7 @@ enum StatusSub{
       contactValues: contactValues??this.contactValues,
       id:id??this.id,
       nameTeacher: nameTeacher??this.nameTeacher,
-      option: option??this.option,
+      options: options??this.options,
       idDir: idDir??this.idDir,
       idUser: idUser??this.idUser,
       nameDir: nameDir??this.nameDir,
@@ -110,5 +110,6 @@ enum OptionStatus{
   holiday,
   prolongation,
   vacation,
+  certificate,
   unknown
 }

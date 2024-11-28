@@ -51,7 +51,9 @@ class UserMapper{
     return Option(status: optionModel.status.isEmpty?OptionStatus.unknown:
     optionModel.status == 'freezing'?
     OptionStatus.freezing:optionModel.status == 'prolongation'?
-    OptionStatus.prolongation:optionModel.status == 'vacation'?OptionStatus.vacation:OptionStatus.holiday,
+    OptionStatus.prolongation:optionModel.status == 'vacation'?OptionStatus.holiday:optionModel.status == 'certificate'?
+    OptionStatus.certificate:
+    OptionStatus.unknown,
         dateEnd: optionModel.dateEnd);
   }
 
@@ -98,8 +100,7 @@ class UserMapper{
     return subscriptionModels.map((e) => SubscriptionEntity(
       maxLessonsCount: e.maxLessonsCount,
       contactValues: e.contactValues,
-      option: fromOptionApi(
-          optionModel: e.options.isEmpty?const OptionModel(status: '', dateEnd: ''):e.options[0]), //todo work with list
+      options: e.options.map((o)=>fromOptionApi(optionModel: o)).toList(),
         idUser: e.idUser,
         idDir: e.idDir,
         nameDir: e.nameDir,
@@ -126,7 +127,7 @@ class UserMapper{
      return subscriptionModelAll.map((e) =>  SubscriptionEntity(
        maxLessonsCount: e.maxLessonsCount,
        contactValues: e.contactValues,
-       option: fromOptionApi(optionModel: e.options.isEmpty?const OptionModel(status: '', dateEnd: ''):e.options[0]), // todo work in list,
+       options:  e.options.map((o)=>fromOptionApi(optionModel:o)).toList(),
        idDir: e.idDir,
        idUser: e.idUser,
        nameDir: e.nameDir,

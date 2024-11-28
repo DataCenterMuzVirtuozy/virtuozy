@@ -215,7 +215,7 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
         maxLessonsCount: 0,
         contactValues: ['','',''],
                 id: 0,
-                option: Option.unknown(),
+                options: [],
                 idUser: user.id,
                 idDir: event.currentDirection.id,
                 nameDir: event.currentDirection.name,
