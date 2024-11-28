@@ -136,7 +136,8 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                                     Expanded(
                                       child: Text('${userType.isStudent?user.firstName:teacher.firstName} ${userType.isStudent?user.lastName:teacher.lastName}',
                                           maxLines: 2,
-                                          style: TStyle.textStyleGaretHeavy(colorWhite,size: 15.0)),
+                                          style: TStyle.textStyleGaretHeavy(colorBlack,
+                                              size: 15.0)),
                                     )
                                   ],
                                 ),
@@ -188,7 +189,7 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                               margin: const EdgeInsets.only(top: 50,left: 10),
                               decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: colorOrange
+                                  color: colorWhite
                               ),
                               padding: const EdgeInsets.all(2),
                               child:  _getAvatar(userType.isStudent?user.avaUrl:teacher.urlAva),
