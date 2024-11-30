@@ -56,9 +56,9 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
             height: 80,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: colorWhite,width: 1.5)
+              border: Border.all(color: colorOrange,width: 1.5)
             ),
-            child: Icon(Icons.image_search_rounded,color: colorWhite,size: 30,));
+            child: Icon(Icons.image_search_rounded,color: colorOrange,size: 30,));
       }else{
 
       return Container(
@@ -167,6 +167,10 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                         ),
                         onTap: (){
                           if(userType.isTeacher){
+                            return;
+                          }
+
+                          if(userType.isUnknown){
                             return;
                           }
                           GoRouter.of(context).push(pathProfile);

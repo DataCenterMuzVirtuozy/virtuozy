@@ -61,7 +61,7 @@ class SubscriptionModel{
       'nameDir': subscriptionEntity.nameDir,
       'dateBay':subscriptionEntity.dateBay, //
       'nameTeacher':subscriptionEntity.nameTeacher,
-      'options':{}
+      'options':subscriptionEntity.options
     };
 
   }
@@ -69,9 +69,6 @@ class SubscriptionModel{
   factory SubscriptionModel.fromMap(Map<String, dynamic> map,String nameDirection) {
 
    final options = (map['options'] as List).map((m) => OptionModel.fromMap(m)).toList();
-    for(var o in options){
-      print('Options ${o.status} ${o.dateEnd}');
-    }
    final idDir = map['customerId'];
    final idUser = map['idUser'];
    int balanceSub = map['balanceSub'];
