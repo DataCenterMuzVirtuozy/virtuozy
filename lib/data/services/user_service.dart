@@ -216,26 +216,28 @@ class UserService{
 
    Future<String> loadAvaProfile({required int uid,required EditProfileEntity profileEntity}) async{
      try{
+       final baseUrl = PreferencesUtil.urlSchool;
+       final token =  PreferencesUtil.token;
+       print('File ${profileEntity.fileImageUrl!.path}');
        String fileName = profileEntity.fileImageUrl!.path.split('/').last;
-       var request = http.MultipartRequest('POST', Uri.parse('https://cce5275ac71003a6.mokky.dev/uploads'));
-       request.files.add(await http.MultipartFile.fromPath('file', profileEntity.fileImageUrl!.path,filename: fileName));
+       var request = http.MultipartRequest('POST', Uri.parse('$baseUrl${Endpoints.update}'));
+       request.headers.addAll({'Authorization':'Bearer $token'});
+       final imgFile = await http.MultipartFile.fromPath('avatar', profileEntity.fileImageUrl!.path,filename: fileName);
+       request.files.add(imgFile);
        var streamedResponse = await request.send();
        var response = await http.Response.fromStream(streamedResponse);
-       if(streamedResponse.statusCode == 201){
-         final url = convert.jsonDecode(response.body)['url'];
-         return url;
-       }else{
-         throw const Failure('Ошибка загрузки фото');
-       }
+       print('Response ${response.body}');
 
-     } on Failure catch(e){
+       return '';
 
+     } on Failure catch(e,s){
+       print('Eror  ${s}');
        throw  Failure(e.message);
-     } on DioException catch(e){
-
+     } on DioException catch(e,s){
+       print('Eror 1 ${s}');
        throw  Failure(e.toString());
-     } catch(e){
-
+     } catch(e,s){
+       print('Eror 2 ${s}');
        throw const Failure('Ошибка загрузки фото');
      }
    }

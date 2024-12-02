@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Virtuozy</string>
+	<string>Виртуозы</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -43,13 +43,13 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Фото для добавления в профиль</string>
+	<string>Этому приложению необходим доступ к внешней камере  для добавления фото в профиль пользователя</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Для определения ближайшей музыкальной школы этому приложению необходим доступ к данным о местоположения</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Для определения ближайшей музыкальной школы этому приложению необходим доступ к данным о местоположения</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Фото для добавления в профиль</string>
+	<string>Этому приложению необходим доступ к хранилищу изображений для добавления фото в профиль пользователя</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>

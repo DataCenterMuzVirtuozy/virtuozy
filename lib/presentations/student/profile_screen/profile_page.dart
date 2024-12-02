@@ -10,6 +10,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:virtuozy/components/dialogs/sealeds.dart';
@@ -22,7 +23,7 @@ import 'package:virtuozy/presentations/student/profile_screen/bloc/profile_event
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/utils/date_time_parser.dart';
 import 'package:virtuozy/utils/theme_provider.dart';
-
+import 'package:path/path.dart' as path;
 import '../../../components/buttons.dart';
 import '../../../components/dialogs/dialoger.dart';
 import '../../../resourses/images.dart';
@@ -53,14 +54,37 @@ import 'bloc/profile_state.dart';
      final pickedFile = await ImagePicker().pickImage(source:
       galery?ImageSource.gallery:ImageSource.camera);
      if (pickedFile != null) {
+       _imageFile = File(pickedFile.path);
+       final fileCompressed = await compressImage(imageFile: _imageFile!);
+       profileEntity = profileEntity.copyWith(fileImageUrl: File(fileCompressed.path));
        setState(() {
-        _imageFile = File(pickedFile.path);
-        profileEntity = profileEntity.copyWith(fileImageUrl: _imageFile);
         _edit = true;
         _editPhotoMode = false;
        });
      }
    }
+
+
+   static Future<XFile> compressImage({
+     required File imageFile,
+     int quality=30,
+     CompressFormat format=CompressFormat.jpeg,
+   }) async {
+     final String targetPath = path.join(Directory.systemTemp.path, 'temp.${format.name}');
+     final XFile? compressedImage = await FlutterImageCompress.compressAndGetFile(
+         imageFile.path,
+         targetPath,
+         quality: quality,
+         format: format
+     );
+
+     if (compressedImage==null){
+       throw ("Failed to compress the image");
+     }
+
+     return compressedImage;
+   }
+
 
    Future<void> _refreshData() async {
      context.read<ProfileBloc>().add(const RefreshProfileEvent());

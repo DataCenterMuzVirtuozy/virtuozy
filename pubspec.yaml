@@ -40,7 +40,7 @@ dependencies:
   equatable: ^2.0.5
   connectivity_plus: ^5.0.2
   mask_text_input_formatter: ^2.8.0
-
+  flutter_image_compress: ^2.3.0
   network_info_plus: ^4.1.0
   responsive_framework: ^1.1.1
   get_it: ^7.6.6
@@ -69,7 +69,7 @@ dependencies:
   flutter_cached_pdfview: ^0.4.2
   grouped_list: ^5.1.2
   flutter_downloader: ^1.11.6
-  image_picker: ^1.0.7
+  image_picker: ^1.1.2
   cached_network_image: ^3.3.1
   filter_list: ^1.0.3
   geolocator: ^13.0.1

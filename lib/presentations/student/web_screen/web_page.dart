@@ -34,7 +34,7 @@ class _WebPageState extends State<WebPage> with AuthMixin{
     super.initState();
 
     if(widget.url.isEmpty){
-      if(user.branchName == 'msk'){
+      if(user.branchName == 'msk'||user.branchName.isEmpty){
         _urlWeb = Endpoints.urlMSK;
       }else{
         _urlWeb = Endpoints.urlNSK;

@@ -419,7 +419,7 @@ class _BoxSubscriptionState extends State<BoxSubscription> {
            ),
            // BoxSubscription(directions: directions,allViewDirection: allViewDirection,
            // namesDir: namesDir),
-          const Gap(5.0),
+          const Gap(10.0),
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -446,18 +446,18 @@ class _BoxSubscriptionState extends State<BoxSubscription> {
               ),
             ],
           ),
-          const Gap(20.0),
-          SizedBox(
-            height: 40.0,
-            child: SubmitButton(
-              textButton: 'Пополнить'.tr(),
-              onTap: () {
-                //currentItemNotifier.value = 4;
-                GoRouter.of(context).push(pathWep,extra: Endpoints.urlPrice);
-              }
-            ),
-          ),
-          const Gap(5.0),
+          const Gap(10.0),
+          // SizedBox(
+          //   height: 40.0,
+          //   child: SubmitButton(
+          //     textButton: 'Пополнить'.tr(),
+          //     onTap: () {
+          //       //currentItemNotifier.value = 4;
+          //       GoRouter.of(context).push(pathWep,extra: Endpoints.urlPrice);
+          //     }
+          //   ),
+          // ),
+          // const Gap(5.0),
         ],
       ),
     );
@@ -495,8 +495,8 @@ class _ItemSubState extends State<ItemSub> {
     if(!_open){
       _heightContainer = 80;
     }else{
-      _heightContainer = widget.subscription.options.isEmpty?140:
-      140+(widget.subscription.options.length*70);
+      _heightContainer = widget.subscription.options.isEmpty?155:
+      155+(widget.subscription.options.length*70);
     }
     return Padding(
         padding: const EdgeInsets.only(bottom: 5.0),
