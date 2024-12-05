@@ -126,10 +126,6 @@ class _SchedulePageState extends State<SchedulePage> with AuthMixin{
           );
         }
 
-
-
-
-
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: RefreshIndicator(

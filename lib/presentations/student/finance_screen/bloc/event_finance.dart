@@ -59,8 +59,14 @@ class PaySubscriptionEvent extends EventFinance{
 }
 class GetListTransactionsEvent extends EventFinance{
   final List<DirectionLesson> directions;
+  final int currentDirIndex;
+  final bool refreshDirection;
+  final bool allViewDir;
 
   const GetListTransactionsEvent({
+    required this.refreshDirection,
+    required this.allViewDir,
+    required this.currentDirIndex,
     required this.directions,
   });
 }

@@ -113,7 +113,7 @@ class SubscriptionModel{
   factory OptionModel.fromMap(Map<String, dynamic> map) {
     return OptionModel(
       status: map['status']??'',
-      dateEnd: map['dataEnd']??'',
+      dateEnd: map['dataActivation']??'',
     );
   }
 }

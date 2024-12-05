@@ -42,22 +42,39 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
 
   void _getListTransaction(GetListTransactionsEvent event,emit) async {
      try{
-       emit(state.copyWith(listTransactionStatus: ListTransactionStatus.loading));
+       if(event.refreshDirection){
+         emit(state.copyWith(listTransactionStatus: ListTransactionStatus.loading));
+         await Future.delayed(const Duration(milliseconds: 1000));
+       }
+
         final idUser = _userCubit.userEntity.id;
         final idDir = event.directions.length>1?-1:event.directions[0].id;
        final listApi = await _financeRepository.getTransactions(idUser: idUser, idDirections: idDir);
-       _listTransaction = _listSortTransHistory(list: listApi);
+       _listTransaction = _listSortTransHistory(list: listApi, allViewLessons: event.allViewDir, indexDi: event.currentDirIndex, directions: event.directions);
        emit(state.copyWith(listTransactionStatus: ListTransactionStatus.loaded,transactions: _listTransaction));
      }on Failure catch(e){
        emit(state.copyWith(listTransactionStatus: ListTransactionStatus.error,error: e.message));
      }
   }
 
-  List<TransactionEntity> _listSortTransHistory({required List<TransactionEntity> list}){
+  List<TransactionEntity> _listSortTransHistory({required List<TransactionEntity> list,
+    required bool allViewLessons,required int indexDi,required List<DirectionLesson> directions}){
+    List<TransactionEntity> resList = [];
     list.sort((a,b)=>DateTimeParser.getTimeMillisecondEpoch(time: a.time, date: a.date)
         .compareTo(DateTimeParser.getTimeMillisecondEpoch(time: b.time, date: b.date)));
     list = list.reversed.toList();
-     return list;
+
+    if(allViewLessons){
+      return list;
+    }else{
+      resList = list.where((t){
+        return t.idDir == directions[indexDi].id;
+      }).toList();
+
+    }
+
+
+     return resList;
   }
 
 

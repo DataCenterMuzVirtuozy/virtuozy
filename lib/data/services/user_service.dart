@@ -218,16 +218,13 @@ class UserService{
      try{
        final baseUrl = PreferencesUtil.urlSchool;
        final token =  PreferencesUtil.token;
-       print('File ${profileEntity.fileImageUrl!.path}');
        String fileName = profileEntity.fileImageUrl!.path.split('/').last;
        var request = http.MultipartRequest('POST', Uri.parse('$baseUrl${Endpoints.update}'));
        request.headers.addAll({'Authorization':'Bearer $token'});
        final imgFile = await http.MultipartFile.fromPath('avatar', profileEntity.fileImageUrl!.path,filename: fileName);
        request.files.add(imgFile);
        var streamedResponse = await request.send();
-       var response = await http.Response.fromStream(streamedResponse);
-       print('Response ${response.body}');
-
+       await http.Response.fromStream(streamedResponse);
        return '';
 
      } on Failure catch(e,s){
