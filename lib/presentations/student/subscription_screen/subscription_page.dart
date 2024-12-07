@@ -1,7 +1,9 @@
 
 
 
- import 'package:easy_localization/easy_localization.dart';
+ import 'dart:async';
+
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -9,6 +11,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+//import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:virtuozy/bloc/app_bloc.dart';
 import 'package:virtuozy/components/box_info.dart';
 import 'package:virtuozy/components/calendar/calendar.dart';
@@ -343,6 +346,7 @@ class _BoxSubscriptionState extends State<BoxSubscription> {
 
 
    List<SubscriptionEntity> subs = [];
+   //late StreamSubscription<List<PurchaseDetails>> _subscription;
 
   double _summaBalance({required List<DirectionLesson> directions}){
      double sum = 0.0;
@@ -364,15 +368,72 @@ class _BoxSubscriptionState extends State<BoxSubscription> {
     return list;
   }
 
+   // void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
+   //   print('P ${purchaseDetailsList}');
+   //   purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
+   //     if (purchaseDetails.status == PurchaseStatus.pending) {
+   //       //_showPendingUI();
+   //     } else {
+   //       if (purchaseDetails.status == PurchaseStatus.error) {
+   //         print('Error');
+   //         //_handleError(purchaseDetails.error!);
+   //       } else if (purchaseDetails.status == PurchaseStatus.purchased ||
+   //           purchaseDetails.status == PurchaseStatus.restored) {
+   //         // bool valid = await _verifyPurchase(purchaseDetails);
+   //         // if (valid) {
+   //         //   //_deliverProduct(purchaseDetails);
+   //         // } else {
+   //         //   //_handleInvalidPurchase(purchaseDetails);
+   //         // }
+   //       }
+   //       if (purchaseDetails.pendingCompletePurchase) {
+   //         await InAppPurchase.instance
+   //             .completePurchase(purchaseDetails);
+   //       }
+   //     }
+   //   });
+   // }
+
 
   @override
   void initState() {
+    // final Stream<List<PurchaseDetails>> purchaseUpdated = InAppPurchase.instance.purchaseStream;
+    // _subscription = purchaseUpdated.listen((purchaseDetailsList) {
+    //   _listenToPurchaseUpdated(purchaseDetailsList);
+    // }, onDone: () {
+    //   _subscription.cancel();
+    // }, onError: (error) {
+    //   // handle error here.
+    // });
+
+    // _productsDetails();
+
     super.initState();
     subs = _getSubs(directions: widget.directions, allViewDirection: widget.allViewDirection);
 
   }
 
-   List<SubscriptionEntity> _getHistorySubscriptions(List<DirectionLesson> directions,int idSelDir){
+  // Future<void> _productsDetails() async {
+  //   final ProductDetailsResponse response =
+  //       await InAppPurchase.instance.queryProductDetails({'sub_test'});
+  //   if (response.notFoundIDs.isNotEmpty) {
+  //     // Handle the error.
+  //     print('Error 2 ');
+  //   }
+  //   List<ProductDetails> products = response.productDetails;
+  //   print('Product ${products.length} ');
+  // }
+
+
+   @override
+  void dispose() {
+   // _subscription.cancel();
+    super.dispose();
+
+//
+  }
+
+  List<SubscriptionEntity> _getHistorySubscriptions(List<DirectionLesson> directions,int idSelDir){
     DirectionLesson dir = directions.firstWhere((d)=>d.id==idSelDir);
      return dir.subscriptionsAll;
    }
@@ -446,18 +507,18 @@ class _BoxSubscriptionState extends State<BoxSubscription> {
               ),
             ],
           ),
-          const Gap(10.0),
-          // SizedBox(
-          //   height: 40.0,
-          //   child: SubmitButton(
-          //     textButton: 'Пополнить'.tr(),
-          //     onTap: () {
-          //       //currentItemNotifier.value = 4;
-          //       GoRouter.of(context).push(pathWep,extra: Endpoints.urlPrice);
-          //     }
-          //   ),
-          // ),
-          // const Gap(5.0),
+          const Gap(15.0),
+          SizedBox(
+            height: 40.0,
+            child: SubmitButton(
+              textButton: 'Пополнить'.tr(),
+              onTap: () {
+                //currentItemNotifier.value = 4;
+
+              }
+            ),
+          ),
+          const Gap(5.0),
         ],
       ),
     );
@@ -483,11 +544,9 @@ class _ItemSubState extends State<ItemSub> {
   double _heightContainer = 80;
 
 
-  int _countAllLesson(SubscriptionEntity subscription){
-    final i1 = subscription.price;
-    final i2 = subscription.priceOneLesson;
-    return i1~/i2;
-  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -495,8 +554,8 @@ class _ItemSubState extends State<ItemSub> {
     if(!_open){
       _heightContainer = 80;
     }else{
-      _heightContainer = widget.subscription.options.isEmpty?155:
-      155+(widget.subscription.options.length*70);
+      _heightContainer =widget.subscription.options.isEmpty?155:
+      155+(widget.subscription.options.length*17)+35;
     }
     return Padding(
         padding: const EdgeInsets.only(bottom: 5.0),
@@ -631,7 +690,7 @@ class _ItemSubState extends State<ItemSub> {
                         ],
                       ),
                     ),
-                     OptionsList(subscription: widget.subscription,),
+                     OptionsList(subscription: widget.subscription),
                   Align(
                     alignment: Alignment.centerRight,
                     child: InkWell(

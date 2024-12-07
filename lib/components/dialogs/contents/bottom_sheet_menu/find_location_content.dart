@@ -1,6 +1,8 @@
 
 
-  import 'package:easy_localization/easy_localization.dart';
+  import 'dart:io';
+
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -40,12 +42,19 @@ class _FindLocationContentState extends State<FindLocationContent> with TickerPr
   late final AnimationController _controller;
   String _administrativeArea = '';
   bool _visibleAdminArea  = false;
+  String _textButton = '';
+  bool _isIOS = false;
 
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this,duration: const Duration(milliseconds: 1000));
+    if(Platform.isAndroid){
+      _isIOS = false;
+    }else{
+      _isIOS = true;
+    }
     _getCurrentPosition();
   }
 
@@ -104,6 +113,14 @@ class _FindLocationContentState extends State<FindLocationContent> with TickerPr
 
   @override
   Widget build(BuildContext context) {
+
+    if(_isIOS){
+      _textButton = 'Далее'.tr();
+    }else{
+      _textButton = _currentAddress == '0'||_currentAddress == '1'?'Выбрать вручную'.tr():'Подтвердить'.tr();
+    }
+
+
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0,).copyWith(bottom: 30),
         child: Column(
@@ -187,7 +204,7 @@ class _FindLocationContentState extends State<FindLocationContent> with TickerPr
                           borderRadius: 10,
                           textSize: 12,
                           colorFill: _currentAddress == '0'?colorRed:colorGreen,
-                          textButton: _currentAddress == '0'||_currentAddress == '1'?'Выбрать вручную'.tr():'Подтвердить'.tr(),
+                          textButton: _textButton,
                         ),
                       )
                     ],

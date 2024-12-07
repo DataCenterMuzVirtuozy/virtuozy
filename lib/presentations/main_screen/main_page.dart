@@ -138,7 +138,7 @@ class _MainPageState extends State<MainPage> with AuthMixin{
                       ValueListenableBuilder<int>(
                           valueListenable: currentItemNotifier,
                         builder: (context,currentIndexItemMenu,child) {
-                          return TitlePage(title: userType.isStudent?titlesDrawMenuStudent[currentIndexItemMenu]:
+                          return TitlePage(title: userType.isStudent||userType.isUnknown?titlesDrawMenuStudent[currentIndexItemMenu]:
                           titlesDrawMenuTeacher[currentIndexItemMenu]);
                         }
                       ),

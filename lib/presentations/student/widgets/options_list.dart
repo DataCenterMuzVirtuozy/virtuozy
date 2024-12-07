@@ -18,7 +18,7 @@ class OptionsList extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
    return                     Visibility(
-     visible: subscription.options.isNotEmpty,
+     visible: subscription.options.isNotEmpty, //subscription.options.isNotEmpty
      child: Column(
        crossAxisAlignment: CrossAxisAlignment.start,
        children: [
@@ -27,6 +27,7 @@ class OptionsList extends StatelessWidget{
              style:TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,
                  size: 13.0)),
          ...List.generate(subscription.options.length, (index){
+
            return                           Row(
              children: [
                Icon(subscription.options[index].status == OptionStatus.freezing?Icons.icecream:

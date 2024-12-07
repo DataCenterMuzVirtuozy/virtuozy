@@ -1,7 +1,9 @@
 
 
 
-  import 'package:easy_localization/easy_localization.dart';
+  import 'dart:io';
+
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
@@ -24,6 +26,18 @@ class OpenLocationSettingsContent extends StatefulWidget{
 class _OpenLocationSettingsContentState extends State<OpenLocationSettingsContent> {
   final GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
 
+
+  bool _isIOS = false;
+
+  @override
+  void initState() {
+    super.initState();
+  if(Platform.isIOS){
+    _isIOS = true;
+  }
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return  Padding(
@@ -38,8 +52,8 @@ class _OpenLocationSettingsContentState extends State<OpenLocationSettingsConten
               textAlign:TextAlign.center,
               style:TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,size: 18.0)),
           const SizedBox(height: 5.0),
-          Text(widget.locationEnable?'После определения местоположения, мы предложим ближайший к вам филиал школы'.tr():
-          'Службы определения местоположения отключены. Пожалуйста, включите службы в настройках'.tr(),
+          Text(widget.locationEnable?'После определения местоположения, мы предложим ближайший к вам филиал школы. Вы так же можете выбрать филиал вручную'.tr():
+          'Службы определения местоположения отключены. Пожалуйста, включите службы в настройках или выберите филиал школы вручную'.tr(),
               textAlign:TextAlign.center,
               style:TStyle.textStyleVelaSansRegular(Theme.of(context).textTheme.displayMedium!.color!,size: 16.0)),
           const SizedBox(height: 10.0),
@@ -51,11 +65,11 @@ class _OpenLocationSettingsContentState extends State<OpenLocationSettingsConten
                     Navigator.pop(context);
                     controllerMenu.open();
                   },
-                  child: Text('Отмена'.tr(),
+                  child: Text(_isIOS?'Выбрать филиал'.tr():'Отмена'.tr(),
                       textAlign: TextAlign.center,
                       style: TStyle.textStyleVelaSansBold(
                           Theme.of(context).textTheme.displayMedium!.color!,
-                          size: 16.0))),
+                          size: 14.0))),
               const Gap(5.0),
               TextButton(
                 onPressed: () {
@@ -71,7 +85,7 @@ class _OpenLocationSettingsContentState extends State<OpenLocationSettingsConten
                 child: Text(widget.locationEnable?'Начать'.tr():'Открыть'.tr(),
                     textAlign: TextAlign.center,
                     style:
-                    TStyle.textStyleVelaSansBold(colorRed,size: 16.0)),)
+                    TStyle.textStyleVelaSansBold(colorRed,size: 14.0)),)
             ],
           )
         ],

@@ -212,6 +212,7 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                       docsAccept: user.documents.isEmpty?true:docsAccept,
                       onSelectedPage:(item){
                         setState(() {
+                          //var indexPage = userType.isUnknown&&item==4?3:item;
                           currentItemNotifier.value = item;
 
                         });
