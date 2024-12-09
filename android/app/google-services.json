@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "132460292077",
+    "project_id": "virtuozy-f9690",
+    "storage_bucket": "virtuozy-f9690.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:132460292077:android:99702cd5aa1c62c611a9e4",
+        "android_client_info": {
+          "package_name": "ru.msk.virtuozy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdqAdf001aB1rquq3sBV567aBpeE2AZnY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
