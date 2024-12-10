@@ -34,21 +34,21 @@ import 'presentations/teacher/lids_screen/bloc/lids_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  //await Firebase.initializeApp();
   await EasyLocalization.ensureInitialized();
   await PreferencesUtil.init();
   await FlutterDownloader.initialize(
       debug: true, // optional: set to false to disable printing logs to console (default: true)
       ignoreSsl: true // option: set to false to disable working with http links (default: false)
   );
-  final notificationSettings = await FirebaseMessaging.instance.requestPermission(provisional: true);
+  //final notificationSettings = await FirebaseMessaging.instance.requestPermission(provisional: true);
 
 // For apple platforms, ensure the APNS token is available before making any FCM plugin API calls
-  final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
-  if (apnsToken != null) {
-    print('APNS token is available, make FCM plugin API requests');
-    // APNS token is available, make FCM plugin API requests...
-  }
+//   final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+//   if (apnsToken != null) {
+//     print('APNS token is available, make FCM plugin API requests');
+//     // APNS token is available, make FCM plugin API requests...
+//   }
   di.setup();
 
   runApp(EasyLocalization(

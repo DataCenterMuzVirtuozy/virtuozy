@@ -508,17 +508,17 @@ class _BoxSubscriptionState extends State<BoxSubscription> {
             ],
           ),
           const Gap(15.0),
-          SizedBox(
-            height: 40.0,
-            child: SubmitButton(
-              textButton: 'Пополнить'.tr(),
-              onTap: () {
-                //currentItemNotifier.value = 4;
-
-              }
-            ),
-          ),
-          const Gap(5.0),
+          // SizedBox(
+          //   height: 40.0,
+          //   child: SubmitButton(
+          //     textButton: 'Пополнить'.tr(),
+          //     onTap: () {
+          //       //currentItemNotifier.value = 4;
+          //
+          //     }
+          //   ),
+          // ),
+          // const Gap(5.0),
         ],
       ),
     );

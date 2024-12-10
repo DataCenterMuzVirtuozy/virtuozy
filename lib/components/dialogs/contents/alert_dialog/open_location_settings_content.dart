@@ -65,7 +65,7 @@ class _OpenLocationSettingsContentState extends State<OpenLocationSettingsConten
                     Navigator.pop(context);
                     controllerMenu.open();
                   },
-                  child: Text(_isIOS?'Выбрать филиал'.tr():'Отмена'.tr(),
+                  child: Text('Отмена'.tr(),
                       textAlign: TextAlign.center,
                       style: TStyle.textStyleVelaSansBold(
                           Theme.of(context).textTheme.displayMedium!.color!,
@@ -82,7 +82,7 @@ class _OpenLocationSettingsContentState extends State<OpenLocationSettingsConten
                   }
 
                 },
-                child: Text(widget.locationEnable?'Начать'.tr():'Открыть'.tr(),
+                child: Text('Далее'.tr(),
                     textAlign: TextAlign.center,
                     style:
                     TStyle.textStyleVelaSansBold(colorRed,size: 14.0)),)
