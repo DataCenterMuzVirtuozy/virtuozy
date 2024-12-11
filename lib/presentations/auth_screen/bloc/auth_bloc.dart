@@ -25,6 +25,7 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
     on<CompleteSinIgEvent>(_completeSingIn);
     on<LogOutEvent>(_logOut);
     on<LogOutTeacherEvent>(_logOutTeacher);
+    on<DeleteAccountEvent>(_deleteAccount);
   }
 
 
@@ -35,6 +36,24 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
     late UserEntity user;
 
 
+
+    void _deleteAccount(DeleteAccountEvent event,emit) async {
+      try {
+        if(event.user.userStatus.isModeration || event.user.userStatus.isAuth){
+          emit(state.copyWith(authStatus: AuthStatus.deleting,error: ''));
+          await Future.delayed(const Duration(seconds: 2));
+          user = event.user.copyWith(userStatus: UserStatus.deleted);
+          _userRepository.deleteAccount(user: user);
+          _userCubit.updateUser(newUser: user);
+          await PreferencesUtil.clear();
+        }
+        emit(state.copyWith(authStatus: AuthStatus.deleted));
+      } on Failure catch (e) {
+        emit(state.copyWith(authStatus: AuthStatus.errorDeleting,error: 'Ошибка удаления аккаунта'.tr()));
+      } catch (e){
+        emit(state.copyWith(authStatus: AuthStatus.errorDeleting,error: 'Ошибка удаления аккаунта'.tr()));
+      }
+    }
 
   void _logIn(LogInEvent event,emit) async {
 

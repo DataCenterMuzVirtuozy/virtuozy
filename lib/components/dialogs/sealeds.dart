@@ -2,6 +2,7 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:virtuozy/components/dialogs/contents/alert_dialog/accept_docunents_content.dart';
+import 'package:virtuozy/components/dialogs/contents/alert_dialog/delete_account_content.dart';
 import 'package:virtuozy/components/dialogs/contents/alert_dialog/details_info_lesson_content.dart';
 import 'package:virtuozy/components/dialogs/contents/alert_dialog/download_doc_content.dart';
 import 'package:virtuozy/components/dialogs/contents/alert_dialog/log_out_content.dart';
@@ -44,6 +45,14 @@ class OpenSettingsLocations extends AlertDialogContent{
   @override
   build({required BuildContext context, Object? args}) {
   return OpenLocationSettingsContent(locationEnable: args as bool,);
+  }
+
+}
+
+class DeleteAccount extends AlertDialogContent{
+  @override
+  build({required BuildContext context, Object? args}) {
+    return  DeleteAccountContent(user: (args as UserEntity));
   }
 
 }

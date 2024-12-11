@@ -460,7 +460,7 @@ class _DrawerItemSettingState extends State<DrawerItemSetting> {
         onTap: (){
           setState(() {
             if(h==0){
-              h=widget.user.userStatus.isAuth||widget.user.userStatus.isModeration?140.0:70.0;
+              h=widget.user.userStatus.isAuth||widget.user.userStatus.isModeration?170.0:70.0;
             }else{
               h=0;
             }
@@ -567,6 +567,30 @@ class _DrawerItemSettingState extends State<DrawerItemSetting> {
                             style: TStyle.textStyleVelaSansRegular( Theme.of(context).textTheme.displayMedium!.color!,
                             size: 16.0)),
                       ],
+                    ),
+                  ),
+                  Visibility(
+                    visible: widget.user.userStatus.isAuth,
+                    child: InkWell(
+                      onTap: (){
+                        Dialoger.showCustomDialog(contextUp: context,
+                            args: widget.user,
+                            content: DeleteAccount());
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Gap(10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text('Удалить аккаунт'.tr(),style: TStyle.textStyleVelaSansRegular( colorRed,
+                                  size: 16.0)),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   )
                 ],

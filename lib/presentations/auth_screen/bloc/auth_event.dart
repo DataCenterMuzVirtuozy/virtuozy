@@ -63,6 +63,13 @@ class CompleteSinIgEvent extends AuthEvent{
 
  }
 
+ class DeleteAccountEvent extends AuthEvent{
+   final UserEntity user;
+
+   const DeleteAccountEvent({required this.user});
+
+ }
+
  class LogOutTeacherEvent extends AuthEvent{
    final TeacherEntity teacher;
 

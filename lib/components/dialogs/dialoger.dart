@@ -305,6 +305,7 @@ class Dialoger {
       AddNewLesson() => AddNewLesson().build(context: contextUp,args: args),
 
       OpenSettingsLocations() => OpenSettingsLocations().build(context: contextUp,args: args),
+      DeleteAccount() => DeleteAccount().build(context: contextUp,args: args),
     };
     return showDialog<T>(
       context: contextUp,

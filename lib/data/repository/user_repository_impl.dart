@@ -55,4 +55,9 @@ class UserRepositoryImpl extends UserRepository{
      await _util.signIn(phone: phone,name: name,surName: surName);
   }
 
+  @override
+  Future<void> deleteAccount({required UserEntity user}) async {
+     await _util.deleteAccount(user:user);
+  }
+
 }

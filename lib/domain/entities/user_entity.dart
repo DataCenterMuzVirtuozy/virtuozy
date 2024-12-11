@@ -10,7 +10,8 @@ import 'notifi_setting_entity.dart';
 enum UserStatus{
   notAuth,
    auth,
-   moderation
+   moderation,
+  deleted
  }
 
  enum UserType{
@@ -142,6 +143,7 @@ enum UserStatus{
 
 class DirectionLesson{
   final int id;
+  final int idCustomer;
   final List<BonusEntity> bonus;
   final List<SubscriptionEntity> subscriptionsAll;
   final List<SubscriptionEntity> lastSubscriptions;
@@ -150,6 +152,7 @@ class DirectionLesson{
   final List<Lesson> lessons;
 
   const DirectionLesson({
+    required this.idCustomer,
     required this.nameTeacher,
     required this.id,
     required this.lastSubscriptions,
@@ -161,7 +164,7 @@ class DirectionLesson{
 
 
   factory DirectionLesson.unknown(){
-    return const DirectionLesson(id: 0, lastSubscriptions: [],nameTeacher: '', bonus: [], subscriptionsAll: [], name: '', lessons: []);
+    return const DirectionLesson(id: 0,idCustomer: 0, lastSubscriptions: [],nameTeacher: '', bonus: [], subscriptionsAll: [], name: '', lessons: []);
   }
 
 
@@ -174,9 +177,11 @@ class DirectionLesson{
     String? name,
     List<Lesson>? lessons,
     int? id,
-    String? nameTeacher
+    String? nameTeacher,
+    int? idCustomer
   }) {
     return DirectionLesson(
+      idCustomer: idCustomer??this.idCustomer,
       id: id??this.id,
       nameTeacher: nameTeacher??this.nameTeacher,
       lastSubscriptions: lastSubscriptions??this.lastSubscriptions,

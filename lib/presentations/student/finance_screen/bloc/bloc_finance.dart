@@ -27,7 +27,7 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
     on<GetListSubscriptionsEvent>(_getPriceSubscription);
     on<GetBalanceSubscriptionEvent>(_getBalanceSubscription);
     on<PaySubscriptionEvent>(_paySubscription);
-    on<GetListTransactionsEvent>(_getListTransaction);
+    on<GetListTransactionsEvent>(_getListTransaction,transformer: droppable());
     on<WritingOfMoneyEvent>(_writingOffMoney);
     on<ApplyBonusEvent>(_applyBonus);
     on<RefreshSubscriptionEvent>(_refreshSubscription,transformer: droppable());
@@ -42,10 +42,10 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
 
   void _getListTransaction(GetListTransactionsEvent event,emit) async {
      try{
-       if(event.refreshDirection){
-         emit(state.copyWith(listTransactionStatus: ListTransactionStatus.loading));
+       emit(state.copyWith(listTransactionStatus: event.refreshDirection?
+       ListTransactionStatus.refresh:ListTransactionStatus.loading));
          await Future.delayed(const Duration(milliseconds: 1000));
-       }
+
 
         final idUser = _userCubit.userEntity.id;
         final idDir = event.directions.length>1?-1:event.directions[0].id;
@@ -68,7 +68,7 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
       return list;
     }else{
       resList = list.where((t){
-        return t.idDir == directions[indexDi].id;
+        return t.idDir == directions[indexDi].idCustomer;
       }).toList();
 
     }

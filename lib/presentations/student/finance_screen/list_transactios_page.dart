@@ -36,7 +36,7 @@ class _ListTransactionsPageState extends State<ListTransactionsPage> {
   void initState() {
     super.initState();
     context.read<BlocFinance>().add(GetListTransactionsEvent(
-      refreshDirection: true,
+      refreshDirection: false,
         directions: widget.directions,
         allViewDir: _allViewDirection,
         currentDirIndex: _selIndexDirection));
@@ -52,7 +52,7 @@ class _ListTransactionsPageState extends State<ListTransactionsPage> {
 
   Future<void> _refreshData() async {
     context.read<BlocFinance>().add(GetListTransactionsEvent(
-      refreshDirection: true,
+      refreshDirection: false,
         directions: widget.directions,
         allViewDir: _allViewDirection,
         currentDirIndex: _selIndexDirection));
@@ -63,13 +63,15 @@ class _ListTransactionsPageState extends State<ListTransactionsPage> {
     return Scaffold(
       appBar: AppBarCustom(title: 'Операции по счету'.tr()),
       body: BlocConsumer<BlocFinance, StateFinance>(listener: (c, s) {
-        _titlesDirections = CreatorListDirections.getTitlesDrawingMenu(
-            directions: s.user.directions);
+        if (s.listTransactionStatus == ListTransactionStatus.loaded) {
+          _titlesDirections = CreatorListDirections.getTitlesDrawingMenu(
+              directions: s.user.directions);
+        }
+
       }, builder: (context, state) {
         if (state.listTransactionStatus == ListTransactionStatus.loading) {
           return const Center(child: CircularProgressIndicator());
         }
-
         return RefreshIndicator(
           onRefresh: () {
             return _refreshData();
@@ -88,7 +90,7 @@ class _ListTransactionsPageState extends State<ListTransactionsPage> {
                       _allViewDirection = false;
                     }
                     context.read<BlocFinance>().add(GetListTransactionsEvent(
-                      refreshDirection: false,
+                      refreshDirection: true,
                         directions: widget.directions,
                         allViewDir: _allViewDirection,
                         currentDirIndex: _selIndexDirection));
@@ -96,7 +98,12 @@ class _ListTransactionsPageState extends State<ListTransactionsPage> {
                 ),
               ),
               const Gap(15),
-              if (state.transactions.isEmpty) ...{
+
+              if(state.listTransactionStatus == ListTransactionStatus.refresh)...{
+                const Expanded(
+                  child: Center(child: CircularProgressIndicator())
+                )
+              }else if (state.transactions.isEmpty) ...{
                 Expanded(
                   child: BoxInfo(
                       title: 'У вас нет транзакций'.tr(),

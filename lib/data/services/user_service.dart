@@ -17,6 +17,7 @@ import 'package:virtuozy/utils/preferences_util.dart';
  import 'dart:convert' as convert;
  import 'dart:io';
 import '../../di/locator.dart';
+import '../../domain/entities/user_entity.dart';
 import '../../domain/user_cubit.dart';
 import '../../resourses/strings.dart';
 import '../models/notifi_setting_model.dart';
@@ -25,6 +26,27 @@ import '../models/user_model.dart';
 
 class UserService{
 
+  Future<void> deleteAccount({required UserEntity user}) async {
+    try{
+      final dioApi = locator.get<DioClient>().initApi();
+
+      final token =  PreferencesUtil.token;
+      var data =  {
+        'userStatus': 0
+      };
+      await dioApi.post(Endpoints.update,
+          options: Options(
+              headers: {'Authorization':'Bearer $token'}
+          ),
+          data: jsonEncode(data));
+
+    } on Failure catch(e){
+      throw  Failure(e.message);
+    } on DioException catch(e){
+      throw  Failure(e.toString());
+    }
+
+  }
 
   Future<void> signIn({required String phone, required String name, required String surName}) async {
 
@@ -205,10 +227,8 @@ class UserService{
            data: jsonEncode(data));
 
      } on Failure catch(e){
-       print('Error 1 ${e.message}');
        throw  Failure(e.message);
      } on DioException catch(e){
-       print('Error 2 ${e.toString()}');
        throw  Failure(e.toString());
      }
    }

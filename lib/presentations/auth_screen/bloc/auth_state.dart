@@ -20,6 +20,9 @@
    sendRequestCode,
    moderation,
    baseUrlEmpty,
+   deleting,
+   deleted,
+   errorDeleting,
    logOut
 
  }

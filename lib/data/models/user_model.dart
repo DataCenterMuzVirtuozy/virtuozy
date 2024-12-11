@@ -104,6 +104,7 @@ class UserModel{
 
  class DirectionModel{
    final int id;
+   final int idCustomer;
    final String nameTeacher;
    final List<BonusModel> bonus;
    final List<SubscriptionModel> subscriptionsAll;
@@ -112,6 +113,7 @@ class UserModel{
    final List<LessonModel> lessons;
 
    const DirectionModel({
+     required this.idCustomer,
      required this.nameTeacher,
      required this.id,
     required this.bonus,
@@ -132,11 +134,13 @@ class UserModel{
     final subsDir = subs.where((element) =>element.idDir == (mapDirection['customerId'] as int)).toList();
     final lastSub = _getLastSub(subsDir);
     final int idDir = mapDirection['customerId'];
+    final int idCustomer = mapDirection['id'];
    // final bonus = mapDirection['bonus'] as List<dynamic>;
 
     return DirectionModel(
       nameTeacher: nameTeacherDir,
       id: idDir,
+      idCustomer:idCustomer,
      // bonus: bonus.map((e) => BonusModel.fromMap(e,nameDirection)).toList(),
       bonus: [],
       subscriptionsAll: subsDir,

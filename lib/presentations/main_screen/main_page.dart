@@ -76,11 +76,25 @@ class _MainPageState extends State<MainPage> with AuthMixin{
 
     return BlocConsumer<AuthBloc,AuthState>(
       listener: (c, s) {
-        if(s.authStatus == AuthStatus.logOut){
+        if(s.authStatus == AuthStatus.logOut||s.authStatus == AuthStatus.deleted){
+          Dialoger.showToast('Аккаунт успешно удален'.tr());
           GoRouter.of(context).push(pathLogIn);
         }
+
+        if(s.authStatus == AuthStatus.errorDeleting){
+          Dialoger.showActionMaterialSnackBar(
+              context: context, title: s.error);
+        }
+
       },
       builder: (context,state) {
+
+        if(state.authStatus == AuthStatus.deleting){
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator())
+          );
+        }
+
         return BackButtonListener(
           onBackButtonPressed: () async {
             if(context.canPop()){

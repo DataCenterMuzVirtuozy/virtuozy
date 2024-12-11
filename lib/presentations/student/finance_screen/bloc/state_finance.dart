@@ -32,6 +32,7 @@ enum FinanceStatus{
   loading,
    loaded,
    error,
+   refresh,
    unknown
  }
 
