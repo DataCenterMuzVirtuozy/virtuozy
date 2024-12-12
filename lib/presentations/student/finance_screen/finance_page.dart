@@ -486,38 +486,38 @@ class _FinancePageState extends State<FinancePage> {
                     ),
                   ),
                   const Gap(20.0),
-                  GestureDetector(
-                    onTap: () {
-                      GoRouter.of(context).push(pathBonusLessons);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 20.0, horizontal: 20.0),
-                      decoration: BoxDecoration(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .surfaceContainerHighest,
-                          borderRadius: BorderRadius.circular(20.0)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                              child: Text('Бонусные уроки'.tr(),
-                                  style: TStyle.textStyleVelaSansMedium(
-                                      Theme.of(context)
-                                          .textTheme
-                                          .displayMedium!
-                                          .color!,
-                                      size: 22.0))),
-                          Icon(Icons.arrow_forward_ios_rounded,
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .displayMedium!
-                                  .color!)
-                        ],
-                      ),
-                    ),
-                  ),
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     GoRouter.of(context).push(pathBonusLessons);
+                  //   },
+                  //   child: Container(
+                  //     padding: const EdgeInsets.symmetric(
+                  //         vertical: 20.0, horizontal: 20.0),
+                  //     decoration: BoxDecoration(
+                  //         color: Theme.of(context)
+                  //             .colorScheme
+                  //             .surfaceContainerHighest,
+                  //         borderRadius: BorderRadius.circular(20.0)),
+                  //     child: Row(
+                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //       children: [
+                  //         Expanded(
+                  //             child: Text('Бонусные уроки'.tr(),
+                  //                 style: TStyle.textStyleVelaSansMedium(
+                  //                     Theme.of(context)
+                  //                         .textTheme
+                  //                         .displayMedium!
+                  //                         .color!,
+                  //                     size: 22.0))),
+                  //         Icon(Icons.arrow_forward_ios_rounded,
+                  //             color: Theme.of(context)
+                  //                 .textTheme
+                  //                 .displayMedium!
+                  //                 .color!)
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
 
                   if (state.applyBonusStatus == ApplyBonusStatus.loading) ...{
                     const CircularProgressIndicator()

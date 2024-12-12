@@ -84,7 +84,7 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
 
   double _heightCalculate(int indexItems,double sizeText){
     final s = _items.length == 2?25.0:15.0;
-    return (sizeText*indexItems)+40;
+    return (sizeText*indexItems)+50;
         //+(s*indexItems);
   }
 
@@ -120,6 +120,7 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
                             animationController.reverse();
                           },
                           child: Container(
+                            constraints: BoxConstraints(maxWidth: MediaQuery.sizeOf(context).width*0.9),
                             color: Colors.transparent,
                             width: double.infinity,
                             padding: const EdgeInsets.symmetric(vertical: 5.0),
@@ -128,7 +129,8 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
                               children: [
                                 Expanded(
                                   child: Text(_items[index],
-                                      maxLines: 2,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                       style:
                                   TStyle.textStyleVelaSansMedium(colorGrey,
                                       size: 18.0)),

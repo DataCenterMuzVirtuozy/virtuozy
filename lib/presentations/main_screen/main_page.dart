@@ -76,8 +76,7 @@ class _MainPageState extends State<MainPage> with AuthMixin{
 
     return BlocConsumer<AuthBloc,AuthState>(
       listener: (c, s) {
-        if(s.authStatus == AuthStatus.logOut||s.authStatus == AuthStatus.deleted){
-          Dialoger.showToast('Аккаунт успешно удален'.tr());
+        if(s.authStatus == AuthStatus.logOut){
           GoRouter.of(context).push(pathLogIn);
         }
 

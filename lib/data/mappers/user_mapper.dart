@@ -59,8 +59,9 @@ class UserMapper{
 
 
   static UserStatus _userStatus(int status){
-    return status == 0?UserStatus.notAuth:
-        status == 1?UserStatus.auth:UserStatus.moderation;
+    return status == 0?UserStatus.deleted:
+        status == 1?UserStatus.auth:UserStatus.notAuth;
+
   }
 
   static UserType _userType(int type){

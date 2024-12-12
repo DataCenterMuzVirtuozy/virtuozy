@@ -16,6 +16,8 @@ import 'package:virtuozy/presentations/auth_screen/bloc/auth_state.dart';
 import 'package:virtuozy/utils/failure.dart';
 import 'package:virtuozy/utils/preferences_util.dart';
 
+import '../../../components/dialogs/dialoger.dart';
+
 class AuthBloc extends Bloc<AuthEvent,AuthState>{
   AuthBloc():super(AuthState.unknown()){
     on<LogInEvent>(_logIn);
@@ -42,15 +44,18 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
         if(event.user.userStatus.isModeration || event.user.userStatus.isAuth){
           emit(state.copyWith(authStatus: AuthStatus.deleting,error: ''));
           await Future.delayed(const Duration(seconds: 2));
-          user = event.user.copyWith(userStatus: UserStatus.deleted);
-          _userRepository.deleteAccount(user: user);
-          _userCubit.updateUser(newUser: user);
+          await _userRepository.deleteAccount();
           await PreferencesUtil.clear();
+          user = event.user.copyWith(userStatus: UserStatus.notAuth);
+          _userCubit.updateUser(newUser: user);
+          Dialoger.showToast('Аккаунт успешно удален'.tr());
         }
-        emit(state.copyWith(authStatus: AuthStatus.deleted));
-      } on Failure catch (e) {
+        emit(state.copyWith(authStatus: AuthStatus.logOut));
+      } on Failure catch (e,s) {
+        print('Error D ${s}');
         emit(state.copyWith(authStatus: AuthStatus.errorDeleting,error: 'Ошибка удаления аккаунта'.tr()));
-      } catch (e){
+      } catch (e,s){
+        print('Error D2 ${s}');
         emit(state.copyWith(authStatus: AuthStatus.errorDeleting,error: 'Ошибка удаления аккаунта'.tr()));
       }
     }
@@ -79,6 +84,9 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
       }
 
       UserEntity user = await _userRepository.logIn(phone: event.phone,password: event.password);
+      if(user.userStatus.isDeleted){
+        throw Failure('Данный аккаунт был удален пользователем'.tr());
+      }
         await PreferencesUtil.setPhoneUser(phone: event.phone);
         user = user.copyWith(userStatus: UserStatus.auth);
         _userCubit.setUser(user: user);
@@ -91,7 +99,6 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
       await PreferencesUtil.clear();
       emit(state.copyWith(authStatus: AuthStatus.error,error: e.message));
     } catch (e,stakeTrace){
-      print('Error 3 ${e.toString()} ${stakeTrace}');
       await PreferencesUtil.clear();
       emit(state.copyWith(authStatus: AuthStatus.error,
           error: 'Ошибка получения данных'.tr()));

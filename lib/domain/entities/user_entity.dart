@@ -31,6 +31,7 @@ enum UserStatus{
   bool get isModeration => this==UserStatus.moderation;
   bool get isAuth => this == UserStatus.auth;
   bool get isNotAuth => this == UserStatus.notAuth;
+  bool get isDeleted =>this == UserStatus.deleted;
  }
 
  class UserEntity{

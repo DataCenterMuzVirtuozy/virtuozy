@@ -26,7 +26,7 @@ import '../models/user_model.dart';
 
 class UserService{
 
-  Future<void> deleteAccount({required UserEntity user}) async {
+  Future<void> deleteAccount() async {
     try{
       final dioApi = locator.get<DioClient>().initApi();
 

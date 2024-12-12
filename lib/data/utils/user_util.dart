@@ -55,8 +55,8 @@ class UserUtil{
       return res.map((e) => UserMapper.fromApiSubway(model: SubwayModel.fromMap(e))).toList();
     }
 
-    Future<void> deleteAccount({required UserEntity user}) async {
-      await _service.deleteAccount(user:user);
+    Future<void> deleteAccount() async {
+      await _service.deleteAccount();
     }
 
  }
