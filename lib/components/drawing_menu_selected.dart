@@ -51,7 +51,7 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
     animationOpacity=Tween<double>(begin: 0.0,end: 0.1).animate(animationController);
     animationBorder=Tween<double>(begin: 0.0,end: 1.0).animate(animationController);
     changeTextNotifier=ValueNotifier(title);
-    WidgetsBinding.instance.addPostFrameCallback((_) => getSizeAndPosition());
+   // WidgetsBinding.instance.addPostFrameCallback((_) => getSizeAndPosition());
   }
 
 
@@ -70,18 +70,18 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
   }
 
 
-  getSizeAndPosition() {
-    RenderBox? cardBox = _textKey.currentContext!.findRenderObject() as RenderBox?;
-    textSize = cardBox!.size;
-    setState(() {
-     double i = textSize.height<50.0?14.0:28.0;
-     _itemBox =  textSize.height + i;
-     animationHeight= Tween<double>(
-         begin: _itemBox,
-         end: _heightCalculate(_items.length, _itemBox))
-         .animate(animationController);
-   });
-  }
+  // getSizeAndPosition() {
+  //   RenderBox? cardBox = _textKey.currentContext!.findRenderObject() as RenderBox?;
+  //   textSize = cardBox!.size;
+  //   setState(() {
+  //    double i = textSize.height<50.0?14.0:28.0;
+  //    _itemBox =  textSize.height + i;
+  //    animationHeight= Tween<double>(
+  //        begin: _itemBox,
+  //        end: _heightCalculate(_items.length, _itemBox))
+  //        .animate(animationController);
+  //  });
+  // }
 
   double _heightCalculate(int indexItems,double sizeText){
     final s = _items.length == 2?25.0:15.0;

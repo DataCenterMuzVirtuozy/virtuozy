@@ -76,7 +76,8 @@ class _ListTransactionsPageState extends State<ListTransactionsPage> {
           onRefresh: () {
             return _refreshData();
           },
-          child: Column(
+          child:               Column(
+            mainAxisSize: MainAxisSize.max,
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -90,7 +91,7 @@ class _ListTransactionsPageState extends State<ListTransactionsPage> {
                       _allViewDirection = false;
                     }
                     context.read<BlocFinance>().add(GetListTransactionsEvent(
-                      refreshDirection: true,
+                        refreshDirection: true,
                         directions: widget.directions,
                         allViewDir: _allViewDirection,
                         currentDirIndex: _selIndexDirection));
@@ -101,7 +102,7 @@ class _ListTransactionsPageState extends State<ListTransactionsPage> {
 
               if(state.listTransactionStatus == ListTransactionStatus.refresh)...{
                 const Expanded(
-                  child: Center(child: CircularProgressIndicator())
+                    child: Center(child: CircularProgressIndicator())
                 )
               }else if (state.transactions.isEmpty) ...{
                 Expanded(
@@ -120,29 +121,29 @@ class _ListTransactionsPageState extends State<ListTransactionsPage> {
                       padding: const EdgeInsets.only(top: 10),
                       child: Center(
                           child: Text(
-                        value,
-                        style: TStyle.textStyleVelaSansBold(
-                            Theme.of(context).textTheme.displayMedium!.color!,
-                            size: 14),
-                      )),
+                            value,
+                            style: TStyle.textStyleVelaSansBold(
+                                Theme.of(context).textTheme.displayMedium!.color!,
+                                size: 14),
+                          )),
                     ),
                     itemBuilder: (context, TransactionEntity element) {
                       return ItemTransaction(
                           allView: widget.directions.length > 1,
                           nameDir:
-                              _getNameDir(element.idDir, widget.directions),
+                          _getNameDir(element.idDir, widget.directions),
                           date:
-                              DateTimeParser.getDateFromApi(date: element.date),
+                          DateTimeParser.getDateFromApi(date: element.date),
                           type: element.typeTransaction,
                           time: element.time,
                           quantity:
-                              '${element.typeTransaction == TypeTransaction.minusLesson ? '-' : '+'}'
+                          '${element.typeTransaction == TypeTransaction.minusLesson ? '-' : '+'}'
                               '${ParserPrice.getBalance(element.quantity)} руб.');
                     },
                     itemComparator: (item1, item2) {
                       return DateTimeParser.getDateForCompare(date: item1.date)
                           .compareTo(DateTimeParser.getDateForCompare(
-                              date: item2.date));
+                          date: item2.date));
                     },
                     // optional
                     useStickyGroupSeparators: false,

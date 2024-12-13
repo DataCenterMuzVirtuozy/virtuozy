@@ -555,7 +555,7 @@ class _ItemSubState extends State<ItemSub> {
       _heightContainer = 80;
     }else{
       _heightContainer =widget.subscription.options.isEmpty?155:
-      155+(widget.subscription.options.length*17)+35;
+      155+(widget.subscription.options.length*20)+35;
     }
     return Padding(
         padding: const EdgeInsets.only(bottom: 5.0),
