@@ -30,7 +30,8 @@ class _SupportListContentState extends State<SupportListContent>
   final List<String> _pathsIcon = [telegram, whatsapp];
 
   String _getUrl(TypeMessager typeMessager, int index, String idFilial) {
-    if (idFilial == 'Москва') {
+
+    if (idFilial == 'msk') {
       if (TypeMessager.telegram == typeMessager) {
         return listSupportUrlTelegramMSK[index];
       } else {

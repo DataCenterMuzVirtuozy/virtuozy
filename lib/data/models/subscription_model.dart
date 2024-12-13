@@ -10,7 +10,7 @@ class SubscriptionModel{
    final double price;
   final double  priceOneLesson;
   final double balanceSub;
-  final int balanceLesson;
+  final dynamic balanceLesson;
   final String dateStart;
   final String dateEnd;
   final String commentary;
@@ -67,12 +67,11 @@ class SubscriptionModel{
   }
 
   factory SubscriptionModel.fromMap(Map<String, dynamic> map,String nameDirection) {
-
    final options = (map['options'] as List).map((m) => OptionModel.fromMap(m)).toList();
    final idDir = map['customerId'];
    final idUser = map['idUser'];
    int balanceSub = map['balanceSub'];
-   final balanceLesson = map['balanceLesson'];
+   final  balanceLesson = map['balanceLesson'];
    final status = map['status'];
 
 

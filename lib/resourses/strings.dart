@@ -56,14 +56,11 @@ List<String> get titlesDrawMenuStudent => [
 
  ];
 
- List<String> get listSupportUrlTelegramMSK =>[
-   'https://t.me/VirtuozyMskMS1?roistat_visit=1514428',
-   'https://t.me/VirtuozyMskMS2?roistat_visit=1514428'
- ];
 
+  ///whatsapp
  List<String> get listSupportUrlWhatsappMSK =>[
-   'https://wa.clck.bar/79231114616',
-   'https://wa.clck.bar/79231114616'
+   'https://wa.clck.bar/79686363386',
+   'https://wa.clck.bar/79686363386'
  ];
 
 
@@ -71,11 +68,20 @@ List<String> get titlesDrawMenuStudent => [
    'https://wa.clck.bar/79231114616',
    'https://wa.clck.bar/79231114616'
  ];
+ ///
+
+ ///telegram
  List<String> get listSupportUrlTelegramNSK =>[
    'https://t.me/@VirtuozyNskMs2',
    'https://t.me/@VirtuozyNskMs1',
    'https://t.me/virtuozy_nsk'
  ];
+
+ List<String> get listSupportUrlTelegramMSK =>[
+   'https://t.me/VirtuozyMskMS1?roistat_visit=1514428',
+   'https://t.me/VirtuozyMskMS2?roistat_visit=1514428'
+ ];
+ ///
 
 
  String get apiKeyDaData => 'c8b766b17530af15eff28fc87f5b75674c614f74';

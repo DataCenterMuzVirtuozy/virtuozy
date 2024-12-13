@@ -64,6 +64,7 @@ class UserModel{
   factory UserModel.fromMap({required Map<String, dynamic> mapUser,required List<dynamic> mapSubsAll,required List<dynamic> lessons}) {
 
     final directions = (mapUser['directions'] as List<dynamic>);
+
     //if(directions.length>5)directions.removeAt(9); //todo index 9 from crm - {id: null, name: Не выбрано, nameTeacher:  Не выбрано }
    //final settingsMap = mapUser['settingNotifi'] as List<dynamic>; //todo type 'String' is not a subtype of type 'List<dynamic>' in type cast
     //final docs =  mapUser['documents'] as List<dynamic>;//todo type 'String' is not a subtype of type 'List<dynamic>' in type cast
@@ -126,15 +127,13 @@ class UserModel{
 
 
   factory DirectionModel.fromMap({required Map<String, dynamic> mapDirection,required List<dynamic> mapSubs,required List<dynamic> lessons}) {
-     int index = 0;
-    //final lessons =  mapDirection['lessons'] as List<dynamic>;
     final nameDirection = mapDirection['name'] as String;
     final nameTeacherDir = mapDirection['nameTeacher']??'';
     final subs = mapSubs.map((e) => SubscriptionModel.fromMap(e,nameDirection)).toList();
     final subsDir = subs.where((element) =>element.idDir == (mapDirection['customerId'] as int)).toList();
     final lastSub = _getLastSub(subsDir);
-    final int idDir = mapDirection['customerId'];
-    final int idCustomer = mapDirection['id'];
+    final int idDir = mapDirection['customerId']??0;
+    final int idCustomer = mapDirection['id']??0;
    // final bonus = mapDirection['bonus'] as List<dynamic>;
 
     return DirectionModel(

@@ -16,7 +16,7 @@ enum StatusSub{
    final double price;
    final double  priceOneLesson;
    final double balanceSub;
-   final int balanceLesson;
+   final dynamic balanceLesson;
    final String dateBay;
    final String dateStart;
    final String dateEnd;
@@ -53,7 +53,7 @@ enum StatusSub{
     double? price,
     double? priceOneLesson,
     double? balanceSub,
-    int? balanceLesson,
+    dynamic balanceLesson,
       String? dateStart,
       String? dateEnd,
      String? dateBay,

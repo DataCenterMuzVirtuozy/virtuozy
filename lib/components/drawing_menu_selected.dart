@@ -43,6 +43,7 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
   void initState() {
     super.initState();
     _items = widget.items;
+    //_items.removeRange(0,20);
     final itemsTitle = _items.isEmpty?'':_items[_items.length-1];
     final title = widget.initTitle.isEmpty?itemsTitle:widget.initTitle;
     animationController=AnimationController(vsync: this,duration: const Duration(milliseconds: 300));
@@ -84,7 +85,7 @@ class _DrawingMenuSelectedState extends State<DrawingMenuSelected> with TickerPr
 
   double _heightCalculate(int indexItems,double sizeText){
     final s = _items.length == 2?25.0:15.0;
-    return (sizeText*indexItems)+50;
+    return (36.5*indexItems)+60;
         //+(s*indexItems);
   }
 

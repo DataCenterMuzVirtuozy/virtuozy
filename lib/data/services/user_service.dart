@@ -32,7 +32,7 @@ class UserService{
 
       final token =  PreferencesUtil.token;
       var data =  {
-        'userStatus': 0
+        'user_status_id': 3
       };
       await dioApi.post(Endpoints.update,
           options: Options(
@@ -80,6 +80,7 @@ class UserService{
             'phone':  phone.replaceAll(' ', ''),
             'password':password
           });
+      print('Error ${resLogin.data}');
       final  token = resLogin.data['token'];
      await PreferencesUtil.setToken(token: token);
       final resUser = await dioApi.get(Endpoints.user,
@@ -109,6 +110,10 @@ class UserService{
 
       throw  Failure(e.message);
     } on DioException catch(e,stack){
+      print('Stake ${stack} Error ${e.message}');
+      if(e.response?.statusCode == 403){
+        throw  Failure('Данный аккаунт был удален пользователем'.tr());
+      }
       print('Stake ${stack} Error ${e.message}');
       throw  Failure('Ошибка авторизации'.tr());
     }

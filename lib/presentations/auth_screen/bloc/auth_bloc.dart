@@ -99,6 +99,7 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
       await PreferencesUtil.clear();
       emit(state.copyWith(authStatus: AuthStatus.error,error: e.message));
     } catch (e,stakeTrace){
+      print('BLOC AUTH ${stakeTrace}');
       await PreferencesUtil.clear();
       emit(state.copyWith(authStatus: AuthStatus.error,
           error: 'Ошибка получения данных'.tr()));
