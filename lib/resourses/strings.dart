@@ -60,13 +60,13 @@ List<String> get titlesDrawMenuStudent => [
   ///whatsapp
  List<String> get listSupportUrlWhatsappMSK =>[
    'https://wa.clck.bar/79686363386',
-   'https://wa.clck.bar/79686363386'
+   'https://wa.clck.bar/79684021748'
  ];
 
 
  List<String> get listSupportUrlWhatsappNSK =>[
    'https://wa.clck.bar/79231114616',
-   'https://wa.clck.bar/79231114616'
+   'https://wa.clck.bar/79069944939'
  ];
  ///
 
@@ -78,8 +78,8 @@ List<String> get titlesDrawMenuStudent => [
  ];
 
  List<String> get listSupportUrlTelegramMSK =>[
-   'https://t.me/VirtuozyMskMS1?roistat_visit=1514428',
-   'https://t.me/VirtuozyMskMS2?roistat_visit=1514428'
+   'https://t.me/VirtuozyMskMS1?roistat_visit=1635377',
+   'https://t.me/VirtuozyMskMS2?roistat_visit=1635377'
  ];
  ///
 

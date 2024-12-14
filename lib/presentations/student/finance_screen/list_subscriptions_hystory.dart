@@ -12,6 +12,7 @@ import 'package:gap/gap.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:virtuozy/components/app_bar.dart';
 import 'package:virtuozy/utils/date_time_parser.dart';
+import 'package:virtuozy/utils/parser_price.dart';
 
 import '../../../components/box_info.dart';
 import '../../../domain/entities/subscription_entity.dart';
@@ -238,7 +239,7 @@ class ItemSubHistory extends StatelessWidget{
             children: [
               Row(
                 children: [
-                  Text(subscriptionEntity.price.toString(),
+                  Text(ParserPrice.getBalance(subscriptionEntity.price),
                       style: TStyle.textStyleVelaSansExtraBolt(Theme.of(context).textTheme.displayMedium!.color!,size: 14.0)),
                   Icon(CupertinoIcons.money_rubl,color: Theme.of(context).textTheme.displayMedium!.color!,size: 16.0)
                 ],

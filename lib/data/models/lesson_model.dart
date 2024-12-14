@@ -118,7 +118,7 @@ class LessonModel{
         idSchool: idSchool,
         idSub: idSub,
         id: map['id']??0,
-        timeAccept: map['timeAccept']??'',
+        timeAccept: map['с']??'',
         date: dateStart,
         timePeriod: timePeriod,
         idTeacher: idTeacher,
