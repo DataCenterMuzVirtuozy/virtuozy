@@ -638,7 +638,9 @@ class _ItemSubState extends State<ItemSub> {
                           alignment: Alignment.center,
                           padding: const EdgeInsets.only(right: 8.0,left:8.0,bottom: 2.0),
                           decoration: BoxDecoration(
-                              color: widget.subscription.status == StatusSub.active?colorGreen:
+                              color:
+                              widget.subscription.status == StatusSub.active?
+                              colorGreen:
                               colorRed,
                               borderRadius: BorderRadius.circular(10.0)),
                           child: Text(widget.subscription.status == StatusSub.active?'активный'.tr():

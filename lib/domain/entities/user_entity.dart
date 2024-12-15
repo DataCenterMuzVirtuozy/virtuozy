@@ -86,7 +86,7 @@ enum UserStatus{
         userStatus: UserStatus.notAuth,
         lastName: '',
         firstName: '',
-        branchName: '',
+        branchName: 'msk',
         phoneNumber: '',
         sex: '',
         about_me: '',

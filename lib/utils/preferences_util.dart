@@ -95,7 +95,7 @@ class PreferencesUtil{
   static String get lastNameUser => _prefsInstance!.getString(_keyLastName)??'';
   static String get firstNameUser => _prefsInstance!.getString(_keyFirstName)??'';
   static String get phoneUser => _prefsInstance!.getString(_keyPhoneNumber)??'';
-  static String get branchUser => _prefsInstance!.getString(_keyBranch)??'';
+  static String get branchUser => _prefsInstance!.getString(_keyBranch)??'msk';
   static String get token => _prefsInstance!.getString(_keyToken)??'';
   static UserType get userType {
     final type = _prefsInstance!.getInt(_keyTypeUser)??0;
@@ -125,7 +125,7 @@ class PreferencesUtil{
     _prefsInstance!.remove(_keyStatus);
     _prefsInstance!.remove(_keyLastName);
     _prefsInstance!.remove(_keyFirstName);
-    _prefsInstance!.remove(_keyBranch);
+    //_prefsInstance!.remove(_keyBranch);
     _prefsInstance!.remove(_keyToken);
     _prefsInstance!.remove(_keyTypeUser);
     _prefsInstance!.remove(_keyTheme);

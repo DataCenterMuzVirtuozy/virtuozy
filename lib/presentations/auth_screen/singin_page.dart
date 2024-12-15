@@ -83,10 +83,41 @@ class _SingInPageState extends State<SingInPage> {
       urlSch = nskUrl;
     }
     await PreferencesUtil.setUrlSchool(urlSch);
+    await PreferencesUtil.setBranchUser(branch: selectedValue == 'Новосибирск'?'nsk':'msk');
   }
 
   void _handleLocation() async {
     await LocationUtil.handleLocationPermission(context: context);
+
+  }
+
+  Widget _logo(){
+    final branch = PreferencesUtil.branchUser;
+    print('Logo $branch');
+    if(branch == 'msk'||branch.isEmpty){
+      return  _darkTheme
+          ? Image.asset(logoDark, width: 100.0)
+          : SvgPicture.asset(logo, width: 100.0);
+    }else{
+      return Container();
+    }
+
+  }
+
+  Widget _illustration(){
+    final branch = PreferencesUtil.branchUser;
+    if(branch == 'nsk'){
+      return Column(
+        children: [
+          _darkTheme
+              ? Image.asset(logoDark, width: 200.0) //todo need nsk logo
+              : SvgPicture.asset(logoMainNsk, width: 200.0),
+          const Gap(50)
+        ],
+      );
+    }else{
+      return  Image.asset(illustration_5);
+    }
 
   }
 
@@ -147,8 +178,7 @@ class _SingInPageState extends State<SingInPage> {
         ),
         backgroundColor: Theme.of(context).colorScheme.background,
         centerTitle: true,
-        title:   _darkTheme?Image.asset(logoDark,width: 100.0):
-        SvgPicture.asset(logo, width: 100.0),
+        title:   _logo()
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 20.0,right: 20.0,top: 50.0),
@@ -189,7 +219,7 @@ class _SingInPageState extends State<SingInPage> {
                 children: [
                   Column(
                     children: [
-                      Image.asset(illustration_5),
+                      _illustration(),
                       const Gap(20.0),
                       Text('Добро пожаловать!'.tr(),style: TStyle.textStyleVelaSansBold(
                           Theme.of(context).textTheme.displayMedium!.color!,
@@ -212,7 +242,6 @@ class _SingInPageState extends State<SingInPage> {
                         ),
                         child: Stack(
                           children: [
-
                             DropdownButton(
                                   key  : _dropdownButtonKey,
                                   underline: Container(color: Colors.transparent,),

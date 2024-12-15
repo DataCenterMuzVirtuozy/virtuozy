@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtuozy/router/paths.dart';
+import 'package:virtuozy/utils/preferences_util.dart';
 
 import '../../../../presentations/auth_screen/bloc/auth_bloc.dart';
 import '../../../../presentations/auth_screen/bloc/auth_event.dart';
@@ -23,6 +24,8 @@ class _SelectBranchContentState extends State<SelectBranchContent> {
   final List<String> _branchs = ['Москва', 'Новосибирск'];
   int selIndex = -1;
 
+
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -35,6 +38,7 @@ class _SelectBranchContentState extends State<SelectBranchContent> {
                 onSelect: (value) {
                   setState(() {
                     selIndex = value;
+
                   });
                 },
                 index: index,

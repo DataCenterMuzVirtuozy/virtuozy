@@ -4,6 +4,7 @@
  import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
@@ -14,10 +15,48 @@ import 'package:virtuozy/utils/contact_school_by_location.dart';
 
 import '../../resourses/colors.dart';
 import '../../resourses/images.dart';
+import '../../utils/preferences_util.dart';
 import '../../utils/text_style.dart';
+import '../../utils/theme_provider.dart';
 
-class SuccessSendSMS extends StatelessWidget{
+class SuccessSendSMS extends StatefulWidget{
   const SuccessSendSMS({super.key});
+
+  @override
+  State<SuccessSendSMS> createState() => _SuccessSendSMSState();
+}
+
+class _SuccessSendSMSState extends State<SuccessSendSMS> {
+
+  bool _darkTheme = false;
+
+
+  Widget _logo(){
+    final branch = PreferencesUtil.branchUser;
+    print('Logo $branch');
+    if(branch == 'msk'||branch.isEmpty){
+      return  _darkTheme
+          ? Image.asset(logoDark)
+          : SvgPicture.asset(logo);
+    }else{
+      return Column(
+        children: [
+          _darkTheme
+              ? Image.asset(logoDark, width: 200.0) //todo need nsk logo
+              : SvgPicture.asset(logoMainNsk, width: 200.0),
+          const Gap(50)
+        ],
+      );
+
+    }
+
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _darkTheme = context.watch<ThemeProvider>().themeStatus == ThemeStatus.dark;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +69,11 @@ class SuccessSendSMS extends StatelessWidget{
           children: [
             Column(
               children: [
-                SvgPicture.asset(logo),
+                _logo(),
                 const Gap(40.0),
-                Image.asset(illustration_5),
+                Visibility(
+                  visible: PreferencesUtil.branchUser == 'msk',
+                    child: Image.asset(illustration_5)),
                 const Gap(40.0),
                 Text('Поздравляем с регистрацией в личном кабинете!'.tr(),
                     textAlign: TextAlign.center,
@@ -102,8 +143,4 @@ class SuccessSendSMS extends StatelessWidget{
       throw Exception('Could not launch $url');
     }
   }
-
-
-
-
 }

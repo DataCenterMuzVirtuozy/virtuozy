@@ -5,7 +5,12 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:virtuozy/domain/entities/user_entity.dart';
+import 'package:virtuozy/domain/user_cubit.dart';
+import 'package:virtuozy/presentations/auth_screen/bloc/auth_bloc.dart';
 import 'package:virtuozy/resourses/colors.dart';
+import 'package:virtuozy/utils/auth_mixin.dart';
+import 'package:virtuozy/utils/preferences_util.dart';
 
 import '../resourses/images.dart';
 import '../utils/text_style.dart';
@@ -20,9 +25,10 @@ class TitlePage extends StatefulWidget{
   State<TitlePage> createState() => _TitlePageState();
 }
 
-class _TitlePageState extends State<TitlePage> {
+class _TitlePageState extends State<TitlePage> with AuthMixin{
 
   bool _darkTheme = false;
+
 
   @override
   void didChangeDependencies() {
@@ -48,7 +54,8 @@ class _TitlePageState extends State<TitlePage> {
          ),
          child: Stack(
            children: [
-             Image.asset(icLogoRec,width: 25.0),
+             user.branchName == 'msk'?Image.asset(icLogoRec,
+                 width: 25.0):SvgPicture.asset(logoNsk,width: 25,),
              Padding(
                padding: const EdgeInsets.only(left: 30),
                child: Text(widget.title,style: TStyle.textStyleGaretHeavy(textColorBlack(context),size: 18),),

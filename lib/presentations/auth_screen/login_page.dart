@@ -48,6 +48,8 @@ class _LogInPageState extends State<LogInPage> {
   @override
   void initState() {
     super.initState();
+    final b = PreferencesUtil.branchUser;
+    print('Scvv $b');
     _phoneNumUser = PreferencesUtil.phoneUser;
     _phoneController = TextEditingController();
     _passwordController = TextEditingController();
@@ -83,12 +85,47 @@ class _LogInPageState extends State<LogInPage> {
 
   }
 
+  _saveBranch(branch) async {
+    await PreferencesUtil.setBranchUser(branch: branch);
+  }
+
+  Widget _logo(){
+    final branch = PreferencesUtil.branchUser;
+    if(branch == 'msk'||branch.isEmpty){
+      return  _darkTheme
+          ? Image.asset(logoDark, width: 100.0)
+          : SvgPicture.asset(logo, width: 100.0);
+    }else{
+      return Container();
+    }
+
+  }
+
+  Widget _illustration(){
+    final branch = PreferencesUtil.branchUser;
+    if(branch == 'nsk'){
+      return Column(
+        children: [
+          _darkTheme
+              ? Image.asset(logoDark, width: 200.0) //todo need nsk logo
+              : SvgPicture.asset(logoMainNsk, width: 200.0),
+          const Gap(50)
+        ],
+      );
+    }else{
+      return  Image.asset(illustration_5);
+    }
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions:  [MyCheckboxMenu(onChange: (idLoc){
+        actions:  [MyCheckboxMenu(
+          onChange: (idLoc){
           setState(() {
+            _saveBranch(idLoc);
             _phoneNumSupport = ContactSchoolByLocation.getPhoneNumberByIdLocation(idLoc);
           });
 
@@ -97,9 +134,7 @@ class _LogInPageState extends State<LogInPage> {
         iconTheme: IconThemeData(color: Theme.of(context).iconTheme.color),
         backgroundColor: Theme.of(context).colorScheme.background,
         centerTitle: true,
-        title: _darkTheme
-            ? Image.asset(logoDark, width: 100.0)
-            : SvgPicture.asset(logo, width: 100.0),
+        title:_logo()
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 50.0),
@@ -144,7 +179,7 @@ class _LogInPageState extends State<LogInPage> {
                 children: [
                   Column(
                     children: [
-                      Image.asset(illustration_5),
+                      _illustration(),
                       const Gap(30.0),
                       Text('Добро пожаловать!'.tr(),
                           style: TStyle.textStyleVelaSansBold(
@@ -176,7 +211,8 @@ class _LogInPageState extends State<LogInPage> {
                               'Не пришел пароль по СМС? Позвоните по телефону'
                                   .tr(),
                               textAlign: TextAlign.center,
-                              style: TStyle.textStyleVelaSansMedium(colorRed,
+                              style: TStyle.textStyleVelaSansMedium(PreferencesUtil.branchUser == 'msk'?colorRed:
+                                  colorOrange,
                                   size: 14.0),
                             ),
                             TextButton(
@@ -186,7 +222,8 @@ class _LogInPageState extends State<LogInPage> {
                                 child: Text(
                                   _phoneNumSupport,
                                   style: TStyle.textStyleVelaSansRegularUnderline(
-                                      colorRed,
+                                      PreferencesUtil.branchUser == 'msk'?colorRed:
+                                      colorOrange,
                                       size: 16.0),
                                 ))
                           ],

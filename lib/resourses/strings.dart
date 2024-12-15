@@ -6,7 +6,7 @@
  String  get mskUrl => 'https://msk.crm-muz.ru/api';
  String get nskUrl => 'https://nsk.crm-muz.ru/api';
   String get numMsk => '8 (499) 112-43-97';
-  String get numNsk => '7 (383) 227-84-56';
+  String get numNsk => '7 (383) 249-34-36';
 
 
 List<String> get titlesDrawMenuStudent => [

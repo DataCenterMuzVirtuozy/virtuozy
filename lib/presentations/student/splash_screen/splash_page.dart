@@ -12,6 +12,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:virtuozy/resourses/images.dart';
 import 'package:virtuozy/utils/theme_provider.dart';
 
+import '../../../utils/preferences_util.dart';
+
 class SplashPage extends StatefulWidget{
   const SplashPage({super.key});
 
@@ -22,13 +24,15 @@ class SplashPage extends StatefulWidget{
 class _SplashPageState extends State<SplashPage> {
 
   bool _darkTheme = false;
+  final bool _msk = PreferencesUtil.branchUser == 'msk';
 
   @override
   Widget build(BuildContext context) {
    return Scaffold(
      body: Center(
          child: _darkTheme?Image.asset(logoDark,width: 150.0):
-         SvgPicture.asset(logo, width: 150.0).animate().scale(
+         SvgPicture.asset(_msk?logo:logoMainNsk,
+             width: 150.0).animate().scale(
               curve: Curves.bounceOut,
               duration: const Duration(milliseconds: 1000))),
    );

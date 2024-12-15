@@ -9,6 +9,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/support_list_content.dart';
@@ -21,6 +22,7 @@ import 'package:virtuozy/resourses/images.dart';
 import 'package:virtuozy/resourses/strings.dart';
 import 'package:virtuozy/router/paths.dart';
 import 'package:virtuozy/utils/auth_mixin.dart';
+import 'package:virtuozy/utils/preferences_util.dart';
 
 import '../utils/text_style.dart';
 import 'package:badges/src/badge.dart' as badge;
@@ -49,7 +51,7 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
   }
 
   Widget _getAvatar(String urlAva){
-
+   final branch = PreferencesUtil.branchUser;
     if(urlAva.isEmpty){
         return Container(
             width: 80,
@@ -60,7 +62,6 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
             ),
             child: Icon(Icons.image_search_rounded,color: colorOrange,size: 30,));
       }else{
-
       return Container(
         width: 80,
         height: 80,
@@ -75,7 +76,7 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
             progressIndicatorBuilder: (context, url, downloadProgress) =>
                 CircularProgressIndicator(value: downloadProgress.progress,color: colorWhite),
             errorWidget: (context, url, error) {
-              return  Image.asset(icLogoRec);
+              return  branch == 'msk'?Image.asset(icLogoRec):SvgPicture.asset(logoNsk);
             },
           ),
         ),
@@ -127,7 +128,7 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                               padding: const EdgeInsets.only(left: 105,top: 50,right: 20,bottom: 5),
                               width: width,
                               decoration: BoxDecoration(
-                                  color: colorYellow
+                                  color: PreferencesUtil.branchUser == 'msk'?colorYellow:colorGreenNsk
                               ),
                               child:  Visibility(
                                 visible: available(),
@@ -150,7 +151,7 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                                   padding: const EdgeInsets.only(left: 105,top: 10),
                                   width: width,
                                   height: 40,
-                                  color: colorOrange,
+                                  color: PreferencesUtil.branchUser == 'msk'?colorOrange:colorGreenNsk,
                               child:
                                  Row(
                                    children: [
@@ -229,7 +230,6 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      //todo url enter
                       IconButton(onPressed: ()async{
                         Dialoger.showModalBottomMenu(
                             title: 'Telegram',
@@ -648,7 +648,7 @@ class DrawerItem extends StatelessWidget{
                 width: 8,
                 height: 8,
                 decoration: BoxDecoration(
-                    color: colorOrange,
+                    color: PreferencesUtil.branchUser == 'msk'?colorOrange:colorGreenNsk,
                     shape: BoxShape.circle
                 ),
               ),
