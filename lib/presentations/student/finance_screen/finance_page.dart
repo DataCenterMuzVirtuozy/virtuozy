@@ -17,6 +17,7 @@ import '../../../components/drawing_menu_selected.dart';
 import '../../../data/rest/endpoints.dart';
 import '../../../domain/entities/subscription_entity.dart';
 import '../../../utils/date_time_parser.dart';
+import '../../../utils/preferences_util.dart';
 import '../../../utils/text_style.dart';
 import '../widgets/options_list.dart';
 import 'bloc/bloc_finance.dart';
@@ -191,21 +192,23 @@ class _FinancePageState extends State<FinancePage> {
                             )
                           ],
                         ),
-                        //const Gap(10.0),
-                        // Padding(
-                        //   padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        //   child: SizedBox(
-                        //     height: 40.0,
-                        //     child: SubmitButton(
-                        //         borderRadius: 20.0,
-                        //         colorFill: colorBeruza,
-                        //         textButton: 'Пополнить'.tr(),
-                        //         onTap: () {
-                        //           GoRouter.of(context)
-                        //               .push(pathWep, extra: Endpoints.urlPrice);
-                        //         }),
-                        //   ),
-                        // ),
+                        const Gap(10.0),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: SizedBox(
+                            height: 40.0,
+                            child: SubmitButton(
+                                borderRadius: 20.0,
+                                colorFill: colorBeruza,
+                                textButton: 'Пополнить'.tr(),
+                                onTap: () {
+                                  GoRouter.of(context).push(pathWep,
+                                      extra: PreferencesUtil.branchUser == 'nsk'
+                                          ? Endpoints.urlPriceNsk
+                                          : Endpoints.urlPriceMsk);
+                                }),
+                          ),
+                        ),
                       ],
                     ),
                   ),

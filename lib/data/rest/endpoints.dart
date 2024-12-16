@@ -15,7 +15,8 @@ class Endpoints{
   static const String singIn  = '/register';
   static const String urlNSK = 'https://virtuozy-nsk.ru';
   static const String urlMSK = 'https://virtuozy-msk.ru';
-  static const String urlPrice = 'https://virtuozy-msk.ru/price/';
+  static const String urlPriceMsk = 'https://virtuozy-msk.ru/price/';
+  static const String urlPriceNsk = 'https://virtuozy-nsk.ru/price/';
   static const String subways = 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/metro';
 
 
