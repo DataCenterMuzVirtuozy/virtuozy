@@ -90,7 +90,7 @@ class _LogInPageState extends State<LogInPage> {
   }
 
   Widget _logo(){
-    final branch = PreferencesUtil.branchUser;
+    final branch = 'msk';//PreferencesUtil.branchUser;
     if(branch == 'msk'||branch.isEmpty){
       return  _darkTheme
           ? Image.asset(logoDark, width: 100.0)
@@ -102,7 +102,7 @@ class _LogInPageState extends State<LogInPage> {
   }
 
   Widget _illustration(){
-    final branch = PreferencesUtil.branchUser;
+    final branch = 'msk';//PreferencesUtil.branchUser;
     if(branch == 'nsk'){
       return Column(
         children: [

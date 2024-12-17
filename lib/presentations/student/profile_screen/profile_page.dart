@@ -695,7 +695,32 @@ class _BodyInfoUserState extends State<BodyInfoUser>{
                       ),
                     )
 
-                  }
+                  },
+                  Visibility(
+                    visible: widget.user.userStatus.isAuth,
+                    child: InkWell(
+                      onTap: (){
+                        Dialoger.showCustomDialog(contextUp: context,
+                            args: widget.user,
+                            content: DeleteAccount());
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Gap(20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('Удалить аккаунт'.tr(),style: TStyle.textStyleVelaSansRegular( colorRed,
+                                  size: 16.0)),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+
                 ],
               ),
             ),

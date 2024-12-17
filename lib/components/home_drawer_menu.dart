@@ -51,7 +51,7 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
   }
 
   Widget _getAvatar(String urlAva){
-   final branch = PreferencesUtil.branchUser;
+   final branch = 'msk'; //PreferencesUtil.branchUser;
     if(urlAva.isEmpty){
         return Container(
             width: 80,
@@ -569,30 +569,6 @@ class _DrawerItemSettingState extends State<DrawerItemSetting> {
                       ],
                     ),
                   ),
-                  Visibility(
-                    visible: widget.user.userStatus.isAuth,
-                    child: InkWell(
-                      onTap: (){
-                        Dialoger.showCustomDialog(contextUp: context,
-                            args: widget.user,
-                            content: DeleteAccount());
-                      },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Gap(10),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text('Удалить аккаунт'.tr(),style: TStyle.textStyleVelaSansRegular( colorRed,
-                                  size: 16.0)),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
                 ],
               ),
             ),)

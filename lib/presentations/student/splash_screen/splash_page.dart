@@ -24,7 +24,7 @@ class SplashPage extends StatefulWidget{
 class _SplashPageState extends State<SplashPage> {
 
   bool _darkTheme = false;
-  final bool _msk = PreferencesUtil.branchUser == 'msk';
+  final bool _msk = true;//PreferencesUtil.branchUser == 'msk';
 
   @override
   Widget build(BuildContext context) {

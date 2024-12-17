@@ -60,7 +60,7 @@ class PhoneField extends StatelessWidget {
 }
 
 
-class CustomField extends StatelessWidget {
+class CustomField extends StatefulWidget {
    CustomField(
       {Key? key,
         required this.controller,
@@ -88,40 +88,60 @@ class CustomField extends StatelessWidget {
   final TextCapitalization? textCapitalization;
 
   @override
+  State<CustomField> createState() => _CustomFieldState();
+}
+
+
+class UpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text.toUpperCase(),
+      selection: newValue.selection,
+    );
+  }
+}
+
+class _CustomFieldState extends State<CustomField> {
+  @override
   Widget build(BuildContext context) {
 
 
 
     return SizedBox(
-      height: heightBody,
+      height: widget.heightBody,
       child: TextField(
-        readOnly: readOnly,
-        textCapitalization: textCapitalization==null?
-        TextCapitalization.none:textCapitalization!,
-        maxLines: maxLines,
-        keyboardType: textInputType,
+        readOnly: widget.readOnly,
+        textCapitalization: widget.textCapitalization==null?
+        TextCapitalization.words:widget.textCapitalization!,
+        maxLines: widget.maxLines,
+        keyboardType: widget.textInputType,
         textAlign: TextAlign.start,
-        controller: controller,
+        controller: widget.controller,
+          // inputFormatters: [
+          //   UpperCaseTextFormatter(),
+          // ],
         style: TextStyle(color: Theme.of(context).textTheme.displayMedium!.color!),
         decoration: InputDecoration(
+
             filled: true,
             fillColor:  Theme.of(context).colorScheme.background,
-            suffixIcon: iconData != null?Padding(
+            suffixIcon: widget.iconData != null?Padding(
               padding: const EdgeInsets.all(14.0),
-              child: Icon(iconData,color: colorGrey),
+              child: Icon(widget.iconData,color: colorGrey),
             ):null,
-            hintText: textHint.tr(),
+            hintText: widget.textHint.tr(),
             hintStyle: TStyle.textStyleVelaSansRegular(colorGrey,size: 14.0),
             contentPadding:const EdgeInsets.only(left: 20,right: 20,top: 15,bottom: 20),
             enabledBorder:  OutlineInputBorder(
-              borderRadius: BorderRadius.circular(borderRadius),
+              borderRadius: BorderRadius.circular(widget.borderRadius),
               borderSide: BorderSide(
                 color: colorPink,
                 width: 1.0,
               ),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(borderRadius),
+              borderRadius: BorderRadius.circular(widget.borderRadius),
               borderSide: BorderSide(
                 color: colorOrange,
                 width: 1.0,

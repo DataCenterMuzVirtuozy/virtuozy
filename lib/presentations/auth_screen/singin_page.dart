@@ -92,8 +92,8 @@ class _SingInPageState extends State<SingInPage> {
   }
 
   Widget _logo(){
-    final branch = PreferencesUtil.branchUser;
-    print('Logo $branch');
+    final branch = 'msk';//PreferencesUtil.branchUser;
+
     if(branch == 'msk'||branch.isEmpty){
       return  _darkTheme
           ? Image.asset(logoDark, width: 100.0)
@@ -105,7 +105,7 @@ class _SingInPageState extends State<SingInPage> {
   }
 
   Widget _illustration(){
-    final branch = PreferencesUtil.branchUser;
+    final branch = 'msk';// PreferencesUtil.branchUser;
     if(branch == 'nsk'){
       return Column(
         children: [
