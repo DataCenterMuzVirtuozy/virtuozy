@@ -28,6 +28,7 @@ class TitlePage extends StatefulWidget{
 class _TitlePageState extends State<TitlePage> with AuthMixin{
 
   bool _darkTheme = false;
+  final bool _msk = PreferencesUtil.branchUser == 'msk';
 
 
   @override
@@ -54,10 +55,12 @@ class _TitlePageState extends State<TitlePage> with AuthMixin{
          ),
          child: Stack(
            children: [
-             // user.branchName == 'msk'?Image.asset(icLogoRec,
-             //     width: 25.0):SvgPicture.asset(logoNsk,width: 25,),
-             Image.asset(icLogoRec,
-                 width: 25.0),
+             _darkTheme?_msk?Image.asset(icLogoRec,
+                 width: 25.0):Image.asset(logoNskBlack,width: 20):
+             _msk?Image.asset(icLogoRec,
+                 width: 25.0):Image.asset(logoNsk,width: 20),
+             // Image.asset(icLogoRec,
+             //     width: 25.0),
              Padding(
                padding: const EdgeInsets.only(left: 30),
                child: Text(widget.title,style: TStyle.textStyleGaretHeavy(textColorBlack(context),size: 18),),

@@ -9,6 +9,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
@@ -27,6 +28,8 @@ import 'package:virtuozy/utils/preferences_util.dart';
 import '../utils/text_style.dart';
 import 'package:badges/src/badge.dart' as badge;
 
+import '../utils/theme_provider.dart';
+
 int _currentIndexItemMenu = 0;
 ValueNotifier<int> currentItemNotifier = ValueNotifier(0);
 
@@ -42,17 +45,25 @@ class HomeDrawerMenu extends StatefulWidget{
 
 class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
 
-
+  bool _darkTheme = false;
 
   @override
   void didChangeDependencies() {
    super.didChangeDependencies();
+   _darkTheme = context.watch<ThemeProvider>().themeStatus == ThemeStatus.dark;
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+
 
   }
 
   Widget _getAvatar(String urlAva){
-   final branch = 'msk'; //PreferencesUtil.branchUser;
-    if(urlAva.isEmpty){
+   final bool msk = PreferencesUtil.branchUser == 'msk';
+    if(!urlAva.isEmpty){
         return Container(
             width: 80,
             height: 80,
@@ -76,7 +87,7 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
             progressIndicatorBuilder: (context, url, downloadProgress) =>
                 CircularProgressIndicator(value: downloadProgress.progress,color: colorWhite),
             errorWidget: (context, url, error) {
-              return  branch == 'msk'?Image.asset(icLogoRec):SvgPicture.asset(logoNsk);
+              return  msk?Image.asset(icLogoRec):Image.asset(logoNsk);
             },
           ),
         ),
@@ -460,7 +471,7 @@ class _DrawerItemSettingState extends State<DrawerItemSetting> {
         onTap: (){
           setState(() {
             if(h==0){
-              h=widget.user.userStatus.isAuth||widget.user.userStatus.isModeration?170.0:70.0;
+              h=widget.user.userStatus.isAuth||widget.user.userStatus.isModeration?140.0:70.0;
             }else{
               h=0;
             }

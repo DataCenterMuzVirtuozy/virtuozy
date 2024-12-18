@@ -48,8 +48,6 @@ class _LogInPageState extends State<LogInPage> {
   @override
   void initState() {
     super.initState();
-    final b = PreferencesUtil.branchUser;
-    print('Scvv $b');
     _phoneNumUser = PreferencesUtil.phoneUser;
     _phoneController = TextEditingController();
     _passwordController = TextEditingController();
@@ -90,7 +88,7 @@ class _LogInPageState extends State<LogInPage> {
   }
 
   Widget _logo(){
-    final branch = 'msk';//PreferencesUtil.branchUser;
+    final branch = PreferencesUtil.branchUser;
     if(branch == 'msk'||branch.isEmpty){
       return  _darkTheme
           ? Image.asset(logoDark, width: 100.0)
@@ -102,13 +100,14 @@ class _LogInPageState extends State<LogInPage> {
   }
 
   Widget _illustration(){
-    final branch = 'msk';//PreferencesUtil.branchUser;
-    if(branch == 'nsk'){
+    final  bool msk = PreferencesUtil.branchUser == 'msk';
+    if(!msk){
       return Column(
         children: [
           _darkTheme
-              ? Image.asset(logoDark, width: 200.0) //todo need nsk logo
-              : SvgPicture.asset(logoMainNsk, width: 200.0),
+              ? Image.asset(msk?logoDark:logoMainNskBlack, width: 200.0)
+              : msk?SvgPicture.asset(logo, width: 200.0):
+          Image.asset(logoMainNsk,width: 200.0),
           const Gap(50)
         ],
       );

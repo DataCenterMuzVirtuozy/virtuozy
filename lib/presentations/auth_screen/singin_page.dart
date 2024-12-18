@@ -92,9 +92,9 @@ class _SingInPageState extends State<SingInPage> {
   }
 
   Widget _logo(){
-    final branch = 'msk';//PreferencesUtil.branchUser;
+    final  bool msk = PreferencesUtil.branchUser == 'msk';
 
-    if(branch == 'msk'||branch.isEmpty){
+    if(msk){
       return  _darkTheme
           ? Image.asset(logoDark, width: 100.0)
           : SvgPicture.asset(logo, width: 100.0);
@@ -105,13 +105,14 @@ class _SingInPageState extends State<SingInPage> {
   }
 
   Widget _illustration(){
-    final branch = 'msk';// PreferencesUtil.branchUser;
-    if(branch == 'nsk'){
+    final  bool msk = PreferencesUtil.branchUser == 'msk';
+    if(!msk){
       return Column(
         children: [
           _darkTheme
-              ? Image.asset(logoDark, width: 200.0) //todo need nsk logo
-              : SvgPicture.asset(logoMainNsk, width: 200.0),
+              ? Image.asset(msk?logoDark:logoMainNskBlack, width: 200.0)
+              : msk?SvgPicture.asset(logo, width: 200.0):
+          Image.asset(logoMainNsk,width: 200.0),
           const Gap(50)
         ],
       );
@@ -220,7 +221,7 @@ class _SingInPageState extends State<SingInPage> {
                   Column(
                     children: [
                       _illustration(),
-                      const Gap(20.0),
+                      const Gap(10.0),
                       Text('Добро пожаловать!'.tr(),style: TStyle.textStyleVelaSansBold(
                           Theme.of(context).textTheme.displayMedium!.color!,
                           size: 25.0)),
@@ -261,7 +262,7 @@ class _SingInPageState extends State<SingInPage> {
                               child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Container(
-                                  color: Colors.white,
+                                  color: Theme.of(context).colorScheme.background,
                                   child: Text(
                                     "Выбери город".tr(),
                                     style: TStyle.textStyleVelaSansRegular(colorGrey,size: 14.0),

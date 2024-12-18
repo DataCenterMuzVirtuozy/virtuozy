@@ -19,7 +19,10 @@
    String get dots => 'lib/assets/img/dots.png';
    String get icMenu => 'lib/assets/img/treble_clef.png';
    String get icLogoRec => 'lib/assets/img/logo_rec.png';
-   String get logoNsk => 'lib/assets/img/logo_nsk.svg';
-   String get logoMainNsk => 'lib/assets/img/logo_main_nsk.svg';
+   //nsk
+   String get logoNsk => 'lib/assets/img/logo_nsk.png';
+   String get logoNskBlack => 'lib/assets/img/logo_nsk_black.png';
+   String get logoMainNsk => 'lib/assets/img/logo_main_nsk.png';
+   String get logoMainNskBlack => 'lib/assets/img/logo_nsk_main_black.png';
 
 

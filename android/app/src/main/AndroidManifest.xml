@@ -20,9 +20,9 @@
     <application
         android:label="Виртуозы"
         android:name="${applicationName}"
-        android:roundIcon="@mipmap/ic_app_round"
+        android:roundIcon="@mipmap/ic_app_hny_round"
         android:usesCleartextTraffic="true"
-        android:icon="@mipmap/ic_app">
+        android:icon="@mipmap/ic_app_hny">
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -24,17 +24,18 @@ class SplashPage extends StatefulWidget{
 class _SplashPageState extends State<SplashPage> {
 
   bool _darkTheme = false;
-  final bool _msk = true;//PreferencesUtil.branchUser == 'msk';
+  final bool _msk = PreferencesUtil.branchUser == 'msk';
 
   @override
   Widget build(BuildContext context) {
    return Scaffold(
      body: Center(
-         child: _darkTheme?Image.asset(logoDark,width: 150.0):
-         SvgPicture.asset(_msk?logo:logoMainNsk,
+         child: _darkTheme?Image.asset(_msk?logoDark:logoMainNskBlack,width: 150.0):
+         _msk?SvgPicture.asset(logo,
              width: 150.0).animate().scale(
               curve: Curves.bounceOut,
-              duration: const Duration(milliseconds: 1000))),
+              duration: const Duration(milliseconds: 1000)):
+         Image.asset(logoMainNsk,width: 150.0)),
    );
   }
 
