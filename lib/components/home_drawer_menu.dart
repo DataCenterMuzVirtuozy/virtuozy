@@ -63,7 +63,7 @@ class _HomeDrawerMenuState extends State<HomeDrawerMenu> with AuthMixin{
 
   Widget _getAvatar(String urlAva){
    final bool msk = PreferencesUtil.branchUser == 'msk';
-    if(!urlAva.isEmpty){
+    if(urlAva.isEmpty){
         return Container(
             width: 80,
             height: 80,

@@ -85,7 +85,6 @@ class ProfileBloc extends Bloc<ProfileEvent,ProfileState>{
      EditProfileEntity profileEdited = event.editProfileEntity;
      UserEntity user = _userCubit.userEntity;
      emit(state.copyWith(profileStatus: ProfileStatus.saving));
-
     if(profileEdited.fileImageUrl != null){
       final url = await _userRepository.loadAvaProfile(uid: user.id, profileEntity: event.editProfileEntity);
       profileEdited = profileEdited.copyWith(urlAva: url);
@@ -100,7 +99,7 @@ class ProfileBloc extends Bloc<ProfileEvent,ProfileState>{
          sex: profileEdited.sex);
      _userCubit.setUser(user: user);
 
-     await _userRepository.saveSettingDataProfile(uid: user.id, profileEntity: profileEdited);
+    await _userRepository.saveSettingDataProfile(uid: user.id, profileEntity: profileEdited);
 
      emit(state.copyWith(profileStatus: ProfileStatus.saved,userEntity: user));
    }on Failure catch(e,s){
