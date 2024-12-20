@@ -19,6 +19,7 @@ import 'package:virtuozy/utils/preferences_util.dart';
 import '../../../../presentations/auth_screen/singin_page.dart';
 import '../../../../resourses/images.dart';
 import '../../../../resourses/strings.dart';
+import '../../../../utils/change_icon_app.dart';
 import '../../../../utils/text_style.dart';
 import '../../dialoger.dart';
 
@@ -200,6 +201,8 @@ class _FindLocationContentState extends State<FindLocationContent> with TickerPr
                             Navigator.pop(context);
                             Dialoger.showToast('Филиал школы в г. ${_currentAddress == 'nsk'?_paterns[1]:_paterns[3]}');
                             await PreferencesUtil.setUrlSchool(_currentAddress == 'nsk'?nskUrl:mskUrl);
+                            await PreferencesUtil.setBranchUser(branch: _currentAddress);
+                            await ChangeIconApp.changeAppIcon(_currentAddress != 'nsk'?AppIcon.msk:AppIcon.nsk);
                           },
                           borderRadius: 10,
                           textSize: 12,

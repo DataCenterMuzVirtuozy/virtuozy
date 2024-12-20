@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
@@ -18,6 +19,7 @@ import 'package:virtuozy/presentations/student/subscription_screen/bloc/sub_bloc
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/resourses/images.dart';
 import 'package:virtuozy/router/paths.dart';
+import 'package:virtuozy/utils/change_icon_app.dart';
 import 'package:virtuozy/utils/contact_school_by_location.dart';
 import 'package:virtuozy/utils/preferences_util.dart';
 
@@ -84,7 +86,9 @@ class _LogInPageState extends State<LogInPage> {
   }
 
   _saveBranch(branch) async {
+    bool msk = branch == 'msk';
     await PreferencesUtil.setBranchUser(branch: branch);
+    await ChangeIconApp.changeAppIcon(msk?AppIcon.msk:AppIcon.nsk);
   }
 
   Widget _logo(){
@@ -123,6 +127,7 @@ class _LogInPageState extends State<LogInPage> {
       appBar: AppBar(
         actions:  [MyCheckboxMenu(
           onChange: (idLoc){
+            print('Id $idLoc');
           setState(() {
             _saveBranch(idLoc);
             _phoneNumSupport = ContactSchoolByLocation.getPhoneNumberByIdLocation(idLoc);

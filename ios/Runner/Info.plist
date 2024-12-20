@@ -78,5 +78,48 @@ ITSAppUsesNonExemptEncryption</key>
 	<true/>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
+
+  <key>CFBundleIcons</key>
+  <dict>
+      <!-- Default app icon -->
+      <key>CFBundlePrimaryIcon</key>
+      <dict>
+          <key>CFBundleIconFiles</key>
+          <array>
+              <string>msk</string>
+          </array>
+          <key>UIPrerenderedIcon</key>
+          <false/>
+      </dict>
+
+      <key>CFBundleAlternateIcons</key>
+      <dict>
+
+          <key>msk</key>
+          <dict>
+              <key>CFBundleIconFiles</key>
+              <array>
+                  <string>msk</string>
+              </array>
+              <key>UIPrerenderedIcon</key>
+              <false/>
+          </dict>
+
+          <!-- Second custom icon - Gradient -->
+          <key>nsk</key>
+          <dict>
+              <key>CFBundleIconFiles</key>
+              <array>
+                  <string>nsk</string>
+              </array>
+              <key>UIPrerenderedIcon</key>
+              <false/>
+          </dict>
+   </dict>
+  </dict>
+
+
+
+
 </dict>
 </plist>

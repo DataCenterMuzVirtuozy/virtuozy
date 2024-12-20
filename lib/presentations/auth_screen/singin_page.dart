@@ -21,6 +21,7 @@ import '../../data/utils/location_util.dart';
 import '../../resourses/colors.dart';
 import '../../resourses/images.dart';
 import '../../resourses/strings.dart';
+import '../../utils/change_icon_app.dart';
 import '../../utils/preferences_util.dart';
 import '../../utils/text_style.dart';
 import '../../utils/theme_provider.dart';
@@ -77,6 +78,7 @@ class _SingInPageState extends State<SingInPage> {
 
   _saveLocation(String selectedValue) async {
     String urlSch = '';
+    bool nsk = selectedValue == 'Новосибирск';
     if(selectedValue == 'Москва'){
       urlSch = mskUrl;
     }else if(selectedValue == 'Новосибирск'){
@@ -84,6 +86,7 @@ class _SingInPageState extends State<SingInPage> {
     }
     await PreferencesUtil.setUrlSchool(urlSch);
     await PreferencesUtil.setBranchUser(branch: selectedValue == 'Новосибирск'?'nsk':'msk');
+    await ChangeIconApp.changeAppIcon(!nsk?AppIcon.msk:AppIcon.nsk);
   }
 
   void _handleLocation() async {

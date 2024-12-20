@@ -156,7 +156,7 @@ class _MyCheckboxMenuState extends State<MyCheckboxMenu> {
                             if (_empty) {
                               _nsk = false;
                               _msk = false;
-                              widget.onChange.call('');
+                              widget.onChange.call('msk');
                             }
                           });
                           await PreferencesUtil.setUrlSchool('');
