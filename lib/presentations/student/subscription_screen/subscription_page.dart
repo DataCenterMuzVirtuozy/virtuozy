@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:badges/badges.dart' as badges;
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -497,7 +498,7 @@ class _BoxSubscriptionState extends State<BoxSubscription> {
             height: 40.0,
             child: SubmitButton(
                 textButton: 'Пополнить'.tr(),
-                onTap: () {
+                onTap: () async {
                   //currentItemNotifier.value = 4;
                   GoRouter.of(context).push(pathWep,
                       extra: PreferencesUtil.branchUser == 'nsk'

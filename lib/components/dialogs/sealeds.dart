@@ -124,7 +124,7 @@ class LogOutTeacher extends AlertDialogContent{
 class FindLocation extends DialogsContent{
   @override
   build({required BuildContext context, Object? args}) {
-    return const FindLocationContent();
+    return  const FindLocationContent();
   }
 
 }

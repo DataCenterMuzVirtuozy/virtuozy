@@ -2,10 +2,12 @@
 
   import 'dart:io';
 
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -16,6 +18,8 @@ import 'package:virtuozy/components/dialogs/contents/bottom_sheet_menu/add_lesso
 import 'package:virtuozy/resourses/colors.dart';
 import 'package:virtuozy/utils/preferences_util.dart';
 
+import '../../../../presentations/auth_screen/bloc/auth_bloc.dart';
+import '../../../../presentations/auth_screen/bloc/auth_event.dart';
 import '../../../../presentations/auth_screen/singin_page.dart';
 import '../../../../resourses/images.dart';
 import '../../../../resourses/strings.dart';
@@ -26,7 +30,7 @@ import '../../dialoger.dart';
 
 
 class FindLocationContent extends StatefulWidget{
-  const FindLocationContent({super.key});
+  const FindLocationContent({super.key,});
 
 
 
@@ -38,8 +42,6 @@ class _FindLocationContentState extends State<FindLocationContent> with TickerPr
 
   String _currentAddress = '';
   final List<String> _paterns = ['Новосибирская','Новосибирск','Московская','Москва'];
-  //final List<String> _titles = ['Новосибирск','Москва'];
-  final List<String> _paternsTest= ['Минская','Московская'];
   late final AnimationController _controller;
   String _administrativeArea = '';
   bool _visibleAdminArea  = false;
@@ -73,7 +75,7 @@ class _FindLocationContentState extends State<FindLocationContent> with TickerPr
         position.latitude, position.longitude)
         .then((List<Placemark> placemarks) {
       Placemark place = placemarks[0];
-      setState(() {
+      setState(() async {
         _administrativeArea = place.administrativeArea!;
          if(place.administrativeArea!.contains(_paterns[2])||place.administrativeArea!.contains(_paterns[3])){
            _currentAddress = 'msk';
@@ -84,6 +86,7 @@ class _FindLocationContentState extends State<FindLocationContent> with TickerPr
          }else{
            _currentAddress = '1';
          }
+
         _controller.stop();
 
       });
@@ -191,7 +194,7 @@ class _FindLocationContentState extends State<FindLocationContent> with TickerPr
                       const Gap(10),
                       Expanded(
                         child: SubmitButton(
-                          onTap: () async {
+                          onTap: ()  {
                             if(_currentAddress=='1'||_currentAddress == '0'){
                               Navigator.pop(context);
                               controllerMenu.open();
@@ -200,9 +203,8 @@ class _FindLocationContentState extends State<FindLocationContent> with TickerPr
                             }
                             Navigator.pop(context);
                             Dialoger.showToast('Филиал школы в г. ${_currentAddress == 'nsk'?_paterns[1]:_paterns[3]}');
-                            await PreferencesUtil.setUrlSchool(_currentAddress == 'nsk'?nskUrl:mskUrl);
-                            await PreferencesUtil.setBranchUser(branch: _currentAddress);
-                            await ChangeIconApp.changeAppIcon(_currentAddress != 'nsk'?AppIcon.msk:AppIcon.nsk);
+                            context.read<AuthBloc>().add(const SearchLocationEvent());
+                            _saveLocation();
                           },
                           borderRadius: 10,
                           textSize: 12,
@@ -217,6 +219,12 @@ class _FindLocationContentState extends State<FindLocationContent> with TickerPr
             )
           ],
         ));
+  }
+
+  Future<void> _saveLocation() async {
+    await PreferencesUtil.setUrlSchool(_currentAddress == 'nsk'?nskUrl:mskUrl);
+    await PreferencesUtil.setBranchUser(branch: _currentAddress);
+    await ChangeIconApp.changeAppIcon(_currentAddress != 'nsk'?AppIcon.msk:AppIcon.nsk);
   }
 }
 

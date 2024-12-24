@@ -90,7 +90,8 @@ class _CalendarState extends State<Calendar> with AuthMixin {
 
     return Container(
       decoration: BoxDecoration(
-          color: widget.colorFill, borderRadius: BorderRadius.circular(20.0)),
+          color: widget.colorFill,
+          borderRadius: BorderRadius.circular(20.0)),
       child: Column(
         children: [
           CustomTableCalendar(
@@ -108,15 +109,7 @@ class _CalendarState extends State<Calendar> with AuthMixin {
             lastDay: _lastDay,
             focusedDay: _focusedDay,
             onDayTapped: (DateTime day) {
-              if (_firstDay.month > day.month) {
-                Dialoger.showMessage('Нет записей на прошлый месяц'.tr(),
-                    context: context);
-                return;
-              } else if (_lastDay.month < day.month) {
-                Dialoger.showMessage('Нет записей на следующий месяц'.tr(),
-                    context: context);
-                return;
-              }
+
               //widget.onDate.call(day.toString().split(' ')[0]);
             },
             calendarStyle: CalendarStyle(
@@ -153,7 +146,39 @@ class _CalendarState extends State<Calendar> with AuthMixin {
               formatButtonVisible: false,
             ),
             onPageChanged: (day) {
-              _focusedDay = day;
+              // if (_focusedDay.month < day.month) {
+              //   print('Left');
+              //   final h = _hasLessons(lessons: widget.lessons, dateTime: day);
+              //   if(h){
+              //     return;
+              //   }
+              //   Dialoger.showMessage('Нет записей на прошлый месяц'.tr(),
+              //       context: context);
+              //   return;
+              // } else if (_focusedDay.month < day.month) {
+              //   print('Right');
+              //   final h = _hasLessons(lessons: widget.lessons, dateTime: day);
+              //   // if(h){
+              //   //   return;
+              //   // }
+              //   Dialoger.showMessage('Нет записей на следующий месяц'.tr(),
+              //       context: context);
+              //   return;
+              // }
+               _focusedDay = day;
+              // final h = _hasLessons(lessons: widget.lessons, dateTime: day);
+              // if(h){
+              //   return;
+              // }
+              // if (isClicked == false) {
+              //       _startTimer();
+              //       Dialoger.showMessage('Нет записей в этом месяце'.tr(),
+              //           context: context);
+              //      isClicked = true;
+              //     }
+
+
+
             },
             calendarBuilders: CalendarBuilders(
               outsideBuilder: (context, day, values) {
@@ -299,6 +324,12 @@ class _CalendarState extends State<Calendar> with AuthMixin {
           );
         });
   }
+
+  bool _hasLessons({required List<Lesson> lessons, required DateTime dateTime}){
+     final l = lessons.where((l)=> DateFormat('yyyy-MM-dd').parse(l.date).month == dateTime.month&&
+         DateFormat('yyyy-MM-dd').parse(l.date).year == dateTime.year).toList();
+      return l.isNotEmpty;
+   }
 
   _handlerDay(
       {required List<Lesson> lessons,

@@ -1,5 +1,10 @@
+import 'dart:io';
+import 'dart:ui';
+
+//import 'package:android_dynamic_icon/android_dynamic_icon.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,9 +29,9 @@ import 'package:virtuozy/presentations/teacher/schedule_table_screen/bloc/table_
 import 'package:virtuozy/presentations/teacher/today_schedule_screen/bloc/today_schedule_bloc.dart';
 import 'package:virtuozy/router/app_router.dart';
 import 'package:virtuozy/utils/app_theme.dart';
+import 'package:virtuozy/utils/firebase_options.dart';
 import 'package:virtuozy/utils/preferences_util.dart';
 import 'package:virtuozy/utils/theme_provider.dart';
-
 import 'components/dialogs/dialoger.dart';
 import 'di/locator.dart';
 import 'presentations/teacher/lids_screen/bloc/lids_bloc.dart';
@@ -38,12 +43,45 @@ Future<void> _backgroundHandler(RemoteMessage message) async {
 }
 
 
+ firebaseCrash(bool fatalError){
+   FlutterError.onError = (errorDetails) {
+     if (fatalError) {
+       // If you want to record a "fatal" exception
+       FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+       // ignore: dead_code
+     } else {
+       // If you want to record a "non-fatal" exception
+       FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
+     }
+   };
+   // Async exceptions
+   PlatformDispatcher.instance.onError = (error, stack) {
+     if (fatalError) {
+       // If you want to record a "fatal" exception
+       FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+       // ignore: dead_code
+     } else {
+       // If you want to record a "non-fatal" exception
+       FirebaseCrashlytics.instance.recordError(error, stack);
+     }
+     return true;
+   };
+ }
+
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform
+  );
+  firebaseCrash(true);
   //FirebaseMessaging.onBackgroundMessage(_backgroundHandler);
   await EasyLocalization.ensureInitialized();
   await PreferencesUtil.init();
+  // if(Platform.isAndroid){
+  //   AndroidDynamicIcon.initialize(
+  //       classNames: ['MainActivity', 'IconOne', 'IconTwo']);
+  // }
   await FlutterDownloader.initialize(
       debug: true,
       // optional: set to false to disable printing logs to console (default: true)

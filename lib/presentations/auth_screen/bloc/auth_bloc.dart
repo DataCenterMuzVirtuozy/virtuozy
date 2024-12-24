@@ -197,8 +197,7 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
 
   void _getIdBranch(SearchLocationEvent event,emit) async {
     emit(state.copyWith(authStatus: AuthStatus.searchLocation));
-    await Future.delayed(const Duration(seconds: 3));
-
+    await Future.delayed(const Duration(seconds: 1));
     emit(state.copyWith(authStatus: AuthStatus.searchLocationComplete));
   }
 

@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
+//import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
@@ -93,6 +93,7 @@ class _LogInPageState extends State<LogInPage> {
 
   Widget _logo(){
     final branch = PreferencesUtil.branchUser;
+    print('State 1 ${branch}');
     if(branch == 'msk'||branch.isEmpty){
       return  _darkTheme
           ? Image.asset(logoDark, width: 100.0)
@@ -105,6 +106,7 @@ class _LogInPageState extends State<LogInPage> {
 
   Widget _illustration(){
     final  bool msk = PreferencesUtil.branchUser == 'msk';
+    print('State 2 ${msk}');
     if(!msk){
       return Column(
         children: [
@@ -127,7 +129,6 @@ class _LogInPageState extends State<LogInPage> {
       appBar: AppBar(
         actions:  [MyCheckboxMenu(
           onChange: (idLoc){
-            print('Id $idLoc');
           setState(() {
             _saveBranch(idLoc);
             _phoneNumSupport = ContactSchoolByLocation.getPhoneNumberByIdLocation(idLoc);
@@ -138,13 +139,22 @@ class _LogInPageState extends State<LogInPage> {
         iconTheme: IconThemeData(color: Theme.of(context).iconTheme.color),
         backgroundColor: Theme.of(context).colorScheme.background,
         centerTitle: true,
-        title:_logo()
+        title: BlocBuilder<AuthBloc, AuthState>(
+          builder: (context,state) {
+            return _logo();
+          }
+        )
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 50.0),
         child: SingleChildScrollView(
           child: BlocConsumer<AuthBloc, AuthState>(
             listener: (c, s) {
+              if(s.authStatus == AuthStatus.searchLocationComplete){
+
+              }
+
+
               if (s.authStatus == AuthStatus.baseUrlEmpty) {
                 _handleLocation();
               }

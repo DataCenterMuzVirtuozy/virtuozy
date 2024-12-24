@@ -1,6 +1,9 @@
 
 
- import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
+ import 'dart:io';
+
+ //import 'package:android_dynamic_icon/android_dynamic_icon.dart';
+//import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
 
 
  enum AppIcon {
@@ -10,17 +13,30 @@
 
 class ChangeIconApp{
 
-
+    //static final _androidDynamicIconPlugin = AndroidDynamicIcon();
 
      static changeAppIcon(AppIcon icon) async {
 
        try{
-         if(await FlutterDynamicIcon.supportsAlternateIcons){
-           await FlutterDynamicIcon.setAlternateIconName(icon.name);
-           return;
+
+         if(Platform.isAndroid){
+          // if(icon.name == 'msk'){
+          //   await _androidDynamicIconPlugin
+          //       .changeIcon(classNames: ['IconOne', '']);
+          // }else{
+          //   await _androidDynamicIconPlugin
+          //       .changeIcon(classNames: ['IconTwo', '']);
+          // }
+
          }else{
-           print('Not Suprted');
+           // if(await FlutterDynamicIcon.supportsAlternateIcons){
+           //   await FlutterDynamicIcon.setAlternateIconName(icon.name);
+           //   return;
+           // }else{
+           //   print('Not Suprted');
+           // }
          }
+
 
        } catch (e){
          print('Error Change icon $e');

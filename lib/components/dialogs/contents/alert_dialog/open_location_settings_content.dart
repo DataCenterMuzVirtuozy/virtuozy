@@ -78,7 +78,9 @@ class _OpenLocationSettingsContentState extends State<OpenLocationSettingsConten
                     _openAppSettings();
                   }else{
                     Dialoger.showModalBottomMenu(title: 'Поиск местоположения'.tr(),
-                        content: FindLocation());
+                        content: FindLocation(
+
+                        ));
                   }
 
                 },

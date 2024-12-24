@@ -297,6 +297,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.18.2"
+  firebase_crashlytics:
+    dependency: "direct main"
+    description:
+      name: firebase_crashlytics
+      sha256: e235c8452d5622fc271404592388fde179e4b62c50e777ad3c8c3369296104ed
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.0"
+  firebase_crashlytics_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_crashlytics_platform_interface
+      sha256: "4ddadf44ed0a202f3acad053f12c083877940fa8cc1a9f747ae09e1ef4372160"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.7.0"
   firebase_messaging:
     dependency: "direct main"
     description:
@@ -374,14 +390,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.11.8"
-  flutter_dynamic_icon:
-    dependency: "direct main"
-    description:
-      name: flutter_dynamic_icon
-      sha256: "25dd26c9f0920e331ebabc471c4bf4842ab0a9128a12e4d4c6c3e4029b8dfd8f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.0"
   flutter_image_compress:
     dependency: "direct main"
     description:
