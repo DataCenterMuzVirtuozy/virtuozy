@@ -17,6 +17,8 @@ import 'package:virtuozy/utils/failure.dart';
 import 'package:virtuozy/utils/preferences_util.dart';
 
 import '../../../components/dialogs/dialoger.dart';
+import '../../../data/models/log_model.dart';
+import '../../../data/services/log_service.dart';
 
 class AuthBloc extends Bloc<AuthEvent,AuthState>{
   AuthBloc():super(AuthState.unknown()){
@@ -52,10 +54,10 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
         }
         emit(state.copyWith(authStatus: AuthStatus.logOut));
       } on Failure catch (e,s) {
-        print('Error D ${s}');
+        LogService.sendLog(TypeLog.errorDeleteAccount,s);
         emit(state.copyWith(authStatus: AuthStatus.errorDeleting,error: 'Ошибка удаления аккаунта'.tr()));
       } catch (e,s){
-        print('Error D2 ${s}');
+        LogService.sendLog(TypeLog.errorDeleteAccount,s);
         emit(state.copyWith(authStatus: AuthStatus.errorDeleting,error: 'Ошибка удаления аккаунта'.tr()));
       }
     }
@@ -93,14 +95,16 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
         await _createLocalUser(user);
         await Future.delayed(const Duration(seconds: 1));
         await PreferencesUtil.setTypeUser(userType: UserType.student);
+        LogService.sendLog(TypeLog.login);
         emit(state.copyWith(authStatus: AuthStatus.authenticated));
 
-    }on Failure catch (e){
+    }on Failure catch (e,s){
       await PreferencesUtil.clear();
+      LogService.sendLog(TypeLog.errorLogin,s);
       emit(state.copyWith(authStatus: AuthStatus.error,error: e.message));
     } catch (e,stakeTrace){
-      print('BLOC AUTH ${stakeTrace}');
       await PreferencesUtil.clear();
+      LogService.sendLog(TypeLog.errorLogin,stakeTrace);
       emit(state.copyWith(authStatus: AuthStatus.error,
           error: 'Ошибка получения данных'.tr()));
     }
@@ -126,8 +130,10 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
       await PreferencesUtil.setPhoneUser(phone: event.phone);
       final user = _createUserEntity(event);
       await _createLocalUser(user);
+      LogService.sendLog(TypeLog.registration);
       emit(state.copyWith(authStatus: AuthStatus.sendRequestCode));
-    }on Failure catch(e){
+    }on Failure catch(e,s){
+      LogService.sendLog(TypeLog.errorRegistration,s);
        emit(state.copyWith(authStatus: AuthStatus.error,error: e.message));
     }
 
@@ -214,7 +220,7 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
       _userCubit.updateUser(newUser: user);
       await PreferencesUtil.clear();
     }
-
+    LogService.sendLog(TypeLog.logout);
    emit(state.copyWith(authStatus: AuthStatus.logOut));
   }
 

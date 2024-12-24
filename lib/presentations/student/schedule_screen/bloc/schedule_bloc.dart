@@ -13,6 +13,8 @@ import 'package:virtuozy/presentations/student/schedule_screen/bloc/schedule_eve
 import 'package:virtuozy/presentations/student/schedule_screen/bloc/schedule_state.dart';
 import 'package:virtuozy/utils/failure.dart';
 
+import '../../../../data/models/log_model.dart';
+import '../../../../data/services/log_service.dart';
 import '../../../../domain/entities/lesson_entity.dart';
 import '../../../../domain/repository/user_repository.dart';
 import '../../../../utils/preferences_util.dart';
@@ -49,7 +51,8 @@ class ScheduleBloc extends Bloc<ScheduleEvent,ScheduleState>{
           status: ScheduleStatus.loaded,
           user: user,
           schedulesList: list.toList()));
-    }on Failure catch(e){
+    }on Failure catch(e,s){
+      LogService.sendLog(TypeLog.errorData,s);
       emit(state.copyWith(status: ScheduleStatus.error, error: e.message));
     }
   }
@@ -87,7 +90,8 @@ class ScheduleBloc extends Bloc<ScheduleEvent,ScheduleState>{
       }
 
       _listenUserFromRefresh(event);
-    } on Failure catch (e) {
+    } on Failure catch (e,s) {
+      LogService.sendLog(TypeLog.errorData,s);
       emit(state.copyWith(status: ScheduleStatus.error, error: e.message));
     }
   }
@@ -124,7 +128,8 @@ class ScheduleBloc extends Bloc<ScheduleEvent,ScheduleState>{
        _listenUser(event);
 
 
-     }on Failure catch(e){
+     }on Failure catch(e,s){
+       LogService.sendLog(TypeLog.errorData,s);
        emit(state.copyWith(status: ScheduleStatus.error, error: e.message));
      }
 

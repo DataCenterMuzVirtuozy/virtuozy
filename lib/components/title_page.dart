@@ -49,6 +49,7 @@ class _TitlePageState extends State<TitlePage> with AuthMixin{
      mainAxisAlignment: MainAxisAlignment.end,
      children: [
        Container(
+         key: ValueKey(_msk),
          decoration: BoxDecoration(
            //color: backgroundCard(context),
            borderRadius: BorderRadius.circular(10)

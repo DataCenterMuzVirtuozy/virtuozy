@@ -65,8 +65,7 @@ class UserService{
       //return UserModel.fromMap(mapUser: {},mapSubsAll: [],lessons: []);
     } on Failure catch(e){
       throw  Failure(e.message);
-    } on DioException catch(e,stakeTrace){
-      print('Stake ${stakeTrace}');
+    } on DioException catch(e){
       throw  Failure('Ошибка авторизации'.tr());
     }
   }
@@ -80,7 +79,7 @@ class UserService{
             'phone':  phone.replaceAll(' ', ''),
             'password':password
           });
-      print('Error ${resLogin.data}');
+
       final  token = resLogin.data['token'];
      await PreferencesUtil.setToken(token: token);
       final resUser = await dioApi.get(Endpoints.user,
@@ -110,11 +109,9 @@ class UserService{
 
       throw  Failure(e.message);
     } on DioException catch(e,stack){
-      print('Stake ${stack} Error ${e.message}');
       if(e.response?.statusCode == 403){
         throw  Failure('Данный аккаунт был удален пользователем'.tr());
       }
-      print('Stake ${stack} Error ${e.message}');
       throw  Failure('Ошибка авторизации'.tr());
     }
   }

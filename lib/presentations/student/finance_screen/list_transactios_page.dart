@@ -137,8 +137,7 @@ class _ListTransactionsPageState extends State<ListTransactionsPage> {
                           type: element.typeTransaction,
                           time: element.time,
                           quantity:
-                          '${element.typeTransaction == TypeTransaction.minusLesson ? '-' : '+'}'
-                              '${ParserPrice.getBalance(element.quantity)} руб.');
+                          _quantity(element));
                     },
                     itemComparator: (item1, item2) {
                       return DateTimeParser.getDateForCompare(date: item1.date)
@@ -159,6 +158,11 @@ class _ListTransactionsPageState extends State<ListTransactionsPage> {
         );
       }),
     );
+  }
+
+  String _quantity(TransactionEntity element) {
+    final String prefix = element.quantity<0.0?'':element.typeTransaction == TypeTransaction.minusLesson ? '-' : '+';
+    return '$prefix${ParserPrice.getBalance(element.quantity)} руб.';
   }
 }
 

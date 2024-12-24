@@ -15,6 +15,8 @@ import 'package:virtuozy/utils/craeator_list_directions.dart';
 import 'package:virtuozy/utils/failure.dart';
 import 'package:virtuozy/utils/update_list_ext.dart';
 
+import '../../../../data/models/log_model.dart';
+import '../../../../data/services/log_service.dart';
 import '../../../../domain/entities/lesson_entity.dart';
 import '../../../../domain/repository/user_repository.dart';
 import '../../../../utils/preferences_util.dart';
@@ -63,7 +65,8 @@ class SubBloc extends Bloc<SubEvent,SubState>{
 
 
 
-    }on Failure catch(e){
+    }on Failure catch(e,s){
+      LogService.sendLog(TypeLog.errorData,s);
       emit(state.copyWith( subStatus: SubStatus.error, error: e.message));
 
     }
@@ -100,7 +103,8 @@ class SubBloc extends Bloc<SubEvent,SubState>{
          emit(state.copyWith( subStatus: SubStatus.loaded,userEntity: user));
        }
 
-    }on Failure catch(e){
+    }on Failure catch(e,s){
+       LogService.sendLog(TypeLog.errorData,s);
        emit(state.copyWith( subStatus: SubStatus.error, error: e.message));
      }
   }
@@ -236,8 +240,8 @@ class SubBloc extends Bloc<SubEvent,SubState>{
       _userCubit.updateUser(newUser: newUser);
       emit(state.copyWith(subStatus: SubStatus.confirm,lessonConfirm:event.lesson));
 
-    }on Failure catch(e){
-
+    }on Failure catch(e,s){
+      LogService.sendLog(TypeLog.errorData,s);
     }
   }
 
@@ -260,8 +264,8 @@ class SubBloc extends Bloc<SubEvent,SubState>{
       _userCubit.updateUser(newUser: newUser);
       //emit(state.copyWith(subStatus: SubStatus.confirm));
 
-    }on Failure catch(e){
-
+    }on Failure catch(e,s){
+      LogService.sendLog(TypeLog.errorData,s);
     }
   }
 
@@ -289,7 +293,8 @@ class SubBloc extends Bloc<SubEvent,SubState>{
       final newUser = user.copyWith(directions: directions);
       _userCubit.updateUser(newUser: newUser);
       emit(state.copyWith(bonusStatus: BonusStatus.activate));
-    } on Failure catch(e){
+    } on Failure catch(e,s){
+      LogService.sendLog(TypeLog.errorData,s);
       emit(state.copyWith(bonusStatus: BonusStatus.error,error: e.message));
     }
 

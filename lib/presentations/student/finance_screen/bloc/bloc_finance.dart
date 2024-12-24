@@ -14,6 +14,8 @@ import 'package:virtuozy/utils/date_time_parser.dart';
 import 'package:virtuozy/utils/failure.dart';
 import 'package:virtuozy/utils/update_list_ext.dart';
 
+import '../../../../data/models/log_model.dart';
+import '../../../../data/services/log_service.dart';
 import '../../../../domain/entities/transaction_entity.dart';
 import '../../../../domain/repository/user_repository.dart';
 import '../../../../domain/user_cubit.dart';
@@ -45,14 +47,13 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
        emit(state.copyWith(listTransactionStatus: event.refreshDirection?
        ListTransactionStatus.refresh:ListTransactionStatus.loading));
          await Future.delayed(const Duration(milliseconds: 1000));
-
-
-        final idUser = _userCubit.userEntity.id;
+         final idUser = _userCubit.userEntity.id;
         final idDir = event.directions.length>1?-1:event.directions[0].id;
        final listApi = await _financeRepository.getTransactions(idUser: idUser, idDirections: idDir);
        _listTransaction = _listSortTransHistory(list: listApi, allViewLessons: event.allViewDir, indexDi: event.currentDirIndex, directions: event.directions);
        emit(state.copyWith(listTransactionStatus: ListTransactionStatus.loaded,transactions: _listTransaction));
-     }on Failure catch(e){
+     }on Failure catch(e,s){
+       LogService.sendLog(TypeLog.errorData,s);
        emit(state.copyWith(listTransactionStatus: ListTransactionStatus.error,error: e.message));
      }
   }
@@ -65,12 +66,13 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
     list = list.reversed.toList();
 
     if(allViewLessons){
+      print('All tr ${list.length}');
       return list;
     }else{
       resList = list.where((t){
         return t.idDir == directions[indexDi].idCustomer;
       }).toList();
-
+      print('One tr ${resList.length}');
     }
 
 
@@ -96,36 +98,41 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
       final prices = await _financeRepository.getSubscriptionsAll();
 
       emit(state.copyWith(paymentStatus: PaymentStatus.loaded,pricesSubscriptionsAll: prices));
-    }on Failure catch(e){
+    }on Failure catch(e,s){
+      LogService.sendLog(TypeLog.errorData,s);
       emit(state.copyWith(paymentStatus: PaymentStatus.paymentError,error: e.message));
     }
   }
 
 
   void _refreshSubscription(RefreshSubscriptionEvent event,emit) async {
-    emit(state.copyWith(status: FinanceStatus.loading));
-    final uid = PreferencesUtil.token;
-    final user = await _userRepository.getUser(uid: uid);
-    _userCubit.setUser(user: user);
+    try {
+      emit(state.copyWith(status: FinanceStatus.loading));
+      final uid = PreferencesUtil.token;
+      final user = await _userRepository.getUser(uid: uid);
+      _userCubit.setUser(user: user);
 
-    if(user.userStatus == UserStatus.moderation || user.userStatus == UserStatus.notAuth){
+      if(user.userStatus == UserStatus.moderation || user.userStatus == UserStatus.notAuth){
+            emit(state.copyWith(
+                status: FinanceStatus.loaded));
+            return;
+          }
+
+      final titlesDrawingMenu = CreatorListDirections.getTitlesDrawingMenu(directions: user.directions);
+      final directions = _getDirections(user: user,indexDir: event.indexDirection,allViewDir: event.allViewDir);
+      final expiredSubscriptions = _getExpiredSubscriptions(directions,event.allViewDir,event.indexDirection);
+      List<SubscriptionEntity> listSubHistory = _getHistorySubscriptions(directions,event.allViewDir,event.indexDirection);
+      listSubHistory = _listSortSubHistory(list: listSubHistory);
       emit(state.copyWith(
-          status: FinanceStatus.loaded));
-      return;
+              status: FinanceStatus.loaded,
+              user: user,
+              subscriptionHistory: listSubHistory,
+              directions: directions,
+              titlesDrawingMenu: titlesDrawingMenu,
+              expiredSubscriptions: expiredSubscriptions));
+    } on Future catch (e,s) {
+      LogService.sendLog(TypeLog.errorData,s);
     }
-
-    final titlesDrawingMenu = CreatorListDirections.getTitlesDrawingMenu(directions: user.directions);
-    final directions = _getDirections(user: user,indexDir: event.indexDirection,allViewDir: event.allViewDir);
-    final expiredSubscriptions = _getExpiredSubscriptions(directions,event.allViewDir,event.indexDirection);
-    List<SubscriptionEntity> listSubHistory = _getHistorySubscriptions(directions,event.allViewDir,event.indexDirection);
-    listSubHistory = _listSortSubHistory(list: listSubHistory);
-    emit(state.copyWith(
-        status: FinanceStatus.loaded,
-        user: user,
-        subscriptionHistory: listSubHistory,
-        directions: directions,
-        titlesDrawingMenu: titlesDrawingMenu,
-        expiredSubscriptions: expiredSubscriptions));
 
   }
 

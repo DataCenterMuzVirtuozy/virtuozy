@@ -15,6 +15,8 @@ import 'package:virtuozy/presentations/student/profile_screen/bloc/profile_event
 import 'package:virtuozy/presentations/student/profile_screen/bloc/profile_state.dart';
 import 'package:virtuozy/utils/failure.dart';
 
+import '../../../../data/models/log_model.dart';
+import '../../../../data/services/log_service.dart';
 import '../../../../utils/preferences_util.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent,ProfileState>{
@@ -35,8 +37,8 @@ class ProfileBloc extends Bloc<ProfileEvent,ProfileState>{
       emit(state.copyWith(findSubwaysStatus: FindSubwaysStatus.adding,addedSubway: SubwayEntity.unknown()));
       await Future.delayed(const Duration(milliseconds: 300));
       emit(state.copyWith(addedSubway: event.subway,findSubwaysStatus: FindSubwaysStatus.added));
-    }on Failure catch(e){
-
+    }on Failure catch(e,s){
+      LogService.sendLog(TypeLog.errorData,s);
     }
   }
 
@@ -45,7 +47,8 @@ class ProfileBloc extends Bloc<ProfileEvent,ProfileState>{
       emit(state.copyWith(findSubwaysStatus: FindSubwaysStatus.loading));
       final subways = await _userRepository.subways(query: event.query);
       emit(state.copyWith(findSubwaysStatus: FindSubwaysStatus.loaded,subways: subways));
-    }on Failure catch(e){
+    }on Failure catch(e,s){
+      LogService.sendLog(TypeLog.errorData,s);
       emit(state.copyWith(findSubwaysStatus: FindSubwaysStatus.error,error: e.message));
     }
   }
@@ -60,7 +63,8 @@ class ProfileBloc extends Bloc<ProfileEvent,ProfileState>{
       final uid = PreferencesUtil.token;
       final user = await _userRepository.getUser(uid: uid);
       emit(state.copyWith(profileStatus: ProfileStatus.loaded,userEntity: user));
-    }on Failure catch(e){
+    }on Failure catch(e,s){
+      LogService.sendLog(TypeLog.errorData,s);
       emit(state.copyWith(profileStatus: ProfileStatus.error,error: e.message));
     }
   }
@@ -74,7 +78,8 @@ class ProfileBloc extends Bloc<ProfileEvent,ProfileState>{
       await Future.delayed(const Duration(seconds: 1));
       UserEntity user = _userCubit.userEntity;
       emit(state.copyWith(profileStatus: ProfileStatus.loaded,userEntity: user));
-    }on Failure catch(e){
+    }on Failure catch(e,s){
+      LogService.sendLog(TypeLog.errorData,s);
      emit(state.copyWith(profileStatus: ProfileStatus.error,error: e.message));
     }
   }
@@ -103,9 +108,10 @@ class ProfileBloc extends Bloc<ProfileEvent,ProfileState>{
 
      emit(state.copyWith(profileStatus: ProfileStatus.saved,userEntity: user));
    }on Failure catch(e,s){
+     LogService.sendLog(TypeLog.errorData,s);
      emit(state.copyWith(profileStatus: ProfileStatus.error,error: 'Ошибка отправки данных'.tr()));
    } catch (e,s){
-
+     LogService.sendLog(TypeLog.errorData,s);
      emit(state.copyWith(profileStatus: ProfileStatus.error,error: 'Ошибка отправки данных'.tr()));
    }
   }
