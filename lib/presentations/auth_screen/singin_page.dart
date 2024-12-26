@@ -79,13 +79,18 @@ class _SingInPageState extends State<SingInPage> {
   _saveLocation(String selectedValue) async {
     String urlSch = '';
     bool nsk = selectedValue == 'Новосибирск';
-    if(selectedValue == 'Москва'){
+    String branch = nsk?'nsk':'msk';
+    if(!nsk){
       urlSch = mskUrl;
-    }else if(selectedValue == 'Новосибирск'){
+    }else if(nsk){
       urlSch = nskUrl;
     }
+    final savedBranch = PreferencesUtil.branchUser;
+    if(branch == savedBranch){
+      return;
+    }
     await PreferencesUtil.setUrlSchool(urlSch);
-    await PreferencesUtil.setBranchUser(branch: selectedValue == 'Новосибирск'?'nsk':'msk');
+    await PreferencesUtil.setBranchUser(branch: branch);
     await ChangeIconApp.changeAppIcon(!nsk?AppIcon.msk:AppIcon.nsk);
   }
 

@@ -87,13 +87,16 @@ class _LogInPageState extends State<LogInPage> {
 
   _saveBranch(branch) async {
     bool msk = branch == 'msk';
+    final savedBranch = PreferencesUtil.branchUser;
+    if(branch == savedBranch){
+      return;
+    }
     await PreferencesUtil.setBranchUser(branch: branch);
     await ChangeIconApp.changeAppIcon(msk?AppIcon.msk:AppIcon.nsk);
   }
 
   Widget _logo(){
     final branch = PreferencesUtil.branchUser;
-    print('State 1 ${branch}');
     if(branch == 'msk'||branch.isEmpty){
       return  _darkTheme
           ? Image.asset(logoDark, width: 100.0)
@@ -106,7 +109,6 @@ class _LogInPageState extends State<LogInPage> {
 
   Widget _illustration(){
     final  bool msk = PreferencesUtil.branchUser == 'msk';
-    print('State 2 ${msk}');
     if(!msk){
       return Column(
         children: [

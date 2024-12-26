@@ -222,6 +222,10 @@ class _FindLocationContentState extends State<FindLocationContent> with TickerPr
   }
 
   Future<void> _saveLocation() async {
+    final savedBranch = PreferencesUtil.branchUser;
+    if(_currentAddress == savedBranch){
+      return;
+    }
     await PreferencesUtil.setUrlSchool(_currentAddress == 'nsk'?nskUrl:mskUrl);
     await PreferencesUtil.setBranchUser(branch: _currentAddress);
     await ChangeIconApp.changeAppIcon(_currentAddress != 'nsk'?AppIcon.msk:AppIcon.nsk);
