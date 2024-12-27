@@ -55,6 +55,8 @@ ITSAppUsesNonExemptEncryption</key>
 	<string>Для определения ближайшей музыкальной школы этому приложению необходим доступ к данным о местоположения</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Для определения ближайшей музыкальной школы этому приложению необходим доступ к данным о местоположения</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Для определения ближайшей музыкальной школы этому приложению необходим постоянный доступ к данным о местоположении</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Этому приложению необходим доступ к хранилищу изображений для добавления фото в профиль пользователя</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>

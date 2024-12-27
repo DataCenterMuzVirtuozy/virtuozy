@@ -44,12 +44,12 @@ class _MyCheckboxMenuState extends State<MyCheckboxMenu> {
   }
 
   void _initLocation() {
-    final branch = PreferencesUtil.branchUser;
-      if (branch.isEmpty) {
+    final urlSchool = PreferencesUtil.urlSchool;
+      if (urlSchool.isEmpty) {
         _empty = true;
         _nsk = false;
         _msk = false;
-      } else if (branch == 'msk') {
+      } else if (urlSchool == mskUrl) {
         _msk = true;
         _nsk = false;
         _empty = false;

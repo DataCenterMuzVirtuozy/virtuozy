@@ -121,7 +121,6 @@ class PreferencesUtil{
 
 
   static clear() async {
-    _prefsInstance!.remove(_keyUrlSchool);
     _prefsInstance!.remove(_keyStatus);
     _prefsInstance!.remove(_keyLastName);
     _prefsInstance!.remove(_keyFirstName);
@@ -129,7 +128,7 @@ class PreferencesUtil{
     _prefsInstance!.remove(_keyToken);
     _prefsInstance!.remove(_keyTypeUser);
     _prefsInstance!.remove(_keyTheme);
-    _prefsInstance!.remove(_keyUrlSchool);
+   // _prefsInstance!.remove(_keyUrlSchool);
 
   }
 
