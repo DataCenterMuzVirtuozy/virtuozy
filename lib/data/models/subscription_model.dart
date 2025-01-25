@@ -73,6 +73,7 @@ class SubscriptionModel{
    double balanceSub = map['balanceSub'] is int?map['balanceSub'].toDouble():int.parse(map['balanceSub']).toDouble();
    final  balanceLesson = map['balanceLesson'];
    final status = map['status'];
+
     return SubscriptionModel(
         maxLessonsCount: map['maxLessonsCount']??0,
         contactValues: map['contactValues']??[],

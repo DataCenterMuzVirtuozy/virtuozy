@@ -27,21 +27,24 @@ class OptionsList extends StatelessWidget {
           ...List.generate(subscription.options.length, (index) {
             return Row(
               children: [
-                Icon(
-                    Icons.free_breakfast_outlined,
-                    color: colorGreen,
-                    size: 10),
+                Icon(Icons.free_breakfast_outlined,
+                    color: colorGreen, size: 10),
                 const Gap(5),
                 Text(
-                    '${subscription.options[index].status == OptionStatus.certificate?"Справка":
-            subscription.options[index].status == OptionStatus.prolongation?'Продление':
-            subscription.options[index].status == OptionStatus.vacation?'Отпуск':
-            subscription.options[index].status == OptionStatus.freezing?'Заморозка':'...'}, активировано '.tr(),
+                    '${subscription.options[index].status == OptionStatus.certificate ? "Справка"
+                        : subscription.options[index].status == OptionStatus.prolongation ? 'Продление'
+                        : subscription.options[index].status == OptionStatus.vacation ? 'Отпуск'
+                        : subscription.options[index].status == OptionStatus.freezing ? 'Заморозка'
+                        : subscription.options[index].status == OptionStatus.holiday ? 'Празд. день'
+                        : '...'}, активировано '
+                        .tr(),
+                    style: TStyle.textStyleVelaSansMedium(colorGrey,
+                        size: 13.0)),
+                Text(
+                    DateTimeParser.getDateFromApi(
+                        date: subscription.options[index].dateEnd),
                     style:
-                    TStyle.textStyleVelaSansMedium(colorGrey, size: 13.0)),
-                Text(DateTimeParser.getDateFromApi(date: subscription.options[index].dateEnd),
-                    style:
-                    TStyle.textStyleVelaSansMedium(colorGrey, size: 13.0)),
+                        TStyle.textStyleVelaSansMedium(colorGrey, size: 13.0)),
               ],
             );
             return Row(
