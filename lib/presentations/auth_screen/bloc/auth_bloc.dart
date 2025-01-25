@@ -103,6 +103,7 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
       LogService.sendLog(TypeLog.errorLogin,s);
       emit(state.copyWith(authStatus: AuthStatus.error,error: e.message));
     } catch (e,stakeTrace){
+      print('Errr ${stakeTrace}');
       await PreferencesUtil.clear();
       LogService.sendLog(TypeLog.errorLogin,stakeTrace);
       emit(state.copyWith(authStatus: AuthStatus.error,

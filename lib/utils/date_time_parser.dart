@@ -7,11 +7,13 @@ import 'package:easy_localization/easy_localization.dart';
 
 class DateTimeParser{
 
-   static String parseTimePeriod({required String period,required String date}){
+   static String parseTimePeriod({required int period,required String date}){
+
      final start = date.split(' ')[1].substring(0,5);
-     final duration = int.parse(period);
+     final duration = period;
      final endFormat = DateFormat('yyyy-MM-dd HH:mm:ss').parse(date).add(Duration(minutes: duration)).toString();
      final end = endFormat.split(' ')[1].substring(0,5);
+
      return '$start - $end';
    }
 

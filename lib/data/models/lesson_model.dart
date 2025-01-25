@@ -96,10 +96,9 @@ class LessonModel{
     final date = map['date'] as String;
     final dateStart = date.split(' ')[0];
     final idSchool =  map['idSchool'].toString();
-    final type = map['type']??'10';
-    final duration = map['timePeriod']??'0';
+    final type =  map['type'] is String?int.parse( map['type']??'10'): map['type']??0;
+    final duration = map['timePeriod'] is String?int.parse(map['timePeriod']??'0'):map['timePeriod']??0;
     final timePeriod = DateTimeParser.parseTimePeriod(period: duration, date: date);
-
     return LessonModel(
       number: map['number']??0,
       nameSchool: map['nameSchool']??'',
@@ -111,8 +110,8 @@ class LessonModel{
         online: map['online']??false, //absent from api
         comments: map['comments']??'...', //absent from api
         nameSub: map['nameSub']??'...', //absent from api
-        duration: int.parse(duration), //['duration']??60, //absent from api
-        type: int.parse(type),
+        duration: duration,
+        type: type,
         contactValues: map['contactValues']??[], //absent from api
         idDir: map['idDir']??1, //absent from api
         idSchool: idSchool,
@@ -122,7 +121,7 @@ class LessonModel{
         date: dateStart,
         timePeriod: timePeriod,
         idTeacher: idTeacher,
-        idAuditory: map['idAuditory']??'',
+        idAuditory: map['idAuditory']??'', //todo now int
         nameTeacher: map['nameTeacher']??'',
         status: status,
         nameDirection: map['nameDir']??'', //absent from api

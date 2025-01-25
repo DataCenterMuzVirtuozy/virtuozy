@@ -70,11 +70,9 @@ class SubscriptionModel{
    final options = (map['options'] as List).map((m) => OptionModel.fromMap(m)).toList();
    final idDir = map['customerId'];
    final idUser = map['idUser'];
-   int balanceSub = map['balanceSub'];
+   double balanceSub = map['balanceSub'] is int?map['balanceSub'].toDouble():int.parse(map['balanceSub']).toDouble();
    final  balanceLesson = map['balanceLesson'];
    final status = map['status'];
-
-
     return SubscriptionModel(
         maxLessonsCount: map['maxLessonsCount']??0,
         contactValues: map['contactValues']??[],
@@ -93,7 +91,7 @@ class SubscriptionModel{
       dateBay: map['dateBay'] as String,
       nameDir: nameDirection,
       nameTeacher: map['nameTeacher'] as String,
-        options: options.where((o)=>o.dateEnd.isNotEmpty).toList()// null from crm
+        options: options.where((o)=>o.dateEnd.isNotEmpty).toList()
     );
   }
 }

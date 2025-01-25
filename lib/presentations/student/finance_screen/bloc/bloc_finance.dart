@@ -66,13 +66,12 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
     list = list.reversed.toList();
 
     if(allViewLessons){
-      print('All tr ${list.length}');
       return list;
     }else{
       resList = list.where((t){
         return t.idDir == directions[indexDi].idCustomer;
       }).toList();
-      print('One tr ${resList.length}');
+
     }
 
 

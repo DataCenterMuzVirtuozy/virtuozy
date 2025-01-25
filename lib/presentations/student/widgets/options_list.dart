@@ -33,10 +33,13 @@ class OptionsList extends StatelessWidget {
                     size: 10),
                 const Gap(5),
                 Text(
-                    'Справка, активировано '.tr(),
+                    '${subscription.options[index].status == OptionStatus.certificate?"Справка":
+            subscription.options[index].status == OptionStatus.prolongation?'Продление':
+            subscription.options[index].status == OptionStatus.vacation?'Отпуск':
+            subscription.options[index].status == OptionStatus.freezing?'Заморозка':'...'}, активировано '.tr(),
                     style:
                     TStyle.textStyleVelaSansMedium(colorGrey, size: 13.0)),
-                Text('6767-98-898',
+                Text(DateTimeParser.getDateFromApi(date: subscription.options[index].dateEnd),
                     style:
                     TStyle.textStyleVelaSansMedium(colorGrey, size: 13.0)),
               ],
