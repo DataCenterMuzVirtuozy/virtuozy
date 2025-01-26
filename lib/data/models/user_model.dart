@@ -111,9 +111,11 @@ class UserModel{
    final List<SubscriptionModel> subscriptionsAll;
    final List<SubscriptionModel> lastSubscriptions;
    final String name;
+   final String balance;
    final List<LessonModel> lessons;
 
    const DirectionModel({
+     required this.balance,
      required this.idCustomer,
      required this.nameTeacher,
      required this.id,
@@ -137,6 +139,7 @@ class UserModel{
    // final bonus = mapDirection['bonus'] as List<dynamic>;
 
     return DirectionModel(
+      balance: mapDirection['balance'],
       nameTeacher: nameTeacherDir,
       id: idDir,
       idCustomer:idCustomer,

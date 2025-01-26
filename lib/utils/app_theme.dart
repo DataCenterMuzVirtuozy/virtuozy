@@ -13,12 +13,13 @@ class AppTheme{
       shadowColor: colorBlack,
       surfaceTintColor: colorBlack,
       headerForegroundColor: colorBlack,
-      dayForegroundColor: MaterialStatePropertyAll(colorBlack),
+      dividerColor: colorBlack,
+      dayForegroundColor: WidgetStatePropertyAll(colorBlack),
       weekdayStyle: TStyle.textStyleVelaSansExtraBolt(colorBlack),
       dayStyle: TStyle.textStyleVelaSansBold(colorBlack),
-      yearForegroundColor: MaterialStatePropertyAll(colorBlack),
+      yearForegroundColor: WidgetStatePropertyAll(colorBlack),
       yearStyle: TStyle.textStyleVelaSansExtraBolt(colorBlack),
-      todayForegroundColor: MaterialStatePropertyAll(colorBlack),
+      todayForegroundColor: WidgetStatePropertyAll(colorBlack),
 
 
     ),

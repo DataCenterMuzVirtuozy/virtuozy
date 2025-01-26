@@ -729,6 +729,7 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
                 ),
                 const Gap(10.0),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
@@ -748,7 +749,7 @@ class _BodyInfoUserState extends State<BodyInfoUser> {
                   ],
                 ),
 
-                const Gap(30.0),
+                const Gap(50.0),
                 // if( widget.state.profileStatus == ProfileStatus.saving)...{
                 //   Center(child: CircularProgressIndicator(color: colorOrange))
                 // }else ...{

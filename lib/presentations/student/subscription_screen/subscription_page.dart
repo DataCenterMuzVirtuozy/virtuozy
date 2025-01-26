@@ -445,6 +445,7 @@ class _BoxSubscriptionState extends State<BoxSubscription> {
                       GoRouter.of(context)
                           .push(pathListSubscriptionsHistory, extra: subsList);
                     },
+                    direction: widget.directions[index],
                     subscription: subs[index]);
 
                 // return ItemSubscription(direction: directions[index],
@@ -514,10 +515,11 @@ class _BoxSubscriptionState extends State<BoxSubscription> {
 }
 
 class ItemSub extends StatefulWidget {
-  const ItemSub({super.key, required this.subscription, required this.onTap});
+  const ItemSub({super.key, required this.subscription, required this.onTap, required this.direction});
 
   final SubscriptionEntity subscription;
   final Function onTap;
+  final DirectionLesson direction;
 
   @override
   State<ItemSub> createState() => _ItemSubState();
@@ -625,7 +627,7 @@ class _ItemSubState extends State<ItemSub> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                              '${ParserPrice.getBalance(widget.subscription.balanceSub)} руб.',
+                              '${ParserPrice.getBalance(double.parse(widget.direction.balance))} руб.',
                               style: TStyle.textStyleVelaSansMedium(colorGrey,
                                   size: 16.0)),
                           Container(

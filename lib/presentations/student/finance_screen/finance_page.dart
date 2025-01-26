@@ -60,9 +60,10 @@ class _FinancePageState extends State<FinancePage> {
   double _summaBalance({required List<DirectionLesson> directions}) {
     double sum = 0.0;
     for (var dir in directions) {
-      for (var s in dir.lastSubscriptions) {
-        sum += s.balanceSub;
-      }
+      sum += double.parse(dir.balance);
+      // for (var s in dir.lastSubscriptions) {
+      //   sum += s.balanceSub;
+      // }
     }
 
     return sum;
@@ -617,6 +618,7 @@ class _BoxSubsState extends State<BoxSubs> {
                       //   GoRouter.of(context).push(pathPay,extra: widget.directions);
                       // }
                     },
+                    direction: widget.directions[index],
                     subscription: subs[index]);
 
                 // return ItemSubscription(direction: directions[index],
@@ -668,10 +670,11 @@ class _BoxSubsState extends State<BoxSubs> {
 }
 
 class ItemSubs extends StatefulWidget {
-  const ItemSubs({super.key, required this.subscription, required this.onTap});
+  const ItemSubs({super.key, required this.subscription, required this.onTap, required this.direction});
 
   final SubscriptionEntity subscription;
   final Function onTap;
+  final DirectionLesson direction;
 
   @override
   State<ItemSubs> createState() => _ItemSubsState();
@@ -768,7 +771,7 @@ class _ItemSubsState extends State<ItemSubs> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                          '${ParserPrice.getBalance(widget.subscription.balanceSub)} руб.',
+                          '${ParserPrice.getBalance(double.parse(widget.direction.balance))} руб.',
                           style: TStyle.textStyleVelaSansMedium(colorGrey,
                               size: 16.0)),
                       Container(

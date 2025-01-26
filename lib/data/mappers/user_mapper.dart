@@ -86,7 +86,9 @@ class UserMapper{
   // }
 
   static DirectionLesson _fromDirectionModel(DirectionModel directionModel){
+    print('Bal ${directionModel.balance}');
     return DirectionLesson(
+      balance: directionModel.balance,
       idCustomer: directionModel.idCustomer,
       nameTeacher: directionModel.nameTeacher,
       id: directionModel.id,
