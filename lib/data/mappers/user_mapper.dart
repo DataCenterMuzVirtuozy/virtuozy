@@ -51,8 +51,8 @@ class UserMapper{
     return Option(status: optionModel.status.isEmpty?OptionStatus.unknown:
     optionModel.status == 'freezing'?
     OptionStatus.freezing:optionModel.status == 'prolongation'?
-    OptionStatus.prolongation:optionModel.status == 'vacation'?OptionStatus.holiday:optionModel.status == 'certificate'?
-    OptionStatus.certificate:
+    OptionStatus.prolongation:optionModel.status == 'vacation'?OptionStatus.vacation:optionModel.status == 'certificate'?
+    OptionStatus.certificate:optionModel.status == 'holiday'?OptionStatus.holiday:
     OptionStatus.unknown,
         dateEnd: optionModel.dateEnd);
   }

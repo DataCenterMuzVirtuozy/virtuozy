@@ -10,6 +10,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:virtuozy/components/dialogs/dialoger.dart';
 import 'package:virtuozy/components/dialogs/sealeds.dart';
 
+import '../../../../presentations/auth_screen/singin_page.dart';
 import '../../../../resourses/colors.dart';
 import '../../../../utils/text_style.dart';
 import '../../../checkbox_menu.dart';

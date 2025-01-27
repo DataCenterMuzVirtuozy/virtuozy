@@ -70,7 +70,9 @@ class SubscriptionModel{
    final options = (map['options'] as List).map((m) => OptionModel.fromMap(m)).toList();
    final idDir = map['customerId'];
    final idUser = map['idUser'];
-   double balanceSub = map['balanceSub'] is int?map['balanceSub'].toDouble():int.parse(map['balanceSub']).toDouble();
+   final dataBalance = map['balanceSub']??'0';
+   double balanceSub = dataBalance is int?dataBalance.toDouble():
+   dataBalance is String?int.parse(dataBalance).toDouble():dataBalance;
    final  balanceLesson = map['balanceLesson'];
    final status = map['status'];
 

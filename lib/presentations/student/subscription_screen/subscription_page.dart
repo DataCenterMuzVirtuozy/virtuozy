@@ -324,9 +324,10 @@ class _BoxSubscriptionState extends State<BoxSubscription> {
   double _summaBalance({required List<DirectionLesson> directions}) {
     double sum = 0.0;
     for (var dir in directions) {
-      for (var s in dir.lastSubscriptions) {
-        sum += s.balanceSub;
-      }
+      sum += double.parse(dir.balance);
+      // for (var s in dir.lastSubscriptions) {
+      //   sum += s.balanceSub;
+      // }
     }
     return sum;
   }

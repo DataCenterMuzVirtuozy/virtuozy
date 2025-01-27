@@ -85,10 +85,10 @@ class _SingInPageState extends State<SingInPage> {
     }else if(nsk){
       urlSch = nskUrl;
     }
-    final savedBranch = PreferencesUtil.branchUser;
-    if(branch == savedBranch){
-      return;
-    }
+    // final savedBranch = PreferencesUtil.branchUser;
+    // if(branch == savedBranch){
+    //   return;
+    // }
     await PreferencesUtil.setUrlSchool(urlSch);
     await PreferencesUtil.setBranchUser(branch: branch);
     await ChangeIconApp.changeAppIcon(!nsk?AppIcon.msk:AppIcon.nsk);
@@ -145,18 +145,22 @@ class _SingInPageState extends State<SingInPage> {
         type: MaskAutoCompletionType.lazy
     );
 
+
     openDropMenuNotifier.addListener((){
+      print('Listener ${openDropMenuNotifier.value}');
       if(openDropMenuNotifier.value =='open'){
         openDropdown();
       }else if(openDropMenuNotifier.value == 'msk'){
         setState(() {
           selectedValue = 'Москва';
-          _saveLocation(selectedValue);
+          openDropMenuNotifier.value = '';
+          //_saveLocation(selectedValue);
         });
       }else if(openDropMenuNotifier.value == 'nsk'){
         setState(() {
           selectedValue = 'Новосибирск';
-          _saveLocation(selectedValue);
+          openDropMenuNotifier.value = '';
+         // _saveLocation(selectedValue);
         });
       }
     });

@@ -51,6 +51,7 @@ class _LogInPageState extends State<LogInPage> {
   void initState() {
     super.initState();
     _phoneNumUser = PreferencesUtil.phoneUser;
+    final branch = PreferencesUtil.branchUser;
     _phoneController = TextEditingController();
     _passwordController = TextEditingController();
 
@@ -59,9 +60,12 @@ class _LogInPageState extends State<LogInPage> {
         filter: {"#": RegExp(r'[0-9]')},
         type: MaskAutoCompletionType.lazy);
     if(_phoneNumUser.isNotEmpty) {
-
       final phone = _maskFormatter.maskText(_phoneNumUser);
       _phoneController.text = phone;
+    }
+
+    if(branch.isNotEmpty){
+      _phoneNumSupport = ContactSchoolByLocation.getPhoneNumberByIdLocation(branch);
     }
 
   }
@@ -87,7 +91,7 @@ class _LogInPageState extends State<LogInPage> {
 
   _saveBranch(branch) async {
     bool msk = branch == 'msk';
-    final savedBranch = PreferencesUtil.branchUser;
+   final savedBranch = PreferencesUtil.branchUser;
     if(branch == savedBranch){
       return;
     }

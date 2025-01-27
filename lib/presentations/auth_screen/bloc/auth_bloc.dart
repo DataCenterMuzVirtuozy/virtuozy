@@ -117,6 +117,7 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
     try{
       emit(state.copyWith(authStatus: AuthStatus.processSingIn,error: ''));
       final urkSchool = PreferencesUtil.urlSchool;
+      print('Loc ${urkSchool}');
       if(urkSchool.isEmpty){
         emit(state.copyWith(authStatus: AuthStatus.onSearchLocation));
       }else if(event.surName.isEmpty){
@@ -127,7 +128,7 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
         throw Failure('Введите номер телефона'.tr());
       }
       await Future.delayed(const Duration(seconds: 2));
-      await _userRepository.signIn(phone: event.phone, name: event.name, surName: event.surName);
+     await _userRepository.signIn(phone: event.phone, name: event.name, surName: event.surName);
       await PreferencesUtil.setPhoneUser(phone: event.phone);
       final user = _createUserEntity(event);
       await _createLocalUser(user);

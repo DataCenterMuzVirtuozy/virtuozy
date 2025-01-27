@@ -76,7 +76,6 @@ class _FindLocationContentState extends State<FindLocationContent> with TickerPr
         .then((List<Placemark> placemarks) {
       Placemark place = placemarks[0];
       setState(() async {
-        _administrativeArea = place.administrativeArea!;
          if(place.administrativeArea!.contains(_paterns[2])||place.administrativeArea!.contains(_paterns[3])){
            _currentAddress = 'msk';
            openDropMenuNotifier.value = _currentAddress;
@@ -117,7 +116,6 @@ class _FindLocationContentState extends State<FindLocationContent> with TickerPr
 
   @override
   Widget build(BuildContext context) {
-
     if(_isIOS){
       _textButton = 'Далее'.tr();
     }else{
@@ -201,10 +199,10 @@ class _FindLocationContentState extends State<FindLocationContent> with TickerPr
                               openDropMenuNotifier.value = 'open';
                               return;
                             }
+                             _saveLocation();
                             Navigator.pop(context);
                             Dialoger.showToast('Филиал школы в г. ${_currentAddress == 'nsk'?_paterns[1]:_paterns[3]}');
                             context.read<AuthBloc>().add(const SearchLocationEvent());
-                            _saveLocation();
                           },
                           borderRadius: 10,
                           textSize: 12,
@@ -222,10 +220,10 @@ class _FindLocationContentState extends State<FindLocationContent> with TickerPr
   }
 
   Future<void> _saveLocation() async {
-    final savedBranch = PreferencesUtil.branchUser;
-    if(_currentAddress == savedBranch){
-      return;
-    }
+    // final savedBranch = PreferencesUtil.branchUser;
+    // if(_currentAddress == savedBranch){
+    //   return;
+    // }
     await PreferencesUtil.setUrlSchool(_currentAddress == 'nsk'?nskUrl:mskUrl);
     await PreferencesUtil.setBranchUser(branch: _currentAddress);
     await ChangeIconApp.changeAppIcon(_currentAddress != 'nsk'?AppIcon.msk:AppIcon.nsk);
