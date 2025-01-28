@@ -446,7 +446,7 @@ class _BoxSubscriptionState extends State<BoxSubscription> {
                       GoRouter.of(context)
                           .push(pathListSubscriptionsHistory, extra: subsList);
                     },
-                    direction: widget.directions[index],
+                    direction: widget.directions.firstWhere((d)=>d.name == subs[index].nameDir),
                     subscription: subs[index]);
 
                 // return ItemSubscription(direction: directions[index],

@@ -91,7 +91,7 @@ class _FindLocationContentState extends State<FindLocationContent> with TickerPr
       });
     }).catchError((e) {
       setState(() {
-        _currentAddress = '0';
+       _currentAddress = '0';
         _controller.stop();
       });
 
@@ -197,12 +197,13 @@ class _FindLocationContentState extends State<FindLocationContent> with TickerPr
                               Navigator.pop(context);
                               controllerMenu.open();
                               openDropMenuNotifier.value = 'open';
+                              context.read<AuthBloc>().add(const SearchLocationEvent());
                               return;
                             }
                              _saveLocation();
                             Navigator.pop(context);
                             Dialoger.showToast('Филиал школы в г. ${_currentAddress == 'nsk'?_paterns[1]:_paterns[3]}');
-                            context.read<AuthBloc>().add(const SearchLocationEvent());
+
                           },
                           borderRadius: 10,
                           textSize: 12,
@@ -224,6 +225,8 @@ class _FindLocationContentState extends State<FindLocationContent> with TickerPr
     // if(_currentAddress == savedBranch){
     //   return;
     // }
+    openDropMenuNotifier.value = _currentAddress;
+    context.read<AuthBloc>().add(const SearchLocationEvent());
     await PreferencesUtil.setUrlSchool(_currentAddress == 'nsk'?nskUrl:mskUrl);
     await PreferencesUtil.setBranchUser(branch: _currentAddress);
     await ChangeIconApp.changeAppIcon(_currentAddress != 'nsk'?AppIcon.msk:AppIcon.nsk);
