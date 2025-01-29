@@ -99,6 +99,7 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
         emit(state.copyWith(authStatus: AuthStatus.authenticated));
 
     }on Failure catch (e,s){
+      print('Errr ${s}');
       await PreferencesUtil.clear();
       LogService.sendLog(TypeLog.errorLogin,s);
       emit(state.copyWith(authStatus: AuthStatus.error,error: e.message));
