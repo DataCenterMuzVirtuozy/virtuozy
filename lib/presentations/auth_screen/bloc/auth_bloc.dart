@@ -128,7 +128,7 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
         throw Failure('Введите номер телефона'.tr());
       }
       await Future.delayed(const Duration(seconds: 2));
-    // await _userRepository.signIn(phone: event.phone, name: event.name, surName: event.surName);
+      await _userRepository.signIn(phone: event.phone, name: event.name, surName: event.surName);
       await PreferencesUtil.setPhoneUser(phone: event.phone);
       final user = _createUserEntity(event);
       await _createLocalUser(user);
@@ -205,8 +205,8 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
 
   void _getIdBranch(SearchLocationEvent event,emit) async {
     emit(state.copyWith(authStatus: AuthStatus.searchLocation));
-    await Future.delayed(const Duration(seconds: 1));
-    emit(state.copyWith(authStatus: AuthStatus.searchLocationComplete));
+    await Future.delayed(const Duration(milliseconds: 700));
+    emit(state.copyWith(authStatus: AuthStatus.searchLocationComplete,changedLocation:event.loc));
   }
 
 

@@ -32,18 +32,20 @@ class AuthState extends Equatable{
 
    final AuthStatus authStatus;
    final String error;
+   final String changedLocation;
 
 
 
 
    factory AuthState.unknown(){
-     return const AuthState(authStatus: AuthStatus.unknown, error: '');
+     return const AuthState(authStatus: AuthStatus.unknown, error: '', changedLocation: '');
    }
 
   @override
   List<Object?> get props => [error,authStatus];
 
    const AuthState({
+     required this.changedLocation,
     required this.authStatus,
     required this.error,
   });
@@ -51,8 +53,10 @@ class AuthState extends Equatable{
    AuthState copyWith({
     AuthStatus? authStatus,
     String? error,
+     String? changedLocation
   }) {
     return AuthState(
+      changedLocation: changedLocation??this.changedLocation,
       authStatus: authStatus ?? this.authStatus,
       error: error ?? this.error,
     );

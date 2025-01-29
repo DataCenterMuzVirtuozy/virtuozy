@@ -112,6 +112,7 @@ class UserService{
       if(e.response?.statusCode == 403){
         throw  Failure('Данный аккаунт был удален пользователем'.tr());
       }
+      print('Login ${e.message}');
       throw  Failure('Ошибка авторизации'.tr());
     }
   }

@@ -23,7 +23,7 @@ import '../../utils/text_style.dart';
 import '../../utils/theme_provider.dart';
 import 'bloc/auth_event.dart';
 
-ValueNotifier<String> openDropMenuNotifier = ValueNotifier('');
+//ValueNotifier<String> openDropMenuNotifier = ValueNotifier('');
 
 class SingInPage extends StatefulWidget {
   const SingInPage({super.key});
@@ -149,17 +149,17 @@ class _SingInPageState extends State<SingInPage> {
         filter: {"#": RegExp(r'[0-9]')},
         type: MaskAutoCompletionType.lazy);
 
-    openDropMenuNotifier.addListener((){
-      if(openDropMenuNotifier.value =='open'){
-        openDropdown();
-      }else if(openDropMenuNotifier.value == 'msk'){
-        selectedValue = 'Москва';
-        openDropMenuNotifier.value = '';
-      }else if(openDropMenuNotifier.value == 'nsk'){
-        selectedValue = 'Новосибирск';
-        openDropMenuNotifier.value = '';
-      }
-    });
+    // openDropMenuNotifier.addListener((){
+    //   if(openDropMenuNotifier.value =='open'){
+    //     openDropdown();
+    //   }else if(openDropMenuNotifier.value == 'msk'){
+    //     selectedValue = 'Москва';
+    //     openDropMenuNotifier.value = '';
+    //   }else if(openDropMenuNotifier.value == 'nsk'){
+    //     selectedValue = 'Новосибирск';
+    //     openDropMenuNotifier.value = '';
+    //   }
+    // });
   }
 
   @override
@@ -191,6 +191,22 @@ class _SingInPageState extends State<SingInPage> {
 
         if (s.authStatus == AuthStatus.onSearchLocation) {
           _handleLocation();
+        }
+
+        if (s.authStatus == AuthStatus.searchLocationComplete) {
+           if(s.changedLocation!='0'||s.changedLocation!='1'){
+             print('2');
+             if(s.changedLocation == 'msk'){
+               selectedValue = 'Москва';
+               //openDropMenuNotifier.value = '';
+             }else if(s.changedLocation == 'nsk'){
+               selectedValue = 'Новосибирск';
+              // openDropMenuNotifier.value = '';
+             }
+           }else{
+             print('1');
+             openDropdown();
+           }
         }
       },
       builder: (context, state) {

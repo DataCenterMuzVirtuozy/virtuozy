@@ -67,14 +67,15 @@ class SubscriptionModel{
   }
 
   factory SubscriptionModel.fromMap(Map<String, dynamic> map,String nameDirection) {
-   List<Map<String,dynamic>> dataOption = [];
+   List<dynamic> dataOption = [];
    List<OptionModel> options = [];
    try{
      dataOption = map['options']??[];
+     options = dataOption.map((m) => OptionModel.fromMap(m)).toList();
    }catch (e){
      options = [];
    }
-    options = dataOption.map((m) => OptionModel.fromMap(m)).toList();
+
    final idDir = map['customerId'];
    final idUser = map['idUser'];
    final dataBalance = map['balanceSub']??'0';

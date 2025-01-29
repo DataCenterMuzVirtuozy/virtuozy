@@ -78,10 +78,10 @@ class _FindLocationContentState extends State<FindLocationContent> with TickerPr
       setState(() async {
          if(place.administrativeArea!.contains(_paterns[2])||place.administrativeArea!.contains(_paterns[3])){
            _currentAddress = 'msk';
-           openDropMenuNotifier.value = _currentAddress;
+          // openDropMenuNotifier.value = _currentAddress;
          }else if(place.administrativeArea!.contains(_paterns[0])||place.administrativeArea!.contains(_paterns[1])){
            _currentAddress = 'nsk';
-           openDropMenuNotifier.value = _currentAddress;
+          // openDropMenuNotifier.value = _currentAddress;
          }else{
            _currentAddress = '1';
          }
@@ -196,8 +196,8 @@ class _FindLocationContentState extends State<FindLocationContent> with TickerPr
                             if(_currentAddress=='1'||_currentAddress == '0'){
                               Navigator.pop(context);
                               controllerMenu.open();
-                              openDropMenuNotifier.value = 'open';
-                              context.read<AuthBloc>().add(const SearchLocationEvent());
+                              //openDropMenuNotifier.value = 'open';
+                              context.read<AuthBloc>().add( SearchLocationEvent(loc: _currentAddress));
                               return;
                             }
                              _saveLocation();
@@ -225,8 +225,8 @@ class _FindLocationContentState extends State<FindLocationContent> with TickerPr
     // if(_currentAddress == savedBranch){
     //   return;
     // }
-    openDropMenuNotifier.value = _currentAddress;
-    context.read<AuthBloc>().add(const SearchLocationEvent());
+    //openDropMenuNotifier.value = _currentAddress;
+    context.read<AuthBloc>().add( SearchLocationEvent(loc: _currentAddress));
     await PreferencesUtil.setUrlSchool(_currentAddress == 'nsk'?nskUrl:mskUrl);
     await PreferencesUtil.setBranchUser(branch: _currentAddress);
     await ChangeIconApp.changeAppIcon(_currentAddress != 'nsk'?AppIcon.msk:AppIcon.nsk);

@@ -99,7 +99,7 @@ class _BranchSearchPageState extends State<BranchSearchPage> with TickerProvider
                     textButton: 'Поиск'.tr(),
                      onTap: (){
                       _controller.forward();
-                      context.read<AuthBloc>().add(const SearchLocationEvent());
+                      context.read<AuthBloc>().add(const SearchLocationEvent(loc: ''));
                      },
 
                                    ),

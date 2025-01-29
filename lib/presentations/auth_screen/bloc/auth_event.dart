@@ -25,7 +25,8 @@ class AuthEvent extends Equatable{
 }
 
 class SearchLocationEvent extends AuthEvent{
-  const SearchLocationEvent();
+  final String loc;
+  const SearchLocationEvent({required this.loc});
 }
 
 
