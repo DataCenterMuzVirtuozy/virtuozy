@@ -137,9 +137,10 @@ class UserModel{
     final int idDir = mapDirection['customerId']??0;
     final int idCustomer = mapDirection['id']??0;
    // final bonus = mapDirection['bonus'] as List<dynamic>;
+   final balance  = mapDirection ['balance'].toString() ;
 
-    return DirectionModel(
-      balance: mapDirection['balance'],
+    return DirectionModel (
+      balance: balance,
       nameTeacher: nameTeacherDir,
       id: idDir,
       idCustomer:idCustomer,

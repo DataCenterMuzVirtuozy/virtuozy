@@ -59,12 +59,14 @@ class _LogInPageState extends State<LogInPage> {
         mask: '+# (###) ###-##-##',
         filter: {"#": RegExp(r'[0-9]')},
         type: MaskAutoCompletionType.lazy);
+
     if(_phoneNumUser.isNotEmpty) {
       final phone = _maskFormatter.maskText(_phoneNumUser);
       _phoneController.text = phone;
     }
 
-    if(branch.isNotEmpty){
+
+    if(_phoneNumUser.isNotEmpty){
       _phoneNumSupport = ContactSchoolByLocation.getPhoneNumberByIdLocation(branch);
     }
 
