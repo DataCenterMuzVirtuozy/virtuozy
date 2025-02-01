@@ -9,6 +9,8 @@
    authenticated,
    unauthenticated,
    error,
+   errorLogIn,
+   errorResetPass,
    searchLocation,
    searchLocationComplete,
    searchLocationError,
@@ -18,11 +20,13 @@
    processLogOut,
    awaitCode,
    sendRequestCode,
+   sendRequestResPass,
    moderation,
    baseUrlEmpty,
    deleting,
    deleted,
    errorDeleting,
+   resettingPass,
    logOut
 
  }

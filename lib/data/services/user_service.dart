@@ -26,6 +26,28 @@ import '../models/user_model.dart';
 
 class UserService{
 
+
+  Future<void> resetPass({required String phone}) async {
+    final dioApi = locator.get<DioClient>().initApi();
+    final phoneFormated = phone.replaceAll(RegExp(r'[^0-9]'), '');
+    try {
+      var formData = FormData.fromMap({
+        'phone': '+$phoneFormated',
+      });
+       await dioApi.post(Endpoints.resetPass, data: formData);
+    } on Failure catch (e) {
+      throw Failure(e.message);
+    } on DioException catch (e) {
+      if(e.response?.statusCode == 404){
+        throw  Failure('Номер телефона не зарегистрирован'.tr());
+      }
+
+      throw Failure('Ошибка сброса пароля'.tr());
+    }
+  }
+
+
+
   Future<void> deleteAccount() async {
     try{
       final dioApi = locator.get<DioClient>().initApi();
@@ -59,14 +81,12 @@ class UserService{
         'surname':surName
       });
       await dioApi.post(Endpoints.singIn, data: formData);
-      //print('Response  ${res.data}');
-      // final  token = res.data['token'];
-      // await PreferencesUtil.setToken(token: token);
-      //return UserModel.fromMap(mapUser: {},mapSubsAll: [],lessons: []);
     } on Failure catch(e){
       throw  Failure(e.message);
     } on DioException catch(e){
-      throw  Failure('Ошибка авторизации'.tr());
+
+
+      throw  Failure('Ошибка регистрации пользователя'.tr());
     }
   }
 
@@ -109,10 +129,19 @@ class UserService{
 
       throw  Failure(e.message);
     } on DioException catch(e,stack){
+
+      if(e.response?.statusCode == 404){
+        throw  Failure('Номер телефона не зарегистрирован'.tr());
+      }
+
       if(e.response?.statusCode == 403){
         throw  Failure('Данный аккаунт был удален пользователем'.tr());
       }
-      print('Login ${e.message}');
+
+      if(e.response?.statusCode == 401){
+        throw  Failure('Неправильно введен логин или пароль'.tr());
+      }
+      print('Login ${e.response!.statusCode}');
       throw  Failure('Ошибка авторизации'.tr());
     }
   }

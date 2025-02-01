@@ -11,6 +11,7 @@ enum TypeLog{
       errorLogout,
       errorData,
       errorInitApp,
+      errorResetPass,
       errorDeleteAccount
     }
 

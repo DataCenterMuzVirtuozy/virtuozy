@@ -2,7 +2,8 @@
 
 
 
- import 'package:easy_localization/easy_localization.dart';
+ import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:virtuozy/di/locator.dart';
 import 'package:virtuozy/domain/entities/notifi_setting_entity.dart';
@@ -30,6 +31,7 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
     on<LogOutEvent>(_logOut);
     on<LogOutTeacherEvent>(_logOutTeacher);
     on<DeleteAccountEvent>(_deleteAccount);
+    on<ResetPassEvent>(_resetPass,transformer: droppable());
   }
 
 
@@ -39,13 +41,29 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
     final _teacherCubit = locator.get<TeacherCubit>();
     late UserEntity user;
 
-
+     void _resetPass(ResetPassEvent event, emit) async {
+       try{
+         emit(state.copyWith(authStatus: AuthStatus.resettingPass,error: ''));
+         final urkSchool = PreferencesUtil.urlSchool;
+         if(urkSchool.isEmpty){
+           emit(state.copyWith(authStatus: AuthStatus.onSearchLocation));
+         }else if(event.phone.isEmpty){
+           throw Failure('Введите номер телефона'.tr());
+         }
+         await Future.delayed(const Duration(seconds: 2));
+         await _userRepository.resetPass(phone: event.phone);
+         emit(state.copyWith(authStatus: AuthStatus.sendRequestResPass));
+       }on Failure catch(e,s){
+         LogService.sendLog(TypeLog.errorResetPass,s);
+         emit(state.copyWith(authStatus: AuthStatus.errorResetPass,error: e.message));
+       }
+      }
 
     void _deleteAccount(DeleteAccountEvent event,emit) async {
       try {
         if(event.user.userStatus.isModeration || event.user.userStatus.isAuth){
           emit(state.copyWith(authStatus: AuthStatus.deleting,error: ''));
-          await Future.delayed(const Duration(seconds: 2));
+          await Future.delayed(const Duration(seconds: 1));
           await _userRepository.deleteAccount();
           await PreferencesUtil.clear();
           user = event.user.copyWith(userStatus: UserStatus.notAuth);
@@ -99,15 +117,13 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
         emit(state.copyWith(authStatus: AuthStatus.authenticated));
 
     }on Failure catch (e,s){
-      print('Errr ${s}');
       await PreferencesUtil.clear();
       LogService.sendLog(TypeLog.errorLogin,s);
-      emit(state.copyWith(authStatus: AuthStatus.error,error: e.message));
+      emit(state.copyWith(authStatus: AuthStatus.errorLogIn,error: e.message));
     } catch (e,stakeTrace){
-      print('Errr ${stakeTrace}');
       await PreferencesUtil.clear();
       LogService.sendLog(TypeLog.errorLogin,stakeTrace);
-      emit(state.copyWith(authStatus: AuthStatus.error,
+      emit(state.copyWith(authStatus: AuthStatus.errorLogIn,
           error: 'Ошибка получения данных'.tr()));
     }
 
@@ -127,7 +143,7 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
       }else if(event.phone.isEmpty){
         throw Failure('Введите номер телефона'.tr());
       }
-      await Future.delayed(const Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 1));
       await _userRepository.signIn(phone: event.phone, name: event.name, surName: event.surName);
       await PreferencesUtil.setPhoneUser(phone: event.phone);
       final user = _createUserEntity(event);

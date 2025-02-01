@@ -18,6 +18,10 @@ class UserUtil{
     final _service = locator.get<UserService>();
 
 
+    Future<void> resetPass({required String phone}) async {
+      await _service.resetPass(phone:phone);
+    }
+
     Future<UserEntity> getUser({required String uid}) async {
        final model = await _service.getUser(uid: uid);
        return UserMapper.fromApi(userModel: model);

@@ -20,7 +20,9 @@ import '../../utils/text_style.dart';
 import '../../utils/theme_provider.dart';
 
 class SuccessSendSMS extends StatefulWidget{
-  const SuccessSendSMS({super.key});
+  const SuccessSendSMS({super.key, required this.resetPass});
+
+  final bool resetPass;
 
   @override
   State<SuccessSendSMS> createState() => _SuccessSendSMSState();
@@ -32,23 +34,23 @@ class _SuccessSendSMSState extends State<SuccessSendSMS> {
 
 
   Widget _logo(){
-    final branch = PreferencesUtil.branchUser;
-    print('Logo $branch');
-    if(branch == 'msk'||branch.isEmpty){
-      return  _darkTheme
-          ? Image.asset(logoDark)
-          : SvgPicture.asset(logo);
-    }else{
+    final bool nsk = PreferencesUtil.branchUser == 'nsk';
+
+    if (nsk) {
       return Column(
         children: [
           _darkTheme
-              ? Image.asset(logoDark, width: 200.0) //todo need nsk logo
-              : SvgPicture.asset(logoMainNsk, width: 200.0),
-          const Gap(50)
+              ? Image.asset(!nsk ? logoDark : logoMainNskBlack, width: 200.0)
+              : !nsk
+              ? SvgPicture.asset(logo, width: 200.0)
+              : Image.asset(logoMainNsk, width: 200.0),
+          const Gap(20)
         ],
       );
-
+    } else {
+      return Container();
     }
+
 
   }
 
@@ -75,7 +77,8 @@ class _SuccessSendSMSState extends State<SuccessSendSMS> {
                   visible: PreferencesUtil.branchUser == 'msk',
                     child: Image.asset(illustration_5)),
                 const Gap(40.0),
-                Text('Поздравляем с регистрацией в личном кабинете!'.tr(),
+                Text(widget.resetPass?'Запрос на смену пароля успешно отправлен'.tr():
+                'Поздравляем с регистрацией в личном кабинете!'.tr(),
                     textAlign: TextAlign.center,
                     style: TStyle.textStyleVelaSansBold(Theme.of(context).textTheme.displayMedium!.color!,
                         size: 20.0)),

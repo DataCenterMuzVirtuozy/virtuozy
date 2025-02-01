@@ -29,6 +29,14 @@ class SearchLocationEvent extends AuthEvent{
   const SearchLocationEvent({required this.loc});
 }
 
+ class ResetPassEvent extends AuthEvent{
+   final String phone;
+
+   const ResetPassEvent({
+    required this.phone,
+  });
+}
+
 
 class CompleteSinIgEvent extends AuthEvent{
   final String branch;

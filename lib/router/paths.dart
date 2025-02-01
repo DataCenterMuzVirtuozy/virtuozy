@@ -24,3 +24,4 @@ const String pathSettingNotifi = '/pathSettingsNotifi';
 const String pathBonusLessons = '/pathBonusLesson';
 const String pathSettings = '/pathSettings';
 const String pathClients = '/clients';
+const String pathResetPass = '/reset_pass';

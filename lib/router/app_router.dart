@@ -5,6 +5,7 @@ import 'package:virtuozy/domain/entities/document_entity.dart';
 import 'package:virtuozy/domain/entities/subscription_entity.dart';
 import 'package:virtuozy/domain/entities/user_entity.dart';
 import 'package:virtuozy/presentations/auth_screen/login_page.dart';
+import 'package:virtuozy/presentations/auth_screen/reset_password_page.dart';
 import 'package:virtuozy/presentations/auth_screen/singin_page.dart';
 import 'package:virtuozy/presentations/auth_screen/success_send_sms_page.dart';
 import 'package:virtuozy/presentations/student/document_screen/documents_page.dart';
@@ -39,6 +40,15 @@ class AppRouter{
   static GoRouter get router=>GoRouter(
     initialLocation: pathApp,
     routes: [
+      GoRoute(
+        path: pathResetPass,
+        pageBuilder: (context, state) {
+
+          return CupertinoPage(
+              key: state.pageKey,
+              child:   const ResetPasswordPage());
+        },
+      ),
       GoRoute(
         path: pathClients,
         pageBuilder: (context, state) {
@@ -231,7 +241,7 @@ class AppRouter{
         path: pathSuccessSendSMS,
         pageBuilder: (context, state) => CupertinoPage(
             key: state.pageKey,
-            child: const SuccessSendSMS()),
+            child:  SuccessSendSMS(resetPass: state.extra as bool)),
       ),
     ],
   );

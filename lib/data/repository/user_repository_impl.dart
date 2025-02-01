@@ -60,4 +60,9 @@ class UserRepositoryImpl extends UserRepository{
      await _util.deleteAccount();
   }
 
+  @override
+  Future<void> resetPass({required String phone}) async {
+   await _util.resetPass(phone:phone);
+  }
+
 }

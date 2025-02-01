@@ -11,6 +11,7 @@ import 'package:virtuozy/presentations/auth_screen/bloc/auth_bloc.dart';
 import 'package:virtuozy/presentations/auth_screen/bloc/auth_state.dart';
 import 'package:virtuozy/router/paths.dart';
 
+import '../../bloc/app_bloc.dart';
 import '../../components/buttons.dart';
 import '../../components/text_fields.dart';
 import '../../data/utils/location_util.dart';
@@ -40,6 +41,7 @@ class _SingInPageState extends State<SingInPage> {
   bool _darkTheme = false;
   String selectedValue = "Не выбрано";
   String _phoneNum = '';
+  bool _networkConnect = true;
   final GlobalKey _dropdownButtonKey = GlobalKey();
 
   List<DropdownMenuItem<String>> get dropdownItems {
@@ -149,23 +151,14 @@ class _SingInPageState extends State<SingInPage> {
         filter: {"#": RegExp(r'[0-9]')},
         type: MaskAutoCompletionType.lazy);
 
-    // openDropMenuNotifier.addListener((){
-    //   if(openDropMenuNotifier.value =='open'){
-    //     openDropdown();
-    //   }else if(openDropMenuNotifier.value == 'msk'){
-    //     selectedValue = 'Москва';
-    //     openDropMenuNotifier.value = '';
-    //   }else if(openDropMenuNotifier.value == 'nsk'){
-    //     selectedValue = 'Новосибирск';
-    //     openDropMenuNotifier.value = '';
-    //   }
-    // });
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _darkTheme = context.watch<ThemeProvider>().themeStatus == ThemeStatus.dark;
+    final appState = context.watch<AppBloc>().state;
+    _networkConnect = appState.statusNetwork.isConnect;
   }
 
   @override
@@ -181,7 +174,7 @@ class _SingInPageState extends State<SingInPage> {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (c, s) {
         if (s.authStatus == AuthStatus.sendRequestCode) {
-          GoRouter.of(context).pushReplacement(pathSuccessSendSMS);
+          GoRouter.of(context).pushReplacement(pathSuccessSendSMS, extra: false);
         }
 
         if (s.error.isNotEmpty) {
@@ -195,16 +188,12 @@ class _SingInPageState extends State<SingInPage> {
 
         if (s.authStatus == AuthStatus.searchLocationComplete) {
            if(s.changedLocation!='0'||s.changedLocation!='1'){
-             print('2');
              if(s.changedLocation == 'msk'){
                selectedValue = 'Москва';
-               //openDropMenuNotifier.value = '';
              }else if(s.changedLocation == 'nsk'){
                selectedValue = 'Новосибирск';
-              // openDropMenuNotifier.value = '';
              }
            }else{
-             print('1');
              openDropdown();
            }
         }
@@ -319,9 +308,14 @@ class _SingInPageState extends State<SingInPage> {
                       const Gap(30.0),
                       SubmitButton(
                         onTap: () {
+
+                          if(!_networkConnect){
+                            Dialoger.showActionMaterialSnackBar(
+                                context: context, onAction: () {}, title: 'Нет сети'.tr());
+                            return;
+                          }
+
                           if (selectedValue == 'Не выбрано') {
-                            // Dialoger.showActionMaterialSnackBar(
-                            //     context: context, title: 'Выберите город'.tr());
                             _handleLocation();
                             return;
                           }

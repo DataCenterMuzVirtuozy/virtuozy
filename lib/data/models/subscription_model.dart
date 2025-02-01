@@ -75,7 +75,7 @@ class SubscriptionModel{
    }catch (e){
      options = [];
    }
-
+   
    final idDir = map['customerId'];
    final idUser = map['idUser'];
    final dataBalance = map['balanceSub']??'0';

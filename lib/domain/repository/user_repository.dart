@@ -18,4 +18,5 @@ abstract class UserRepository{
    Future<UserEntity> logIn({required String phone,required String password});
    Future<void> deleteAccount();
    Future<void> signIn({required String phone, required String name, required String surName});
+   Future<void> resetPass({required String phone});
  }
