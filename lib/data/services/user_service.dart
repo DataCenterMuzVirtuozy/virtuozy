@@ -38,6 +38,10 @@ class UserService{
     } on Failure catch (e) {
       throw Failure(e.message);
     } on DioException catch (e) {
+      if(e.type == DioExceptionType.connectionError){
+        throw Failure('Нет сети'.tr());
+      }
+
       if(e.response?.statusCode == 404){
         throw  Failure('Номер телефона не зарегистрирован'.tr());
       }
@@ -65,6 +69,9 @@ class UserService{
     } on Failure catch(e){
       throw  Failure(e.message);
     } on DioException catch(e){
+      if(e.type == DioExceptionType.connectionError){
+        throw Failure('Нет сети'.tr());
+      }
       throw  Failure(e.toString());
     }
 
@@ -84,7 +91,9 @@ class UserService{
     } on Failure catch(e){
       throw  Failure(e.message);
     } on DioException catch(e){
-
+      if(e.type == DioExceptionType.connectionError){
+        throw Failure('Нет сети'.tr());
+      }
 
       throw  Failure('Ошибка регистрации пользователя'.tr());
     }
@@ -129,7 +138,11 @@ class UserService{
 
       throw  Failure(e.message);
     } on DioException catch(e,stack){
+      print('Errr ${e.type}');
 
+      if(e.type == DioExceptionType.connectionError){
+        throw Failure('Нет сети'.tr());
+      }
       if(e.response?.statusCode == 404){
         throw  Failure('Номер телефона не зарегистрирован'.tr());
       }
@@ -179,6 +192,10 @@ class UserService{
        throw  Failure(e.message);
     } on DioException catch(e,stack){
       print('Stake ${stack}');
+      if(e.type == DioExceptionType.connectionError){
+        throw Failure('Нет сети'.tr());
+      }
+
       throw  Failure('Ошибка авторизации'.tr());
     }
    }
@@ -208,6 +225,9 @@ class UserService{
     } on Failure catch(e){
      throw  Failure(e.message);
     } on DioException catch(e){
+      if(e.type == DioExceptionType.connectionError){
+        throw Failure('Нет сети'.tr());
+      }
      throw  Failure(e.toString());
     } catch (e){
       throw  Failure(e.toString());
@@ -261,6 +281,9 @@ class UserService{
      } on Failure catch(e){
        throw  Failure(e.message);
      } on DioException catch(e){
+       if(e.type == DioExceptionType.connectionError){
+         throw Failure('Нет сети'.tr());
+       }
        throw  Failure(e.toString());
      }
    }
@@ -283,10 +306,13 @@ class UserService{
        print('Eror  ${s}');
        throw  Failure(e.message);
      } on DioException catch(e,s){
-       print('Eror 1 ${s}');
+       if(e.type == DioExceptionType.connectionError){
+         throw Failure('Нет сети'.tr());
+       }
        throw  Failure(e.toString());
      } catch(e,s){
        print('Eror 2 ${s}');
+
        throw const Failure('Ошибка загрузки фото');
      }
    }
@@ -314,7 +340,9 @@ class UserService{
 
        throw  Failure(e.message);
      } on DioException catch(e){
-
+       if(e.type == DioExceptionType.connectionError){
+         throw Failure('Нет сети'.tr());
+       }
        throw  Failure(e.toString());
      }
    }
