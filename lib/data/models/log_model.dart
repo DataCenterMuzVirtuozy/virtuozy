@@ -12,7 +12,8 @@ enum TypeLog{
       errorData,
       errorInitApp,
       errorResetPass,
-      errorDeleteAccount
+      errorDeleteAccount,
+      editedPass
     }
 
     enum TypePlatform{

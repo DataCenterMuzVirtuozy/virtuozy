@@ -23,7 +23,10 @@ import '../../utils/text_style.dart';
 import 'bloc/auth_event.dart';
 
 class ResetPasswordPage extends StatefulWidget{
-  const ResetPasswordPage({super.key});
+  const ResetPasswordPage({super.key, required this.editPass});
+
+
+  final bool editPass;
 
   @override
   State<ResetPasswordPage> createState() => _ResetPasswordPageState();
@@ -32,6 +35,9 @@ class ResetPasswordPage extends StatefulWidget{
 class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
   late TextEditingController _phoneController;
+  late TextEditingController _passOldController;
+  late TextEditingController _passNewController;
+  late TextEditingController _passConfController;
   late MaskTextInputFormatter _maskFormatter;
   bool _networkConnect = true;
   String _phoneNumUser = '';
@@ -47,6 +53,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   void initState() {
     super.initState();
     _phoneController = TextEditingController();
+    _passOldController = TextEditingController();
+    _passNewController = TextEditingController();
+    _passConfController = TextEditingController();
     _phoneNumUser = PreferencesUtil.phoneUser;
     _maskFormatter = MaskTextInputFormatter(
         mask: '+# (###) ###-##-##',
@@ -63,6 +72,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   void dispose() {
     super.dispose();
     _phoneController.dispose();
+    _passConfController.dispose();
+    _passNewController.dispose();
+    _passOldController.dispose();
 
   }
 
@@ -82,7 +94,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               GoRouter.of(context).pushReplacement(pathSuccessSendSMS,extra: true);
             }
 
-
+           if(s1.authStatus == AuthStatus.editedPass){
+             Dialoger.showToast('Пароль успешно изменен'.tr());
+             GoRouter.of(context).pop();
+           }
 
             if (s1.error.isNotEmpty) {
               Dialoger.showActionMaterialSnackBar(
@@ -92,7 +107,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
           },
           builder: (c,s){
-            if (s.authStatus == AuthStatus.resettingPass) {
+            if (s.authStatus == AuthStatus.resettingPass||
+            s.authStatus == AuthStatus.editingPass) {
               return SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
@@ -105,8 +121,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               );
             }
 
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+            return SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 60),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -115,7 +131,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                     children: [
                      Icon(Icons.lock_reset,size: 120,color: colorGrey),
                       const Gap(20.0),
-                      Text('Сброс пароля'.tr(),
+                      Text(widget.editPass?'Сменить пароль'.tr():'Сброс пароля'.tr(),
                           style: TStyle.textStyleVelaSansBold(
                               Theme.of(context).textTheme.displayMedium!.color!,
                               size: 25.0)),
@@ -125,11 +141,37 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      PhoneField(
-                          onChange: (String text) {},
-                          textInputFormatter: _maskFormatter,
-                          controller: _phoneController),
-                      const Gap(20.0),
+                      Visibility(
+                        visible: widget.editPass,
+                        child: Column(
+                          spacing: 20,
+                          children: [
+                            // CustomField(
+                            //     controller: _passOldController,
+                            //     textHint: 'Текущий пароль'.tr(),
+                            //     iconData: Icons.code,
+                            //     fillColor: colorPink.withOpacity(0.5)),
+                            CustomField(
+                                controller: _passNewController,
+                                textHint: 'Новый пароль'.tr(),
+                                iconData: Icons.code,
+                                fillColor: colorPink.withOpacity(0.5)),
+                            CustomField(
+                                controller: _passConfController,
+                                textHint: 'Подвердите новый пароль'.tr(),
+                                iconData: Icons.code,
+                                fillColor: colorPink.withOpacity(0.5))
+                          ],
+                        ),
+                      ),
+                      Visibility(
+                        visible: !widget.editPass,
+                        child: PhoneField(
+                            onChange: (String text) {},
+                            textInputFormatter: _maskFormatter,
+                            controller: _phoneController),
+                      ),
+                      const Gap(30.0),
                       SubmitButton(
                         onTap: () {
                           if(!_networkConnect){
@@ -137,10 +179,17 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                                 context: context, onAction: () {}, title: 'Нет сети'.tr());
                             return;
                           }
+
+                          if(widget.editPass){
+                            context.read<AuthBloc>().add(EditPassEvent(oldPass: _passOldController.text,
+                            confirmPass: _passConfController.text, passNew: _passNewController.text));
+                            return;
+                          }
+
                           context.read<AuthBloc>().add(ResetPassEvent(
                               phone: _phoneController.text));
                         },
-                        textButton: 'Сбросить пароль'.tr(),
+                        textButton: widget.editPass?"Изменить пароль".tr():'Сбросить пароль'.tr(),
                       ),
 
                     ],

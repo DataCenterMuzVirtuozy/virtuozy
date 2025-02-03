@@ -37,6 +37,18 @@ class SearchLocationEvent extends AuthEvent{
   });
 }
 
+ class EditPassEvent extends AuthEvent{
+   final String passNew;
+   final String oldPass;
+   final String confirmPass;
+
+   const EditPassEvent({
+     required this.oldPass,
+     required this.confirmPass,
+     required this.passNew,
+   });
+ }
+
 
 class CompleteSinIgEvent extends AuthEvent{
   final String branch;

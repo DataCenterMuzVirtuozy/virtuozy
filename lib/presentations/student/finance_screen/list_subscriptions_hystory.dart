@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:virtuozy/components/app_bar.dart';
+import 'package:virtuozy/presentations/student/widgets/options_list.dart';
 import 'package:virtuozy/utils/date_time_parser.dart';
 import 'package:virtuozy/utils/parser_price.dart';
 
@@ -232,7 +233,11 @@ class ItemSubHistory extends StatelessWidget{
               )),
             ],
           ),
-          const Gap(10.0),
+          Padding(
+            padding: const EdgeInsets.only(left: 50),
+            child: OptionsList(subscription: subscriptionEntity),
+          ),
+          const Gap(10),
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.end,
@@ -245,7 +250,7 @@ class ItemSubHistory extends StatelessWidget{
                 ],
               ),
             ],
-          )
+          ),
         ],
       ),
     );

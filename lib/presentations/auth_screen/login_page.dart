@@ -291,7 +291,7 @@ class _LogInPageState extends State<LogInPage> {
                               context: context, onAction: () {}, title: 'Выберите город'.tr());
                           return;
                         }
-                          GoRouter.of(context).push(pathResetPass);
+                          GoRouter.of(context).push(pathResetPass,extra: false);
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,

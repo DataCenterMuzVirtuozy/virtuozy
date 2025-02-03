@@ -471,7 +471,7 @@ class _DrawerItemSettingState extends State<DrawerItemSetting> {
         onTap: (){
           setState(() {
             if(h==0){
-              h=widget.user.userStatus.isAuth||widget.user.userStatus.isModeration?140.0:70.0;
+              h=widget.user.userStatus.isAuth||widget.user.userStatus.isModeration?160.0:70.0;
             }else{
               h=0;
             }
@@ -552,6 +552,19 @@ class _DrawerItemSettingState extends State<DrawerItemSetting> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text('Тема'.tr(),style: TStyle.textStyleVelaSansRegular( Theme.of(context).textTheme.displayMedium!.color!,
+                            size: 16.0)),
+                      ],
+                    ),
+                  ),
+                  const Gap(10),
+                  InkWell(
+                    onTap: (){
+                      GoRouter.of(context).push(pathResetPass,extra: true);
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text('Сменить пароль'.tr(),style: TStyle.textStyleVelaSansRegular( Theme.of(context).textTheme.displayMedium!.color!,
                             size: 16.0)),
                       ],
                     ),

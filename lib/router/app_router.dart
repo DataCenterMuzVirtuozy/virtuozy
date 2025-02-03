@@ -46,7 +46,7 @@ class AppRouter{
 
           return CupertinoPage(
               key: state.pageKey,
-              child:   const ResetPasswordPage());
+              child:    ResetPasswordPage(editPass: state.extra as bool));
         },
       ),
       GoRoute(

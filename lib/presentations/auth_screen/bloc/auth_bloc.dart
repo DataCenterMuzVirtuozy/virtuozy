@@ -32,6 +32,7 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
     on<LogOutTeacherEvent>(_logOutTeacher);
     on<DeleteAccountEvent>(_deleteAccount);
     on<ResetPassEvent>(_resetPass,transformer: droppable());
+    on<EditPassEvent>(_editPass,transformer: droppable());
   }
 
 
@@ -59,7 +60,32 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
        }
       }
 
-    void _deleteAccount(DeleteAccountEvent event,emit) async {
+  void _editPass(EditPassEvent event, emit) async {
+    try{
+      emit(state.copyWith(authStatus: AuthStatus.editingPass,error: ''));
+      // if(event.oldPass.isEmpty){
+      //   throw Failure('Введите текущий пароль'.tr());
+      // }else
+        if(event.passNew.isEmpty){
+        throw Failure('Введите новый пароль'.tr());
+      }else if(event.confirmPass.isEmpty){
+        throw Failure('Повторите новый пароль'.tr());
+      }else if(event.confirmPass != event.passNew){
+        throw Failure('Пароли не совпадают'.tr());
+      }else if(event.passNew.length<6){
+        throw Failure('Пароль менее 6 символов'.tr());
+      }
+      await Future.delayed(const Duration(seconds: 2));
+     // await _userRepository.resetPass(phone: event.phone);
+      emit(state.copyWith(authStatus: AuthStatus.editedPass));
+    }on Failure catch(e,s){
+      LogService.sendLog(TypeLog.editedPass,s);
+      emit(state.copyWith(authStatus: AuthStatus.errorEditPass,error: e.message));
+    }
+  }
+
+
+  void _deleteAccount(DeleteAccountEvent event,emit) async {
       try {
         if(event.user.userStatus.isModeration || event.user.userStatus.isAuth){
           emit(state.copyWith(authStatus: AuthStatus.deleting,error: ''));
