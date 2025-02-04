@@ -33,6 +33,7 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
     on<WritingOfMoneyEvent>(_writingOffMoney);
     on<ApplyBonusEvent>(_applyBonus);
     on<RefreshSubscriptionEvent>(_refreshSubscription,transformer: droppable());
+    on<GetListHistorySubsEvent>(_historySubs);
 
   }
 
@@ -41,6 +42,24 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
   final _userRepository = locator.get<UserRepository>();
   List<TransactionEntity> _listTransaction = [];
 
+
+
+  void _historySubs(GetListHistorySubsEvent event, emit) async {
+    try{
+      emit(state.copyWith(listHistorySubsStatus: event.refreshDirection?
+      ListHistorySubsStatus.refresh:ListHistorySubsStatus.loading));
+      await Future.delayed(const Duration(milliseconds: 1000));
+      print('Index dir ${event.currentDirIndex}');
+      //final idUser = _userCubit.userEntity.id;
+      //final idDir = event.directions.length>1?-1:event.directions[0].id;
+      List<SubscriptionEntity> listSubHistory = _getHistorySubscriptions(event.directions,event.allViewDir,event.currentDirIndex);
+      listSubHistory = _listSortSubHistory(list: listSubHistory);
+      emit(state.copyWith(listHistorySubsStatus: ListHistorySubsStatus.loaded,subscriptionHistory: listSubHistory));
+    }on Failure catch(e,s){
+      LogService.sendLog(TypeLog.errorData,s);
+      emit(state.copyWith(listHistorySubsStatus: ListHistorySubsStatus.error,error: e.message));
+    }
+  }
 
   void _getListTransaction(GetListTransactionsEvent event,emit) async {
      try{
@@ -176,15 +195,17 @@ class BlocFinance extends Bloc<EventFinance,StateFinance>{
 
   List<SubscriptionEntity> _getHistorySubscriptions(List<DirectionLesson> directions,bool allView,int indexDir){
     List<SubscriptionEntity> resList = [];
-    List<SubscriptionEntity> resListHis = [];
+    List<SubscriptionEntity> allSubs = [];
+    for(var e in directions){
+      allSubs.addAll(e.subscriptionsAll);
+    }
     if(allView){
-
-      for(var e in directions){
-        resList.addAll(e.subscriptionsAll);
-      }
-
+      resList = allSubs;
     }else{
-      resList = directions[0].subscriptionsAll;
+      resList = allSubs.where((t){
+        return t.idDir == directions[indexDir].id;
+      }).toList();
+      //resList = directions[0].subscriptionsAll;
     }
 
     // for(var s in resList){

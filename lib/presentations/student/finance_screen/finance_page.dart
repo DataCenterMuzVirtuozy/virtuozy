@@ -426,7 +426,7 @@ class _FinancePageState extends State<FinancePage> {
                   GestureDetector(
                     onTap: () {
                       GoRouter.of(context).push(pathListSubscriptionsHistory,
-                          extra: state.subscriptionHistory);
+                          extra: state.directions);
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(
@@ -460,7 +460,7 @@ class _FinancePageState extends State<FinancePage> {
                   GestureDetector(
                     onTap: () {
                       GoRouter.of(context)
-                          .push(pathListTransaction, extra: state.directions);
+                          .push(pathListTransaction,extra: state.directions);
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(

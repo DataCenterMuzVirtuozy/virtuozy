@@ -71,6 +71,20 @@ class GetListTransactionsEvent extends EventFinance{
   });
 }
 
+ class GetListHistorySubsEvent extends EventFinance{
+   final List<DirectionLesson> directions;
+   final int currentDirIndex;
+   final bool refreshDirection;
+   final bool allViewDir;
+
+   const GetListHistorySubsEvent({
+     required this.refreshDirection,
+     required this.allViewDir,
+     required this.currentDirIndex,
+     required this.directions,
+   });
+ }
+
  class WritingOfMoneyEvent extends EventFinance{
    final DirectionLesson currentDirection;
    final Lesson lessonConfirm;

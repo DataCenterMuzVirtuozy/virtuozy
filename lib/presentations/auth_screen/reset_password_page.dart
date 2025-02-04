@@ -181,7 +181,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                           }
 
                           if(widget.editPass){
-                            context.read<AuthBloc>().add(EditPassEvent(oldPass: _passOldController.text,
+                            context.read<AuthBloc>().add(EditPassEvent(
+                                phone: _phoneController.text,
+                                oldPass: _passOldController.text,
                             confirmPass: _passConfController.text, passNew: _passNewController.text));
                             return;
                           }

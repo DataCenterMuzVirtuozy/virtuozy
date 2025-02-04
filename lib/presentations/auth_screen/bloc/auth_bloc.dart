@@ -75,8 +75,8 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
       }else if(event.passNew.length<6){
         throw Failure('Пароль менее 6 символов'.tr());
       }
-      await Future.delayed(const Duration(seconds: 2));
-     // await _userRepository.resetPass(phone: event.phone);
+      await Future.delayed(const Duration(seconds: 1));
+     await _userRepository.editPass(phone: event.phone, newPass: event.passNew);
       emit(state.copyWith(authStatus: AuthStatus.editedPass));
     }on Failure catch(e,s){
       LogService.sendLog(TypeLog.editedPass,s);

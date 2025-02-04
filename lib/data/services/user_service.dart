@@ -34,7 +34,8 @@ class UserService{
       var formData = FormData.fromMap({
         'phone': '+$phoneFormated',
       });
-       await dioApi.post(Endpoints.resetPass, data: formData);
+       await dioApi.post(Endpoints.resetPass,
+           data: formData);
     } on Failure catch (e) {
       throw Failure(e.message);
     } on DioException catch (e) {
@@ -47,6 +48,38 @@ class UserService{
       }
 
       throw Failure('Ошибка сброса пароля'.tr());
+    }
+  }
+
+
+  Future<void> editPass({required String phone, required String newPass}) async {
+    final dioApi = locator.get<DioClient>().initApi();
+    final token =  PreferencesUtil.token;
+    final phoneUser = PreferencesUtil.phoneUser;
+    final phoneFormated = phoneUser.replaceAll(RegExp(r'[^0-9]'), '');
+
+    try {
+      var formData = FormData.fromMap({
+        'phone': '+$phoneFormated',
+        'password': newPass
+      });
+      await dioApi.post(Endpoints.editPass,
+          options: Options(
+              headers: {'Authorization':'Bearer $token'}
+          ),
+          data: formData);
+    } on Failure catch (e) {
+      throw Failure(e.message);
+    } on DioException catch (e) {
+      if(e.type == DioExceptionType.connectionError){
+        throw Failure('Нет сети'.tr());
+      }
+
+      if(e.response?.statusCode == 404){
+        throw  Failure('Номер телефона не зарегистрирован'.tr());
+      }
+
+      throw Failure('Ошибка смены пароля'.tr());
     }
   }
 
@@ -138,7 +171,6 @@ class UserService{
 
       throw  Failure(e.message);
     } on DioException catch(e,stack){
-      print('Errr ${e.type}');
 
       if(e.type == DioExceptionType.connectionError){
         throw Failure('Нет сети'.tr());
@@ -191,7 +223,6 @@ class UserService{
     } on Failure catch(e){
        throw  Failure(e.message);
     } on DioException catch(e,stack){
-      print('Stake ${stack}');
       if(e.type == DioExceptionType.connectionError){
         throw Failure('Нет сети'.tr());
       }

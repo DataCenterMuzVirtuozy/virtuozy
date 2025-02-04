@@ -41,8 +41,10 @@ class SearchLocationEvent extends AuthEvent{
    final String passNew;
    final String oldPass;
    final String confirmPass;
+   final String phone;
 
    const EditPassEvent({
+     required this.phone,
      required this.oldPass,
      required this.confirmPass,
      required this.passNew,

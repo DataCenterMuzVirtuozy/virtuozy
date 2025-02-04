@@ -65,4 +65,9 @@ class UserRepositoryImpl extends UserRepository{
    await _util.resetPass(phone:phone);
   }
 
+  @override
+  Future<void> editPass({required String phone, required String newPass})  async{
+    await _util.editPass(phone: phone, newPass: newPass);
+  }
+
 }

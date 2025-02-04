@@ -15,6 +15,7 @@ class Endpoints{
   static const String logIn  = '/login';
   static const String singIn  = '/register';
   static const String resetPass= '/resetPass';
+  static const String editPass= '/editPassword';
   static const String urlNSK = 'https://virtuozy-nsk.ru';
   static const String urlMSK = 'https://virtuozy-msk.ru';
   static const String urlPriceMsk = 'https://virtuozy-msk.ru/price/';

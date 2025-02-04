@@ -19,4 +19,5 @@ abstract class UserRepository{
    Future<void> deleteAccount();
    Future<void> signIn({required String phone, required String name, required String surName});
    Future<void> resetPass({required String phone});
+   Future<void> editPass({required String phone, required String newPass});
  }

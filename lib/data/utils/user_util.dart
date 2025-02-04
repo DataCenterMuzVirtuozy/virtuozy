@@ -22,6 +22,10 @@ class UserUtil{
       await _service.resetPass(phone:phone);
     }
 
+    Future<void> editPass({required String phone, required String newPass}) async {
+      await _service.editPass(phone: phone, newPass: newPass);
+    }
+
     Future<UserEntity> getUser({required String uid}) async {
        final model = await _service.getUser(uid: uid);
        return UserMapper.fromApi(userModel: model);

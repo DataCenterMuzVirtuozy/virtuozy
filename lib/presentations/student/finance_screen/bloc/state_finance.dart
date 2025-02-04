@@ -36,6 +36,15 @@ enum FinanceStatus{
    unknown
  }
 
+
+ enum ListHistorySubsStatus{
+   loading,
+   loaded,
+   error,
+   refresh,
+   unknown
+ }
+
  enum ApplyBonusStatus{
    loading,
    loaded,
@@ -52,6 +61,7 @@ enum FinanceStatus{
   final FinanceStatus status;
   final PaymentStatus paymentStatus;
   final ApplyBonusStatus applyBonusStatus;
+  final ListHistorySubsStatus listHistorySubsStatus;
   final ListTransactionStatus listTransactionStatus;
   final String error;
   final PricesDirectionEntity pricesDirectionEntity;
@@ -64,6 +74,7 @@ enum FinanceStatus{
   final List<String> titlesDrawingMenu;
 
   const StateFinance({
+    required this.listHistorySubsStatus,
     required this.subscriptionHistory,
     required this.pricesSubscriptionsAll,
     required this.expiredSubscriptions,
@@ -82,6 +93,7 @@ enum FinanceStatus{
 
   factory StateFinance.unknown(){
     return StateFinance(
+      listHistorySubsStatus: ListHistorySubsStatus.unknown,
         subscriptionHistory : const [],
       pricesSubscriptionsAll: const [],
       expiredSubscriptions: const [],
@@ -110,9 +122,11 @@ enum FinanceStatus{
     ApplyBonusStatus? applyBonusStatus,
     List<String>? titlesDrawingMenu,
     List<PriceSubscriptionEntity>? pricesSubscriptionsAll,
-    List<SubscriptionEntity>? subscriptionHistory
+    List<SubscriptionEntity>? subscriptionHistory,
+    ListHistorySubsStatus? listHistorySubsStatus
   }) {
     return StateFinance(
+      listHistorySubsStatus: listHistorySubsStatus??this.listHistorySubsStatus,
       subscriptionHistory: subscriptionHistory??this.subscriptionHistory,
       pricesSubscriptionsAll: pricesSubscriptionsAll??this.pricesSubscriptionsAll,
       expiredSubscriptions: expiredSubscriptions??this.expiredSubscriptions,
@@ -142,5 +156,6 @@ enum FinanceStatus{
     status,
     error,
     titlesDrawingMenu,
+    listHistorySubsStatus,
     pricesDirectionEntity];
 }
