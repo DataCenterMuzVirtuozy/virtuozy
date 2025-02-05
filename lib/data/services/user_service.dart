@@ -8,20 +8,14 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:virtuozy/data/models/document_model.dart';
 import 'package:virtuozy/data/rest/dio_client.dart';
 import 'package:virtuozy/data/rest/endpoints.dart';
-import 'package:virtuozy/domain/entities/document_entity.dart';
 import 'package:virtuozy/domain/entities/edit_profile_entity.dart';
 import 'package:virtuozy/domain/entities/notifi_setting_entity.dart';
 import 'package:virtuozy/utils/failure.dart';
  import 'package:http/http.dart' as http;
 import 'package:virtuozy/utils/preferences_util.dart';
- import 'dart:convert' as convert;
- import 'dart:io';
 import '../../di/locator.dart';
-import '../../domain/entities/user_entity.dart';
 import '../../domain/user_cubit.dart';
 import '../../resourses/strings.dart';
-import '../models/notifi_setting_model.dart';
-import '../models/subway_model.dart';
 import '../models/user_model.dart';
 
 class UserService{
@@ -55,13 +49,11 @@ class UserService{
   Future<void> editPass({required String phone, required String newPass}) async {
     final dioApi = locator.get<DioClient>().initApi();
     final token =  PreferencesUtil.token;
-    final phoneUser = PreferencesUtil.phoneUser;
-    final phoneFormated = phoneUser.replaceAll(RegExp(r'[^0-9]'), '');
 
     try {
       var formData = FormData.fromMap({
-        'phone': '+$phoneFormated',
-        'password': newPass
+        'password': newPass,
+        'password_confirmation': newPass
       });
       await dioApi.post(Endpoints.editPass,
           options: Options(
