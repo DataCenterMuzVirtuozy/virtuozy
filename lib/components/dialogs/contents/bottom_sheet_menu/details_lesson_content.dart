@@ -68,7 +68,7 @@ class _DetailsLessonContentState extends State<DetailsLessonContent> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        currentDayNotifi.value = 0;
+        currentDayNotifi.value = [0,0];
         Navigator.of(context).pop();
       },
       child: SizedBox(

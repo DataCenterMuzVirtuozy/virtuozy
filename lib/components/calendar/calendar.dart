@@ -52,7 +52,7 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar> with AuthMixin {
-  final currentDayNotifi = locator.get<ValueNotifier<int>>();
+  final currentDayNotifi = locator.get<ValueNotifier<List<int>>>();
   int month = 0;
   DateTime day = DateTime.now();
   int i = 0;
@@ -283,7 +283,7 @@ class _CalendarState extends State<Calendar> with AuthMixin {
       {required List<Lesson> lessons,
       required DateTime today,
       required Function onLesson}) {
-    return ValueListenableBuilder<int>(
+    return ValueListenableBuilder<List<int>>(
         valueListenable: currentDayNotifi,
         builder: (context, valueDay, child) {
           return Padding(
@@ -310,7 +310,7 @@ class _CalendarState extends State<Calendar> with AuthMixin {
                                 lessons: lessons, today: today),
                             border: Border.all(
                                 color: colorOrange,
-                                width: valueDay == today.day ? 3.0 : 1.0)),
+                                width: valueDay[0] == today.day && valueDay[1] == today.month ? 3.0 : 1.0)),
                       ),
                       Center(
                         child: Text(
@@ -358,13 +358,13 @@ class _CalendarState extends State<Calendar> with AuthMixin {
         // }
         final lessonsDay = _handleLessonsDay(lesson, lessons);
 
-        return ValueListenableBuilder<int>(
+        return ValueListenableBuilder<List<int>>(
             valueListenable: currentDayNotifi,
-            builder: (context, valueDay, child) {
-              lesson = lesson.copyWith(
-                  status: lessonsDay.length > 1
-                      ? LessonStatus.layering
-                      : lessonsDay[0].status);
+            builder: (context, valuesDay, child) {
+              // lesson = lesson.copyWith(
+              //     status: lessonsDay.length > 1
+              //         ? LessonStatus.layering
+              //         : lessonsDay[0].status);
               return Padding(
                 padding: const EdgeInsets.all(3.0),
                 child: InkWell(
@@ -375,7 +375,8 @@ class _CalendarState extends State<Calendar> with AuthMixin {
                         if (!focusedDayStatus) {
                           return;
                         }
-                        currentDayNotifi.value = day;
+
+                        currentDayNotifi.value = [day,dateTime.month];
                       }
                     },
                     child: Container(
@@ -392,22 +393,49 @@ class _CalendarState extends State<Calendar> with AuthMixin {
                                 shape: BoxShape.circle,
                                 color: visibleStatusColor
                                     ? StatusToColor.getColor(
-                                        lesson: lesson, userType: userType)
+                                    lesson: lessonsDay.length>1?lessonsDay[0]:
+                                    lesson, userType: userType)
                                     : Colors.transparent,
                                 border: Border.all(
                                     color: colorOrange,
-                                    width: valueDay == day ? 3.0 : 1.0)),
+                                    width: valuesDay[0] == day&&valuesDay[1] == dateTime.month ? 3.0 : 1.0)),
                           ),
                           Visibility(
-                              visible: lessonsDay.length > 1,
+                            visible: lessonsDay.length>1,
+                            child: Positioned(
+                              top: 2.5,
+                              left: -1,
                               child: RotationTransition(
                                 turns: const AlwaysStoppedAnimation(135 / 360),
                                 child: Container(
-                                  margin: const EdgeInsets.all(5),
-                                  height: valueDay == day ? 3.0 : 1.0,
-                                  color: colorOrange,
+                                  height: 18.0,
+                                  width: 33.0,
+                                  decoration: BoxDecoration(
+                                      color: visibleStatusColor
+                                          ? StatusToColor.getColor(
+                                          lesson: lessonsDay.length>1?lessonsDay[1]:lesson, userType: userType)
+                                          : Colors.transparent,
+                                      borderRadius:  const BorderRadius.only(
+                                  bottomLeft: Radius.circular(45),
+                                    bottomRight: Radius.circular(45)),
+                                      border: Border.all(
+                                          color: colorOrange,
+                                          width: valuesDay[0] == day&&valuesDay[1] == dateTime.month ? 3.0 : 1.0)),
+
                                 ),
-                              )),
+                              ),
+                            ),
+                          ),
+                          // Visibility(
+                          //     visible: lessonsDay.length > 1,
+                          //     child: RotationTransition(
+                          //       turns: const AlwaysStoppedAnimation(135 / 360),
+                          //       child: Container(
+                          //         margin: const EdgeInsets.all(5),
+                          //         height: valueDay == day ? 3.0 : 1.0,
+                          //         color: colorOrange,
+                          //       ),
+                          //     )),
                           Center(
                             child: Text(
                               day.toString(),
@@ -605,3 +633,7 @@ class _InfoColorState extends State<InfoColor> {
     );
   }
 }
+
+
+
+

@@ -47,7 +47,7 @@ class SubscriptionPage extends StatefulWidget {
 
 class _SubscriptionPageState extends State<SubscriptionPage> {
   int _selIndexDirection = 0;
-  final currentDayNotifi = locator.get<ValueNotifier<int>>();
+  //final currentDayNotifi = locator.get<ValueNotifier<List<int>>>();
   BonusEntity bonus = BonusEntity.unknown();
   List<String> _titlesDirections = [];
   bool _hasBonus = false;
@@ -441,10 +441,11 @@ class _BoxSubscriptionState extends State<BoxSubscription> {
 
                 return ItemSub(
                     onTap: (int idDir) {
-                      final subsList =
-                          _getHistorySubscriptions(widget.directions, idDir);
+                      // final subsList =
+                      //     _getHistorySubscriptions(widget.directions, idDir);
+
                       GoRouter.of(context)
-                          .push(pathListSubscriptionsHistory, extra: subsList);
+                          .push(pathListSubscriptionsHistory, extra: [widget.directions,idDir]);
                     },
                     direction: widget.directions.firstWhere((d)=>d.name == subs[index].nameDir),
                     subscription: subs[index]);

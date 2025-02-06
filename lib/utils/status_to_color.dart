@@ -21,7 +21,7 @@ class StatusToColor{
    const Color.fromRGBO(153, 0, 255, 1.0),
    const Color.fromRGBO(230, 230, 230, 1.0),
     const Color.fromRGBO(0, 148, 77, 1.0),
-    const Color.fromRGBO(3, 252, 244,1.0),
+  const Color.fromRGBO(255, 255, 255, 1.0),
     const Color.fromRGBO(0, 255, 0, 1),
     const Color.fromRGBO(255, 230, 0, 1),
   ];
@@ -78,7 +78,7 @@ class StatusToColor{
    }
  }
 
-   static Color getColor({required Lesson lesson, UserType userType = UserType.unknown,}){
+   static Color getColor({required Lesson lesson, UserType userType = UserType.unknown}){
 
      if(userType.isTeacher){
        return _colors[3];

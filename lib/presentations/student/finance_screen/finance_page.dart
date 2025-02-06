@@ -426,7 +426,7 @@ class _FinancePageState extends State<FinancePage> {
                   GestureDetector(
                     onTap: () {
                       GoRouter.of(context).push(pathListSubscriptionsHistory,
-                          extra: state.directions);
+                          extra: [state.directions,-1]);
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(

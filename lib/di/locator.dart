@@ -40,7 +40,7 @@ void setup() {
   locator.registerLazySingleton<TeacherUtil>(() => TeacherUtil());
   locator.registerFactory<TeacherRepository>(() => TeacherRepositoryImpl());
 
-  locator.registerLazySingleton(() => ValueNotifier<int>(0));
+  locator.registerLazySingleton(() => ValueNotifier<List<int>>([0,0]));
 
 
   locator.registerLazySingleton<FinanceService>(() => FinanceService());

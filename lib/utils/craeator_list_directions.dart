@@ -36,6 +36,7 @@ class CreatorListDirections{
      if(length>1){
        resultList.insert(length, 'Все направления'.tr());
      }
+
      return resultList;
    }
 

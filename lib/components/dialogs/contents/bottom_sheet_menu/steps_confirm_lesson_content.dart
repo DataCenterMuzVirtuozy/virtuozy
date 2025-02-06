@@ -19,7 +19,7 @@ import '../../../../utils/status_to_color.dart';
 import '../../../../utils/text_style.dart';
 import '../../../buttons.dart';
 
-final currentDayNotifi = locator.get<ValueNotifier<int>>();
+final currentDayNotifi = locator.get<ValueNotifier<List<int>>>();
 
 class StepsConfirmLesson extends StatefulWidget {
   const StepsConfirmLesson(
@@ -141,7 +141,7 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson>
                           curve: Curves.ease);
                     });
                   } else {
-                    currentDayNotifi.value = 0;
+                    currentDayNotifi.value = [0,0];
                     Navigator.pop(context);
                     //todo send reviews
                   }
@@ -575,7 +575,7 @@ class _StepsConfirmLessonState extends State<StepsConfirmLesson>
               child: SubmitButton(
                 onTap: () {
                   Navigator.pop(context);
-                  currentDayNotifi.value = 0;
+                  currentDayNotifi.value = [0,0];
                   //todo send rewiev
                 },
                 borderRadius: 10.0,

@@ -72,8 +72,8 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
         throw Failure('Повторите новый пароль'.tr());
       }else if(event.confirmPass != event.passNew){
         throw Failure('Пароли не совпадают'.tr());
-      }else if(event.passNew.length<6){
-        throw Failure('Пароль менее 6 символов'.tr());
+      }else if(event.passNew.length<4){
+        throw Failure('Пароль менее 4 символов'.tr());
       }
       await Future.delayed(const Duration(seconds: 1));
      await _userRepository.editPass(phone: event.phone, newPass: event.passNew);

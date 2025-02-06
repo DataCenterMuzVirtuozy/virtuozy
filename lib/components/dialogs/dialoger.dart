@@ -84,7 +84,7 @@ class Dialoger {
       required DialogsContent content,
       bool blurred = false,
       Object? args}) {
-    final currentDayNotifi = locator.get<ValueNotifier<int>>();
+    final currentDayNotifi = locator.get<ValueNotifier<List<int>>>();
 
     showModalBottomSheet(
         isDismissible: true,
@@ -173,7 +173,7 @@ class Dialoger {
             ),
           );
         }).whenComplete(() {
-      currentDayNotifi.value = 0;
+      currentDayNotifi.value = [0,0];
     });
   }
 

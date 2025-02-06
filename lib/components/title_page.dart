@@ -28,7 +28,7 @@ class TitlePage extends StatefulWidget{
 class _TitlePageState extends State<TitlePage> with AuthMixin{
 
   bool _darkTheme = false;
-  final bool _msk = PreferencesUtil.branchUser == 'msk';
+
 
 
   @override
@@ -42,23 +42,23 @@ class _TitlePageState extends State<TitlePage> with AuthMixin{
   @override
   Widget build(BuildContext context) {
 
-
+    final bool msk = PreferencesUtil.branchUser == 'msk';
 
 
    return Row(
      mainAxisAlignment: MainAxisAlignment.end,
      children: [
        Container(
-         key: ValueKey(_msk),
+         key: ValueKey(msk),
          decoration: BoxDecoration(
            //color: backgroundCard(context),
            borderRadius: BorderRadius.circular(10)
          ),
          child: Stack(
            children: [
-             _darkTheme?_msk?Image.asset(icLogoRec,
+             _darkTheme?msk?Image.asset(icLogoRec,
                  width: 25.0):Image.asset(logoNskBlack,width: 20):
-             _msk?Image.asset(icLogoRec,
+             msk?Image.asset(icLogoRec,
                  width: 25.0):Image.asset(logoNsk,width: 20),
              // Image.asset(icLogoRec,
              //     width: 25.0),

@@ -34,7 +34,8 @@ List<String> get titlesDrawMenuStudent => [
 
  List<String> get listSupportTelegramMSK =>[
    'Музыкальная школа Виртуозы, м. Парк Культуры',
-   'Музыкальная школа Виртуозы, м. Таганская'
+   'Музыкальная школа Виртуозы, м. Таганская',
+   'Наш телеграм канал'
  ];
 
  List<String> get listSupportWhatsappMSK =>[
@@ -72,14 +73,15 @@ List<String> get titlesDrawMenuStudent => [
 
  ///telegram
  List<String> get listSupportUrlTelegramNSK =>[
-   'https://t.me/@VirtuozyNskMs2',
-   'https://t.me/@VirtuozyNskMs1',
+   'https://t.me/VirtuozyNskMs2',
+   'https://t.me/VirtuozyNskMs1',
    'https://t.me/virtuozy_nsk'
  ];
 
  List<String> get listSupportUrlTelegramMSK =>[
    'https://t.me/VirtuozyMskMS1?roistat_visit=1635377',
-   'https://t.me/VirtuozyMskMS2?roistat_visit=1635377'
+   'https://t.me/VirtuozyMskMS2?roistat_visit=1635377',
+       'https://t.me/virtuozy_msk'
  ];
  ///
 

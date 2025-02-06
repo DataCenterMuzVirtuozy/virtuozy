@@ -55,7 +55,7 @@ class _SupportListContentState extends State<SupportListContent>
       }
     } else {
       if (TypeMessager.telegram == typeMessager) {
-        return listSupportUrlTelegramNSK[index];
+        return listSupportTelegramNSK[index];
       } else {
         return listSupportWhatsappNSK[index];
       }
@@ -95,13 +95,13 @@ class _SupportListContentState extends State<SupportListContent>
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Image.asset(
                       _pathsIcon[
                           widget.typeMessager == TypeMessager.telegram ? 0 : 1],
-                      width: 40,
-                      height: 40,
+                      width: 30,
+                      height: 30,
                     ),
                     const Gap(10),
                     Expanded(

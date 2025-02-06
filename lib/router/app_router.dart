@@ -166,7 +166,8 @@ class AppRouter{
         pageBuilder: (context, state) {
           return CupertinoPage(
               key: state.pageKey,
-              child:    ListSubscriptionHistory( directions: (state.extra as List<DirectionLesson>)));
+              child:    ListSubscriptionHistory( directions: (state.extra as List)[0] as List<DirectionLesson>,
+                  selIdDirection:  (state.extra as List)[1] as int));
         },
       ),
       GoRoute(
