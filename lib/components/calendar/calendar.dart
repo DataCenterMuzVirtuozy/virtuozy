@@ -393,7 +393,7 @@ class _CalendarState extends State<Calendar> with AuthMixin {
                                 shape: BoxShape.circle,
                                 color: visibleStatusColor
                                     ? StatusToColor.getColor(
-                                    lesson: lessonsDay.length>1?lessonsDay[0]:
+                                    lesson: lessonsDay.length>1?lessonsDay[1]:
                                     lesson, userType: userType)
                                     : Colors.transparent,
                                 border: Border.all(
@@ -413,7 +413,7 @@ class _CalendarState extends State<Calendar> with AuthMixin {
                                   decoration: BoxDecoration(
                                       color: visibleStatusColor
                                           ? StatusToColor.getColor(
-                                          lesson: lessonsDay.length>1?lessonsDay[1]:lesson, userType: userType)
+                                          lesson: lessonsDay.length>1?lessonsDay[0]:lesson, userType: userType)
                                           : Colors.transparent,
                                       borderRadius:  const BorderRadius.only(
                                   bottomLeft: Radius.circular(45),
